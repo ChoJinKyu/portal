@@ -21,7 +21,11 @@ sap.ui.define([
 
 	return BaseController.extend("dp.pd.productActivityMgt.controller.MainList", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        _oViewData : {
+            tenant_id : ""
+        },
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -38,6 +42,9 @@ sap.ui.define([
             
             var oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+
+            //세션에서 tenant_id 받기 전 하드코딩 코드수정 필요
+            this._oViewData.tenant_id = "L2101"
 
             this.enableMessagePopover();
             this._doInitTablePerso();
@@ -126,7 +133,7 @@ sap.ui.define([
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: "L2101",
+				tenantId: this._oViewData.tenant_id,
 				controlOptionCode: oRecord.product_activity_code
 			}, true);
 
@@ -138,7 +145,7 @@ sap.ui.define([
             var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: "L2101",
+				tenantId: this._oViewData.tenant_id,
 				controlOptionCode: "new"				
             });
 
