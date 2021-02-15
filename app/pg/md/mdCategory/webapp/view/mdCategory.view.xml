@@ -119,7 +119,7 @@
                 <Column hAlign="Center" width="3em">
                     <Text text="" />
                 </Column>
-                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" width="3em" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" visible="false" width="3em" >
                     <Text text="{I18N>/SPMD_CATEGORY_SORT_SEQUENCE}" />
                 </Column>
                 <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
@@ -161,22 +161,22 @@
                             }" />
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>spmd_category_sort_sequence}" visible="true"></Text>
+                            <Text text="{list>spmd_category_sort_sequence}"></Text>
                         </HBox>
                         <HBox>
-                            <Text text="{list>org_code}" visible="true"></Text>
+                            <Text text="{list>org_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>org_infos/bizunit_name}" visible="true"></Text>
+                            <Text text="{list>org_infos/bizunit_name}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>spmd_category_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>spmd_category_code_name}" visible="true"></Text>
+                            <Text text="{list>spmd_category_code_name}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>rgb_font_color_code}" visible="true"></Text>
+                            <Text text="{list>rgb_font_color_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>create_user_id}"></Text>
