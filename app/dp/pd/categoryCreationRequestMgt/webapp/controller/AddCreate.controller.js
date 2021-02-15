@@ -70,7 +70,7 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
             this.setModel(new ManagedModel(), "PdPartCategoryModel");
-            this.setModel(new ManagedListModel(), "pdPartCategoryLng");
+            this.setModel(new ManagedModel(), "pdPartCategoryLng");
             this.setModel(new ManagedModel(), "pdActivityStdDayView");
 
 			var oViewModel = new JSONModel({
@@ -91,6 +91,9 @@ sap.ui.define([
             this.getRouter().getRoute("addCreatePage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
+
+            
+
         },
 
 		/**
@@ -278,10 +281,22 @@ sap.ui.define([
                     // console.log("pdActivityStdDayView");
                     // console.log(oData);
                     this.getModel("pdActivityStdDayView").setData(oData.results);
+            
+                    this.toTop();
                     
                 }.bind(this)
             });
-            
+            this.toTop();
+        },
+        /**
+         * 리스트 레코드 추가
+         * @public
+         */
+        toTop: function () {
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
         },
 
         
@@ -478,6 +493,7 @@ sap.ui.define([
 				}
             });
             this.validator.clearValueState(this.byId("midObjectForm"));
+            
 
         },
 

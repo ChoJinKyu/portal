@@ -32,7 +32,7 @@ public class PartCategoryV4 implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
     
-    private final static Logger log = LoggerFactory.getLogger(TemplateV4Service.class);
+    private final static Logger log = LoggerFactory.getLogger(PartCategoryV4Service_.class);
 
     @Transactional(rollbackFor = SQLException.class)
     @On(event = PdPartCategorySaveProcContext.CDS_NAME)
