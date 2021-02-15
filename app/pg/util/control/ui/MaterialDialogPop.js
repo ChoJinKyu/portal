@@ -120,7 +120,7 @@ sap.ui.define([
             }
 
             if (!!this.oSearchObj.orgCode) {
-                aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+                aFilters.push(new Filter("bizunit_code", FilterOperator.EQ, this.oSearchObj.orgCode));
             }
 
             // Input Info
