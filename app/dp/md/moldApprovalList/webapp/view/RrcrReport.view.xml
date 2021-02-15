@@ -28,11 +28,15 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
                 <uxap:expandedHeading>
-					<Title text="Remodel &amp; Repair Completion Report" wrapping="true" />
+					<FlexBox fitContainer="true" alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
+						<Title text="Remodel &amp; Repair Completion Report" wrapping="true"/>
+					</FlexBox>
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
 						<Title text="Remodel &amp; Repair Completion Report" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
@@ -50,9 +54,9 @@
                     <!-- 상단 버튼 영역 --> 
 				</uxap:actions>
 
-                <uxap:navigationActions>
+                <!-- <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
-                </uxap:navigationActions>
+                </uxap:navigationActions> -->
                 <!-- <uxap:heading> 
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />

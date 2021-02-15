@@ -23,11 +23,15 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true" />
+					<FlexBox fitContainer="true" alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
+						<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true"/>
+					</FlexBox>
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
 						<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
@@ -44,9 +48,9 @@
 				<uxap:actions>
 				</uxap:actions>
 
-                <uxap:navigationActions>
+                <!-- <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
-                </uxap:navigationActions>
+                </uxap:navigationActions> -->
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
