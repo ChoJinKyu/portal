@@ -203,7 +203,7 @@
                                         labelFor="input"
                                         required="true"/>
                                     <VBox>
-                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}" />
+                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" />
                                             
                                     </VBox>
                                 </OverflowToolbar>

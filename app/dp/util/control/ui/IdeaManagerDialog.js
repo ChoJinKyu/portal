@@ -14,9 +14,8 @@ sap.ui.define([
     "ext/lib/control/m/CodeComboBox",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
-    "sap/m/SearchField",
     "ext/lib/model/ManagedModel"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, CodeComboBox, ComboBox, Item, SearchField, ManagedModel) {
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, CodeComboBox, ComboBox, Item, ManagedModel) {
     "use strict";
 
     var IdeaManagerDialog = Parent.extend("dp.util.control.ui.IdeaManagerDialog", {
@@ -70,9 +69,7 @@ sap.ui.define([
                 required: true
             });
 
-            this.oLocalUserName = new SearchField({
-                 placeholder: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")
-            });
+            this.oLocalUserName = new Input();
             
             this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
             this.oBizunitCode.attachEvent("change", this.loadData.bind(this));

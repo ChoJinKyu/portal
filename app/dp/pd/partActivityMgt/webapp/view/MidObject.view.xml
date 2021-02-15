@@ -95,7 +95,7 @@
                                         <items>
                                             <core:ListItem
                                                 key="{company_code}" 
-                                                text="{company_code}" 
+                                                text="{company_name}" 
                                                 additionalText="{company_code}"/>
                                         </items>
                                     </ComboBox>
@@ -123,7 +123,7 @@
                                         <items>
                                             <core:ListItem
                                                 key="{org_code}" 
-                                                text="{org_code}" 
+                                                text="{org_name}" 
                                                 additionalText="{org_code}"/>
                                         </items>
                                     </ComboBox>
