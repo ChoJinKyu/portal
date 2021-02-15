@@ -174,6 +174,10 @@ sap.ui.define([
             return SppUserSessionUtil.getUserId();
         },
 
+        getSessionTenantId: function(){
+            return SppUserSessionUtil.getTenantId();
+        },
+
         getSessionLanguageCode: function(){
             return SppUserSessionUtil.getLanguageCode();
         },

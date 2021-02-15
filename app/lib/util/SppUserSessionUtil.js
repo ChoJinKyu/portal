@@ -15,6 +15,10 @@ sap.ui.define([
             return this.SppUserSession.getModel().getSessionAttr("USER_ID");
         },
 
+        getTenantId: function(){
+            return this.SppUserSession.getModel().getSessionAttr("TENANT_ID");
+        },
+        
         getLanguageCode: function(){
             return this.SppUserSession.getModel().getSessionAttr("LANGUAGE_CODE");
         },

@@ -62,12 +62,18 @@ sap.ui.define([
 
                 var curCode1 = this.getModel("USER_SESSION").getSessionAttr("CURRENCY_CODE");
 
+                var tenantId = this.getSessionTenantId();  // BaseController의 function 사용
+                var tenantId2 = SppUserSessionUtil.getTenantId(); // JSON 중 USER_ID 사용
+
                 debugger
                 console.log("BaseController : " + userId1);
                 console.log("BaseController JSON : " + userId2);
                 console.log("Static : " + langCd1);
                 console.log("Static JSON : " + LangCd2);
                 console.log("Local Model : " + curCode1);
+
+                console.log("Local Model : " + tenantId);
+                console.log("Local Model : " + tenantId2);
             }
 
 		});
