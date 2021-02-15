@@ -17,3 +17,4 @@ using from './util/supplierSelection-service';
 using from './util/modelDeveloperSelection-service';
 using from './util/dpMdCommon-service';
 using from './util/progressStatus-service';
+using from './util/remodelRepairEstimation-service';
