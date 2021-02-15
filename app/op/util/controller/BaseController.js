@@ -269,7 +269,7 @@ sap.ui.define([
         // Service
         /////////////////////////////////////////////////////////////
         // call procedure
-        procedure: function(service, entry, input, { skip }) {
+        procedure: function(service, entry, input, args) {
 
             var mDeferred = $.Deferred();
             (function(){
@@ -298,9 +298,9 @@ sap.ui.define([
                 // Message
                 r.return_code == "NG" 
                 ? MessageBox.error(r.return_msg)
-                : !skip
-                ? MessageBox.success(r.return_msg)
-                : "skip";
+                : args && !!args.skip
+                ? "skip"
+                : MessageBox.success(r.return_msg);
 
                 // Settled
                 return (
