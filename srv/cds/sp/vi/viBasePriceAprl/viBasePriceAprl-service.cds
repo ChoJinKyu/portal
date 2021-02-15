@@ -209,7 +209,8 @@ service BasePriceAprlService {
  entity Base_Price_Aprl_Item_Dtl       as
         select from itmDtlView itmdtl
         {
-            key itmdtl.tenant_id,                     
+            key itmdtl.tenant_id,
+            key itmdtl.approval_number,   
             key itmdtl.item_sequence,                 
             key itmdtl.net_price_type_code,
                 itmdtl.net_price_type_name,           
