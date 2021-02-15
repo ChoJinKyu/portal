@@ -9,15 +9,15 @@ SELECT pam.tenant_id,
        and    org_type_code = pam.org_type_code
        and    org_code = pam.org_code) org_name,
        pam.activity_code,
-       null product_activity_code,
-       null activity_dependency_code,
+       '' product_activity_code,
+       '' activity_dependency_code,
        pam.active_flag,
        case when pam.active_flag = True then 'Active' else 'Inactive' end active_flag_val,
-       null update_user_id,
-       null local_update_dtm,
+       '' update_user_id,
+       '' local_update_dtm,
        (select code_name from dp_pd_part_base_activity_lng where tenant_id = pam.tenant_id and activity_code = pam.activity_code and language_cd = 'KO' ) activity_name,
-       null product_activity_name,
-       null activity_dependency_name
+       '' product_activity_name,
+       '' activity_dependency_name
 FROM   DP_PD_PART_ACTIVITY_TEMPLATE pam
 WHERE  pam.tenant_id = 'L2101'
 and	   not exists 
