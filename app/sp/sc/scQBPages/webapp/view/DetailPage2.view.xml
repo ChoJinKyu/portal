@@ -1035,7 +1035,8 @@
                                                             <Label text="Vendor Pool" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input showValueHelp="true" value="{NegoHeaders>vendor_pool_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input showValueHelp="true" value="{NegoHeaders>vendor_pool_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueHelpRequest=".createConfirmBox"/>
                                                                     <Text text="{NegoHeaders>vendor_pool_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1119,7 +1120,8 @@
                                                             <Label text="회신 통화" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input showValueHelp="true" value="{NegoHeaders>response_currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input showValueHelp="true" value="{NegoHeaders>response_currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueHelpRequest=".createConfirmBox"/>
                                                                     <Text text="{NegoHeaders>response_currency_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
