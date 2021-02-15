@@ -67,7 +67,7 @@ service RemodelRepairMgtService {
 	    , mst.model 
 	    , mst.mold_number 
 	    , mst.mold_sequence     
-	    , ass.class_desc  
+	    , mst.spec_name   
 	    , item.create_user_id 
 	    , item.repair_request_date  
 	    , case when item.repair_progress_status_code = 'RB' 
@@ -114,7 +114,7 @@ service RemodelRepairMgtService {
 	from repairItem.Md_Repair_Item item 
     join sppUserSession.Spp_User_Session_View ses on item.tenant_id = ses.TENANT_ID 
 	join moldMst.Md_Mst mst  on mst.mold_id = item.mold_id and mst.tenant_id = item.tenant_id
-	join  asset.Md_Asset ass on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id 
+ 	join  asset.Md_Asset ass on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id   
 	left join Org.Pur_Operation_Org f on f.org_code = mst.org_code and f.company_code=mst.company_code
     inner join orgMapping.Pur_Org_Type_Mapping j on f.tenant_id = j.tenant_id and f.org_type_code = j.org_type_code and j.process_type_code='DP05' 
     left join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code
@@ -143,7 +143,7 @@ service RemodelRepairMgtService {
                 mst.company_code , 
                 mst.mold_number,
                 mst.mold_sequence,
-                ass.class_desc,
+                mst.spec_name,
                 mst.mold_production_type_code, 
                 CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_PROD_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_production_type_code_nm : String(240) ,
                 item.repair_progress_status_code ,
@@ -163,7 +163,7 @@ service RemodelRepairMgtService {
         from repairItem.Md_Repair_Item item 
         join sppUserSession.Spp_User_Session_View ses on item.tenant_id = ses.TENANT_ID 
         join moldMst.Md_Mst mst on mst.mold_id = item.mold_id and mst.tenant_id = item.tenant_id
-        join asset.Md_Asset ass on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id 
+      /*  join asset.Md_Asset ass on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id */ 
         join user.User u on u.user_id = item.create_user_id and u.tenant_id = item.tenant_id
         left join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code
         left join supplier.Sm_Supplier_Mst sup2 on sup2.tenant_id = mst.tenant_id and sup2.supplier_code = mst.supplier_code
@@ -189,7 +189,7 @@ service RemodelRepairMgtService {
                 mst.mold_sequence, 
                 mst.org_code ,
                 mst.company_code , 
-                ass.class_desc,
+                mst.spec_name,
                 mst.mold_production_type_code, 
                 CM_GET_CODE_NAME_FUNC(mst.tenant_id ,'DP_MD_PROD_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_production_type_code_nm : String(240) ,
                 mst.mold_item_type_code, 
@@ -206,7 +206,7 @@ service RemodelRepairMgtService {
                 null as mold_complete_result_date    : String(240)
         from moldMst.Md_Mst mst 
         join sppUserSession.Spp_User_Session_View ses on mst.tenant_id = ses.TENANT_ID 
-        join asset.Md_Asset ass  on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id
+       /* join asset.Md_Asset ass  on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id */ 
         left join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code
         left join supplier.Sm_Supplier_Mst sup2 on sup2.tenant_id = mst.tenant_id and sup2.supplier_code = mst.supplier_code
         left join supplier.Sm_Supplier_Mst sup3 on sup3.tenant_id = mst.tenant_id and sup3.supplier_code = mst.production_supplier_code

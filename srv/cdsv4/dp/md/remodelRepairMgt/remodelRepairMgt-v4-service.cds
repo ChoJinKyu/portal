@@ -1,8 +1,8 @@
 using { dp as item } from  '../../../../../db/cds/dp/md/DP_MD_REPAIR_ITEM-model';
 
 namespace dp;
-@path : '/dp.RrMgtListV4Service' 
-service RrMgtListV4Service { 
+@path : '/dp.RemodelRepairMgtV4Service' 
+service RemodelRepairMgtV4Service { 
 
     entity RepairItem as projection on item.Md_Repair_Item; // 저장 엔터티 
 
