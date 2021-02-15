@@ -394,8 +394,7 @@ sap.ui.define([
                         // Trailing Zero
                         (numbers||[]).forEach(n => {
                             e[n] = (+e[n] || 0);
-                            return e[n]+"";
-                        })
+                        });
                         return e;
                     })
                 });
