@@ -58,46 +58,26 @@ service spviBasePriceArlV4Service {
         update_user_id         : String(255);
     };
 
- //양산품의ITEM
-    type BasePriceAprlItemType : {
+ //양산품의예외ITEM
+    type BasePriceAprlItemExcType : {
         tenant_id	              : String(5)    ;
         approval_number	          : String(50)   ;
         item_sequence	          : Decimal   ;
         company_code	          : String(10)   ;
         bizunit_code	          : String(10)   ;
-        management_mprice_code	  : String(30)   ;
         base_year	              : String(4)    ;
         apply_start_yyyymm	      : String(6)    ;
         apply_end_yyyymm	      : String(6)    ;
         bizdivision_code	      : String(10)   ;
         plant_code	              : String(10)   ;
-        supply_plant_code	      : String(10)   ;
         supplier_code	          : String(10)   ;
         material_code	          : String(40)   ;
         material_name	          : String(240)  ;
         vendor_pool_code	      : String(20)   ;
         currency_code	          : String(3)    ;
-        base_uom_code        	  : String(30)   ;
-        buyer_empno	              : String(30)   ;
-        base_price	              : Decimal(19,4)    ;
-        pcst	                  : Decimal(19,4)    ;
-        metal_net_price	          : Decimal(19,4)    ;
-        coating_mat_net_price	  : Decimal(19,4)    ;
-        fabric_net_price	      : Decimal(19,4)    ;
-
-        local_create_dtm       : DateTime;
-        local_update_dtm       : DateTime;
-        create_user_id         : String(255);
-        update_user_id         : String(255);
-    };
-
-    type BasePriceAprlDtlType : {
-        tenant_id              : String(5);
-        approval_number        : String(30);
-        item_sequence          : Decimal;
-        metal_type_code        : String(30);
-        metal_net_price        : Decimal(19, 4);
-
+        base_price_exception_reason   : String(300);
+	    apply_flag                    : String(1);
+    
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
         create_user_id         : String(255);
@@ -123,8 +103,7 @@ service spviBasePriceArlV4Service {
         BasePriceAprlApproverType   : array of BasePriceAprlApproverType;
         BasePriceAprlRefererType    : array of BasePriceAprlRefererType;
         BasePriceAprlTypeType       : array of BasePriceAprlTypeType;
-        BasePriceAprlItemType       : array of BasePriceAprlItemType;
-        BasePriceAprlDtlType        : array of BasePriceAprlDtlType;
+        BasePriceAprlItemExcType    : array of BasePriceAprlItemExcType;
         type_code                   : String(10);
     }
 
@@ -135,14 +114,14 @@ service spviBasePriceArlV4Service {
         return_msg      : String(1000);
     };
 
-    action SpViBasePriceAprlProc(inputData : InputAprlDataType) returns OutputDataType;
-    action SpViBasePriceAprlUpdateProc(inputData : InputAprlDataType) returns OutputDataType;
+    action SpViBasePriceAprlExcProc(inputData : InputAprlDataType) returns OutputDataType;
+    action SpViBasePriceAprlExcUpdateProc(inputData : InputAprlDataType) returns OutputDataType;
     
       type InputAprlDataType1 : {
         BasePriceAprlMstType        : array of BasePriceAprlMstType;
     }
 
-    action SpViBasePriceAprlDeleteProc(inputData : InputAprlDataType1) returns OutputDataType;
+    action SpViBasePriceAprlExcDeleteProc(inputData : InputAprlDataType1) returns OutputDataType;
 
 
     
