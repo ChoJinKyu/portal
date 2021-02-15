@@ -732,7 +732,7 @@ public class MoldApprovalV4 implements EventHandler {
                     MoldMasters mMaster =  MoldMasters.create();  
                     mMaster.setTenantId(row.getTenantId());
                     mMaster.setMoldId(row.getMoldId());
-                    mMaster.setMoldProgressStatusCode("ORD_APP");
+                    mMaster.setMoldProgressStatusCode("ORD_CRT");
 
                     CqnUpdate mMasterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(mMaster);
                     Result result = moldApprovalService.run(mMasterUpdate);
