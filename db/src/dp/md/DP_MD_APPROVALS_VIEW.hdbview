@@ -1,50 +1,42 @@
  view DP_MD_APPROVALS_VIEW as
-    select 
-        a.tenant_id
-        ,a.approval_type_code
-        ,CM_GET_CODE_NAME_FUNC (a.tenant_id
+    SELECT 
+        A.TENANT_ID
+        ,A.APPROVAL_TYPE_CODE
+        ,CM_GET_CODE_NAME_FUNC (A.TENANT_ID
                                 ,'DP_MD_APPROVAL_TYPE'
-                                ,a.approval_type_code
+                                ,A.APPROVAL_TYPE_CODE
                                 ,'KO'
-                                ) as approval_type 
-        ,a.approval_number
-        ,a.approval_title
-        ,'['||a.company_code||'] '||e.company_name as company_name
-        ,'['||a.org_code||'] '||f.org_name as org_name
-        ,a.company_code
-        ,a.org_type_code
-        ,a.org_code
-        ,c.model
-        ,c.mold_id
-        ,c.mold_number
-        ,a.requestor_empno
-        ,'['||g.user_english_name||'] '||g.user_korean_name as requestor_name
-        ,a.request_date
-        ,a.approve_status_code
-	    ,CM_GET_CODE_NAME_FUNC (a.tenant_id
+                                ) AS APPROVAL_TYPE 
+        ,A.APPROVAL_NUMBER
+        ,A.APPROVAL_TITLE
+        ,'['||A.COMPANY_CODE||'] '||E.COMPANY_NAME AS COMPANY_NAME
+        ,'['||A.ORG_CODE||'] '||F.ORG_NAME AS ORG_NAME
+        ,A.COMPANY_CODE
+        ,A.ORG_TYPE_CODE
+        ,A.ORG_CODE
+        ,C.MODEL
+        ,C.MOLD_ID
+        ,C.MOLD_NUMBER
+        ,A.REQUESTOR_EMPNO
+        ,'['||G.USER_ENGLISH_NAME||'] '||G.USER_KOREAN_NAME AS REQUESTOR_NAME
+        ,A.REQUEST_DATE
+        ,A.APPROVE_STATUS_CODE
+	    ,CM_GET_CODE_NAME_FUNC (A.TENANT_ID
                                 ,'CM_APPROVE_STATUS'
-                                ,a.approve_status_code
+                                ,A.APPROVE_STATUS_CODE
                                 ,'KO'
-                                ) as approve_status 
-        ,a.approval_contents
-        ,g.email_id
-        ,k.sort_no
-        ,c.mold_sequence
-    from CM_APPROVAL_MST a
-    join dp_md_approval_dtl b 
-        on a.approval_number = b.approval_number and a.tenant_id = b.tenant_id
-    left join dp_md_mst c on b.mold_id = c.mold_id and b.tenant_id = c.tenant_id
-    left join cm_org_company e on e.company_code = a.company_code
-    left join cm_pur_operation_org f on f.org_code = a.org_code and f.company_code=a.company_code
-    inner join cm_pur_org_type_mapping j on f.tenant_id = j.tenant_id and f.org_type_code = j.org_type_code and j.process_type_code='DP05' 
-    left join cm_hr_employee g on g.employee_number = a.requestor_empno and g.tenant_id = a.tenant_id
-    left join cm_user i on g.employee_number = i.employee_number and i.tenant_id = a.tenant_id
-    inner join 
-        (select t1.code, t1.sort_no, t1.group_code, t2.language_cd, t1.tenant_id 
-            from cm_code_dtl t1 join cm_code_lng t2 
-            on t1.tenant_id = t2.tenant_id and t1.code = t2.code and t1.group_code = t2.group_code
-    		where t2.group_code='DP_MD_APPROVAL_TYPE' 
-    		and t2.language_cd='KO'
-    	) k 
-    on a.approval_type_code=k.code and k.tenant_id = a.tenant_id
-    order by k.sort_no asc;
+                                ) AS APPROVE_STATUS 
+        ,A.APPROVAL_CONTENTS
+        ,G.EMAIL_ID
+        ,K.SORT_NO
+        ,C.MOLD_SEQUENCE
+    FROM CM_APPROVAL_MST A
+    JOIN DP_MD_APPROVAL_DTL B ON A.APPROVAL_NUMBER = B.APPROVAL_NUMBER AND A.TENANT_ID = B.TENANT_ID
+    LEFT JOIN DP_MD_MST C ON B.MOLD_ID = C.MOLD_ID AND B.TENANT_ID = C.TENANT_ID
+    JOIN CM_ORG_COMPANY E ON E.TENANT_ID = A.TENANT_ID AND E.COMPANY_CODE = A.COMPANY_CODE
+    JOIN CM_PUR_OPERATION_ORG F ON F.TENANT_ID = A.TENANT_ID AND F.ORG_CODE = A.ORG_CODE AND F.COMPANY_CODE=A.COMPANY_CODE
+    JOIN CM_PUR_ORG_TYPE_MAPPING J ON F.TENANT_ID = J.TENANT_ID AND F.ORG_TYPE_CODE = J.ORG_TYPE_CODE AND J.PROCESS_TYPE_CODE='DP05' 
+    JOIN CM_HR_EMPLOYEE G ON G.EMPLOYEE_NUMBER = A.REQUESTOR_EMPNO AND G.TENANT_ID = A.TENANT_ID
+    JOIN CM_USER I ON I.EMPLOYEE_NUMBER = A.REQUESTOR_EMPNO AND I.TENANT_ID = A.TENANT_ID
+    JOIN CM_CODE_DTL K ON K.TENANT_ID = A.TENANT_ID AND K.GROUP_CODE='DP_MD_APPROVAL_TYPE' AND K.CODE = A.APPROVAL_TYPE_CODE
+    ORDER BY K.SORT_NO ASC;
