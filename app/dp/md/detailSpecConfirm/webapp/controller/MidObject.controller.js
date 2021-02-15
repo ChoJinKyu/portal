@@ -56,6 +56,8 @@ sap.ui.define([
 			oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("schedule"));
             oTransactionManager.addDataModel(this.getModel("spec"));
+
+            this._oFragments = {};
 		}, 
 
 		/* =========================================================== */
@@ -464,13 +466,14 @@ sap.ui.define([
             }
         },
         _loadFragment: function (sFragmentName, oHandler) {
+
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
 					name: "dp.md.detailSpecConfirm.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
+                    this._oFragments[sFragmentName] = oFragment;
                     if(oHandler) oHandler(oFragment);
 				}.bind(this));
 			}else{

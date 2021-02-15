@@ -54,6 +54,8 @@ sap.ui.define([
 			oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("schedule"));
             oTransactionManager.addDataModel(this.getModel("spec"));
+
+            this._oFragments = {};
 		}, 
 
 		/* =========================================================== */
