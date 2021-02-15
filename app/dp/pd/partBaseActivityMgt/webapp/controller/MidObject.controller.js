@@ -503,13 +503,15 @@ sap.ui.define([
                                     
                                 }else{
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    // sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error(rst.return_msg);
                                 }
                             },
                             error: function (rst) {
                                     console.log("eeeeee");
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error("예기치 않은 오류가 발생하였습니다.");
+                                    // sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     // v_this.onSearch(rst.return_msg );
                             }
                         });
