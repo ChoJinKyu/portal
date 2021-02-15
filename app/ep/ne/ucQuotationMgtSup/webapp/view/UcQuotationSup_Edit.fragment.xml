@@ -17,7 +17,7 @@
                     constraints: {
                         maxLength: 200
                     }
-                }" required="true" editable="true" width="100%"/>
+                }" required="true" editable="true" width="70%"/>
             </VBox>
         </form:SimpleForm>
 
