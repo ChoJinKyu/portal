@@ -211,7 +211,7 @@
                         </VBox>
                         <VBox height="4em">
                             <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="searchDescription"></Label>
-                            <Input id="searchDescription" placeholder="Input data" value="{searchCon>/class_desc}" />
+                            <Input id="searchDescription" placeholder="Input data" value="{searchCon>/spec_name}" />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -278,7 +278,7 @@
                     <table:Column id="rrMgtDescriptionColumn" width="10em" hAlign="Center">
                         <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text id="spec_name" text="{list>class_desc}"/>
+                            <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="rrMgtRequestNoColumn" width="7em" hAlign="Center">

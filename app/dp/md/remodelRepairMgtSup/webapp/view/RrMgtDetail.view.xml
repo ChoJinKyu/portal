@@ -206,7 +206,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                              />
-                                        <Text text="{rrMgt>/class_desc}"/>
+                                        <Text text="{rrMgt>/spec_name}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
 					                    </layoutData>
