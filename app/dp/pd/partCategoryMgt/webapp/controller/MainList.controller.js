@@ -88,6 +88,7 @@ sap.ui.define([
                             }
                         }), "tree");
 
+                        this.getModel("tree").getData()
                         
 
                     }).bind(this))

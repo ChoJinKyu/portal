@@ -147,17 +147,17 @@
                                 <Text text="{tree>category_group_code}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/CATEGORY_GROUP} {I18N>/NAME}" hAlign="Left">    
+                        <t:Column label="{I18N>/CATEGORY} {I18N>/GROUP_NAME}" hAlign="Left" width="11%">    
                             <t:template>
                                 <Text text="{tree>category_group_name}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/STATUS}" hAlign="Center">    
+                        <t:Column label="{I18N>/STATUS}" hAlign="Center"  width="6%">    
                             <t:template>
                                 <Text text="{= ${tree>active_flag} === true ? 'Active' : 'Inactive'}"/>
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/UPDATE_USER_ID}" hAlign="Center">    
+                        <t:Column label="{I18N>/UPDATE_USER_ID}" hAlign="Center"  width="9%">    
                             <t:template>
                                 <Text text="{tree>update_user_id}" wrapping="false" />
                             </t:template>

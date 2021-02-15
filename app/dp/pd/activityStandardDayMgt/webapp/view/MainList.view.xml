@@ -17,7 +17,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/ACTIVITY} {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
+                    <Title text="Activity {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
                 </f:heading>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -59,8 +59,7 @@
                                     </items>
                                 </ComboBox>
                                 <layoutData>
-                                    <layout:GridData
-                                        span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL2 L2 M3 S12" />
                                 </layoutData>
                         </VBox>
                         <VBox>
@@ -82,7 +81,7 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -117,14 +116,14 @@
                                         additionalText="{util>code}"/></items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/ACTIVITY_NAME}: " labelFor="searchActivity"></Label>
                             <Input id="searchActivity" change=".onPageSearchButtonPress"/>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
@@ -147,7 +146,7 @@
                 width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title id="mainTableTitle" text="{I18N>/ACTIVITY} {I18N>/STANDARD_DAYS} {I18N>/DISPLAY} ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
+                        <Title id="mainTableTitle" text="Activity {I18N>/STANDARD_DAYS} {I18N>/LIST} ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
                         <ToolbarSeparator/>
