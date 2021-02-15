@@ -24,7 +24,7 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
-                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" }
             }
         },
 
@@ -111,7 +111,7 @@ sap.ui.define([
                     }),
                     template: new Text({
                         text: "{company_code}",
-                        textAlign: "Center",
+                        textAlign: "Left",
                         width: "100%"
                     })
                 }),
@@ -124,7 +124,7 @@ sap.ui.define([
                     }),
                     template: new Text({
                         text: "{bizunit_code}",
-                        textAlign: "Center",
+                        textAlign: "Left",
                         width: "100%"
                     })
                 }),

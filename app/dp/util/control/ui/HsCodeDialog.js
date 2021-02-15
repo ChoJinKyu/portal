@@ -28,8 +28,12 @@ sap.ui.define([
 
         createSearchFilters: function(){
             this.oCompanyCode = new Input();
+            this.oCompanyHsCode = new Input();
+            this.oCompanyHsText = new Input();
             
             this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
+            this.oCompanyHsCode.attachEvent("change", this.loadData.bind(this));
+            this.oCompanyHsText.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
@@ -37,8 +41,23 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/COUNTRY_CODE")}),
                         this.oCompanyCode
                     ],
-                    layoutData: new GridData({ span: "XL6 L6 M6 S12"})
+                    layoutData: new GridData({ span: "XL2 L3 M3 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/HS_CODE")}),
+                        this.oCompanyHsCode
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/HS_TEXT")}),
+                        this.oCompanyHsText
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S10"})
                 })
+
             ];
         },
 
@@ -53,7 +72,7 @@ sap.ui.define([
                     }),
                     template: new Text({
                         text: "{country_code}",
-                        textAlign: "Center",
+                        textAlign: "Left",
                         width: "100%"
                     })
                 }),
@@ -66,7 +85,7 @@ sap.ui.define([
                     }),
                     template: new Text({
                         text: "{hs_code}",
-                        textAlign: "Center",
+                        textAlign: "Left",
                         width: "100%"
                     })
                 }),
@@ -88,12 +107,22 @@ sap.ui.define([
 
         loadData: function(){
             var sCompanyCode = this.oCompanyCode.getValue(),
+                sCompanyHsCode = this.oCompanyHsCode.getValue(),
+                sCompanyHsText = this.oCompanyHsText.getValue(),
                 aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2101")
                 ];
 
                 if(sCompanyCode){
                     aFilters.push(new Filter("tolower(country_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sCompanyHsCode){
+                    aFilters.push(new Filter("tolower(hs_code)", FilterOperator.Contains, "'" + sCompanyHsCode.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sCompanyHsText){
+                    aFilters.push(new Filter("tolower(hs_text)", FilterOperator.Contains, "'" + sCompanyHsText.toLowerCase().replace("'","''") + "'"));
                 }
 
 

@@ -20,7 +20,7 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_group_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "material_group_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "material_group_code" }
             }
         },
 
@@ -29,7 +29,10 @@ sap.ui.define([
         createSearchFilters: function(){
 
             this.oMaterialGroup = new Input();
+            this.oMaterialGroupName = new Input();
+
             this.oMaterialGroup.attachEvent("change", this.loadData.bind(this));
+            this.oMaterialGroupName.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
@@ -37,7 +40,14 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/GROUP_CODE")}),
                         this.oMaterialGroup
                     ],
-                    layoutData: new GridData({ span: "XL6 L6 M6 S12"})
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/GROUP_CODE_NAME")}),
+                        this.oMaterialGroupName
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
             ];
         },
@@ -53,7 +63,7 @@ sap.ui.define([
                     }),
                     template: new Text({
                         text: "{material_group_code}",
-                        textAlign: "Center",
+                        textAlign: "Left",
                         width: "100%"
                     })
                 }),
@@ -75,12 +85,17 @@ sap.ui.define([
 
         loadData: function(){
             var sMaterialGroup = this.oMaterialGroup.getValue(),
+                sMaterialGroupName = this.oMaterialGroupName.getValue(),
                 aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2101")
                 ];
 
                 if(sMaterialGroup){
                     aFilters.push(new Filter("tolower(material_group_code)", FilterOperator.Contains, "'" + sMaterialGroup.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sMaterialGroupName){
+                    aFilters.push(new Filter("tolower(material_group_name)", FilterOperator.Contains, "'" + sMaterialGroupName.toLowerCase().replace("'","''") + "'"));
                 }
 
 

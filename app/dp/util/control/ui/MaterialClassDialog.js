@@ -20,7 +20,7 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_class_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "material_class_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "material_class_code" }
             }
         },
 
@@ -28,8 +28,10 @@ sap.ui.define([
 
         createSearchFilters: function(){
             this.oMaterialClassCode = new Input();
+            this.oMaterialClassName = new Input();
             
             this.oMaterialClassCode.attachEvent("change", this.loadData.bind(this));
+            this.oMaterialClassName.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
@@ -37,7 +39,14 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")}),
                         this.oMaterialClassCode
                     ],
-                    layoutData: new GridData({ span: "XL6 L6 M6 S12"})
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/NAME")}),
+                        this.oMaterialClassName
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
             ];
         },
@@ -53,7 +62,7 @@ sap.ui.define([
                     }),
                     template: new Text({
                         text: "{material_class_code}",
-                        textAlign: "Center",
+                        textAlign: "Left",
                         width: "100%"
                     })
                 }),
@@ -75,12 +84,17 @@ sap.ui.define([
 
         loadData: function(){
             var sMaterialClassCode = this.oMaterialClassCode.getValue(),
+                sMaterialClassName = this.oMaterialClassName.getValue(),
                 aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2101")
                 ];
 
                 if(sMaterialClassCode){
                     aFilters.push(new Filter("tolower(material_class_code)", FilterOperator.Contains, "'" + sMaterialClassCode.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sMaterialClassName){
+                    aFilters.push(new Filter("tolower(material_class_name)", FilterOperator.Contains, "'" + sMaterialClassName.toLowerCase().replace("'","''") + "'"));
                 }
 
 

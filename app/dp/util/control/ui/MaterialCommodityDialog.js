@@ -20,7 +20,7 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "commodity_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "commodity_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "commodity_code" }
             }
         },
 
@@ -28,8 +28,10 @@ sap.ui.define([
 
         createSearchFilters: function(){
             this.oMaterialCommodity = new Input();
+            this.oMaterialCommodityName = new Input();
             
             this.oMaterialCommodity.attachEvent("change", this.loadData.bind(this));
+            this.oMaterialCommodityName.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
@@ -37,7 +39,14 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/COMMODITY")}),
                         this.oMaterialCommodity
                     ],
-                    layoutData: new GridData({ span: "XL6 L6 M6 S12"})
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/COMMODITY")+" "+this.getModel("I18N").getText("/NAME")}),
+                        this.oMaterialCommodityName
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
             ];
         },
@@ -53,7 +62,7 @@ sap.ui.define([
                     }),
                     template: new Text({
                         text: "{commodity_code}",
-                        textAlign: "Center",
+                        textAlign: "Left",
                         width: "100%"
                     })
                 }),
@@ -75,12 +84,17 @@ sap.ui.define([
 
         loadData: function(){
             var sMaterialCommodity = this.oMaterialCommodity.getValue(),
+                sMaterialCommodityName = this.oMaterialCommodityName.getValue(),
                 aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2101")
                 ];
 
                 if(sMaterialCommodity){
                     aFilters.push(new Filter("tolower(commodity_code)", FilterOperator.Contains, "'" + sMaterialCommodity.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sMaterialCommodityName){
+                    aFilters.push(new Filter("tolower(commodity_name)", FilterOperator.Contains, "'" + sMaterialCommodityName.toLowerCase().replace("'","''") + "'"));
                 }
 
 
