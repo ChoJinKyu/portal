@@ -148,7 +148,10 @@ sap.ui.define([
 				"product_activity_code": "",
 				"language_cd": "",
 				"code_name": ""			
-            }, "/PdPartBaseActivityLng");
+            }, "/PdPartBaseActivityLng", 0);
+
+
+            
 
 		},
 
