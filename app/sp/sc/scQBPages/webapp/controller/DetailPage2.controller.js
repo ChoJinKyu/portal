@@ -510,6 +510,7 @@ sap.ui.define([
 
                         // this.getView().byId("tableLines").getVisibleRowCount();
                         
+                        oView.getModel("NegoHeaders").refresh(true);
 
                         // data.value[0].Items.lengt
                         // oView.byId("table1")
