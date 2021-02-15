@@ -356,9 +356,22 @@ sap.ui.define([
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                         oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
                         oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
-                        oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
-                        oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
-                        oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice")[0].note_content = decodeURIComponent(escape(window.atob(data.value[0].ItemsNonPrice[0].note_content)));
+                        // oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , this.getDecodeString(data.value[0].nego_document_desc)) ;//decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
+                        // oView.getModel("NegoHeaders").setProperty("/note_content" , this.getDecodeString(data.value[0].note_content)) ;//decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+                        if(data.value[0].nego_document_desc !=null){
+                            console.log("decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc)))======", decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))));
+                            oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
+                        }
+                        if(data.value[0].note_content !=null){
+                            console.log("decodeURIComponent(escape(window.atob(data.value[0].note_content)))======", decodeURIComponent(escape(window.atob(data.value[0].note_content))));
+                            oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+                        }
+                        var itemNonPrices = oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice");
+                        itemNonPrices.forEach(element => {
+                            element.note_content = this.getDecodeString(element.note_content);//decodeURIComponent(escape(window.atob(element.note_content)));
+                            
+                        });
+                        // oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice")[0].note_content = decodeURIComponent(escape(window.atob(data.value[0].ItemsNonPrice[0].note_content)));
                         // editable="{=${propInfo>/isEditMode}}" 
                         this.byId("reDescription").setEditable(false);
                         this.byId("reNoteToSupplier").setEditable(false);
@@ -401,6 +414,10 @@ sap.ui.define([
                         console.log( "error :: " + e.responseText);
                     }
                 });
+            },
+
+            getDecodeString: function (oData) {
+                return decodeURIComponent(escape(window.atob(oData)));
             },
 
             _update : function(uPath, uArray){
@@ -736,7 +753,6 @@ sap.ui.define([
                 }
 
             },
-
             getCheckSupplierCode: function (supplierCode) {
                 var sFlag = true;
                 this._selectedLineItem.Suppliers.forEach(element => {
@@ -1106,6 +1122,14 @@ sap.ui.define([
             onPressNPSelectButton: function (e) {
                 // @ts-ignore
                 this._NPSelectIndex = e.oSource.getParent().getIndex();
+
+                var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+                this._selectedNPItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+
+                this.getView().getModel("NegoItemNonPrice").setData(this._selectedNPItem);
+                
+                // this._selectedNPItem = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+
                 // @ts-ignore
                 // this._NonPriceInfPopup.open();
                 if (!this._NonPriceInf) {
@@ -1233,9 +1257,9 @@ sap.ui.define([
                                     if( cell.getId().indexOf("toggleBtnDisplay") != -1 ) { 
                                         objTemp.bidding_start_net_price_flag = cell.getPressed() ? "Y" : "N" ;
                                     }
-                                    if( cell.getId().indexOf("datePickerMaturitydate") != -1 ) { 
-                                        objTemp.maturity_date = cell.getDateValue();
-                                    }
+                                    // if( cell.getId().indexOf("datePickerMaturitydate") != -1 ) { 
+                                    //     objTemp.maturity_date = cell.getDateValue();
+                                    // }
                                     if( cell.getId().indexOf("inputCurrentPrice") != -1 ) { 
                                         objTemp.current_price = Number(cell.getValue());
                                     }
@@ -1376,13 +1400,22 @@ sap.ui.define([
                 if( typeof returnValue === "number" ) {
                     result = Number( oObj[oField] );
                 }else if( typeof returnValue === "object" ){ // date type
-                    result = new Date( oObj[oField] );
+                    result = returnValue === null ? null : new Date( oObj[oField] );
                 }else {
+                    
                     if( returnValue === "encoding" ){
-                        result = this.htmlEncoding(oObj[oField]);
+                        
+                        if(oObj[oField]){
+                            result = this.htmlEncoding(oObj[oField]);
+                        }else{
+                            result = null;
+                            returnValue = null;
+                        }
+                        
                     }else {
                         result = oObj[oField];
-                    }                    
+                        // result = null;
+                    }                  
                 }
 
                 return oObj.hasOwnProperty(oField) ? result : returnValue;
@@ -1512,7 +1545,7 @@ sap.ui.define([
                         vendor_pool_code             : this.getCheckObject(element,"vendor_pool_code",""),
                         request_quantity             : this.getCheckObject(element,"request_quantity",0),
                         uom_code                     : this.getCheckObject(element,"uom_code",""),
-                        maturity_date                : this.getCheckObject(element,"maturity_date",new Date()),
+                        maturity_date                : this.getCheckObject(element,"maturity_date",null),
                         currency_code                : this.getCheckObject(element,"currency_code",""),
                         response_currency_code       : this.getCheckObject(element,"response_currency_code",""),
                         exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
