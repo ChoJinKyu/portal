@@ -135,7 +135,7 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <t:Column id="mainConstQuotationNumber" width="12rem">
+                <t:Column id="mainConstQuotationNumber" width="12rem"  hAlign="Center">
                 <Label text="견적서번호" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>const_quotation_number}"/>
