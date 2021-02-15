@@ -1142,7 +1142,6 @@ sap.ui.define([
                         requestor_empno     : (item.requestor_empno) ? item.requestor_empno : this.$session.employee_number,
                         requestor_name      : (item.requestor_name) ? item.requestor_name : this.$session.employee_name,
                         delivery_request_date: that._fnConvertDate(item.delivery_request_date),
-                        //delivery_request_date: (item.delivery_request_date) ? item.delivery_request_date : "",
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
                         price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
                         pr_progress_status_code: "INIT",
@@ -1351,9 +1350,6 @@ sap.ui.define([
                 }
             }), function(result) {
                 var oItemData = result.getParameter("item");
-                //var oViewModel = that.getModel("viewModel");
-                //var oSelectedData = oViewModel.getProperty(sSelectedPath);
-
                 if(oItemData.account_code && oItemData.account_code !== ""){
                     oSelectedData.account_code = oItemData.account_code;                    
                     oViewModel.refresh();
@@ -1403,7 +1399,6 @@ sap.ui.define([
                 var oItemData = result.getParameter("item");
                 oSelectedData.org_code = (oItemData.org_code && oItemData.org_code !== "") ? oItemData.org_code:"";
                 oSelectedData.org_name = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name:"";
-                // oSelectedData.org_name_desc = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name+" ["+oItemData.org_code+"]":"";
                 oSelectedData.org_name_desc =that._fnGetCodeNameDesc(oItemData.org_code, oItemData.org_name);
                 oSelectedData.org_type_code = (oItemData.org_type_code && oItemData.org_type_code !== "") ? oItemData.org_type_code:"";
                 oSelectedData.material_code = oItemData.material_code;
@@ -1457,7 +1452,6 @@ sap.ui.define([
                 if(oItemData.org_code && oItemData.org_code !== ""){
                     oSelectedData.org_code = oItemData.org_code;
                     oSelectedData.org_name = oItemData.org_name;
-                    //oSelectedData.org_name_desc = oItemData.org_name + " [" + oItemData.org_code + "]"; 
                     oSelectedData.org_name_desc =that._fnGetCodeNameDesc(oItemData.org_code, oItemData.org_name);  
                     oSelectedData.org_type_code = oItemData.org_type_code;                
                     oViewModel.refresh();
@@ -1522,7 +1516,6 @@ sap.ui.define([
                     oPrItemData.pr_item_number = iPrItemNumber;
                     oPrItemData.org_code = (item.org_code && item.org_code !== "") ? item.org_code:"";
                     oPrItemData.org_name = (item.org_name && item.org_name !== "") ? item.org_name:"";
-                    //oPrItemData.org_name_desc = item.org_name + " [" + item.org_code + "]";  
                     oPrItemData.org_name_desc =that._fnGetCodeNameDesc(item.org_code, item.org_name);                  
                     oPrItemData.material_code = item.material_code;
                     oPrItemData.pr_desc = (item.material_desc && item.material_desc !== "") ? item.material_desc:"";

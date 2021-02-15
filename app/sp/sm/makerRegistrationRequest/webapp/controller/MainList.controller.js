@@ -42,7 +42,7 @@ sap.ui.define([
 		 * Called when the mainList controller is instantiated.
 		 * @public
 		 */
-         onInit: function () {
+        onInit: function () {
             var oView = this.getView(),
                 oModel = this.getOwnerComponent().getModel(),
                 oI18NModel = this.getOwnerComponent().getModel("I18N"),
@@ -63,14 +63,14 @@ sap.ui.define([
                     console.log("error");
                 }
             });
+
             // //MakerRegistrationRequestView count
-            // this.setModel(new JSONModel(), "countModel");
-            // this._getListCount();
-            //list model
-            this.setModel(new JSONModel(), "listModel");
+            this.setModel(new JSONModel(), "countModel");
+            this._getListCount();
 
         },
 
+      
         /**
         * Search 버튼 클릭(Filter 추출)
         */
@@ -95,31 +95,11 @@ sap.ui.define([
             if (oDateValue) {
                 aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, this.dateFormatter.toDateString(oDateValue), this.dateFormatter.toDateString(oSecondDateValue)));
             }
-            // this.byId("mainTable").getBinding("items").filter(aFilters);
-            this._getList(aFilters);
-            // this._getListCount(aFilters);
+            this.byId("mainTable").getBinding("items").filter(aFilters);
+            // this._getList(aFilters);
+            this._getListCount(aFilters);
         },
-        _getList: function (filtersParam) {
-            var oView = this.getView();
-            var oModel = this.getModel();
-            filtersParam = Array.isArray(filtersParam) ? filtersParam : [];
-            oView.setBusy(true);
 
-            oModel.read("/MakerRegistrationRequestView", {
-                filters: filtersParam,
-                urlParameters: {
-                    "$orderby": "maker_request_sequence"
-                },
-                success: function (data) {
-                    oView.setBusy(false);
-                    oView.getModel("listModel").setData(data);
-                },
-                error: function (data) {
-                    oView.setBusy(false);
-                    console.log("error", data);
-                }
-            });
-        },
         _getListCount: function (filtersParam) {
             var oView = this.getView(),
                 oModel = this.getOwnerComponent().getModel();

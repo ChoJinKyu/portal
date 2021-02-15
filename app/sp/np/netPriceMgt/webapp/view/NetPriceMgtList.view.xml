@@ -145,6 +145,11 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
+                            <Label text="{I18N>/APPROVAL_NO}" labelFor="search_approval_no"></Label>
+                            <Input id="search_approval_no" type="Text" value="" />
+                            <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
+                        </VBox>
+                        <VBox>
                             <Label text="{I18N>/TITLE}" labelFor="search_net_price_title"></Label>
                             <Input id="search_title" type="Text" value="" />
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
@@ -171,14 +176,15 @@
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/SUPPLIER_TYPE}" labelFor="search_supplier"></Label>
-                            <MultiInput id="search_supplier" type="Text" showValueHelp="true" valueHelpRequest=".vhSupplierCode" />
+                            <Label text="{I18N>/SUPPLIER}" labelFor="search_supplier"></Label>
+                            <!-- <MultiInput id="search_supplier" type="Text" showValueHelp="true" valueHelpRequest=".vhSupplierCode" /> -->
+                            <Input id="search_supplier" type="Text" showValueHelp="true" valueHelpRequest=".vhSupplierCode" />
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/REQUESTOR}"></Label>
-                            <MultiInput id="multiInputWithEmployeeValueHelp" placeholder="Choose employees from the ValueHelp" showValueHelp="true" valueHelpRequest=".vhEmployeeCode">
-                            </MultiInput>
+                            <!-- <MultiInput id="multiInputWithEmployeeValueHelp" placeholder="Choose employees" showValueHelp="true" valueHelpRequest=".vhEmployeeCode"/> -->
+                            <MultiInput id="multiInputWithEmployeeValueHelp" placeholder="Choose employees" showValueHelp="true" valueHelpRequest=".vhEmployeeCode"/>
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
                         </VBox>
                     </form:content>
@@ -194,7 +200,7 @@
                 cellClick=".fnDetail">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title text="{I18N>/BASE_PRICE_LIST} ({= ${list>/NpApprovalListView}.length || 0})" level="H2"/>
+                        <Title text="{I18N>/NET_PRICE_APPROVAL_LIST} ({= ${list>/NpApprovalListView}.length || 0})" level="H2"/>
                         <ToolbarSpacer />
                         <Button text="Create" type="Emphasized" press=".fnCreate" />
                     </OverflowToolbar>

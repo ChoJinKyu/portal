@@ -1,4 +1,9 @@
 
+    <!--     
+     * @description Remodel/Repair Management List(협력사) 상세 
+     * @date 2021.02.08 
+     * @author jinseon.lee 
+     -->
     <mvc:View controllerName="dp.md.remodelRepairMgtList.controller.RrMgtDetail" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
@@ -239,9 +244,11 @@
                                            />
                                         <Input
                                             value="{rrMgt>/mold_mfger_code_nm}"
-                                            width="10em"
+                                            width="100%" 
+                                            showValueHelp="true"
                                             placeholder="Input data" 
-                                            editable="{mode>/editFlag}"
+                                            editable="{mode>/editFlag}" 
+                                            valueHelpRequest=".onMoldSupplierValuePress"
                                             >
                                         </Input>
                                         <layoutData>
