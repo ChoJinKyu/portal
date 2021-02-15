@@ -12,9 +12,10 @@ sap.ui.define([
   "sap/m/MessageToast",
   "sap/ui/model/Sorter",
   "sap/ui/core/Fragment",
-  "dp/tc/projectMgt/custom/TcMaterialMasterDialog"
+  "dp/tc/projectMgt/custom/TcMaterialMasterDialog",
+  "ext/lib/util/ExcelUtil"
 ],
-  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Formatter, Multilingual, Filter, FilterOperator, MessageBox, MessageToast, Sorter, Fragment, TcMaterialMasterDialog) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Formatter, Multilingual, Filter, FilterOperator, MessageBox, MessageToast, Sorter, Fragment, TcMaterialMasterDialog, ExcelUtil) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.McstBomInfo", {
@@ -634,7 +635,17 @@ sap.ui.define([
         },
 
         onExportSheet: function() {
-            MessageToast.show("준비중", {at: "center center"}); 
+            //MessageToast.show("준비중", {at: "center center"});
+            var oTable = this.byId("tblPartListTable");
+            var oData = this.getModel("partListModel").getProperty("/PartListView");
+            var sFileName = this.I18N.getText("/BOM");
+            debugger;
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+
         },
 
         onInputWithEmployeeValuePress: function(oEvent){

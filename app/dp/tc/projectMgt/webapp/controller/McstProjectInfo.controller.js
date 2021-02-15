@@ -389,7 +389,9 @@ sap.ui.define([
             this.getRouter().navTo("ProjectMgtList", {});
         }
 
-
+        , custom_sort: function(a, b) {
+           return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
+        }
 
         /**
          * pivot data
@@ -400,6 +402,7 @@ sap.ui.define([
             //Grid Table 별로 data 가공
             var oSimilarModelData = oDetailData.mcst_similar_model ? oDetailData.mcst_similar_model : [];//유사모델
             var oEvents = oDetailData.mcst_events ? oDetailData.mcst_events.results : [];//개발일정
+            oEvents.sort(this.custom_sort);
 
             var oMtlmob = oDetailData.mcst_mtlmob ? oDetailData.mcst_mtlmob.results : [];//판가/물동/원가의 예상물동
             var oSalesPrice = oDetailData.mcst_sales_price ? oDetailData.mcst_sales_price.results : [];//판가/물동/원가의 판가

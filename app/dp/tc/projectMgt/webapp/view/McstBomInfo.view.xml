@@ -238,7 +238,7 @@
                         <Button text="{I18N>/ROW_DELETE}" type="Transparent" press=".onPartListDeleteButtonPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <Button text="{I18N>/COMPARE_BOM}" type="Transparent" press=".onCompareBomPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <Button text="{I18N>/BOM_MAPPING}" type="Transparent" press=".onBomInfoMappingPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
-                        <Button text="{I18N>/BOM}{I18N>/INFORMATION}" type="Transparent" press=".onBomInfo" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="{I18N>/LOAD_BOM}" type="Transparent" press=".onBomInfo" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <ToolbarSeparator/>
                         <Button text="{I18N>/INITIALIZE}" type="Emphasized" press=".onSearchButtonPress" />
                         <Button text="Save" type="Emphasized" press=".onDraftPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
@@ -272,7 +272,10 @@
                                             valueHelpRequest=".onMaterialCodeValueHelpPress"
                                             visible="{= ${partListModel>_row_state_} === 'C' ? true : false }" />
                             </HBox>
-						</t:template>
+                        </t:template>
+                        <t:customData>
+                            <core:CustomData key="width" value="15" />
+                        </t:customData>
                     </t:Column>
                     <t:Column hAlign="Left" width="auto" >
                         <Label text="{I18N>/MATERIAL_DESC}" required="true" textAlign="Center" width="100%"/>
@@ -345,7 +348,10 @@
                                 text="{partListModel>change_reason}"
                                 emphasized="true"
                                 press=".onChangeNumberLinkPress" />
-						</t:template>
+                        </t:template>
+                        <t:customData>
+                            <core:CustomData key="width" value="40" />
+                        </t:customData>
                     </t:Column>
                 </t:columns>
             </t:Table>
