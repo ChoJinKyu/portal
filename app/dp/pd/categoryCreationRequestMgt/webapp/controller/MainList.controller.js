@@ -168,6 +168,14 @@ sap.ui.define([
             } else {
                 var aSearchFilters = this._getSearchStates();
                 var aSorter = this._getSorter();
+
+                if(this.byId("searchCategoryCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCategoryCombo")) !== true) {
+                    MessageToast.show("필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchCategoryCombo"));
+                }
+                
                 this._applySearch(aSearchFilters, aSorter);
             }
         },

@@ -54,6 +54,13 @@ sap.ui.define([
 
             onSearch: function (event) {
                 var predicates = [];
+                if(this.byId("searchCategoryCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCategoryCombo")) !== true) {
+                    MessageToast.show("필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchCategoryCombo"));
+                }
+
                 if (!!this.byId("searchCategoryCombo").getSelectedKey()) {
                     predicates.push(new Filter("category_group_code", FilterOperator.EQ, this.byId("searchCategoryCombo").getSelectedKey()));
                 }
