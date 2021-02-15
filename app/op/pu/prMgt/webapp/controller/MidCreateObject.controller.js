@@ -1128,6 +1128,7 @@ sap.ui.define([
                         org_name            : (item.org_name) ? item.org_name : "",
                         org_name_desc       : that._fnGetCodeNameDesc(item.org_code, item.org_name),
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
+                        buyer_department_code : item.buyer_department_code || "",
                         user_local_name     : (item.user_local_name) ? item.user_local_name : "",
                         //currency_code       : (item.currency_code) ? item.currency_code : "KRW",
                         currency_code         : item.currency_code || "KRW",
@@ -1224,8 +1225,7 @@ sap.ui.define([
                 MultiSelection: false,
                 items: {
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
-                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
                     ],
                     sorters: [
                         new Sorter("employee_number")
@@ -1235,7 +1235,8 @@ sap.ui.define([
                 var oItemData = result.getParameter("item");
                 if(oItemData.employee_number && oItemData.employee_number !== ""){
                     oSelectedData.buyer_empno = oItemData.employee_number;                    
-                    oSelectedData.user_local_name = oItemData.user_local_name;    
+                    oSelectedData.user_local_name = oItemData.user_local_name;                    
+                    oSelectedData.buyer_department_code = oItemData.department_id;  
                     oViewModel.refresh();
                 }           
             });

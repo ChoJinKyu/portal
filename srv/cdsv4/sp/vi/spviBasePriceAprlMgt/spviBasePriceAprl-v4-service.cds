@@ -128,25 +128,22 @@ service spviBasePriceArlV4Service {
         type_code                   : String(10);
     }
 
+
+
     type OutputDataType : {
         return_code     : String(30);
         return_msg      : String(1000);
     };
 
     action SpViBasePriceAprlProc(inputData : InputAprlDataType) returns OutputDataType;
-
-    type InputRequestorDataType : {
-        cmd                           : String(30);        // only upsert
-        BasePriceArlChangeRequestor   : array of BasePriceAprlChangeRequestorType;
-        debug                         : Boolean;
+    action SpViBasePriceAprlUpdateProc(inputData : InputAprlDataType) returns OutputDataType;
+    
+      type InputAprlDataType1 : {
+        BasePriceAprlMstType        : array of BasePriceAprlMstType;
     }
 
-    type OutputDataChangeRequestorType : {
-        return_code     : String(30);
-        return_msg      : String(1000);
-        return_param    : String(5000);
-        return_rs       : array of BasePriceAprlChangeRequestorType;
-    };
+    action SpViBasePriceAprlDeleteProc(inputData : InputAprlDataType1) returns OutputDataType;
 
-    action SpViBasePriceChangeRequestorProc(inputData : InputRequestorDataType) returns OutputDataChangeRequestorType;
+
+    
 }

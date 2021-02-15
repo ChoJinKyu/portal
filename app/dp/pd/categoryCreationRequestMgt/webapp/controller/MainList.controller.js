@@ -209,7 +209,7 @@ sap.ui.define([
 			    aSearchFilters.push(new Filter("progress_status_code", FilterOperator.EQ, status));
             }
 
-            var searchCategoryCombo = this.getView().byId("searchCategoryCombo").getValue();
+            var searchCategoryCombo = this.getView().byId("searchCategoryCombo").getSelectedKey();
             if (searchCategoryCombo != "") {
                 aSearchFilters.push(new Filter("category_group_code", FilterOperator.EQ, searchCategoryCombo) );
             }
@@ -495,8 +495,7 @@ sap.ui.define([
         , onAddCreate: function (oEvent) {
             //인자값을 받아서 넘기는 방식이므로 하드 코딩하고 가져다 붙일때는 넘겨 받은 인자값을 넣으면 됨
             this.getRouter().navTo("addCreatePage", {
-                requestNumber: "CCR2102050022",
-                categoryCode: "new"
+                requestNumber: "CCR2102080028"
             }, true);
         }
     });

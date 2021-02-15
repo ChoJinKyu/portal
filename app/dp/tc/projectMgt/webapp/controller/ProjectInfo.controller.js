@@ -311,7 +311,9 @@ sap.ui.define([
             this.getRouter().navTo("ProjectMgtList", {});
         }
 
-
+        , custom_sort: function(a, b) {
+           return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
+        }
 
         /**
          * BlockPrice Controller
@@ -322,6 +324,7 @@ sap.ui.define([
             //Grid Table 별로 data 가공
             var oSimilarModelData = oDetailData.similar_model ? oDetailData.similar_model.results : [];//유사모델
             var oEvents = oDetailData.events ? oDetailData.events.results : [];//개발일정
+            oEvents.sort(this.custom_sort);
 
             var oMtlmob = oDetailData.mtlmob ? oDetailData.mtlmob.results : [];//판가/물동/원가의 예상물동
             var oSalesPrice = oDetailData.sales_price ? oDetailData.sales_price.results : [];//판가/물동/원가의 판가

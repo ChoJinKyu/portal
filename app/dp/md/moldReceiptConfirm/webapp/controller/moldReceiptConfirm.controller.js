@@ -29,11 +29,12 @@ sap.ui.define([
     "dp/md/util/controller/SupplierSelection",
     "ext/lib/util/ExcelUtil",
     "ext/lib/formatter/NumberFormatter",
-    "ext/lib/util/SppUserSession"
+    "ext/lib/util/SppUserSession",
+    "dp/md/util/controller/ProcessUI"
 ], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, moldReceiptConfirmPersoService, 
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token, SupplierSelection, ExcelUtil,
-    NumberFormatter, SppUserSession) {
+    NumberFormatter, SppUserSession, ProcessUI) {
     "use strict";
     
     return BaseController.extend("dp.md.moldReceiptConfirm.controller.moldReceiptConfirm", {
@@ -42,6 +43,7 @@ sap.ui.define([
         numberFormatter: NumberFormatter,
         validator: new Validator(),
         supplierSelection: new SupplierSelection(),
+        process : new ProcessUI(),
         userInfo: {},
 
         /* =========================================================== */
@@ -88,6 +90,9 @@ sap.ui.define([
                 customDataKey: "moldReceiptConfirm",
                 persoService: moldReceiptConfirmPersoService
             }).setTable(this.byId("moldMstTable"));
+
+            this.process.setDrawProcessUI(this, "ProcessFlowE" , "A", 7);
+            this.process.setDrawProcessUI(this, "ProcessFlowS" , "A", 7);
 
             //sheet.js cdn url
             jQuery.getScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js");

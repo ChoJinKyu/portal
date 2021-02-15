@@ -137,6 +137,7 @@ public class PartCategoryV4 implements EventHandler {
                 v_pdMst.get("parent_category_code"),
                 Integer.parseInt(String.valueOf(v_pdMst.get("sequence"))),
                 
+                
                 active_flag,
                 v_pdMst.get("update_user_id"),
                 v_pdMst.get("crud_type_code")
@@ -161,6 +162,7 @@ public class PartCategoryV4 implements EventHandler {
                     v_inRow.get("category_code"),
                     v_inRow.get("langauge_cd"),
                     v_inRow.get("code_name"),
+                    
 
                     v_inRow.get("update_user_id"),
                     v_inRow.get("crud_type_code")
@@ -185,9 +187,9 @@ public class PartCategoryV4 implements EventHandler {
                 }
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id"),
-                    v_inRow.get("activity_code"),
                     v_inRow.get("category_group_code"),
-                    v_inRow.get("category_code"),                    
+                    v_inRow.get("category_code"),   
+                    v_inRow.get("activity_code"),                 
                     Integer.parseInt(String.valueOf(v_inRow.get("s_grade_standard_days"))),
 
                     Integer.parseInt(String.valueOf(v_inRow.get("a_grade_standard_days"))),
@@ -235,9 +237,9 @@ public class PartCategoryV4 implements EventHandler {
 
 
         // Local Temp Table DROP
-        // jdbc.execute(v_sql_dropable);
-        // jdbc.execute(v_sql_dropable2);
-        // jdbc.execute(v_sql_dropable3);
+        jdbc.execute(v_sql_dropable);
+        jdbc.execute(v_sql_dropable2);
+        jdbc.execute(v_sql_dropable3);
 
         context.setResult(v_row);
         context.setCompleted();

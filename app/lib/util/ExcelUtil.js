@@ -63,7 +63,7 @@ sap.ui.define([
          * sheet 에 적용할 columns 정보를 반환
          */
         , _fnGetColumnConfig: function(_oTable) {
-            var aColumns, aCells, aColumnConfig;
+            var aColumns, aCells, aColumnConfig = [];
 
             aColumns = _oTable.getColumns();
 
@@ -71,12 +71,8 @@ sap.ui.define([
                 aCells = _oTable.getItems()[0].getCells();
             }
 
-	    	aColumnConfig = aColumns.map(
-	    		function(oCol, idx){
-	    			if(oCol.data("exportData") !== "true" && !(typeof oCol.getVisible === "function" ? oCol.getVisible() : oCol.getHeader().getVisible())) {// passing column, invisible column
-						return;
-                    }
-                    
+            aColumns.forEach(function(oCol, nIdx) {
+                if((oCol.data("exportData") && oCol.data("exportData") === "true") || (typeof oCol.getVisible === "function" ? oCol.getVisible() : oCol.getHeader().getVisible())) {
                     //label 을 FlexBox 로 감싸는 부분 대비
                     //var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();
                     var sLabel = "";
@@ -105,7 +101,7 @@ sap.ui.define([
                         }    
                     }
 
-                    var oBindingInfo = this._getBindingInfo(aCells ? aCells[idx] : oCol.getTemplate());
+                    var oBindingInfo = this._getBindingInfo(aCells ? aCells[nIdx] : oCol.getTemplate());
 
                     if(oBindingInfo.prop === "") {//binding 정보가 없으면 pass
                         return;
@@ -125,19 +121,37 @@ sap.ui.define([
                     //     aPath = [oBindingInfo.prop.parts[0].path];
                     // }
                     var sPath = [oBindingInfo.prop.parts[0].path];
-
-	    			return {
-	    				label : sLabel,
-	    				width : oCol.getWidth(),
-	    				textAlign: oBindingInfo.align ? oBindingInfo.align : "Left",
+                    var sWidth = oCol.data("width") || oCol.getWidth();//passed as customData
+                    var sTextAlign = oCol.data("textAlign") || oBindingInfo.align || "Left";//passed as customData
+                    var nWidth = 10;
+                    console.log("sLabel",sLabel);
+                    if($.isNumeric(sWidth)) {
+                        nWidth = parseInt(sWidth, 10);
+                    } else if(sWidth.toLowerCase() === "auto") {
+                        nWidth = 50;
+                    } else if(sWidth.indexOf("%") > -1) {
+                        let sRefine = sWidth.replace("%", "");
+                        nWidth = parseInt(sRefine);
+                    } else {
+                        nWidth = 15;
+                    }
+                    console.log("nWidth",nWidth);
+                    aColumnConfig.push({
+                        label : sLabel,
+                        width : nWidth,
+                        textAlign: sTextAlign,
                         property : sPath,
                         type : oCol.data("type") || "",
+                        template : oCol.data("template") || "",
                         format : oCol.data("format") || "",
+                        trueValue : oCol.data("trueValue") || "",
+                        falseValue : oCol.data("falseValue") || "",
                         style : oCol.data("style") || ""
-	    			};
-	    		}.bind(this)	
-    		);
-	    	return aColumnConfig;
+                    });
+                }
+            }.bind(this));
+
+            return aColumnConfig;
         }
         /**
          * binding 정보와 align 정보를 반환.
@@ -158,9 +172,12 @@ sap.ui.define([
             } else {
                 sEleNm = oCell.getMetadata().getElementName()
             }
+            //debugger;
             switch(sEleNm) {
                 case "sap.m.Text" :
                 case "sap.m.ObjectIdentifier" :
+                case "sap.tnt.InfoLabel" :
+                case "sap.m.Link" : 
                     
                     oBindingInfo.prop = oCell.getBindingInfo("text") || "";
                     if(typeof oCell.getTextAlign === "function") {

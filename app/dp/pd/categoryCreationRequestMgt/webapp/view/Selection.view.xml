@@ -37,7 +37,7 @@
                 <!-- Requester 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/REQUEST_NUMBER}" text="{master>/request_number}"/>
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{master>/requestor_empno}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{master>/requestor}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
 
@@ -190,7 +190,7 @@
                                 </HBox>
                                 <HBox alignItems="Center">
                                     <Label
-                                        text="{I18N>/SIMILAR_CATEGORY_CODE}: "
+                                        text="{I18N>/SIMILAR_CATEGORY}: "
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"

@@ -1,0 +1,23 @@
+TYPE SP_VI_BASE_PRICE_APRL_EXCITEM_TYPE AS TABLE (
+    TENANT_ID	                    NVARCHAR(5)   NOT NULL,
+    APPROVAL_NUMBER	                NVARCHAR(50)  NOT NULL,
+    ITEM_SEQUENCE	                DECIMAL(34)   NOT NULL,
+    COMPANY_CODE	                NVARCHAR(10),
+    BIZUNIT_CODE	                NVARCHAR(10),
+    BASE_YEAR	                    NVARCHAR(4),
+    APPLY_START_YYYYMM	            NVARCHAR(6),
+    APPLY_END_YYYYMM	            NVARCHAR(6),
+    BIZDIVISION_CODE	            NVARCHAR(10),
+    PLANT_CODE	                    NVARCHAR(10),
+    SUPPLIER_CODE	                NVARCHAR(10),
+    MATERIAL_CODE	                NVARCHAR(40),
+    MATERIAL_NAME	                NVARCHAR(240),
+    VENDOR_POOL_CODE	            NVARCHAR(20),
+    CURRENCY_CODE	                NVARCHAR(3),
+	BASE_PRICE_EXCEPTION_REASON     NVARCHAR(300),
+	APPLY_FLAG                      NVARCHAR(1),
+    LOCAL_CREATE_DTM                SECONDDATE NOT NULL,
+    LOCAL_UPDATE_DTM                SECONDDATE NOT NULL,
+    CREATE_USER_ID                  NVARCHAR(255) NOT NULL,
+    UPDATE_USER_ID                  NVARCHAR(255) NOT NULL
+); 

@@ -52,7 +52,7 @@
                                 <items>
                                     <core:ListItem
                                         key="{company_code}"
-                                        text="{company_code}"
+                                        text="{company_name}"
                                         additionalText="{company_code}"/>
                                 </items>
                             </ComboBox>
@@ -78,7 +78,7 @@
                                 <items>
                                     <core:ListItem
                                         key="{org_code}" 
-                                        text="{org_code}" 
+                                        text="{org_name}" 
                                         additionalText="{org_code}"/>
                                 </items>
                             </ComboBox>
@@ -141,11 +141,7 @@
             <t:Table id="mainTable"
             selectionMode="MultiToggle"
             rows="{
-                path: 'list>/pdPartactivityTemplateView',
-                sorter: { 
-                    path: 'local_update_dtm',
-                    descending: true 
-                }                   
+                path: 'list>/pdPartactivityTemplateView'                               
             }"
             cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
@@ -192,11 +188,17 @@
                 <t:template>
                     <Text text="{list>org_name}" wrapping="false" textAlign="Center" width="100%"/>
                 </t:template>
-                </t:Column>
+                </t:Column>                
                 <t:Column id="part_project_type_code">
                 <Label text="{I18N>/PROJECT_TYPE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>part_project_type_name}" wrapping="false" textAlign="Left" width="100%"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="sequence" width="60px">
+                <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>sequence}" textAlign="Right" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>                
                 <t:Column id="activity_code">

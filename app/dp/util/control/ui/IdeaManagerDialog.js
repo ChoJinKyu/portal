@@ -14,16 +14,15 @@ sap.ui.define([
     "ext/lib/control/m/CodeComboBox",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
-    "sap/m/SearchField",
     "ext/lib/model/ManagedModel"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, CodeComboBox, ComboBox, Item, SearchField, ManagedModel) {
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, CodeComboBox, ComboBox, Item, ManagedModel) {
     "use strict";
 
     var IdeaManagerDialog = Parent.extend("dp.util.control.ui.IdeaManagerDialog", {
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "55em"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
                 textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
             }
@@ -70,9 +69,7 @@ sap.ui.define([
                 required: true
             });
 
-            this.oLocalUserName = new SearchField({
-                 placeholder: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")
-            });
+            this.oLocalUserName = new Input();
             
             this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
             this.oBizunitCode.attachEvent("change", this.loadData.bind(this));
@@ -107,23 +104,55 @@ sap.ui.define([
             return [
                 new Column({
                     width: "10%",
-                    label: new Label({text: this.getModel("I18N").getText("/COMPANY_CODE")}),
-                    template: new Text({text: "{company_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/COMPANY_CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{company_code}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "15%",
-                    label: new Label({text: this.getModel("I18N").getText("/BIZUNIT_CODE")}),
-                    template: new Text({text: "{bizunit_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/BIZUNIT_CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{bizunit_code}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "20%",
-                    label: new Label({text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")}),
-                    template: new Text({text: "{idea_manager_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{idea_manager_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "50%",
-                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
-                    template: new Text({text: "{department_local_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{department_local_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 })
             ];
         },

@@ -23,6 +23,7 @@ entity Vp_Vendor_pool_Popup_View {
   hierarchy_level: Integer;
   hierarchy_root_rank: Integer64;
   drill_state: String @title: 'expanded/leaf';
+  child_drill_state: String @title: 'expanded/leaf/X';
   vendor_pool_path_code: String(240) @title: 'VP Code Chain';
   vendor_pool_path_name: String(400) @title: 'VP Code Name Chain';
 }

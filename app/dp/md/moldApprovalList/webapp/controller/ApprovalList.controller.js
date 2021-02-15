@@ -875,11 +875,11 @@ sap.ui.define([
                     
                     chkArr.push(parseInt(chkRow));
                     delApprData.push({
-                        approval_number : lModel.getData().Approvals[chkArr[j]].approval_number
-                        ,tenant_id : lModel.getData().Approvals[chkArr[j]].tenant_id
-                        ,company_code : lModel.getData().Approvals[chkArr[j]].company_code
-                        ,org_code : lModel.getData().Approvals[chkArr[j]].org_code
-                        ,approval_type_code : lModel.getData().Approvals[chkArr[j]].approval_type_code
+                        approval_number : lModel.getData().Approvals[chkArr[j]].approval_number.trim()
+                        ,tenant_id : lModel.getData().Approvals[chkArr[j]].tenant_id.trim()
+                        ,company_code : lModel.getData().Approvals[chkArr[j]].company_code.trim()
+                        ,org_code : lModel.getData().Approvals[chkArr[j]].org_code.trim()
+                        ,approval_type_code : lModel.getData().Approvals[chkArr[j]].approval_type_code.trim()
                     })
                     oSelected.push(i);
                     

@@ -91,6 +91,27 @@ sap.ui.define([
 
             }, this);
         },
+        after: function() {
+
+            var [pointcut, ...args] = arguments;
+            var [fn, ...keys] = args.slice().reverse();
+            keys = keys.reverse().filter(e => typeof e == "string").join("");
+
+            Aop.around(pointcut, function(f) {
+
+                var args = f.arguments = Array.prototype.slice.call(f.arguments);
+                args = args.filter(e => typeof e == "string").join("");
+
+                setTimeout((function() {
+                    keys == args
+                    &&
+                    fn.call(this);
+                }).bind(this), 0);
+               
+                return Aop.next.call(this, f);
+
+            }, this);
+        },
         // Filter
         generateFilters: function(model, filters) {
             // model Object

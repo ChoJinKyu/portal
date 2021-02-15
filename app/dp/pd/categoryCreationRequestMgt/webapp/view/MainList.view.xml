@@ -139,7 +139,7 @@
                 <t:Column id="requestor" hAlign="Left">
                     <Label text="{I18N>/REQUESTOR}" textAlign="Center"/>
                     <t:template>
-                        <Text text="{list>requestor_empno}" textAlign="Left"/>
+                        <Text text="{list>requestor}" textAlign="Left"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="request_date_time" hAlign="Center">

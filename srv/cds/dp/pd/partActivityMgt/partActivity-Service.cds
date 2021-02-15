@@ -23,7 +23,8 @@ service PartActivityService {
     entity cmPurOperationOrg as projection on CmPurOperationOrg.Pur_Operation_Org;
 
     view CompanyView as
-        select pat.company_code, c.company_name
+        select key pat.company_code
+                 , c.company_name
         from
             ( select tenant_id, company_code
                 from  PdPartActivityTemplate
@@ -35,7 +36,8 @@ service PartActivityService {
     ;
 
     view OrgView as
-        select org_code, org_name
+        select key org_code
+                 , org_name
         from CmPurOperationOrg.Pur_Operation_Org
         where tenant_id = 'L2101' 
         and org_type_code in (
