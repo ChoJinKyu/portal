@@ -134,6 +134,9 @@
         "css": [
             {
                 "uri": "css/style.css"
+            },
+            {
+                "uri": "../../util/css/style.css"
             }
         ]
     },
