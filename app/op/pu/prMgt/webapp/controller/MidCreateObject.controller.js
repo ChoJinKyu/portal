@@ -570,10 +570,7 @@ sap.ui.define([
                     that._fnReadServiceModel("", "/Pr_Service", aServiceFilters, aSorters)
             ).done(function(oDetailData, oAccountData, oServiceData){
 
-                let oAccounts={}, oServices={};
-                //let aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
-                //let aPrDtlData = oDetailData.results;
-                let aPrDtlData = [];
+                let oAccounts={}, oServices={}, aPrDtlData = [];
                 let aDetailData = oDetailData.results;
                 if(aDetailData && aDetailData.length > 0){
                     aDetailData.forEach(function(itemDtl, idx){
@@ -613,11 +610,7 @@ sap.ui.define([
                     });
                 }
                 
-                if(aPrDtlData.length > 0) {
-                    oViewModel.setProperty("/Pr_Dtl", aPrDtlData);
-                } else {
-                    oViewModel.setProperty("/Pr_Dtl", []);
-                }
+                oViewModel.setProperty("/Pr_Dtl", aPrDtlData);
             });
         },
 
