@@ -47,7 +47,7 @@ sap.ui.define([
             this._oViewData.tenant_id = "L2101"
 
             this.enableMessagePopover();
-            this._doInitTablePerso();
+            //this._doInitTablePerso();
         },
 		
         onRenderedFirst : function () {
@@ -88,7 +88,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoButtonPressed: function(oEvent){
-			this._oTPC.openDialog();
+            
+			//this._oTPC.openDialog();
 		},
 
 		/**

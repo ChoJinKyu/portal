@@ -516,7 +516,7 @@ sap.ui.define([
                                     if(CUType === "D") {
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("mainTable").
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
                                     } else if(CUType === "C"){
                                         v_this.onPageNavBackButtonPress.call(v_this);
