@@ -44,6 +44,7 @@ service NpApprovalDetailPriceV4Service {
         market_code                     : type of SP_NP_NET_PRICE_APPROVAL_DTL : market_code        ; 
         currency_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : currency_code      ; 
     }
+    /*   _row_state_                     : String(1) @Text:'UI:Row State' @Description:'UI Table Status("D":Delete, ""|"U":Update, "C":Create)'; */
 
     /*  */
     type outTableType : {
