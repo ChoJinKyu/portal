@@ -1,7 +1,7 @@
 PROCEDURE SP_VI_BASE_PRICE_APRL_EXC_DELETE_PROC (IN I_MASTER SP_VI_BASE_PRICE_APRL_MST_TYPE
                                             ,OUT O_MSG SP_VI_BASE_PRICE_APRL_OUT_TYPE)
 LANGUAGE SQLSCRIPT
-SQL SECURITY INVOKER 
+SQL SECURITY INVOKER  
 /**************************************************************************
 Scrum          : SP/VI/예외자재 품의서 삭제
 Procedure Name : SP_VI_BASE_PRICE_APRL_EXC_DELETE_PROC

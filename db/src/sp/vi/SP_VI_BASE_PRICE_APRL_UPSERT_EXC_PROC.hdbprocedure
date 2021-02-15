@@ -12,7 +12,7 @@ Scrum          : SP/VI/예외자재 등록품의 수정
 Procedure Name : SP_VI_BASE_PRICE_APRL_UPSERT_PROC
 Creator        : 유남열
 Description    : 품의서 수정
-History        : 2021-02-09 initial creation
+History        : 2021-02-09 initial creation 
 ***************************************************************************/
 AS
 BEGIN

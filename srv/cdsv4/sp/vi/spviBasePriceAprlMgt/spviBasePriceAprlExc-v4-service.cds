@@ -1,7 +1,7 @@
 namespace sp;
 
-@path : '/sp.spviBasePriceArlV4Service'
-service spviBasePriceArlV4Service {
+@path : '/sp.spviBasePriceArlExcV4Service'
+service spviBasePriceArlExcV4Service {
     //품의마스터
     type BasePriceAprlMstType : {
         tenant_id              : String(5);

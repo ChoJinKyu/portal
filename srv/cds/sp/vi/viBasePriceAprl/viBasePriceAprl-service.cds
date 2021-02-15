@@ -21,7 +21,7 @@ using {cm.Currency as curr} from '../../../../../db/cds/cm/CM_CURRENCY-model';
 using {pg.Vp_Vendor_Pool_Item_Dtl as VPoolDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
 using {pg.Vp_Vendor_Pool_Mst as VPoolMst} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';
 
-namespace sp;
+namespace sp; 
 
 @path : '/sp.BasePriceArlService'
 service BasePriceAprlService {

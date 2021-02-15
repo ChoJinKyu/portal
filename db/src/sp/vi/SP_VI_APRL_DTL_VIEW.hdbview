@@ -1,4 +1,4 @@
-view sp_vi_aprl_dtl_view as
+view sp_vi_aprl_dtl_view as 
 SELECT  ITEM.TENANT_ID 
 	   ,ITEM.APPROVAL_NUMBER 
 	   ,ITEM.ITEM_SEQUENCE

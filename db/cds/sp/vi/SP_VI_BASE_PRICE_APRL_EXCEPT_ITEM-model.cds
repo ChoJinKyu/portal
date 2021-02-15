@@ -1,4 +1,4 @@
-namespace sp;	
+namespace sp; 
 
 using util from '../../cm/util/util-model';
 

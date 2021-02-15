@@ -1,4 +1,4 @@
-namespace sp;
+namespace sp; 
 
 @cds.persistence.exists
 entity Vi_Aprl_Dtl_View {

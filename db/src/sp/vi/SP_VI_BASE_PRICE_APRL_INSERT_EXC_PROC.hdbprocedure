@@ -12,7 +12,7 @@ Scrum          : SP/VI/예외자재품의서 등록
 Procedure Name : SP_VI_BASE_PRICE_APRL_INSERT_EXC_PROC
 Creator        : 유남열
 Description    : SPVI 예외자재품의서 등록
-History        : 2021-02-09 initial creation
+History        : 2021-02-09 initial creation 
 ***************************************************************************/
 AS
 BEGIN
