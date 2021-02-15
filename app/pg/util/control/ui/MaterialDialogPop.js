@@ -64,12 +64,13 @@ sap.ui.define([
         createTableColumns: function () {
            return [
                 new Column({
-                    width: "30%",
+                    width: "25%",
+                    hAlign : "Center",
                     label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE"), textAlign:"Center"}),  // 자재코드
                     template: new Text({text: "{material_code}"})
                 }),
                 new Column({
-                    width: "80%",
+                    width: "75%",
                     label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),  // 자재설명
                     template: new Text({text: "{material_desc}"})
                 })

@@ -57,6 +57,7 @@ sap.ui.define([
             return [
                 new Column({
                     width: "20%",
+                    hAlign : "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
