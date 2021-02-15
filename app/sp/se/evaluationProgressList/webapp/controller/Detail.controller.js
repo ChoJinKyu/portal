@@ -188,9 +188,9 @@ sap.ui.define([
                 oView = this.getView();
                 sAppLayout = oViewModel.getProperty("/App/layout");
 
-                oMasterPage = oComponent.byId("Master");
-                if(oMasterPage){
-                    oDynamicPage = oMasterPage.byId("page");
+                oMainListPage = oComponent.byId("MainList");
+                if(oMainListPage){
+                    oDynamicPage = oMainListPage.byId("page");
                 }
 
                 oViewModel.setProperty("/Args", oArgs);
@@ -227,7 +227,7 @@ sap.ui.define([
                 oViewModel.setProperty("/Detail", oDetailData);
                 oViewModel.setProperty("/App/layout", sAppLayout === "OneColumn" ? "TwoColumnsMidExpanded" : sAppLayout);
                 
-                var oMasterPage, oDynamicPage;
+                var oMainListPage, oDynamicPage;
 
                 this._readHeader();
                 
@@ -294,9 +294,9 @@ sap.ui.define([
                             ]
                         });
 
-                        var oMasterPage = oComponent.byId("Master");
-                        if(oMasterPage){
-                            // oMasterPage.byId("page").setHeaderExpanded(false);
+                        var oMainListPage = oComponent.byId("MainList");
+                        if(oMainListPage){
+                            // oMainListPage.byId("page").setHeaderExpanded(false);
                         }
                         oViewModel.setProperty("/Detail/Header", oResult);
                         oAppView.setBusy(false);
@@ -531,7 +531,7 @@ sap.ui.define([
              */
             , onPressPageNavBack : function(){
                 
-                this.getOwnerComponent().getRouter().navTo("Master");
+                this.getOwnerComponent().getRouter().navTo("MainList");
             }
             /**
              * 해당 상세 평가 삭제
@@ -571,7 +571,7 @@ sap.ui.define([
                                 MessageBox.success(oI18NModel.getProperty("/NCM01002"), {
                                     onClose : function (sAction) {
                                         oView.setBusy(false);
-                                        oComponent.getRouter().navTo("Master",{
+                                        oComponent.getRouter().navTo("MainList",{
                                             search : true
                                         });
                                     }
@@ -642,7 +642,7 @@ sap.ui.define([
                                     onClose : function (sAction) {
                                         oView.setBusy(false);
                                         if(oArgs.new === "Y"){
-                                            oComponent.getRouter().navTo("Master",{
+                                            oComponent.getRouter().navTo("MainList",{
                                                 search : true
                                             });
                                             return;
@@ -815,7 +815,7 @@ sap.ui.define([
              * 수정 변경모드 
              */
             , onPressModeChange : function(oEvent, sGubun){
-                var oView, oViewModel, bEditFlg, oComponent, oMasterPage, oTreeTable,
+                var oView, oViewModel, bEditFlg, oComponent, oMainListPage, oTreeTable,
                     aSelectedIdices, oContext, oRowData, oI18NModel;
 
                 oView = this.getView();
@@ -832,10 +832,10 @@ sap.ui.define([
                             }
 
                             // oComponent = this.getOwnerComponent();
-                            // oMasterPage = oComponent.byId("Master");
+                            // oMainListPage = oComponent.byId("MainList");
                             
-                            // if(oMasterPage){
-                            //     oTreeTable = oMasterPage.byId("treeTable");
+                            // if(oMainListPage){
+                            //     oTreeTable = oMainListPage.byId("treeTable");
                             //     aSelectedIdices = oTreeTable.getSelectedIndices();
                             //     oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
                             //     oRowData = this._deepCopy( oContext.getObject() );

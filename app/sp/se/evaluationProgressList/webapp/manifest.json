@@ -146,18 +146,18 @@
                     "target": ["Detail"]
                 },
                 {
-                    "name": "Master",
+                    "name": "MainList",
                     "pattern": ":search:",
-                    "target": ["Master"]
+                    "target": ["MainList"]
                 }
             ],
 			"targets": {
-				"Master": {
+				"MainList": {
 					"viewType": "XML",
 					"transition": "slide",
 					"clearControlAggregation": true,
-					"viewId": "Master",
-					"viewName": "Master",
+					"viewId": "MainList",
+					"viewName": "MainList",
                     "viewLevel": 1
 				},
 				"Detail": {
