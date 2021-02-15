@@ -320,6 +320,7 @@
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                             ]
                                                         }"
+                                                        selectedKey="{generalInfoList>net_price_type_code}"
                                                         editable="{detailViewModel>/viewMode}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
@@ -480,7 +481,7 @@
                                                         }" selectedKey="{generalInfoList>incoterms}"
                                                         editable="{detailViewModel>/viewMode}">
                                                     <items>
-                                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                                        <core:Item key="{util>code}" text="{util>code}" />
                                                     </items>
                                                 </ComboBox>
                                             </t:template>
