@@ -897,8 +897,9 @@ sap.ui.define([
                 
             oMessageManager.removeAllMessages();
             bAllValid = aControls.every(function(oControl){
-                var sEleName = oControl.getMetadata().getElementName(),
-                    sValue;
+            var sEleName = oControl.getMetadata().getElementName(),
+                sValue,
+                oContext;
                 
                 
                 switch(sEleName){
@@ -906,6 +907,7 @@ sap.ui.define([
                     case "sap.m.Input":
                     case "sap.m.TextArea":
                         sValue = oControl.getValue();
+                        oContext = oControl.getBinding("value");
                         break;
                     case "sap.m.ComboBox":
                         sValue = oControl.getSelectedKey();
@@ -924,6 +926,27 @@ sap.ui.define([
                             type: MessageType.Error
                         }));
                         bAllValid = false;
+                        oControl.focus();
+                        return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                }
+
+                if(oContext && oContext.getType()){
+                    try{
+                        oContext.getType().validateValue(sValue);
+                    }catch(e){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(e.message);
+                        oControl.focus();
+                        return false;
+                    }
+                    oControl.setValueState(ValueState.None);
+                }else if(sEleName === "sap.m.ComboBox"){
+                    if(!sValue && oControl.getValue()){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
                         oControl.focus();
                         return false;
                     }else{

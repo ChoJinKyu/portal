@@ -4,21 +4,20 @@
 	xmlns:uxap="sap.uxap" 
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
-    xmlns:richtexteditor="sap.ui.richtexteditor"
-	xmlns:core="sap.ui.core"
-    height="100%">
+    xmlns:core="sap.ui.core"
+    height="85%">
     
     <uxap:ObjectPageLayout 
         id="Apply"
-		toggleHeaderOnTitleClick="true"
-		alwaysShowContentHeader = "true" 
+		toggleHeaderOnTitleClick="false"
+		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
-        isChildPage="true"
+		headerContentPinnable="false"
+		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-        showFooter="false">
+        showFooter="true">
         
 		<uxap:headerTitle>
 			<!-- 타이틀 영역 -->
@@ -430,7 +429,6 @@
                 <Button id="cancelButton" type="Transparent" text="취소" press=".onPageNavBackButtonPress"/>
                 <Button id="updateButton" type="Transparent" text="수정" press=".onPageUpdateButtonPress" />
                 <Button id="saveButton" type="Transparent" text="저장" press=".onPageSaveButtonPress" />
-                <Button id="submissionButton" type="Emphasized" text="제출" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

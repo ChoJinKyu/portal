@@ -273,6 +273,8 @@ sap.ui.define([
                 oNavParam.supplierCode = oRowData.supplier_code;
                 oNavParam.fundingStatusCode = oRowData.funding_status_code;
 
+                
+
                 this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
             }
 

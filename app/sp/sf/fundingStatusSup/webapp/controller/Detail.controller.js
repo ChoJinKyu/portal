@@ -63,9 +63,12 @@ sap.ui.define([
             onFilterSelect : function(oEvent){
                 var sPramModel = this.getModel("viewModel").getProperty("/Args"),
                     statusCode = sPramModel.fundingStatusCode;
+                    debugger;
+                    // this.getModel("viewModel").setProperty("/windowHeight", ((window.innerHeight-100)/window.innerHeight *100).toString()+"%");
 
                 if(oEvent){
                     if(oEvent.getParameters().key==="step1"){
+                        debugger;
                         this.byId("beginView").setVisible(true);
                         this.onReadApply();
                         // this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
@@ -74,6 +77,7 @@ sap.ui.define([
                     }
                 }else{
                     if(statusCode=="110" || statusCode=="120" ){
+                        debugger;
                         this.byId("beginView").setVisible(true);
                         this.onReadApply();
                         // this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
