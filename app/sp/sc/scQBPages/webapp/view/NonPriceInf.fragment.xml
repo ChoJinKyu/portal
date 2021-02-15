@@ -144,8 +144,7 @@
             <!-- Item 입력 start -->
             <VBox>
                 <ScrollContainer vertical="false" focusable="true" >
-                    <Table id="idProductsTable"
-                        mode="{=${propInfo>/isEditMode} ? 'MultiSelect' : 'None' }"
+                    <Table mode="{=${propInfo>/isEditMode} ? 'MultiSelect' : 'None' }"
                         inset="false">
                         <headerToolbar>
                             <OverflowToolbar class="NonPricePopHeader" visible="{=${propInfo>/isEditMode}}">
