@@ -19,7 +19,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/ACTIVITY_MANAGEMENT}" />
+                    <Title text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -149,7 +149,7 @@
             columnResize="onColumnResize">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title id="mainTableTitle" text="Activity List {= ${list>/pdPartactivityTemplateView}.length > 0 ? '(' + ${list>/pdPartactivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
+                    <Title id="mainTableTitle" text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/LIST} {= ${list>/pdPartactivityTemplateView}.length > 0 ? '(' + ${list>/pdPartactivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
                     <ToolbarSpacer/>
                     <Button text="Copy" id="buttonCopy" press=".onCopy"  type="Transparent"/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>

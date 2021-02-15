@@ -195,8 +195,14 @@
                                         <Text text="{details>spec_desc}"/>
                                         <Text text="{details>unit}"/>
                                         <Text text="{details>request_quantity}"/>
-                                        <Text text="{details>request_net_price}"/>
-                                        <Text text="{details>request_amount}"/>
+                                        <Text text="{
+                                                    path: 'details>request_net_price',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"/>
+                                        <Text text="{
+                                                    path: 'details>request_amount',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"/>
                                         <Text text="{
                                             path: 'details>delivery_request_date',
                                             formatter: '.dateFormatter.toUTCDateString'

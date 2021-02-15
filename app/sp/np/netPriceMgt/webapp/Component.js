@@ -54,31 +54,45 @@ sap.ui.define([
             var oPurOrgModel = this.getModel("purOrg");
             var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)];
             oPurOrgModel.read("/Pur_Operation_Org", {
-                filters : aPurOrgFilter,
-                success : function(data){
-                    if( data && data.results ) {
+                filters: aPurOrgFilter,
+                success: function (data) {
+                    if (data && data.results) {
                         var aResults = data.results;
                         var aCompoany = [];
                         var oPurOrg = {};
 
-                        for( var i=0; i<aResults.length; i++ ) {
+                        for (var i = 0; i < aResults.length; i++) {
                             var oResult = aResults[i];
-                            if( -1===aCompoany.indexOf(oResult.company_code) ) {
+                            if (-1 === aCompoany.indexOf(oResult.company_code)) {
                                 aCompoany.push(oResult.company_code);
                                 oPurOrg[oResult.company_code] = [];
                             }
 
-                            oPurOrg[oResult.company_code].push({org_code: oResult.org_code, org_name: oResult.org_name});
+                            oPurOrg[oResult.company_code].push({ org_code: oResult.org_code, org_name: oResult.org_name });
                         }
 
                         oRootModel.setProperty("/purOrg", oPurOrg);
                     }
                 },
-                error : function(data){
+                error: function (data) {
                     console.log("error", data);
                 }
             });
             // 플랜트 조회 끝
+
+            // Currency 데이터 조회 시작
+            var oCurrencyModel = this.getModel("currency");
+            oCurrencyModel.read("/Currency", {
+                filters: [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)],
+                success: function (data) {
+                    if (data && data.results) {
+                        oCurrencyModel.setProperty("/currency", data.results);
+                    }
+                },
+                error: function (data) {
+                    console.log("error", data);
+                }
+            });
         },
 
         /**

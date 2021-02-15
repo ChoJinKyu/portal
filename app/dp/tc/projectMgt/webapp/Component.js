@@ -13,8 +13,10 @@ sap.ui.define([
     init : function () {
         // call the base component's init function
         UIComponent.prototype.init.apply(this, arguments);
-        
-        this.setModel(new JSONModel(), "projectMgtRootModel");
+        var oRootModel = new JSONModel({
+            userId : "A60262", tenantId : "L2100"
+        });
+        this.setModel(oRootModel, "rootModel");
         this.getModel().setSizeLimit(1000);
     },
   });

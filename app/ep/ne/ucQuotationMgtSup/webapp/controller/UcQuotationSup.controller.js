@@ -331,6 +331,11 @@ sap.ui.define([
                  console.log("const_end_date222 >>> " , e.const_end_date);
                  console.log("completion_date33 >>> " , e.completion_date);
 
+                 if(e.completion_flag == null || e.completion_flag === undefined){
+                        e.completion_flag = true;
+                 }
+                    
+
                 return { 
                     tenant_id: e.tenant_id, 
                     company_code: e.company_code,
@@ -341,7 +346,7 @@ sap.ui.define([
                     const_end_date: (!that.convertDateToString(e.const_end_date) ? null : that.convertDateToString(e.const_end_date)),
                     remark: e.remark,
                     attch_group_number: e.attch_group_number,
-                    completion_flag : Boolean(e.completion_flag),
+                    completion_flag : e.completion_flag,
                     completion_date :(!that.convertDateToString(e.completion_date) ? null : that.convertDateToString(e.completion_date)),
                     facility_person_empno : e.facility_person_empno,
                     completion_attch_group_number : e.completion_attch_group_number,
@@ -898,7 +903,9 @@ sap.ui.define([
         },
         _loadFragment: function (sFragmentName, oHandler) {
             var that = this;
-            if (!this._oFragments[sFragmentName]) {
+            //if (!this._oFragments[sFragmentName]) {
+            if (!this._oFragments[sFragmentName] || !this._oFragments[sFragmentName].getParent()) {
+                if (this._oFragments[sFragmentName]) this._oFragments[sFragmentName].destroy();
                 Fragment.load({
                     id: this.getView().getId(),
                     name: "ep.ne.ucQuotationMgtSup.view." + sFragmentName,
@@ -978,8 +985,40 @@ sap.ui.define([
                 }.bind(this));
             }
 
+            // var sDate = '20210101';
+            // var eDate = '20210101';
+
             this._contractItemDialog.then((function (contractItemDialog) {
                 contractItemDialog.open();
+
+                // $.ajax({
+                //     url: "ep/ne/ucQuotationMgtSup/webapp/srv-api/odata/v2/ep.UcQuotationMgtService/EpGetUcApprovalDtlView(tenant_id='L2100',company_code='LGCKR',supplier_code='1000001',org_code='100003',po_start_date="+sDate +",po_end_date="+ eDate +")/Set",
+                //     type: "GET",
+                //     contentType: "application/json",
+                    
+                //     success: (function (oData) {
+                //         console.log("#########oData Success#####", oData.value);
+                //         // console.log("#########oData #####", oData.value.length);
+                //         // console.log("#########oData #####", oData.value[0].todo_count);
+                //         // var sum_count = oData.value[0].todo_count + oData.value[0].ongoing_count + oData.value[0].complete_count;
+
+                //         // console.log("#########sum_count #####", sum_count);
+
+                //         // oData.value.forEach(function (item, idx) {
+                //         //     //_tempFilters.push(new Filter("net_price_contract_document_no", FilterOperator.EQ, item));
+
+                //         //    oData.value[idx].sum_count = oData.value[idx].todo_count +  oData.value[idx].ongoing_count + oData.value[idx].complete_count;
+                //         // });
+
+                //         // console.log("#########result #####", oData.value);
+
+                //         // this.getModel("popup").setProperty("/summaryChart", oData.value);
+                //         //console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
+                //     }).bind(this) 
+                // })
+
+
+                //--------------------------------------------
 
                 oView.setBusy(true);
 
@@ -1010,6 +1049,8 @@ sap.ui.define([
             //     oViewModel.setProperty("/popUcdetails", popDtlModel);
                 oViewModel.setProperty("/popUcdetails", dtlData);
                 //oView.getModel("popSelectUcQuotationSup").setData(dtlData);
+
+                //-------------------------------------------------------------
 
 
             }).bind(this));
@@ -1330,6 +1371,10 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             console.log(" edit before----------------->" , dtlData[index]["row_state"]); 
             console.log(" edit extra_rate----------------->" , dtlData[index]["extra_rate"]); 
 
+
+            if(!dtlData[index]["extra_rate"]){
+                dtlData[index]["extra_rate"] = 1;
+            }
             
 
             dtlData[index]["material_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["material_net_price"];
@@ -1359,6 +1404,10 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
 
             var dtlData = oViewModel.getProperty("/ucdetails");
 
+            if(!dtlData[index]["extra_rate"]){
+                dtlData[index]["extra_rate"] = 1;
+            }
+
             dtlData[index]["material_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["quotation_quantity"]; //자재단가 * 수량
             dtlData[index]["labor_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["extra_rate"] * dtlData[index]["labor_net_price"]; //수량 * 노무단가
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
@@ -1383,6 +1432,10 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             console.log(" index obj ----------------->" , index); 
 
             var dtlData = oViewModel.getProperty("/ucdetails");
+
+            if(!dtlData[index]["extra_rate"]){
+                dtlData[index]["extra_rate"] = 1;
+            }
 
             dtlData[index]["labor_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["quotation_quantity"]; //노무단가 * 수량
             dtlData[index]["material_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["extra_rate"] * dtlData[index]["material_net_price"]; //수량 * 자재단가

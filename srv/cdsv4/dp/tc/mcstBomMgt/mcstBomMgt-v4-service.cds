@@ -68,7 +68,7 @@ service McstBomMgtV4Service {
         material_code          : String(40);
         commodity_code         : String(100);
         uom_code               : String(3);
-        material_reqm_quantity : Decimal;
+        material_reqm_quantity : Decimal(30, 10);
         buyer_empno            : String(30);
         mapping_id             : Integer;
         crud_type_code         : String(1);

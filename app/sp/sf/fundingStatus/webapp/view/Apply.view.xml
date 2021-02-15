@@ -249,6 +249,11 @@
                                 </Column>
                                 <Column hAlign="Left">
                                     <Text text="투자장소" />
+                                    <footer>
+                                        <Text text="총 신청금액 : {
+                                            path: 'viewModel>/Detail/Apply/funding_appl_amount', 
+                                            type: 'sap.ui.model.type.Integer'}" />
+                                    </footer>
                                 </Column>
                             </columns>
                             <items>

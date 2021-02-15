@@ -21,7 +21,8 @@
 		showTitleInHeaderContent="true"
 		showTitleSelector="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+        showFooter="false"
+        >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>

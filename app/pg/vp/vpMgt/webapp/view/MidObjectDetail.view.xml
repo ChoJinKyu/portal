@@ -333,7 +333,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="sppListAdd"     type="Emphasized" text="{I18N>/ADDITION}"        press=".supplierAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="sppListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".supplierDelRow"   enabled="{mode>/viewFlag}" />
-                                    <!-- <Button id="rTableSupExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onSupExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                         -->
+                                    <Button id="rTableSupExportButton" text="" type="Transparent" press=".onSupExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                        
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
@@ -513,7 +513,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="metListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".materialAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="metListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".materialDelRow"   enabled="{mode>/viewFlag}" />                                    
-                                    <!-- <Button id="rTableMatExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onMatExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                                                                 -->
+                                    <Button id="rTableMatExportButton" text="" type="Transparent" press=".onMatExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                                                                
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>

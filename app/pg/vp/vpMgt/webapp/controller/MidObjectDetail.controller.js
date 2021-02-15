@@ -450,7 +450,7 @@ sap.ui.define([
 		 * @public
 		 */
         onDetailSaveButtonPress: function(){
-			 MessageToast.show("Do 1st Proc!");
+			//  MessageToast.show("Do 1st Proc!");
             var doSave =  true;
              var oModel = this.getModel("vpMappingProc"),
                 oView = this.getView(),   
@@ -980,6 +980,7 @@ sap.ui.define([
             }
 
         },
+        //Supplier Excel Download
         onSupExportPress: function (_oEvent) {
             console.log("export");
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
@@ -994,6 +995,7 @@ sap.ui.define([
                 data: oData
             });
         },
+        //Material Excel Download
         onMatExportPress: function (_oEvent) {
             console.log("export");
             var sTableId = _oEvent.getSource().getParent().getParent().getId();

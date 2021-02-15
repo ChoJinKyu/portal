@@ -314,7 +314,7 @@ sap.ui.define([
             sendData.inputData = aInputData;
 
 
-            MessageBox.confirm("Are you sure to delete?", {
+            MessageBox.confirm( that.getModel("I18N").getText("/NCM00003" ) , {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -365,9 +365,9 @@ sap.ui.define([
                 success: function (result){                     
                     if(result && result.value && result.value.length > 0) {
                         if(result.value[0].return_code === "0000") {
-                            MessageToast.show(that.getModel("I18N").getText("/" + result.value[0].return_code));
+                            MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                         }
-                        MessageToast.show(result.value[0].return_msg);                        
+                        //MessageToast.show(result.value[0].return_msg);                        
                     }
                     callback(result);
                 },

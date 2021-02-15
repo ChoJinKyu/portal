@@ -186,8 +186,7 @@
                 "assetList": {
                     "viewName": "AssetList",
                     "viewId": "assetList",
-                    "viewLevel": 1,
-                    "title": "{i18n>assetListViewTitle}"
+                    "viewLevel": 1
                 },
                 "notFound": {
                     "viewName": "NotFound",

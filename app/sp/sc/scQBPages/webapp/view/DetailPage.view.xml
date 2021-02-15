@@ -1172,7 +1172,7 @@
                                                                     }" />
                                                                     <Label text="{NegoItemPrices>supplier_code}"/>
                                                                     <Label text="{NegoItemPrices>supplier_name}"/>
-                                                                    <Label text="{NegoItemPrices>evaluation_type_name}"/>
+                                                                    <Label text="{NegoItemPrices>supplier_register_status_name}"/>
                                                                     <Label text="{NegoItemPrices>supplier_type_name}"/>
                                                                     <Label text="{NegoItemPrices>maker_only_flag}"/>
                                                                     <Button icon="sap-icon://value-help" />

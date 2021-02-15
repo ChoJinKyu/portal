@@ -296,7 +296,7 @@
         <f:content>
             <smartTable:SmartTable id="sTable1" entitySet="NegoWorkbenchView"
                 ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code,buyer_empno,negotiation_style_code,
-                negotiation_output_class_code,nego_type_code,outcome_code,request_department_code,requestor_empno,buyer_department_code"
+                negotiation_output_class_code,nego_type_code,outcome_code,request_department_code,requestor_empno,buyer_department_code,supplier_count"
                 ignoredFields=""
                 smartFilterId="smartFilterBar" tableType="Table" 
                 useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
@@ -315,19 +315,6 @@
                             <OverflowToolbarButton icon="sap-icon://excel-attachment" tooltip="Excel Export" text="Filter" press="onExcelExport" visible="false"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                    <!-- <t:Table 
-                        enableColumnFreeze="true"
-                        visibleRowCount="13"
-                        rows="{
-                                    path: '/NegoItemPrices',
-                                    sorter: {
-                                        path: 'nego_header_id',
-                                        descending: false
-                                    },
-                                    parameters: {
-                                        'expand': 'Header,nego_progress_status'
-                                    }
-                                }"> -->
                     <t:Table 
                         enableColumnFreeze="true"
                         visibleRowCount="13"
@@ -391,13 +378,13 @@
                                 </t:template> 
                             </t:Column> 
 
-                            <t:Column width="6rem" sortProperty="supplier_count" filterProperty="supplier_count">
+                            <t:Column width="6rem" sortProperty="specific_supplier_count" filterProperty="specific_supplier_count">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "supplier_count", "leadingProperty": "supplier_count", "sortProperty": "supplier_count", "filterProperty": "supplier_count"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "specific_supplier_count", "leadingProperty": "specific_supplier_count", "sortProperty": "specific_supplier_count", "filterProperty": "specific_supplier_count"}'/>
                                 </t:customData>
                                 <Label text="{I18N>/SUPPLIER_COUNT}" class="AlignC" width="100%"/>
                                 <t:template>
-                                    <Text text="{supplier_count}" wrapping="false" class="AlignC" width="100%" />
+                                    <Text text="{specific_supplier_count}" wrapping="false" class="AlignC" width="100%" />
                                 </t:template>
                             </t:Column>
                             <t:Column width="7rem" sortProperty="supplier_participation_flag" filterProperty="supplier_participation_flag">

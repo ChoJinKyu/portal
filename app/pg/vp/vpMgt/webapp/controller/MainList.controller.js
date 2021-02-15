@@ -689,7 +689,7 @@ sap.ui.define([
                 MessageToast.show("필수값과 Vendor Pool를 입력하세요 ");
             }
         },
-
+        //Vendor Pool Delete
         onDialogDel: function () {
 
             if (this.byId("treeTable").getSelectedIndices().length > 0) {
@@ -714,11 +714,6 @@ sap.ui.define([
                         user_no: "testerNo"
                     }
                 };
-
-
-                // if(){
-
-                // }    
 
                 vpMstList.push({
 
@@ -878,7 +873,7 @@ sap.ui.define([
             this.getView().byId("pop_domestic_net_price_diff_rate").setValue("");
             this.byId("v_pop_plan_base").setVisible(false);
         },
-
+        //Create Vendor Pool PopUp mtl Combo Box View Control
         handlemtlChang: function (event) {
 
             var mtl = this.getView().byId("pop_inp_type_code").getSelectedKey();
@@ -890,7 +885,7 @@ sap.ui.define([
             }
 
         },
-
+        //Vendor Pool Mgt View Control
         handleTable: function (event) {
 
 
@@ -970,7 +965,7 @@ sap.ui.define([
 
         },
 
-
+        //Create Vendor Pool Save
         handleSave: function (oEvent) {
 
             var stenant_id = pop_t_id;
@@ -1563,7 +1558,7 @@ sap.ui.define([
             this.createTreePopupClose();
 
         },
-
+        //Vendor Pool PopUp Tree Table Search
         onDialogSearch: function (event) {
 
             var predicates = [];
@@ -1666,6 +1661,7 @@ sap.ui.define([
             // }
             // this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
         },
+        //Detail Infomation Call (Asap Delete)
         onCellClick: function (oEvent) {
 
             var rowData = oEvent.getParameter('rowBindingContext').getObject();
@@ -1715,6 +1711,7 @@ sap.ui.define([
 
 
         },
+        //Detail Infomation Call
         onMainTableEditButtonPress: function(){
             var oView = this.getView(),
                 oTable = this.byId("mainTable"),         
@@ -1801,6 +1798,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
 		 */
+        //Search Button Press Action
         onPageSearchButtonPress: function (oEvent) {
             // if (oEvent.getParameters().refreshButtonPressed) {
             // 	// Search field's 'refresh' button has been pressed.
@@ -1925,7 +1923,7 @@ sap.ui.define([
 		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
 		 * @private
 		 */
-
+        //Vendor Pool Search
         _applySearch: function (aSearchFilters) {
             console.log("_applySearch!!!");
             that.mainTable = this.byId("mainTable");
@@ -2033,10 +2031,8 @@ sap.ui.define([
             that.mainTable.setVisibleRowCount(oDataLen);
             oView.setBusy(false);
         },
-
+        //Apply Search filter Set
         _getSearchStates: function () {
-
-
 
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
@@ -2266,6 +2262,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -2280,6 +2277,7 @@ sap.ui.define([
                 that.byId("search_Man_Code").setValue(oEvent.mParameters.item.employee_number);
             }.bind(this));
         },
+
         onPopInputWithDeptValuePress: function(){
              this.oPopDeptDialog = new DepartmentDialog({
                 // id:"employeeDialog" ,
@@ -2287,6 +2285,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -2309,6 +2308,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -2323,7 +2323,7 @@ sap.ui.define([
                 that.byId("search_Dept_Code").setValue(oEvent.mParameters.item.department_id);
             }.bind(this));
         },
-
+        //PG Util Supplier PopUp Call
         vhSupplier: function () {
 
             if (this.byId("search_Vp_Code").getValue()) {
@@ -2386,6 +2386,7 @@ sap.ui.define([
 
             //     console.groupEnd();
         },
+        //Vendor Pool MGT Excel Download
         onExportPress: function (_oEvent) {
             console.log("export");
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
@@ -2400,6 +2401,7 @@ sap.ui.define([
                 data: oData
             });
         },
+        //ORG, Operation Unit에 해당하는 Vendor Pool Max Lv Check View Control
         checkOrg: function () {
 
             // debugger

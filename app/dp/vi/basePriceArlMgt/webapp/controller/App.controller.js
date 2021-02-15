@@ -94,7 +94,7 @@ sap.ui.define([
                 closeWhenApplied: bCloseWhenApplied,
                 items: {
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.getModel("rootModel").getProperty("tenantId"))
+                        new Filter("tenant_id", FilterOperator.EQ, this.getModel("rootModel").getProperty("/tenantId"))
                     ]
                 }
             });

@@ -79,7 +79,7 @@
                         </co:MicroProcessFlow>
                     </HBox>
                     <HBox>
-                        <Text text="{rootModel>/processList/0/code_name}" width="4rem" />
+                        <Text text="{rootModel>/processList/0/code_name}" width="4rem" textAlign="Center" />
                         <Text text="{rootModel>/processList/1/code_name}" width="6rem" textAlign="Center" />
                         <Text text="{rootModel>/processList/2/code_name}" width="6rem" textAlign="Center" />
                         <Text text="{rootModel>/processList/3/code_name}" width="6rem" textAlign="Center" />
@@ -120,7 +120,8 @@
                                                         filters: [
                                                             {path: 'group_code', operator: 'EQ', value1: 'SP_DOCUMENT_TYPE'}
                                                         ]
-                                                    }" selectedKey="{detailModel>/net_price_document_type_code}">
+                                                    }" selectedKey="{detailModel>/net_price_document_type_code}"
+                                                    editable="{detailViewModel>/viewMode}">
                                                 <items>
                                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                                 </items>
@@ -138,7 +139,8 @@
                                                         filters: [
                                                             {path: 'group_code', operator: 'EQ', value1: 'NET_PRICE_SOURCE_CODE'}
                                                         ]
-                                                    }" selectedKey="{detailModel>/net_price_source_code}">
+                                                    }" selectedKey="{detailModel>/net_price_source_code}"
+                                                    editable="{detailViewModel>/viewMode}">
                                                 <items>
                                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                                 </items>
@@ -205,13 +207,13 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/OPERATION_ORG}" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" value="{path: 'generalInfoList>org_code'}" />    
+                                                <Input type="Text" value="{path: 'generalInfoList>org_code'}" editable="{detailViewModel>/viewMode}"/>    
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhMaterialOrgCode" value="{path: 'generalInfoList>material_code'}"  />
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhMaterialOrgCode" value="{path: 'generalInfoList>material_code'}" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -223,7 +225,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/SUPPLIER} Code" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhSupplierCode" value="{path: 'generalInfoList>supplier_code'}"  />
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhSupplierCode" value="{path: 'generalInfoList>supplier_code'}" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -253,7 +255,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhVendorPoolCode" value="{path: 'generalInfoList>vendor_pool_code'}"  />
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhVendorPoolCode" value="{path: 'generalInfoList>vendor_pool_code'}" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -273,7 +275,8 @@
                                                                 {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_REASON_CODE'},
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                             ]
-                                                        }" selectedKey="{generalInfoList>net_price_approval_reason_code}">
+                                                        }" selectedKey="{generalInfoList>net_price_approval_reason_code}"
+                                                        editable="{detailViewModel>/viewMode}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
@@ -291,7 +294,8 @@
                                                                 {path: 'group_code', operator: 'EQ', value1: 'DP_VI_MARKET_CODE'},
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                             ]
-                                                        }" selectedKey="{generalInfoList>market_code}">
+                                                        }" selectedKey="{generalInfoList>market_code}"
+                                                        editable="{detailViewModel>/viewMode}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
@@ -305,6 +309,25 @@
                                             </t:template>
                                         </t:Column> -->
                                         <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/NET_PRICE_TYPE_CODE}" textAlign="Center" />
+                                            <t:template>
+                                                <ComboBox
+                                                    width="100%"
+                                                    items="{
+                                                            path: 'util>/Code',
+                                                            filters: [
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_TYPE'},
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                            ]
+                                                        }"
+                                                        editable="{detailViewModel>/viewMode}">
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                                    </items>
+                                                </ComboBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/EFFECTIVE_START_DATE}" textAlign="Center" />
                                             <t:template>
                                                 <DatePicker placeholder="Date" 
@@ -314,7 +337,7 @@
                                                             format: 'yyyyMMdd',
                                                             pattern: 'yyyy-MM-dd'
                                                         } 
-                                                    }" />
+                                                    }" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -327,7 +350,7 @@
                                                             format: 'yyyyMMdd',
                                                             pattern: 'yyyy-MM-dd'
                                                         } 
-                                                    }" />
+                                                    }" change=".fnChkEndDate" editable="{detailViewModel>/viewMode}"/>
                                             </t:template>
                                         </t:Column>
                                         <!-- <t:Column hAlign="Center" width="10rem">
@@ -369,7 +392,8 @@
                                                         path: 'currency>/Currency',
                                                         filters: [
                                                         ]
-                                                    }" selectedKey="{generalInfoList>currency_code}">
+                                                    }" selectedKey="{generalInfoList>currency_code}"
+                                                    editable="{detailViewModel>/viewMode}">
                                                     <items>
                                                         <core:Item key="{currency>currency_code}" text="{currency>currency_code}" />
                                                     </items>
@@ -377,9 +401,9 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
-                                            <Label text="(New)Price" textAlign="Center" />
+                                            <Label text="(New)Price" textAlign="Right" />
                                             <t:template>
-                                                <Input type="Number" value="{generalInfoList>net_price}" />
+                                                <Input type="Number" value="{generalInfoList>net_price}" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -388,12 +412,12 @@
                                                 <Text text="{path: 'generalInfoList>change_rate'}"  />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
+                                        <!-- <t:Column hAlign="Center" width="10rem">
                                             <Label text="Surrogate code" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{path: 'generalInfoList>surrogate_type_code'}"  />
                                             </t:template>
-                                        </t:Column>
+                                        </t:Column> -->
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Surrogate" textAlign="Center" />
                                             <t:template>
@@ -401,9 +425,9 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
-                                            <Label text="Maker code" textAlign="Center" />
+                                            <Label text="Maker code" textAlign="Center" editable="{detailViewModel>/viewMode}" />
                                             <t:template>
-                                                <Input type="Text" showValueHelp="true" value="{generalInfoList>maker_code}" />
+                                                <Input type="Text" showValueHelp="true" value="{generalInfoList>maker_code}" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -423,14 +447,15 @@
                                                                 {path: 'group_code', operator: 'EQ', value1: 'PAYMENT_TERMS'},
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                             ]
-                                                        }" selectedKey="{generalInfoList>payterms_code}">
+                                                        }" selectedKey="{generalInfoList>payterms_code}"
+                                                        editable="{detailViewModel>/viewMode}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
                                                 </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
+                                        <!-- <t:Column hAlign="Center" width="10rem">
                                             <Label text="(Supplier Agreement) Status code" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{path: 'generalInfoList>net_price_agreement_status_code'}"  />
@@ -441,7 +466,7 @@
                                             <t:template>
                                                 <Text text="{path: 'generalInfoList>net_price_agreement_status_name'}"  />
                                             </t:template>
-                                        </t:Column>
+                                        </t:Column> -->
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Incoterms" textAlign="Center" />
                                             <t:template>
@@ -452,7 +477,8 @@
                                                             filters: [
                                                                 {path: 'group_code', operator: 'EQ', value1: 'OP_INCOTERMS'}
                                                             ]
-                                                        }" selectedKey="{generalInfoList>incoterms}">
+                                                        }" selectedKey="{generalInfoList>incoterms}"
+                                                        editable="{detailViewModel>/viewMode}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
@@ -812,7 +838,7 @@
                                 </Table>
 
                                 <Text text="Referrer" />
-                                <Input value="{detailModel>/abc}" showValueHelp="true" valueHelpRequest=".onOpenMaterialCode" />
+                                <Input value="{detailModel>/referrer}" showValueHelp="true" valueHelpRequest=".onOpenMaterialCode" editable="{detailViewModel>/viewMode}" />
                             </VBox>
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>

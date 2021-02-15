@@ -9,13 +9,14 @@
     xmlns:lib-m="ext.lib.m"
     xmlns:lib-cm="ext.lib.control.m"
     xmlns:t="sap.ui.table"
-    xmlns:tnt="sap.tnt"    
+    xmlns:tnt="sap.tnt"     
     xmlns:co="sap.suite.ui.commons"
     xmlns:rte="sap.ui.richtexteditor"
     xmlns:u="sap.ui.unified"
     height="100%">
-
+ 
     <uxap:ObjectPageLayout
+        id= "ObjectPageLayout"
         showTitleInHeaderContent="true"
 		showEditHeaderButton="true"
         upperCaseAnchorBar="false"
@@ -46,17 +47,17 @@
 			<FlexBox wrap="Wrap">
                 <!-- base Info 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-                    <ObjectStatus title="{I18N>/APPROVAL_NO}" text=""/>
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/create_user}"/> 
-                    <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
-                    <ObjectStatus title="{I18N>/BUSINESS_UNIT}" text="{detailModel>/bizunit_name}"/>
+                    <ObjectStatus title="{I18N>/APPROVAL_NO}" text="{detailModel>/approval_number}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_local_nm}"/> 
+                    <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>                        
+                    <ObjectStatus title="{I18N>/BUSINESS_UNIT}" text="{= ${detailModel>/results/0/bizunit_name} === null ? ${detailModel>/results/0/bizunit_name} : ${detailModel>/bizunit_name}  }"/>
                 </layout:VerticalLayout>
                 <!-- base Info 끝 -->
 
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<Label text="{I18N>/STATUS} :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="{I18N>/NEW}" state="Error" />
+                    <ObjectStatus class="sapMObjectStatusLarge" text="{path:'rootModel>/selectedData/approve_status_code', formatter: '.onSetStatusText'}" state="Error" />
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
 
@@ -93,8 +94,11 @@
                             <VBox>
                                 <HBox alignItems="Center">
                                     <Label text="{I18N>/TITLE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
-                                    <Input width="20rem" placeholder="" editable="true" value="{detailModel>/approval_title}">
-                                    </Input>
+                                    <VBox>
+                                        <Input width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" visible="{= ${detailViewModel>/viewMode}}"
+                                            value="{detailModel>/approval_title}" />
+                                        <Text text="{detailModel>/approval_title}" visible="{= !${detailViewModel>/viewMode}}" />
+                                    </VBox>
                                 </HBox>
                                 <VBox>
                                     <Label text="{I18N>/DESCRIPTION}" required="true"/>
@@ -102,13 +106,11 @@
                                     <rte:RichTextEditor 
                                         width="100%" 
                                         height="200px" 
-                                        value="{detailModel>/approval_request_desc}" 
-                                        customToolbar="true" 
-                                        showGroupFont="true" 
-                                        showGroupLink="true" 
-                                        showGroupInsert="true"
-                                        editable="{detailViewModel>/viewMode}" />
+                                        value="{detailModel>/approval_contents}" 
+                                        customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"
+                                        visible="{= ${detailViewModel>/viewMode}}" />
                                     <!-- Text Editor 끝 -->
+                                    <FormattedText height="200px" htmlText="{= ${detailModel>/approval_contents} ? ${detailModel>/approval_contents} : '' }" visible="{= !${detailViewModel>/viewMode}}"/>
                                 </VBox>
                             </VBox>
 						</uxap:blocks>
@@ -124,53 +126,38 @@
 						<uxap:blocks>
                             <VBox>
                             <t:Table id="BasePriceDetailTable" selectionMode="MultiToggle" rowSelectionChange=".onRowSelectionChange" 
-                                 fixedColumnCount="3" visibleRowCount="5" rows="{detailModel>/details}" >
+                                 fixedColumnCount="3" visibleRowCount="5" rows="{detailModel>/results}" >
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <Title text="{I18N>/BASE_PRICE_LIST}({= ${detailModel>/details}.length || 0}) " level="H2"/>
                                         <ToolbarSpacer />
-                                        <!-- <Label text="{I18N>/MANAGEMENT}/{I18N>/MARKET_PRICE}" class="sapUiTinyMarginEnd" textAlign="Left" /> 
-                                        <ComboBox id="listManagementComboBox" width="7rem" selectedKey=""
-                                            items="{path: 'rootModel>/management_mprice_code'}">
-                                            <items>
-                                                <core:Item key="{rootModel>code}" text="{rootModel>text}" />
-                                            </items>
-                                        </ComboBox>
-                                        <ToolbarSeparator/> -->
-                                         <Button text="{I18N>/ADDITION}({I18N>/MANAGEMENT})" type="Emphasized" press=".onRowSelectadd('MANAGEMENT')" />
-                                        <Button text="{I18N>/ADDITION}({I18N>/MARKET_PRICE})" type="Emphasized" press=".onRowSelectadd('MARKET_PRICE')" />
-                                        <Button text="{I18N>/DELETE}" type="Emphasized" press=".onListRowDelete" />
-
+                                        <Button text="{I18N>/ADDITION}({I18N>/MANAGEMENT})" type="Emphasized" press=".onRowSelectadd('MANAGEMENT')" visible="{= ${detailViewModel>/viewMode}}"/>
+                                        <Button text="{I18N>/ADDITION}({I18N>/MARKET_PRICE})" type="Emphasized" press=".onRowSelectadd('MARKET_PRICE')" visible="{= ${detailViewModel>/viewMode}}"/>
+                                        <Button text="{I18N>/DELETE}" type="Emphasized" press=".onListRowDelete" visible="{= ${detailViewModel>/viewMode}}"/>
 
                                         <u:FileUploader id="FileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
-                                        buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="{I18N>/UPLOAD}" enabled="false"/>
-                                        <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="{I18N>/TEMPLATE}"/>  
+                                            buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="{I18N>/UPLOAD}" enabled="false" visible="{= ${detailViewModel>/viewMode}}" />
+                                        <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="{I18N>/TEMPLATE}" visible="{= ${detailViewModel>/viewMode}}" />  
 
-                                        <!-- <Button text="{I18N>/TEMPLATE}" type="Emphasized" press=".onTemplateDownload" />
-                                        <Button text="{I18N>/UPLOAD}" type="Emphasized" press=".onExcelUpload" /> -->
-
-                                        <!-- <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
-                                        <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
-                                        <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/> --> 
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
                                         <t:Column hAlign="Left" width="3rem">
-                                        <Label text="{I18N>/STATUS}" textAlign="Center" width="100%"/>
-                                        <t:template>
-                                            <Text text="{detailModel>status}" />
-                                        </t:template>
+                                            <Label text="{I18N>/STATUS}" textAlign="Center" width="100%" />
+                                            <t:template>
+                                                <Text text="{detailModel>status}" />
+                                            </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="5rem">
                                             <Label text="{I18N>/LINE_NO}" textAlign="Center" width="100%"/>
                                             <t:template>
-                                                <Text text="{detailModel>line_no}" />
+                                                <Text text="{detailModel>item_sequence}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
                                             <Label text="{I18N>/MANAGEMENT}/{I18N>/MARKET_PRICE}" textAlign="Center" width="100%"/>
                                             <t:template>
-                                                <Text text="{detailModel>management}" />
+                                                <Text text="{detailModel>management_mprice_name}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
@@ -182,135 +169,183 @@
                                         <t:Column hAlign="Left" width="8rem">
                                             <Label text="{I18N>/SP_APPLY_START_DATA_YYYYMM}" textAlign="Center" width="100%" required="true"/>
                                             <t:template>
-                                                <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM"
-                                                            value="{ path: 'detailModel>apply_start_date'}" change=".onChangeStartData" />
+                                                <VBox>
+                                                    <DatePicker editable="true" displayFormat="y-MM" visible="{= ${detailViewModel>/viewMode}}" change=".onChangeStartData"
+                                                            value="{ path: 'detailModel>apply_start_yyyymm' }" />
+                                                    <Text visible="{= !${detailViewModel>/viewMode}}" 
+                                                        text="{ path: 'detailModel>apply_start_yyyymm',
+                                                                formatter: '.onChangeDateFormatYYYYMM'}" />
+                                                </VBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
                                             <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%" required="true"/>
                                             <t:template>
-                                                <DatePicker editable="{= ${detailModel>management} === '관리' }" displayFormat="y-MM" 
-                                                            value="{ path: 'detailModel>apply_end_date' }" change=".onChangeEndData" />
+                                                <VBox>
+                                                    <DatePicker editable="{= ${detailModel>management_mprice_name} === '관리' }" displayFormat="y-MM" visible="{= ${detailViewModel>/viewMode}}"
+                                                            value="{ path: 'detailModel>apply_end_yyyymm' }" change=".onChangeEndData" />
+                                                    <Text visible="{= !${detailViewModel>/viewMode}}" 
+                                                        text="{ path: 'detailModel>apply_end_yyyymm',
+                                                                formatter: '.onChangeDateFormatYYYYMM'}" />    
+                                                </VBox>
                                             </t:template>
                                         </t:Column>
-                                    <t:Column hAlign="Left" width="10rem">
-                                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox id="listDivComboBox" width="100%" selectedKey="{detailModel>business_division}" 
-                                                items="{
-                                                        path: 'rootModel>/org_Division'
-                                                       }">
-                                                <items>
-                                                    <core:Item key="{rootModel>bizdivision_code}" text="{rootModel>bizdivision_code} [{rootModel>bizdivision_name}]" />
-                                                </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/CORPORATION}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox id="CorpComboBox" width="100%"  selectedKey="{detailModel>corporation}" 
-                                                editable="{= ${detailModel>row_state} === 'edit' }"
-                                                items="{ path: 'rootModel>/org_Company',
-                                                        filters: [
-                                                        {path: 'affiliate_code', operator: 'EQ', value1: 'C100'}
-                                                        ]
-                                                }" change=".onChangeCorporation"> 
-                                                <items>
-                                                    <core:Item key="{rootModel>company_code}" text="{rootModel>affiliate_code} [{rootModel>company_code}]" />
-                                                </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Center" width="8rem">
-                                        <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
-                                                selectedKey="{detailModel>plant}" 
-                                                items="{
-                                                        path: 'detailModel>org_Plant'
-                                                        }">
-                                                <items>
-                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
-                                                </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/SUPPLY_PLANT}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
-                                                selectedKey="{detailModel>supply_plant}" 
-                                                items="{
-                                                        path: 'detailModel>org_Plant'
-                                                        }">
-                                                <items>
-                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
-                                                </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/MATERIAL}{I18N>/CODE}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <VBox>
-                                                <Input value="{detailModel>material_code}" showValueHelp="true"
-                                                    valueHelpRequest=".onMaterialMasterMultiDialogPress">
-                                                </Input>
-                                            </VBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/MATERIAL_NAME}" textAlign="Center" width="100%"/>
-                                        <t:template>
-                                            <Input editable="FALSE" value="{detailModel>material}"/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" width="100%"/>
-                                        <t:template>
-                                            <Input editable="FALSE" value="{detailModel>vendor_pool_code}"/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
-                                        <t:template>
-                                            <Input editable="FALSE" value="{detailModel>vendor_pool}"/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox selectedKey="{detailModel>currency_code}"
-                                                items="{ path: 'currModel>/org_Currency'}">
-                                            <items>
-                                                <core:Item key="{currModel>currency_code}" text="{currModel>currency_code}" />
-                                            </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/QUANTITY_UNIT}" textAlign="Center" width="100%"/> 
-                                        <t:template>
-                                            <Input editable="FALSE" value="{detailModel>base_uom_code}"/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}" 
-                                                type="Number" change=""/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/BUYER}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <MultiInput editable="{= ${detailModel>row_state} === 'edit' }"
-                                                    valueHelpRequest="onEmployeeDialogPress" value="{detailModel>buyer}"/>
-                                        </t:template>
-                                    </t:Column>
-                                </t:columns>
-                            </t:Table>
+                                        <t:Column hAlign="Left" width="10rem">
+                                            <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" required="true" />
+                                            <t:template>
+                                                <VBox>
+                                                    <ComboBox id="listDivComboBox" width="100%" selectedKey="{detailModel>bizdivision_code}" visible="{= ${detailViewModel>/viewMode}}"
+                                                        items="{
+                                                                path: 'rootModel>/org_Division'
+                                                            }">
+                                                        <items>
+                                                            <core:Item key="{rootModel>bizdivision_code}" text="{rootModel>bizdivision_code} [{rootModel>bizdivision_name}]" />
+                                                        </items>
+                                                    </ComboBox>
+                                                    <Text text="{detailModel>bizdivision_code} [{detailModel>bizdivision_name}]" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/CORPORATION}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <ComboBox id="CorpComboBox" width="100%"  selectedKey="{detailModel>company_code}"  visible="{= ${detailViewModel>/viewMode}}"
+                                                        editable="true"
+                                                        items="{ path: 'rootModel>/org_Company',
+                                                                filters: [
+                                                                {path: 'affiliate_code', operator: 'EQ', value1: 'C100'}
+                                                                ]
+                                                        }" change=".onChangeCorporation"> 
+                                                        <items>
+                                                            <core:Item key="{rootModel>company_code}" text="{rootModel>affiliate_code} [{rootModel>company_code}]" />
+                                                        </items>
+                                                    </ComboBox>
+                                                    <Text text="{detailModel>affiliate_code} [{detailModel>company_code}]" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="8rem">
+                                            <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <ComboBox width="100%" editable="true" visible="{= ${detailViewModel>/viewMode}}"
+                                                        selectedKey="{detailModel>plant_code}" 
+                                                        items="{
+                                                                path: 'detailModel>org_Plant'
+                                                                }"
+                                                        >
+                                                        <items>
+                                                            <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
+                                                        </items>
+                                                    </ComboBox>
+                                                    <Text text="{detailModel>plant_code}[{detailModel>plant_name}]" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/SUPPLY_PLANT}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <ComboBox width="100%" editable="true" visible="{= ${detailViewModel>/viewMode}}"
+                                                        selectedKey="{detailModel>supply_plant_code}" 
+                                                        items="{
+                                                                path: 'detailModel>org_Plant'
+                                                                }">
+                                                        <items>
+                                                            <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
+                                                        </items>
+                                                    </ComboBox>
+                                                    <Text text="{detailModel>supply_plant_code}[{detailModel>supply_plant_name}]" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/MATERIAL}{I18N>/CODE}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <Input value="{detailModel>material_code}" showValueHelp="true" visible="{= ${detailViewModel>/viewMode}}"
+                                                        valueHelpRequest=".onMaterialMasterMultiDialogPress" />
+                                                    <Text text="{detailModel>material_code}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/MATERIAL_NAME}" textAlign="Center" width="100%"/>
+                                            <t:template>
+                                                <VBox>    
+                                                    <Input editable="FALSE" value="{detailModel>material_name}" visible="{= ${detailViewModel>/viewMode}}" />
+                                                    <Text text="{detailModel>material_name}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox> 
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="10rem">
+                                            <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" width="100%"/>
+                                            <t:template>
+                                                <VBox> 
+                                                    <Input editable="FALSE" value="{detailModel>vendor_pool_code}" visible="{= ${detailViewModel>/viewMode}}" />
+                                                    <Text text="{detailModel>vendor_pool_code}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox> 
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="20rem">
+                                            <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <Input editable="FALSE" value="{detailModel>vendor_pool_local_name}" visible="{= ${detailViewModel>/viewMode}}" />
+                                                    <Text text="{detailModel>vendor_pool_local_name}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <ComboBox selectedKey="{detailModel>currency_code}" visible="{= ${detailViewModel>/viewMode}}"
+                                                        items="{ path: 'currModel>/org_Currency' }">
+                                                    <items>
+                                                        <core:Item key="{currModel>currency_code}" text="{currModel>currency_code}" />
+                                                    </items>
+                                                    </ComboBox>
+                                                    <Text text="{detailModel>currency_code}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/QUANTITY_UNIT}" textAlign="Center" width="100%"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <Input editable="FALSE" value="{detailModel>base_uom_code}" visible="{= ${detailViewModel>/viewMode}}" />
+                                                    <Text text="{detailModel>base_uom_code}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>    
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <Input editable="true" type="Number" change="" visible="{= ${detailViewModel>/viewMode}}"
+                                                        value="{detailModel>base_price}" />
+                                                    <Text visible="{= !${detailViewModel>/viewMode}}" 
+                                                        text="{ path: 'detailModel>base_price',
+                                                                formatter: '.onChangeNumber'}" />  
+                                                </VBox>
+                                                
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/BUYER}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <MultiInput editable="true" visible="{= ${detailViewModel>/viewMode}}"
+                                                        valueHelpRequest="onEmployeeDialogPress" value="{detailModel>buyer_empno}"/>
+                                                    <Text text="{detailModel>buyer_empno}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                </VBox>
+                                                
+                                            </t:template>
+                                        </t:Column>
+                                    </t:columns>
+                                </t:Table>
                             </VBox>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -364,9 +399,13 @@
         <!-- footer 시작 -->
         <uxap:footer>
 			<OverflowToolbar visible="true">
-				<ToolbarSpacer />
-                <Button type="Emphasized" text="{I18N>/TEMP_SAVE}" visible="true" press=".onSave" />
-                <Button type="Emphasized" text="{I18N>/REQUEST}" visible="true" press=".onDraft" />
+                <ToolbarSpacer />
+                <!-- <Button type="Emphasized" text="{I18N>/EDIT_CANCEL}" visible="{= ${detailViewModel>/viewMode}}" press=".onCancel" /> -->
+                <Button type="Emphasized" text="{I18N>/DELETE}" visible="{= !${detailViewModel>/viewMode}}" press=".onDelete" />
+                <Button type="Emphasized" text="{I18N>/EDIT}" visible="{= !${detailViewModel>/viewMode}}" press=".onUpdate" />
+                <Button type="Emphasized" text="{I18N>/TEMP_SAVE}" visible="{= ${detailViewModel>/viewMode}}" press=".onSave" />
+                <Button type="Emphasized" text="{I18N>/REQUEST}" visible="{= ${detailViewModel>/viewMode}}" press=".onDraft" />
+                <Button type="Emphasized" text="{I18N>/APPROVE}" visible="{= ${rootModel>/selectedData/approve_status_code} === 'AR' ? true : false}" press=".onApprove" />
 			</OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->

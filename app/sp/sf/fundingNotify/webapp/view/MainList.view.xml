@@ -73,7 +73,7 @@
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
-                            <Button text="{I18N>/DISPLAY}" type="Emphasized" press=".onPageSearchButtonPress"/>
+                            <Button id="pageSearchButton" text="{I18N>/DISPLAY}" type="Emphasized" press=".onPageSearchButtonPress"/>
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>

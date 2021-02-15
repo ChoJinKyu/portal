@@ -141,30 +141,30 @@
 			},
 			"routes": [
                 {
-                    "name": "Detail",
-                    "pattern": "Detail/{new}",
-                    "target": ["Detail"]
+                    "name": "SheetMgt",
+                    "pattern": "SheetMgt/{new}",
+                    "target": ["SheetMgt"]
                 },
                 {
-                    "name": "Master",
+                    "name": "MainList",
                     "pattern": ":search:",
-                    "target": ["Master"]
+                    "target": ["MainList"]
                 }
             ],
 			"targets": {
-				"Master": {
+				"MainList": {
 					"viewType": "XML",
 					"transition": "slide",
 					"clearControlAggregation": true,
-					"viewId": "Master",
-					"viewName": "Master",
+					"viewId": "MainList",
+					"viewName": "MainList",
                     "viewLevel": 1
 				},
-				"Detail": {
+				"SheetMgt": {
 					"viewType": "XML",
 					"transition": "slide",
-					"viewName": "Detail",
-					"viewId": "Detail",
+					"viewName": "SheetMgt",
+					"viewId": "SheetMgt",
                     "viewLevel": 2,
 					"clearControlAggregation": true
                     

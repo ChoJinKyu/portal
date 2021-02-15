@@ -279,7 +279,11 @@
                     <table:Column id="assetMoldNoColumn" width="12em">
                         <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-							<Link id="mold_number" text="{list>mold_number}" press="handleLinkPress"/>
+                            <Link 
+                                id="mold_number" 
+                                text="{list>mold_number}" 
+                                enabled="{= ${list>asset_status_code} ==='P' || ${list>asset_status_code} === 'S' ? true:false }"
+                                press="handleLinkPress" />
 						</table:template>
                     </table:Column>
                     <table:Column id="assetSeqColumn" width="3em" hAlign="Center">

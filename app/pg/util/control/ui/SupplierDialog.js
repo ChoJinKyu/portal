@@ -67,7 +67,6 @@ sap.ui.define([
 
             // 운영조직
             this.oOperationOrgComb = new ComboBox({
-                id: "operationOrgSp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -83,7 +82,6 @@ sap.ui.define([
 
             //운영단위
             this.oOperationUnitComb = new ComboBox({
-                id: "operationUnitSp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -99,7 +97,6 @@ sap.ui.define([
 
             //벤더 레벨1
             this.oVendorPoolLvl1 = new ComboBox({
-                id: "vendorPoolLvl1Sp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -116,7 +113,6 @@ sap.ui.define([
             
             //벤더 레벨2
             this.oVendorPoolLvl2 = new ComboBox({
-                id: "vendorPoolLvl2Sp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -133,7 +129,6 @@ sap.ui.define([
 
             //벤더 레벨3
             this.oVendorPoolLvl3 = new ComboBox({
-                id: "vendorPoolLvl3Sp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -150,7 +145,6 @@ sap.ui.define([
 
             //벤더 레벨4
             this.oVendorPoolLvl4 = new ComboBox({
-                id: "vendorPoolLvl4Sp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -167,7 +161,6 @@ sap.ui.define([
 
             //벤더 레벨5
             this.oVendorPoolLvl5 = new ComboBox({
-                id: "vendorPoolLvl5Sp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -423,36 +416,30 @@ sap.ui.define([
             return [
                 new Column({
                     width: "8rem",
-                    hAlign: "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT")}),
-                    template: new Text({ text: "{operation_unit_name}"})
+                    template: new Text({ text: "{operation_unit_name}" , textAlign : "Left"})
                 }),
                 new Column({
-                    id : "spColumnLvl1",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "1" }),
                     template: new Text({ text: "{vendor_pool_level1_name}" })
                 }),
                 new Column({
-                    id : "spColumnLvl2",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "2" }),
                     template: new Text({ text: "{vendor_pool_level2_name}" })
                 }),
                 new Column({
-                    id : "spColumnLvl3",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "3" }),
                     template: new Text({ text: "{vendor_pool_level3_name}" })
                 }),
                 new Column({
-                    id : "spColumnLvl4",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "4" }),
                     template: new Text({ text: "{vendor_pool_level4_name}" })
                 }),
                 new Column({
-                    id : "spColumnLvl5",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "5" }),
                     template: new Text({ text: "{vendor_pool_level5_name}" })
@@ -514,7 +501,6 @@ sap.ui.define([
                     };
                     var oModel = new sap.ui.model.json.JSONModel(mData);
                     that.oOperationOrgComb.setModel(oModel);
-                    //that.oSearchObj.operationOrg 넘겨 받은 값에 있을 경우 셋팅 해주고 
                     //임시로 셋팅 해둔다
                     that.oOperationOrgComb.setSelectedKey("BIZ00300").fireChange();
                 }.bind(this)
@@ -535,7 +521,6 @@ sap.ui.define([
                     };
                     var oModel = new sap.ui.model.json.JSONModel(mData);
                     that.oOperationUnitComb.setModel(oModel);
-                    //that.oSearchObj.operationUnit 넘겨 받은 값에 있을 경우 셋팅 해주고 
                     //임시로 셋팅 해둔다
                     that.oOperationUnitComb.setSelectedKey("RAW_MATERIAL").fireChange();
                 }.bind(this)
@@ -859,14 +844,13 @@ sap.ui.define([
             that.oVendorPoolLvl4.oParent.setVisible(false);
             that.oVendorPoolLvl5.oParent.setVisible(false);
             
-            // 앞 화면에서 넘어온 supplierCode가 있는 경우 화면에 넘김
-            if (!!this.oSearchObj.supplierCode) {
-                this.oSupplierCode.setValue(null);
-                this.oSupplierCode.setValue(this.oSearchObj.supplierCode);
-            }
+            // 앞 화면에서 넘어온 supplierCode가 있는 경우 화면에 넘김(Input 가능한 경우)
+            // if (!!this.oSearchObj.supplierCode) {
+            //     this.oSupplierCode.setValue(null);
+            //     this.oSupplierCode.setValue(this.oSearchObj.supplierCode);
+            // }
 
             // 데이터 load
-            //this.loadData();
             this.loadTenantCode();
             this.loadOperationOrgData();
             this.loadOperationUnitData();

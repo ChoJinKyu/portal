@@ -532,6 +532,8 @@ sap.ui.define([
 		 */
         onPageSearchButtonPress: function (oEvent) {
 
+            //debugger;
+
             //if(this.validator.validate(this.byId("searchRequestDate")) !== true) return;
 
             if (oEvent.getParameters().refreshButtonPressed) {

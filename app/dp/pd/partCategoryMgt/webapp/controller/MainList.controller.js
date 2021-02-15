@@ -76,6 +76,11 @@ sap.ui.define([
                     // 성공시
                     .then((function (jNodes) {
                         
+                        for(var i=0; i<jNodes[1].results.length; i++) {
+                            var local_update_dtm = jNodes[1].results[i].local_update_dtm;
+                            jNodes[1].results[i].local_update_dtm = this.dateFormatter.toDateTimeString(local_update_dtm);
+                        }
+
                         this.getView().setModel(new JSONModel({
                             "pdPartCategoryView": {
                                 "nodes": jNodes[0],
@@ -83,15 +88,9 @@ sap.ui.define([
                             }
                         }), "tree");
 
-                    //    var treeData = this.getModel("tree").oData.pdPartCategoryView.list.results;
+                        this.getModel("tree").getData()
+                        
 
-                    //    for(var i=0; i>treeData.legnth; i++) {
-                    //        var local_update_dtm = treeData[i].local_update_dtm;
-                    //        treeData[i].local_update_dtm = this.dateFormatter.toDateTimeString(local_update_dtm);
-                    //    }
-
-                    //    this.getModel("tree").oData.pdPartCategoryView.list.results = treeData;
-                       
                     }).bind(this))
                     // 실패시
                     .catch(function (oError) {

@@ -194,9 +194,16 @@ service MoldApprovalV4Service {
          approvalMaster :  ApprovalMaster_v4
     }
 	
+    type moldMstStatus {
+        approvalMaster :  ApprovalMaster_v4;
+        approvalDetails :  array of ApprovalDetails_v4;
+    }
+	
 	
 	action updateApproveStatusCode ( inputData : apprStatus ) returns resultMsg; // request cancel 시 필요  
 
     action saveMoldApproval ( inputData : data ) returns resultMsg;
     action deleteApproval (inputData : ApprDeleteData) returns resultMsg;
+
+    action updateMoldMstStatusCode ( inputData : moldMstStatus ) returns resultMsg;
 }

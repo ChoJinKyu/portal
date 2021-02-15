@@ -340,7 +340,7 @@ sap.ui.define([
         }, 
 
         callAjax : function(data, fn , callback){
-            var url = "/dp/md/remodelRepairMgtSup/webapp/srv-api/odata/v4/dp.RrMgtListV4Service/" + fn;
+            var url = "/dp/md/remodelRepairMgtSup/webapp/srv-api/odata/v4/dp.RemodelRepairMgtV4Service/" + fn;
 
             $.ajax({
                 url: url,

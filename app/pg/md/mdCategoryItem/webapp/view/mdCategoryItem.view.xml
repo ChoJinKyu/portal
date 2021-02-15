@@ -140,7 +140,7 @@
                 <Column  hAlign="Center" width="3em" >
                     <Text text="" />
                 </Column>
-                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" width="3em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" visible="false" width="3em" >
                     <Text text="{I18N>/SPMD_CHARACTER_SORT_SEQ}" />
                 </Column>
                 <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="false">

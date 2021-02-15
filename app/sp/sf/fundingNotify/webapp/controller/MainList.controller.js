@@ -263,15 +263,6 @@ sap.ui.define([
                 persoService: MainListPersoService,
                 hasGrouping: true
             }).activate();
-        }, 
-
-        _utcTimeZon: function (oDate) {
-
-
-
-            return oDate;
         }
-
-
     });
 });

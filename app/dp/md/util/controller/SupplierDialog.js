@@ -42,7 +42,9 @@ sap.ui.define([
             useBatch: true
         });
 
-
+ /**
+  * 단건 선택 supplier 
+  */
     var SupplierDialog = Parent.extend("dp.util.SupplierDialog", {
 
         metadata: {
@@ -60,9 +62,21 @@ sap.ui.define([
 
             this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/SELECT_SUPPLIER"));
 
+            console.log("searchFilters >> " , this.getProperty("items"));
+            var items = this.getProperty("items"); 
+            var company_code = "";
+            var org_code = "";
+            items.filters.forEach(function(data){
+                if(data.sPath == 'company_code'){
+                    company_code = data.oValue1;
+                }else if(data.sPath == 'org_code'){
+                    org_code = data.oValue1;
+                }
+            });
+
             //this.oSearchField = new sap.m.SearchField({ placeholder: "검색"});
             this.oCompanyCode =    new ComboBox({
-                                        selectedKey: "",
+                                        selectedKey: company_code,
                                         items: {
                                         path: 'company>/Org_Company',
                                         filters: [
@@ -77,7 +91,7 @@ sap.ui.define([
                                         width : '100%'
                                     }); 
             this.oOrgCode =    new ComboBox({
-                                        selectedKey: "",
+                                        selectedKey: org_code,
                                         items: {
                                         path: 'plant>/Divisions',
                                         filters: [
@@ -236,7 +250,7 @@ sap.ui.define([
         //},
 
         loadData : function(){ 
-            console.log(" >>> loadData "); 
+         
             var that = this;
             var cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, sTenantId)]; 
             console.log(" cFilters ", cFilters);

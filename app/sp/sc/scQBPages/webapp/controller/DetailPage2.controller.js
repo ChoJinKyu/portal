@@ -103,12 +103,16 @@ sap.ui.define([
                     NegoItemSuppliers : {
 
                     },
+                    NegoItemNonPrice: {
+                        ItemsNonPriceDtl: []
+                    },
                     NPHeader : []
                 });
                 this.getView().setModel(this.viewModel, "viewModel");
                 this.getView().setModel( new JSONModel(this.viewModel.getData().NegoHeaders), "NegoHeaders");
                 this.getView().setModel( new JSONModel(this.viewModel.getData().NegoItemPrices), "NegoItemPrices");
                 this.getView().setModel( new JSONModel(this.viewModel.getData().NegoItemSuppliers), "NegoItemSuppliers");
+                this.getView().setModel( new JSONModel(this.viewModel.getData().NegoItemSuppliers), "NegoItemNonPrice");
                 
                 var NPHeader = { "list": [{ h1: "AAAAA" }] };
                 this._NPHeaderTemp = {
@@ -346,8 +350,8 @@ sap.ui.define([
                     oView.getModel("NegoHeaders").setProperty("/nego_progress_status/nego_progress_status_name", 'Draft' );
 
                     oView.byId("checkbox_Immediately").fireSelect();
-                    // 사용자 session 적용 전까지 default 사번으로 사용
-                    
+
+                    // 사용자 session 적용 전까지 default 사번으로 사용                    
                     oView.getModel("NegoHeaders").setProperty("/buyer_empno", '100000' );
                     oView.getModel("NegoHeaders").setProperty("/buyer_employee/employee_name", '**매' );
                     oView.getModel("NegoHeaders").setProperty("/buyer_employee/department_name", '석유화학.구매.원재료구매1팀' );
@@ -421,7 +425,7 @@ sap.ui.define([
                     type: "GET",
                     contentType: "application/json",
                     success: function(data){
-                        // debugger;
+                        // 
                         var v_viewHeaderModel = oView.getModel("viewModel").getData();
                         v_viewHeaderModel.NegoHeaders = data.value[0];
 
@@ -447,14 +451,32 @@ sap.ui.define([
 
                         this._supplierNumberModel(String(data.value[0].number_of_award_supplier));
                         
-    
-
+                        // contact point add token
+                        if(data.value[0].contact_point != null){
+                            this.byId("inputContactPoint").addToken(new sap.m.Token({
+                                text: data.value[0].contact_point.employee_name,
+                                key: data.value[0].contact_point.employee_number
+                            }));
+                        }
+                        
+                        
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                         oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
                         oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
-                        oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
-                        oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
-                        oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice")[0].note_content = decodeURIComponent(escape(window.atob(data.value[0].ItemsNonPrice[0].note_content)));
+                        if(data.value[0].nego_document_desc !=null){
+                            console.log("decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc)))======", decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))));
+                            oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
+                        }
+                        if(data.value[0].note_content !=null){
+                            console.log("decodeURIComponent(escape(window.atob(data.value[0].note_content)))======", decodeURIComponent(escape(window.atob(data.value[0].note_content))));
+                            oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+                        }
+                        var itemNonPrices = oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice");
+                        itemNonPrices.forEach(element => {
+                            element.note_content = this.getDecodeString(element.note_content);//decodeURIComponent(escape(window.atob(element.note_content)));
+                            
+                        });
+                        
                         // editable="{=${propInfo>/isEditMode}}" 
                         this.byId("reDescription").setEditable(false);
                         this.byId("reNoteToSupplier").setEditable(false);
@@ -488,6 +510,7 @@ sap.ui.define([
 
                         // this.getView().byId("tableLines").getVisibleRowCount();
                         
+                        oView.getModel("NegoHeaders").refresh(true);
 
                         // data.value[0].Items.lengt
                         // oView.byId("table1")
@@ -497,6 +520,10 @@ sap.ui.define([
                         console.log( "error :: " + e.responseText);
                     }
                 });
+            },
+
+            getDecodeString: function (oData) {
+                return decodeURIComponent(escape(window.atob(oData)));
             },
 
             _update : function(uPath, uArray){
@@ -599,10 +626,14 @@ sap.ui.define([
                                 
                                 
                                 }  else {
-
+                                    if(this.byId("inputContactPoint").getTokens()[0]){
+                                        oModel.contact_point_empno = this.byId("inputContactPoint").getTokens()[0].getKey();
+                                    }
                                     this._CallUpsertProc("010");
                                     
                                 }
+                                
+                                
                             }
                         }.bind(this)
                     });
@@ -775,18 +806,7 @@ sap.ui.define([
                         this.setSupplierDeleteList( objTemp.Suppliers );
                         objTemp.Suppliers = [];
 
-                        var lengthTemp = 0;//this.getView().byId("table_Specific").getItems().length-1;
-                        var seqTemp = "00001";//this.getView().byId("table_Specific").getItems()[lengthTemp].getCells()[0].getCustomData()[0].getValue();
-                        
-                        if( this.getView().byId("table_Specific").getItems().length > 0 ) {
-                            lengthTemp = this.getView().byId("table_Specific").getItems().length-1;
-                            // seqTemp = this.getView().byId("table_Specific").getItems()[lengthTemp].getCells()[0].getCustomData()[0].getValue();
-                        }
-
-                        // this.getView().byId("table_Specific").getItems()[0].getCells()[0].getCustomData()[0].getValue()
-
                         for( var i = 0 ; i < pToken.length ; i++ ) {
-
                             if( pToken[i].business_partner_code != "" ) {
 
                                 // business_partner_code: "VN01970300"
@@ -821,6 +841,8 @@ sap.ui.define([
                                 objTemp.evaluation_type_code = pToken[i].business_partner_register_status_code;
                                 objTemp.evaluation_type_name = pToken[i].business_partner_register_status_name;
 
+                                objTemp.operation_org_code = pToken[i].org_code;
+                                // objTemp.operation_org_type_code = pToken[i].type_code;
                                 console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
 
                                 objTemp.only_maker_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
@@ -889,6 +911,7 @@ sap.ui.define([
                     "nego_item_number": oObj.nego_item_number,
                     "item_supplier_sequence": this.getCheckObject(oObj,"item_supplier_sequence", ""),
                     "operation_org_code": oObj.operation_org_code,
+                    "operation_org_type_code": oObj.operation_org_type_code,
                     "operation_unit_code": oObj.operation_unit_code,
                     "nego_supplier_register_type_code": "S",
                     "evaluation_type_code": oObj.evaluation_type_code,
@@ -1240,6 +1263,12 @@ sap.ui.define([
             onPressNPSelectButton: function (e) {
                 // @ts-ignore
                 this._NPSelectIndex = e.oSource.getParent().getIndex();
+
+                var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+                this._selectedNPItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+
+                this.getView().getModel("NegoItemNonPrice").setData(this._selectedNPItem);
+                
                 // @ts-ignore
                 // this._NonPriceInfPopup.open();
                 if (!this._NonPriceInf) {
@@ -1367,9 +1396,9 @@ sap.ui.define([
                                     if( cell.getId().indexOf("toggleBtnDisplay") != -1 ) { 
                                         objTemp.bidding_start_net_price_flag = cell.getPressed() ? "Y" : "N" ;
                                     }
-                                    if( cell.getId().indexOf("datePickerMaturitydate") != -1 ) { 
-                                        objTemp.maturity_date = cell.getDateValue();
-                                    }
+                                    // if( cell.getId().indexOf("datePickerMaturitydate") != -1 ) { 
+                                    //     objTemp.maturity_date = cell.getDateValue();
+                                    // }
                                     if( cell.getId().indexOf("inputCurrentPrice") != -1 ) { 
                                         objTemp.current_price = Number(cell.getValue());
                                     }
@@ -1516,12 +1545,21 @@ sap.ui.define([
                 if( typeof returnValue === "number" ) {
                     result = Number( oObj[oField] );
                 }else if( typeof returnValue === "object" ){ // date type
-                    result = new Date( oObj[oField] );
+                     result = returnValue === null ? null : new Date( oObj[oField] );
                 }else {
+                    
                     if( returnValue === "encoding" ){
-                        result = this.htmlEncoding(oObj[oField]);
+                        
+                        if(oObj[oField]){
+                            result = this.htmlEncoding(oObj[oField]);
+                        }else{
+                            result = null;
+                            returnValue = null;
+                        }
+                        
                     }else {
                         result = oObj[oField];
+                        // result = null;
                     }                    
                 }
 
@@ -1652,7 +1690,7 @@ sap.ui.define([
                         vendor_pool_code             : this.getCheckObject(element,"vendor_pool_code",""),
                         request_quantity             : this.getCheckObject(element,"request_quantity",0),
                         uom_code                     : this.getCheckObject(element,"uom_code",""),
-                        maturity_date                : this.getCheckObject(element,"maturity_date",new Date()),
+                        maturity_date                : this.getCheckObject(element,"maturity_date",null),
                         currency_code                : this.getCheckObject(element,"currency_code",""),
                         response_currency_code       : this.getCheckObject(element,"response_currency_code",""),
                         exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
@@ -1749,29 +1787,29 @@ sap.ui.define([
                     negoitemnonprices.push(oItem);
                     // }
 
-                    // var oItemNonPriceDtls = element.ItemsNonPriceDtl;
-                    // oItemNonPriceDtls.forEach(element2 => {
+                    var oItemNonPriceDtls = element.ItemsNonPriceDtl;
+                    oItemNonPriceDtls.forEach(element2 => {
 
-                    //     // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
+                        // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
-                    //         var oDtlItem = {
-                    //             _row_state_             : that.getCheckObject(element2,"_row_state_",""),
-                    //             tenant_id               : that.getCheckObject(element2,"tenant_id",""),
-                    //             nego_header_id          : that.getCheckObject(element2,"nego_header_id", -1),
+                            var oDtlItem = {
+                                _row_state_             : that.getCheckObject(element2,"_row_state_",""),
+                                tenant_id               : that.getCheckObject(element2,"tenant_id",""),
+                                nego_header_id          : that.getCheckObject(element2,"nego_header_id", -1),
                                 
-                    //             nonpr_item_number       : oItem.nonpr_item_number,
-                    //             nonpr_dtl_item_number   : that.getCheckObject(element2,"nonpr_dtl_item_number", ""),
+                                nonpr_item_number       : oItem.nonpr_item_number,
+                                nonpr_dtl_item_number   : that.getCheckObject(element2,"nonpr_dtl_item_number", ""),
 
-                    //             supeval_from_date       : that.getCheckObject(element2,"supeval_from_date", new Date()),
-                    //             supeval_to_date         : that.getCheckObject(element2,"supeval_to_date", new Date()),
-                    //             supeval_from_value      : that.getCheckObject(element2,"supeval_from_value", 0),
-                    //             supeval_to_value        : that.getCheckObject(element2,"supeval_to_value", 0),
-                    //             supeval_text_value      : that.getCheckObject(element2,"supeval_text_value", ""),
-                    //             supeval_score           : that.getCheckObject(element2,"supeval_score", 0),
-                    //         };
-                    //         negoitemnonpricedtls.push(oDtlItem);
-                    //     // }
-                    // });
+                                supeval_from_date       : that.getCheckObject(element2,"supeval_from_date", new Date()),
+                                supeval_to_date         : that.getCheckObject(element2,"supeval_to_date", new Date()),
+                                supeval_from_value      : that.getCheckObject(element2,"supeval_from_value", 0),
+                                supeval_to_value        : that.getCheckObject(element2,"supeval_to_value", 0),
+                                supeval_text_value      : that.getCheckObject(element2,"supeval_text_value", ""),
+                                supeval_score           : that.getCheckObject(element2,"supeval_score", 0),
+                            };
+                            negoitemnonpricedtls.push(oDtlItem);
+                        // }
+                    });
                 }.bind(this));
                 
                 return {negoitemnonprices       : negoitemnonprices,
@@ -1795,8 +1833,6 @@ sap.ui.define([
                 var negoItems = this.getNegoItemObject("C", progressCode);
                 var negoNons = this.getNegoNonPriceObject("C");
 
-                
-
                 var inputInfo = {
                     "deepupsertnegoheader" : {
                         "negoheaders": [
@@ -1811,8 +1847,6 @@ sap.ui.define([
                     }
                 };
                 console.log(inputInfo);
-
-                debugger;
 
                 // return;
 
@@ -1850,7 +1884,7 @@ sap.ui.define([
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00003"), {
+                        MessageBox.error(this.getModel("I18N").getText("/EPG00003"), {
                             title : this.getModel("I18N").getText("/ERROR"),
                             initialFocus : sap.m.MessageBox.Action.CANCEL,
                             onClose : function(sButton) {
@@ -1911,7 +1945,7 @@ sap.ui.define([
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00001"), {
+                        MessageBox.error(this.getModel("I18N").getText("/EPG00001"), {
                             title : this.getModel("I18N").getText("/ERROR"),
                             initialFocus : sap.m.MessageBox.Action.CANCEL,
                             onClose : function(sButton) {
@@ -1951,7 +1985,7 @@ sap.ui.define([
                     var oState = this._sumSupplierScore();
                 }
                 this._supplierNumInputStateChange(oState);
-                debugger;
+                
                 // var inputGroup = this.getView().getControlsByFieldGroupId("SupplierNumG1");
                 // for(var i=0; i< inputGroup.length; i++){
                 //     var cInput = inputGroup[i];
@@ -2133,14 +2167,31 @@ sap.ui.define([
                         }
                     });
                     this._EmployeeDialog.attachEvent("apply", function(oEvent){
-                        // oInput.setTokens(oEvent.getSource().getTokens());
+                        oInput.destroyTokens();
                         var oItem = oEvent.getParameters("item").item;
-                        this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
-                        this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
-                        console.log(this.getView().getModel("NegoHeaders").oData.contact_point.employee_number);
-                        this.getView().getModel("NegoHeaders").oData.contact_point_empno = this.getView().getModel("NegoHeaders").oData.contact_point.employee_number;
-                        oInput.setValue(oItem.user_local_name);
+                        oInput.addToken(new sap.m.Token({
+                            text: oItem.user_local_name,
+                            key: oItem.employee_number
+                        }));
                         oEvent.getSource().close(); //직접 닫아야 합니다.
+                        console.log("employee_number=========================", oItem.employee_number);
+                        
+                        // oInput.setTokens(oEvent.getSource().getTokens());
+                        
+                        // this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
+                        // this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
+                        // console.log(this.getView().getModel("NegoHeaders").oData.contact_point.employee_number);
+                        // this.getView().getModel("NegoHeaders").oData.contact_point_empno = this.getView().getModel("NegoHeaders").oData.contact_point.employee_number;
+                        // oInput.setValue(oItem.user_local_name);
+
+                        // // oInput.setTokens(oEvent.getSource().getTokens());
+                        // var oItem = oEvent.getParameters("item").item;
+                        // this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
+                        // this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
+                        // console.log(this.getView().getModel("NegoHeaders").oData.contact_point.employee_number);
+                        // this.getView().getModel("NegoHeaders").oData.contact_point_empno = this.getView().getModel("NegoHeaders").oData.contact_point.employee_number;
+                        // oInput.setValue(oItem.user_local_name);
+                        // oEvent.getSource().close(); //직접 닫아야 합니다.
                     }.bind(this));
                 }
                 this._EmployeeDialog.open();

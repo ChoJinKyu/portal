@@ -2,8 +2,9 @@ namespace sp;
 
 /* Transaction Association */
 using util from '../../cm/util/util-model';
-using {sp.Sc_Nego_Item_Prices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
+using {sp.Sc_Nego_Item_Prices,sp.Sc_Nego_Item_Prices_View} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Item_Non_Price} from '../../sp/sc/SP_SC_NEGO_ITEM_NON_PRICE-model';
+using {sp.Sc_Nego_Suppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
 
 /* Master Association */
@@ -220,10 +221,21 @@ entity Sc_Nego_Headers_Ext as projection on Sc_Nego_Headers {
     )
 };
 
+entity Sc_Nego_Headers_Calc_View as 
+    select from Sc_Nego_Headers as Header
+    left outer one to one join ( select from Sc_Nego_Item_Prices { tenant_id _tenant_id, nego_header_id _nego_header_id, count(*) as items_count } group by tenant_id, nego_header_id ) 
+        as Items_Count on Header.tenant_id = Items_Count._tenant_id and Header.nego_header_id = Items_Count._nego_header_id
+    {
+        key tenant_id,
+        key nego_header_id,
+        Items_Count.items_count as items_count: Integer
+    };
 
 // #Query-Local Mixins#https://cap.cloud.sap/docs/cds/cql#query-local-mixins
-entity Sc_Nego_Headers_View as
-    select from Sc_Nego_Headers mixin {
+
+entity Sc_Nego_Headers_View as 
+    select from Sc_Nego_Headers
+    mixin {
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $projection.tenant_id
             and operation_org.company_code = $projection.company_code
@@ -235,6 +247,10 @@ entity Sc_Nego_Headers_View as
             and award_method_map2.award_type_code = $projection.award_type_code
             and award_method_map2.award_method_code = $projection.award_method_code
             ;
+        header_calc : association to Sc_Nego_Headers_Calc_View 
+            on header_calc.tenant_id = $projection.tenant_id
+            and header_calc.nego_header_id = $projection.nego_header_id
+            ;
     } into {
         *,
         // Master Text 추가 
@@ -243,14 +259,24 @@ entity Sc_Nego_Headers_View as
         award_method_map2,                                      //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
         award_method_map2.sort_no as nego_award_method_sort_no, //[가능]Association으로 추가되지 않고 디자인타임의 Left Outer Join으로 적용된다.
         round(seconds_between($now, closing_date)/3600,2) as remain_times  : Decimal(28, 2),
-        operation_org                                           //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+        operation_org,                                          //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+        header_calc
     };
 
-  annotate Sc_Nego_Headers_View with @( 
-        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가'
-  ) {
-        remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
-  };
+annotate Sc_Nego_Headers_View with @( 
+    title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가'
+) {
+    remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
+};
+
+// @title:'협상헤더정보+계산항목추가' @description:'협상헤더정보'
+// entity Sc_Nego_Headers_Calc01_View as
+//     // select from Sc_Nego_Headers as Header left outer join Sc_Nego_Item_Prices as Items
+//     select from Sc_Nego_Headers as Header {
+//         key Header.tenant_id,
+//         key Header.nego_header_id,
+//         count(Items.nego_header_id) as items_count: Integer
+//     } group by Header.tenant_id, Header.nego_header_id;
 
 entity Sc_Nego_Headers_View1 as
     select from Sc_Nego_Headers mixin {
@@ -292,10 +318,17 @@ entity Sc_Nego_Headers_View_Ext as projection on Sc_Nego_Headers_View;
 //         remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
 //   };
 
-view Sc_Nego_Workbench_View as select from Sc_Nego_Headers_View as Header {
-    Key Header.tenant_id                                                                                 ,
-    key Header.nego_header_id                                                                            ,
-    Key ifnull(Items.nego_item_number,'') as nego_item_number : Sc_Nego_Item_Prices : nego_item_number  ,
+view Sc_Nego_Workbench_View as select from Sc_Nego_Headers_View as Header
+mixin {
+        Items_View : association to many Sc_Nego_Item_Prices_View
+            on Items_View.tenant_id = Header.tenant_id
+            and Items_View.nego_header_id = Header.nego_header_id
+            ;
+} into 
+{
+    Key Header.tenant_id                                                                                ,
+    key Header.nego_header_id                                                                           ,
+    Key ifnull(Items_View.nego_item_number,'') as nego_item_number : Sc_Nego_Item_Prices : nego_item_number  ,
         Header.nego_document_number                                                                     ,
         Header.nego_document_round                                                                      ,
         Header.nego_progress_status_code                                                                ,
@@ -303,11 +336,14 @@ view Sc_Nego_Workbench_View as select from Sc_Nego_Headers_View as Header {
         Header.award_progress_status_code                                                               ,
         Header.award_progress_status.award_progress_status_name as award_progress_status_name           ,
         Header.reply_times                                                                              ,
-        Header.supplier_count                                                                           ,
+        // Header.supplier_count                                                                        , //Items Count-폐기예정
+        Items_View.Suppliers_Calc.specific_supplier_count as supplier_count                             , //계산필드-@readonly
+        Items_View.Suppliers_Calc.specific_supplier_count                                               , //계산필드-@readonly
         Header.supplier_participation_flag                                                              ,
         Header.remaining_hours                                                                          ,
         Header.nego_document_title                                                                      ,
-        Header.items_count                                                                              ,
+        // Header.items_count                                                                           , //Items Count-폐기예정
+        Header.header_calc.items_count as items_count                                                   , //계산필드-@readonly
         Header.nego_type_code                                                                           ,
         Header.nego_type.nego_type_name as nego_type_name                                               ,
         Header.outcome_code                                                                             ,
@@ -316,15 +352,15 @@ view Sc_Nego_Workbench_View as select from Sc_Nego_Headers_View as Header {
         Header.negotiation_style.negotiation_style_name as negotiation_style_name                       ,
         Header.bidding_result_open_status_code                                                          ,
         Header.negotiation_output_class_code                                                            ,
-        Items.pr_approve_number                                                                         ,
-        Items.req_submission_status                                                                     ,
-        Items.req_reapproval                                                                            ,
-        Items.material_code                                                                             ,
-        Items.material_desc                                                                             ,
-        Items.requestor_empno                                                                           ,
-        Items.requestor_employee.employee_name as requestor_empno_name                                  ,
-        Items.request_department_code                                                                   ,
-        Items.request_department.department_name as request_department_name                             ,
+        Items_View.pr_approve_number                                                                    ,
+        Items_View.req_submission_status                                                                ,
+        Items_View.req_reapproval                                                                       ,
+        Items_View.material_code                                                                        ,
+        Items_View.material_desc                                                                        ,
+        Items_View.requestor_empno                                                                      ,
+        Items_View.requestor_employee.employee_name as requestor_empno_name                             ,
+        Items_View.request_department_code                                                              ,
+        Items_View.request_department.department_name as request_department_name                        ,
         Header.award_type_code                                                                          ,
         Header.award_type.award_type_name as award_type_name                                            ,
         Header.buyer_empno                                                                              ,
@@ -336,11 +372,11 @@ view Sc_Nego_Workbench_View as select from Sc_Nego_Headers_View as Header {
         Header.close_date_ext_enabled_hours                                                             ,
         Header.close_date_ext_enabled_count                                                             ,
         Header.actual_extension_count                                                                   ,
-        Items.requisition_flag                                                                          ,
-        Items.price_submission_no                                                                       ,
-        Items.price_submisstion_status                                                                  ,
+        Items_View.requisition_flag                                                                     ,
+        Items_View.price_submission_no                                                                  ,
+        Items_View.price_submisstion_status                                                             ,
         Header.local_create_dtm                                                                         ,
-        Items.interface_source                  
+        Items_View.interface_source                                                                     
 };
 
 view Sc_Nego_Workbench_View2 as select from Sc_Nego_Headers_View as Header {

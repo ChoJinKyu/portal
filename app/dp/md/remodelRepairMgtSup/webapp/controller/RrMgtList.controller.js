@@ -333,10 +333,10 @@ sap.ui.define([
                 aTableSearchState.push(new Filter("mold_number", FilterOperator.StartsWith, srch));
             };
 
-            if(search.getProperty("/class_desc") != undefined 
-                && search.getProperty("/class_desc") != null && search.getProperty("/class_desc") != "" ){ 
-                var srch = search.getProperty("/class_desc");
-                aTableSearchState.push(new Filter("class_desc", FilterOperator.StartsWith, srch));
+            if(search.getProperty("/spec_name") != undefined 
+                && search.getProperty("/spec_name") != null && search.getProperty("/spec_name") != "" ){ 
+                var srch = search.getProperty("/spec_name");
+                aTableSearchState.push(new Filter("spec_name", FilterOperator.StartsWith, srch));
             };
              
             if(search.getProperty("/asset_number") != undefined 

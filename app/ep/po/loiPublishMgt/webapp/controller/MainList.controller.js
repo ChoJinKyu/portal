@@ -411,6 +411,9 @@ sap.ui.define([
 		 */
         onRfqButtonPress: function () {
 
+            MessageToast.show("RFQ 연계는 추후 개발예정입니다.");
+            return;
+
             var canSelect = true;
 
             var oTable = this.byId("mainTable"),
@@ -682,33 +685,33 @@ sap.ui.define([
             console.log("canSelect=", canSelect);
 
             if (canSelect) {
-                if (!existRfq) {
-                    MessageBox.confirm(this.getModel("I18N").getText("/NEP00004"), {
-                        title: this.getModel("I18N").getText("/CONFIRM"),
-                        initialFocus: MessageBox.Action.CANCEL,
-                        onClose: function (sButton) {
-                            console.log("sButton===", sButton);
-                            if (sButton === MessageBox.Action.OK) {
-                                if (canSelect) {
-                                    console.log("sTenantId=", sTenantId);
-                                    // var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
-                                    that.getRouter().navTo("selectionPage", {
-                                        //layout: oNextUIState.layout,
-                                        tenantId: sTenantId,
-                                        companyCode: sCompanyCode,
-                                        loiWriteNumber: sLoiWriteNumber,
-                                        loiItemNumber: sLoiItemNumber,
-                                        loiSelectionNumber: sLoiSelectionNumber,
-                                        loiNumber: sLoiNumber,
-                                        quotationNumber: sQuotationNumber,
-                                        quotationItemNumber: sQuotationItemNumber
-                                    }, true);
+                // if (!existRfq) {
+                //     MessageBox.confirm(this.getModel("I18N").getText("/NEP00004"), {
+                //         title: this.getModel("I18N").getText("/CONFIRM"),
+                //         initialFocus: MessageBox.Action.CANCEL,
+                //         onClose: function (sButton) {
+                //             console.log("sButton===", sButton);
+                //             if (sButton === MessageBox.Action.OK) {
+                //                 if (canSelect) {
+                //                     console.log("sTenantId=", sTenantId);
+                //                     // var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
+                //                     that.getRouter().navTo("selectionPage", {
+                //                         //layout: oNextUIState.layout,
+                //                         tenantId: sTenantId,
+                //                         companyCode: sCompanyCode,
+                //                         loiWriteNumber: sLoiWriteNumber,
+                //                         loiItemNumber: sLoiItemNumber,
+                //                         loiSelectionNumber: sLoiSelectionNumber,
+                //                         loiNumber: sLoiNumber,
+                //                         quotationNumber: sQuotationNumber,
+                //                         quotationItemNumber: sQuotationItemNumber
+                //                     }, true);
 
-                                }
-                            }
-                        }
-                    });
-                } else {
+                //                 }
+                //             }
+                //         }
+                //     });
+                // } else {
                     console.log("sTenantId=", sTenantId);
                     var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
                     this.getRouter().navTo("selectionPage", {
@@ -722,7 +725,7 @@ sap.ui.define([
                         quotationNumber: sQuotationNumber,
                         quotationItemNumber: sQuotationItemNumber
                     }, true);
-                }
+                // }
 
             }
 

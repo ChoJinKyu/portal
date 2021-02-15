@@ -705,6 +705,49 @@ public class MoldApprovalV4 implements EventHandler {
     } 
 
 
+    @On(event = UpdateMoldMstStatusCodeContext.CDS_NAME)
+    public void updateMoldMstStatusCode(UpdateMoldMstStatusCodeContext context){
 
+        MoldMstStatus data = context.getInputData();
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+        Collection<ApprovalDetailsV4> approvalDetail = data.getApprovalDetails();
 
+        ResultMsg msg = ResultMsg.create();
+        msg.setMessageCode("NCM01001");
+        msg.setResultCode(0);
+        msg.setCompanyCode(aMaster.getCompanyCode());
+        msg.setPlantCode(aMaster.getOrgCode());
+
+        try {
+            if(!approvalDetail.isEmpty() && approvalDetail.size() > 0){ 
+                ApprovalMasters master =  ApprovalMasters.create();  
+                master.setTenantId(aMaster.getTenantId());
+                master.setApprovalNumber(aMaster.getApprovalNumber());
+                master.setApproveStatusCode(aMaster.getApproveStatusCode());
+                
+                CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(master);
+                Result resultDetail = moldApprovalService.run(masterUpdate);
+                   
+                for(ApprovalDetailsV4 row : approvalDetail){
+                    MoldMasters mMaster =  MoldMasters.create();  
+                    mMaster.setTenantId(row.getTenantId());
+                    mMaster.setMoldId(row.getMoldId());
+                    mMaster.setMoldProgressStatusCode("ORD_CRT");
+
+                    CqnUpdate mMasterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(mMaster);
+                    Result result = moldApprovalService.run(mMasterUpdate);
+                }  
+            }
+
+            msg.setApprovalNumber(aMaster.getApprovalNumber()); 
+            
+        } catch (Exception e) {
+            msg.setMessageCode("FAILURE");
+            msg.setResultCode(-1);
+            e.printStackTrace();
+        }
+
+        context.setResult(msg);
+        context.setCompleted();
+    }
 }

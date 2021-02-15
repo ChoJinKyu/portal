@@ -64,7 +64,7 @@ service PrReviewMgtService {
 
             ,dtl.pr_desc  // 구매요청내역
             ,dtl.pr_unit  // 구매요청단위
-            ,dtl.pr_quantity  // 구매요청수량
+            ,ifnull(dtl.pr_quantity, 0) as pr_quantity : Decimal(30, 10) // 구매요청수량
             ,ifnull(dtl.pr_quantity, 0) - ifnull(dtl.closing_quantity, 0) as remain_quantity : Decimal(30, 10)  // 잔여수량
             //,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
             ,dtl.delivery_request_date  // 납품요청일자
@@ -80,7 +80,7 @@ service PrReviewMgtService {
 
             ,dtl.org_type_code  // 조직유형코드
             ,dtl.purchasing_group_code  // 구매그룹코드
-            ,dtl.estimated_price  // 예상가격
+            ,ifnull(dtl.estimated_price, 0) as estimated_price : Decimal(30, 10)  // 예상가격
             ,dtl.currency_code  // 통화코드
             ,dtl.price_unit  // 가격단위
             ,mst.pr_template_number  // 구매요청템플릿번호
@@ -180,16 +180,16 @@ service PrReviewMgtService {
             ,mtlPur.purchasing_group_code as material_purchasing_group_code  // 자재구매그룹
             ,ifnull(mtlPurGr.purchasing_group_name, mtlPur.purchasing_group_code) as material_purchasing_group_name : String(30)  // 자재구매그룹명
 
-            ,dtl.pr_quantity  // 구매요청수량
+            ,ifnull(dtl.pr_quantity, 0) as pr_quantity : Decimal(30, 10)  // 구매요청수량
             ,dtl.pr_unit  // 구매요청단위
-            ,dtl.closing_quantity  // 마감수량
+            ,ifnull(dtl.closing_quantity, 0) as closing_quantity : Decimal(30, 10)  // 마감수량
             ,ifnull(dtl.pr_quantity, 0) - ifnull(dtl.closing_quantity, 0) as remain_quantity : Decimal(30, 10)  // 잔여수량
             //,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
 
-            ,dtl.estimated_price  // 단가예산
+            ,ifnull(dtl.estimated_price, 0) as estimated_price : Decimal(30, 10)  // 단가예산
             ,dtl.currency_code  // 통화코드
             ,dtl.price_unit  // Per - 가격단위
-            ,dtl.pr_quantity * (ifnull(dtl.estimated_price, 0) / ifnull(dtl.price_unit, 1)) as pr_amount : Decimal(30, 10)  // 금액 = 요청수량 * (단가 / Per)
+            ,ifnull(dtl.pr_quantity, 0) * (ifnull(dtl.estimated_price, 0) / ifnull(dtl.price_unit, 1)) as pr_amount : Decimal(30, 10)  // 금액 = 요청수량 * (단가 / Per)
 
             ,dtl.request_date  // 생성일자 - 요청일자
             ,dtl.delivery_request_date  // 납품요청일자
@@ -265,7 +265,7 @@ service PrReviewMgtService {
         on  mtlPurGr.tenant_id             = mtlPur.tenant_id
         and mtlPurGr.purchasing_group_code = mtlPur.purchasing_group_code
         and mtlPurGr.use_flag              = true
-    ;
+        ;
 
    // 구매요청 검토/접수 상세 - 계정정보
     view Pr_ReviewDtlAcctView @(title : '구매요청 검토/접수 Detail Account View') as
@@ -325,7 +325,7 @@ service PrReviewMgtService {
         on  orderMst.tenant_id    = acct.tenant_id
         and orderMst.company_code = acct.company_code
         and orderMst.order_number = acct.order_number
-    ;
+        ;
 
    // 구매요청 검토/접수 상세 - 이력정보
     view Pr_ReviewDtlHistView @(title : '구매요청 검토/접수 Detail History View') as
@@ -354,6 +354,6 @@ service PrReviewMgtService {
         and dtl.company_code   = hist.company_code
         and dtl.pr_number      = hist.pr_number
         and dtl.pr_item_number = hist.pr_item_number
-    ;
+        ;
 
 }

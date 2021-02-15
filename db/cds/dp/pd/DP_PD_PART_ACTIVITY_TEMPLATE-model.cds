@@ -27,4 +27,8 @@ entity Pd_Select_An_Activity_View {
         activity_name         : String;
         active_flag           : Boolean;
         active_flag_val       : String;
+        sequence              : Integer;
+        company_code          : String;
+        org_code              : String;
+        part_project_type_code : String;
 };

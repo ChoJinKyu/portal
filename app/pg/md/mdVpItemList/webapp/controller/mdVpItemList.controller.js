@@ -143,7 +143,7 @@ sap.ui.define([
 
             var items = oTable.getSelectedIndices();
             if(items.length>1 || items.length<1){
-                MessageToast.show("한 건 선택해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NPG10016"));
                 return;
             }
 
@@ -152,7 +152,7 @@ sap.ui.define([
             var sPath = oContext.getPath();
             var oData = oTable.getBinding().getModel().getProperty(sPath);
             if(oData.drill_state != "leaf"){
-                MessageToast.show("leaf node를 선택해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NPG10015"));
                 return;
             }
 
@@ -187,11 +187,11 @@ sap.ui.define([
             var aSearchFilters = [];
 
             if (tenant_combo.length == 0) {
-                MessageToast.show("테넌트를 설정해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NPG10002"));
                 return;
             }
 			if (sChain.length == 0) {
-                MessageToast.show("사업본부를 설정해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NPG10003"));
                 return;
             }
             
@@ -292,7 +292,7 @@ sap.ui.define([
                     var itemCnt = dataArr[i].vendor_pool_item_mapping_cnt;
                     var leafNode = dataArr[i].drill_state;
                     if(leafNode != "leaf"){
-                        //select:false
+                        // this.byId("treeTable").setSelectionMode(sap.ui.table.SelectionMode.None);
                     }
 
                     if(itemCnt != 0){ //itemArr != null ){
@@ -358,7 +358,7 @@ sap.ui.define([
                 
             var selectedItems = oTable.getSelectedIndices();
             if(selectedItems.length<1){
-                MessageToast.show("한개이상 선택해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NPG00016"));
                 return;
             }else{
                 var param = {};
@@ -368,11 +368,11 @@ sap.ui.define([
                     var sPath = oContext.getPath();
                     var oData = oTable.getBinding().getModel().getProperty(sPath);
                     if(oData.drill_state != "leaf"){
-                        MessageToast.show("leaf node를 선택해주세요.");
+                        MessageToast.show(this.getModel("I18N").getText("/NPG10014"));
                         return;
                     }
                     if(oData.confirmed_status_code != "200"){
-                        MessageToast.show("임시저장 상태만 선택해주세요.");
+                        MessageToast.show(this.getModel("I18N").getText("/NPG10014"));
                         return;
                     }
                     
@@ -386,8 +386,8 @@ sap.ui.define([
 
                 }            
 ///////////////////////////////MSG : 확정되었습니다
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-                    title: this.getModel("I18N").getText("/SAVE"),
+                MessageBox.confirm(this.getModel("I18N").getText("/NPG10013"), {
+                    title: this.getModel("I18N").getText("/CONFIRMED"),
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
                         if (sButton === MessageBox.Action.OK) {

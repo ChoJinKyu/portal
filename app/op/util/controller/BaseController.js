@@ -373,6 +373,7 @@ sap.ui.define([
         onButtonPress: function () {},
         onExcel: function () {
             var [event, action, items, ...args] = arguments;
+            var { numbers } = args[args.length-1];
             if (action == "Download") {
                 var today = new Date();
                 var stamp = [
@@ -389,7 +390,14 @@ sap.ui.define([
                         return items.reverse().join("_");
                     })(args.slice().reverse())) + "_" + stamp,
                     table: this.byId(args[args.length-1]["tId"]),
-                    data: items
+                    data: items.map(e => {
+                        // Trailing Zero
+                        numbers.forEach(n => {
+                            e[n] = (+e[n] || 0);
+                            return e[n]+"";
+                        })
+                        return e;
+                    })
                 });
             }
             else /*if (action == "Upload")*/ {

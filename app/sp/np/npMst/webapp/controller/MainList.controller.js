@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+    "ext/lib/util/SppUserSessionUtil",
     "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/TreeListModel",
@@ -38,6 +39,7 @@ sap.ui.define([
      */
     function (
         BaseController,
+        SppUserSessionUtil,
         History,
         JSONModel,
         TreeListModel,
@@ -155,8 +157,8 @@ sap.ui.define([
 
             fnSearch: function () {
 
-                //this.validator.validate(this.byId('pageSearchFormE'));
-                //if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
+                this.validator.validate(this.byId('pageSearchFormE'));
+                if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
 
                 var status = "";
                 var oFilter = [];
@@ -185,7 +187,7 @@ sap.ui.define([
 
                 if (searchOperationOrg.length > 0) {
                     for (var i = 0; i < searchOperationOrg.length; i++) {
-                        oFilter.push(new Filter("supplier_code", FilterOperator.EQ, supplierCode));
+                        aFilter.push(new Filter("org_code", FilterOperator.EQ, searchOperationOrg[i]));
                     }
                     oFilter.push(new Filter(aFilter, false));
                 }
@@ -359,7 +361,7 @@ sap.ui.define([
                 if (!this.oSearchSupplierDialog) {
                     this.oSearchSupplierDialog = new SupplierDialog({
                         title: "Choose Supplier",
-                        multiSelection: true,
+                        multiSelection: false,
                         items: {
                             filters: [
                                 new Filter("tenant_id", "EQ", "L2100")
@@ -368,13 +370,14 @@ sap.ui.define([
                     });
 
                     this.oSearchSupplierDialog.attachEvent("apply", function (oEvent) {
-                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
-                        oSearch.setTokens(jQuery.map(oEvent.mParameters.items, function(oToken){
-                            return new Token({
-                                key: oToken.supplier_code,
-                                text: oToken.supplier_local_name,
-                            });
-                        }));
+                        oSearch.setValue(oEvent.mParameters.item.supplier_code);
+                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.supplier_code);
+                        // oSearch.setTokens(jQuery.map(oEvent.mParameters.items, function(oToken){
+                        //     return new Token({
+                        //         key: oToken.supplier_code,
+                        //         text: oToken.supplier_local_name,
+                        //     });
+                        // }));
                     }.bind(this));
                 }
 
@@ -410,13 +413,32 @@ sap.ui.define([
             },
 
             ///////////////////// Multi Combo box event Start //////////////////////////
-            /**
-            * @private 
-            * @see (멀티박스)Company와 Plant 부분 연관성 포함함
-            */
+            copyMultiSelected: function (oEvent, flag) {
+                var source = oEvent.getSource();
+                var params = oEvent.getParameters();
+            
+                var selectedKeys = [];
+                params.selectedItems.forEach(function (item, idx, arr) {
+                    selectedKeys.push(item.getKey());
+                });
+
+                if (flag === "company") {
+                    this.getView().byId("search_company_e").setSelectedKeys(selectedKeys);
+                    this.getView().byId("search_company_s").setSelectedKeys(selectedKeys);
+                }
+                if (flag === "org") {
+                    this.getView().byId("search_operation_org_e").setSelectedKeys(selectedKeys);
+                    this.getView().byId("search_operation_org_s").setSelectedKeys(selectedKeys);
+                }
+            },
+
+            handleSelectionFinishOrg: function(oEvent) {
+                this.copyMultiSelected(oEvent, "org");
+            },
+
             handleSelectionFinishComp: function (oEvent) {
 
-                //this.copyMultiSelected(oEvent);
+                this.copyMultiSelected(oEvent, "company");
 
                 var params = oEvent.getParameters();
                 var plantFilters = [];
@@ -426,7 +448,7 @@ sap.ui.define([
                         //console.log(item.getKey());
                         plantFilters.push(new Filter({
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                                new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID),
                                 new Filter("company_code", FilterOperator.EQ, item.getKey())
                             ],
                             and: true
@@ -434,7 +456,7 @@ sap.ui.define([
                     });
                 } else {
                     plantFilters.push(
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
+                        new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)
                     );
                 }
 
