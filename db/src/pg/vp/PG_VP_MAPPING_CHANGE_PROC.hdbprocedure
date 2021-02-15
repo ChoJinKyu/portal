@@ -1420,8 +1420,8 @@ BEGIN
 						--1건이 존재하는 경우 UPDATE
 						ELSEIF V_ITEM_EXIST_DELETED_CNT = 1 THEN
 						    UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL
-							SET     REGISTER_REASON						= TRIM( ' ' FROM loop_itm.REGISTER_REASON )
-								   ,APPROVAL_NUMBER						= TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
+							SET     REGISTER_REASON						= :V_REGIST_REASON_NEW
+								   --,APPROVAL_NUMBER						= TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
 								   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
 								   ,LOCAL_UPDATE_DTM       				= NOW()
 								   ,UPDATE_USER_ID         				= I_USER_ID
@@ -1479,9 +1479,9 @@ BEGIN
 						END IF;
 						
 					    UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL
-						SET     REGISTER_REASON						= TRIM( ' ' FROM loop_itm.REGISTER_REASON )
-							   ,APPROVAL_NUMBER						= TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
-							   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
+						SET     --REGISTER_REASON						= TRIM( ' ' FROM loop_itm.REGISTER_REASON )
+							   --,APPROVAL_NUMBER						= TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
+							    VENDOR_POOL_MAPPING_USE_FLAG        = True
 							   ,LOCAL_UPDATE_DTM       				= NOW()
 							   ,UPDATE_USER_ID         				= I_USER_ID
 							   ,SYSTEM_UPDATE_DTM      				= NOW()
@@ -1698,7 +1698,7 @@ BEGIN
 						IF V_MANAGER_EXIST_DELETED_CNT = 1 THEN
 						    UPDATE  PG_VP_VENDOR_POOL_MANAGER_DTL
 							SET     VENDOR_POOL_PERSON_ROLE_TEXT		= TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_ROLE_TEXT )
-								   --,REGISTER_REASON						= TRIM( ' ' FROM loop_man.REGISTER_REASON )
+								   ,REGISTER_REASON						= :V_REGIST_REASON_NEW
 								   --,APPROVAL_NUMBER						= TRIM( ' ' FROM loop_man.APPROVAL_NUMBER )
 								   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
 								   ,LOCAL_UPDATE_DTM       				= NOW()
