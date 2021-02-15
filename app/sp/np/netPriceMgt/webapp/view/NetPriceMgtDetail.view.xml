@@ -309,6 +309,25 @@
                                             </t:template>
                                         </t:Column> -->
                                         <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/NET_PRICE_TYPE_CODE}" textAlign="Center" />
+                                            <t:template>
+                                                <ComboBox
+                                                    width="100%"
+                                                    items="{
+                                                            path: 'util>/Code',
+                                                            filters: [
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_TYPE'},
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                            ]
+                                                        }"
+                                                        editable="{detailViewModel>/viewMode}">
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                                    </items>
+                                                </ComboBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/EFFECTIVE_START_DATE}" textAlign="Center" />
                                             <t:template>
                                                 <DatePicker placeholder="Date" 
@@ -393,12 +412,12 @@
                                                 <Text text="{path: 'generalInfoList>change_rate'}"  />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
+                                        <!-- <t:Column hAlign="Center" width="10rem">
                                             <Label text="Surrogate code" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{path: 'generalInfoList>surrogate_type_code'}"  />
                                             </t:template>
-                                        </t:Column>
+                                        </t:Column> -->
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Surrogate" textAlign="Center" />
                                             <t:template>
@@ -436,7 +455,7 @@
                                                 </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
+                                        <!-- <t:Column hAlign="Center" width="10rem">
                                             <Label text="(Supplier Agreement) Status code" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{path: 'generalInfoList>net_price_agreement_status_code'}"  />
@@ -447,7 +466,7 @@
                                             <t:template>
                                                 <Text text="{path: 'generalInfoList>net_price_agreement_status_name'}"  />
                                             </t:template>
-                                        </t:Column>
+                                        </t:Column> -->
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Incoterms" textAlign="Center" />
                                             <t:template>
