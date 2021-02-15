@@ -18,6 +18,11 @@ sap.ui.define([
                 sFormat = UserChoices.getTimeFormatString();
                 break;
             }
+            if(typeof oDate == "string") {
+                try{
+                    oDate = new Date(oDate);
+                }catch(e){};
+            }
             return getInstance(sFormat).format(oDate, bUTC);
         };
 
