@@ -156,7 +156,10 @@ sap.ui.define([
                     multiSelection: false,
                     items: {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                            new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                            new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
+                            new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
+                            new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
                         ]
                     }
                 });
@@ -164,6 +167,7 @@ sap.ui.define([
                     console.log(oEvent.getParameter("item"));
                     this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
                     this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
+                    this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
                 }.bind(this));
             }
 
@@ -204,8 +208,24 @@ sap.ui.define([
             
             _oInput.setValue("");
                
-            this.byId("searchActivityName").setValue("");                          
+            this.byId("searchActivityName").setValue("");
+            
+            this.byId("searchSequence").setValue("");
                 
+        },
+
+        onComboChange: function(oEvent){
+
+            if(!(this.isValNull(this.byId("searchCompanyCombo").getValue())) && 
+            !(this.isValNull(this.byId("searchOrgCombo").getValue())) && 
+            !(this.isValNull(this.byId("searchPartProjectCombo").getValue()))){
+                this.byId("searchActivityInput").setEditable(true);
+            } else {
+                this.byId("searchActivityInput").setValue("");
+                this.byId("searchActivityName").setValue("");            
+                this.byId("searchSequence").setValue("");
+                this.byId("searchActivityInput").setEditable(false);
+            }
         },
 		
 		/**
@@ -269,11 +289,15 @@ sap.ui.define([
                     activity_code               : oMasterData.activity_code,
                     // category_group_code         : oMasterData.category_group_code,
                     sequence                    : oMasterData.sequence,
-                    develope_event_code         : oMasterData.develope_event_code,
+                    // 설계상 null 값 넘겨달라고 함.
+                    // develope_event_code         : oMasterData.develope_event_code,
+                    develope_event_code         : null,
                     actual_role_code            : oMasterData.actual_role_code,
 
                     activity_complete_type_code : oMasterData.activity_complete_type_code,
-                    job_type_code               : oMasterData.job_type_code,
+                    // 설계상 null 값 넘겨달라고 함.
+                    // job_type_code               : oMasterData.job_type_code,
+                    job_type_code               : null,
                     attachment_mandatory_flag   : attachmentMandatoryFlag,
                     approve_mandatory_flag      : approveMandatoryFlag,
                     active_flag                 : activeFlg,
@@ -482,9 +506,9 @@ sap.ui.define([
                     "part_project_type_code": "",
                     "activity_code": "",
                     "category_group_code": "",
-                    "attachment_mandatory_flag": true,
-                    "approve_mandatory_flag": true,
-                    "active_flag": true			
+                    "attachment_mandatory_flag": "true",
+                    "approve_mandatory_flag": "true",
+                    "active_flag": "true"			
                 }, "/pdPartactivityTemplateView");
                 
 				// var oLanguagesModel = this.getModel("languages");
@@ -524,7 +548,8 @@ sap.ui.define([
 				this._toShowMode();
             }
             this.validator.clearValueState(this.byId("page"));
-			oTransactionManager.setServiceModel(this.getModel());
+            oTransactionManager.setServiceModel(this.getModel());
+            this.byId("searchActivityInput").setEditable(false);
         },
         
         _fnInitControlModel : function(){

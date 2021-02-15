@@ -128,9 +128,10 @@
                                     </Text>
                                     <Input 
                                         width="50%"
+                                        liveChange=".onInputChange"
                                         value="{
                                             path: 'master>/sequence'
-                                        }" type="Number"  visible="{contModel>/editMode}" editable="{= !${contModel>/createMode}}"></Input>
+                                        }" visible="{contModel>/editMode}" editable="{= !${contModel>/createMode}}"></Input>
                                         <layoutData>
                                             <layout:GridData
                                                 span="XL12 L12 M12 S12" />

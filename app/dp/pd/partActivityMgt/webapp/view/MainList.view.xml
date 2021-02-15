@@ -207,12 +207,12 @@
                     <Text text="{list>activity_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="develope_event_name" width="80px">
+                <!-- <t:Column id="develope_event_name" width="80px">
                 <Label text="{I18N>/EVENT}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>develope_event_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
-                </t:Column>
+                </t:Column> -->
                 <t:Column id="actual_role_name">
                 <Label text="{I18N>/ROLE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
@@ -237,12 +237,12 @@
                     <Text text="{list>activity_complete_type_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="job_type_name">
+                <!-- <t:Column id="job_type_name">
                 <Label text="{I18N>/JOB_TYPE}" textAlign="Center" width="100%" wrapping="false"/>
                 <t:template>
                     <Text text="{list>job_type_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
-                </t:Column>
+                </t:Column> -->
                 <t:Column id="active_flag_val" width="90px">
                 <Label text="{I18N>/USE_FLAG}" textAlign="Center" width="100%" wrapping="false"/>
                 <t:template>                    
