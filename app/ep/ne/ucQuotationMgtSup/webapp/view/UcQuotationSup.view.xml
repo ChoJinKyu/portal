@@ -380,7 +380,7 @@
                                                     path: 'viewModel>material_amount',
                                                     formatter: '.numberFormatter.toNumberString'
                                                 }"
-                                                vAlign="Right"/> 
+                                                textAlign="Right"/> 
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="mainLaborNetPrice" width="8rem" hAlign="Right">
@@ -413,7 +413,7 @@
                                                     path: 'viewModel>labor_amount',
                                                     formatter: '.numberFormatter.toNumberString'
                                                 }"
-                                                vAlign="Right"/> 
+                                                textAlign="Right"/> 
                                      
                                 </t:template>
                                 </t:Column>  
@@ -424,7 +424,7 @@
                                                     path: 'viewModel>sum_amount',
                                                     formatter: '.numberFormatter.toNumberString'
                                                 }"
-                                                vAlign="Right"/> 
+                                                textAlign="Right"/> 
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="mainRemark" width="10rem" hAlign="Left">
