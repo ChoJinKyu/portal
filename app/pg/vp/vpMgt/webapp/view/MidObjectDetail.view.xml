@@ -378,7 +378,7 @@
                                 </table:Column>
                                 <table:Column label="{I18N>/STATUS}" hAlign="Center" width="6em" filterProperty="supplier_status_code">
                                     <table:template>
-                                        <Text text="{suplist>inactive_status_code}" wrapping="false" />
+                                        <Text text="{suplist>inactive_status_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <!-- <table:Column label="거래상태" width="8em" filterProperty="supplier_status_code">
@@ -474,7 +474,7 @@
                                         <Text text="{sppList>register_reason}" wrapping="false" />
                                     </table:template>
                                 </table:Column> -->
-                                <table:Column label="{I18N>/REG_DATE}" hAlign="Center" width="13em" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" hAlign="Center" width="11em" filterProperty="local_update_dtm">
                                     <table:template>
                                     <!-- <DatePicker  
                                         placeholder="Date" 
