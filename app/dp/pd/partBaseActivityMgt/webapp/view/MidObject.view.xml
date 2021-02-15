@@ -128,9 +128,10 @@
                                     </Text>
                                     <Input 
                                         width="50%"
+                                        liveChange=".onInputChange"
                                         value="{
                                             path: 'master>/sequence'
-                                        }" type="Number"  visible="{contModel>/editMode}" editable="{= !${contModel>/createMode}}"></Input>
+                                        }" visible="{contModel>/editMode}" editable="{= !${contModel>/createMode}}"></Input>
                                         <layoutData>
                                             <layout:GridData
                                                 span="XL12 L12 M12 S12" />
@@ -219,7 +220,7 @@
                                             <HBox>
                                                 <Text
                                                     visible="{contModel>/readMode}"
-                                                    text="{languages>language_cd}" required="true"/>                                                
+                                                    text="{languages>language_cd}"/>                                                
                                                 <ComboBox 
                                                     visible="{contModel>/editMode}"
                                                     showSecondaryValues= "true"
@@ -259,7 +260,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection 
+            <!-- <uxap:ObjectPageSection 
                 titleUppercase="false" 
                 title="{I18N>/CATEGORY} ({= (${category>/PdPartBaseActivityCategoryView})?${category>/PdPartBaseActivityCategoryView}.length:0})">
 				<uxap:subSections>
@@ -304,13 +305,13 @@
                                 <table:Column id="category_group_name" width="100px" filterProperty="category_group_name">
                                 <Label text="{I18N>/GROUP}" wrapping="false" textAlign="Center" width="100%" required="true"/>
                                 <table:template>
-                                    <Text text="{category>category_group_name}" textAlign="Center" width="100%" wrapping="false" required="true"/>
+                                    <Text text="{category>category_group_name}" textAlign="Center" width="100%" wrapping="false/>
                                 </table:template>
                                 </table:Column>                                
                                 <table:Column id="category_name_show" visible="{= !${contModel>/editMode}}" filterProperty="category_name">
                                 <Label text="{I18N>/CATEGORY}" wrapping="false" textAlign="Center" width="100%" required="true"/>
                                 <table:template>
-                                    <Text text="{category>category_name}" textAlign="Left" width="100%" wrapping="false" required="true"/>
+                                    <Text text="{category>category_name}" textAlign="Left" width="100%" wrapping="false"/>
                                 </table:template>
                                 </table:Column>
                                 <table:Column id="category_name_edit" visible="{= ${contModel>/editMode}}" filterProperty="category_name">
@@ -348,14 +349,7 @@
                                 </table:Column>
                                 <table:Column id="s_grade_standard_days_edit" width="100px" visible="{contModel>/editMode}" filterProperty="s_grade_standard_days">
                                 <Label text="{I18N>/S_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
-                                <table:template>
-                                    <!-- <MaskInput
-                                        visible="{contModel>/editMode}"
-                                        editable="{contModel>/editMode}" 
-                                        mask="99999999999" 
-                                        placeholderSymbol=" "  
-                                        value="{category>s_grade_standard_days}" width="100%" textAlign="Right"  
-                                        placeholder="0"/> -->
+                                <table:template>                                    
                                     <Input
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
@@ -437,7 +431,7 @@
                     </uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>
+			</uxap:ObjectPageSection> -->
             
             <!-- <uxap:ObjectPageSection 
                 titleUppercase="false" 

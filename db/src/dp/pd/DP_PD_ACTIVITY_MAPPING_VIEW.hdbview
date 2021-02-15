@@ -3,39 +3,52 @@ SELECT pam.tenant_id,
        pam.company_code,
        pam.org_type_code,
        pam.org_code,
+       (select org_name 
+       from   cm_pur_operation_org 
+       where  tenant_id = pam.tenant_id 
+       and    org_type_code = pam.org_type_code
+       and    org_code = pam.org_code) org_name,
+       pam.activity_code,
+       '' product_activity_code,
+       '' activity_dependency_code,
+       pam.active_flag,
+       case when pam.active_flag = True then 'Active' else 'Inactive' end active_flag_val,
+       '' update_user_id,
+       '' local_update_dtm,
+       (select code_name from dp_pd_part_base_activity_lng where tenant_id = pam.tenant_id and activity_code = pam.activity_code and language_cd = 'KO' ) activity_name,
+       '' product_activity_name,
+       '' activity_dependency_name
+FROM   DP_PD_PART_ACTIVITY_TEMPLATE pam
+WHERE  pam.tenant_id = 'L2101'
+and	   not exists 
+	   (select * 
+	    from   DP_PD_ACTIVITY_MAPPING 
+	    where  tenant_id = pam.tenant_id 
+	    and    company_code = pam.company_code
+        and	   org_type_code = pam.org_type_code
+       and	   org_code = pam.org_code
+       and     org_code = pam.activity_code)
+union all
+SELECT pam.tenant_id, 
+       pam.company_code,
+       pam.org_type_code,
+       pam.org_code,
+       (select org_name 
+       from   cm_pur_operation_org 
+       where  tenant_id = pam.tenant_id 
+       and    org_type_code = pam.org_type_code
+       and    org_code = pam.org_code) org_name,
        pam.activity_code,
        pam.product_activity_code,
        pam.activity_dependency_code,
        pam.active_flag,
+       case when pam.active_flag = True then 'Active' else 'Inactive' end active_flag_val,
        pam.update_user_id,
        pam.local_update_dtm,
-       pat.code_name as activity_name,
-       pat1.code_name as product_activity_name,
-       ad.code_name as activity_dependency_name
-  FROM DP_PD_ACTIVITY_MAPPING pam,
-	   ( Select l.tenant_id,l.group_code,l.code,l.language_cd,l.code_name
-		  From DP_CODE_DTL d, DP_CODE_LNG l
-		 Where d.tenant_id = l.tenant_id 
-		   And d.group_code = l.group_code
-		   And d.code = l.code
-		   And d.group_code = 'PD_RPODUCT_ACTIVITY' ) pat1,
-	   ( Select l.tenant_id,l.group_code,l.code,l.language_cd,l.code_name
-		  From DP_CODE_DTL d, DP_CODE_LNG l
-		 Where d.tenant_id = l.tenant_id 
-		   And d.group_code = l.group_code
-		   And d.code = l.code
-		   And d.group_code = 'PD_ACTIVITY' ) pat,
-	  ( Select l.tenant_id, l.code, l.code_name, l.language_cd
-	      From CM_CODE_LNG l, CM_CODE_DTL d
-	     Where l.tenant_id = d.tenant_id and l.code = d.code and d.group_code = 'DP_ACTIVITY_DEPENDENCY' ) ad
-    WHERE pam.tenant_id = pat1.tenant_id
-      AND pam.tenant_id = pat.tenant_id
-      AND pam.product_activity_code = pat1.code
-      AND pam.activity_code = pat.code
-      AND pam.tenant_id = ad.tenant_id
-      AND pam.activity_dependency_code = ad.code
-      AND pat1.language_cd = pat.language_cd
-      AND pat1.language_cd = ad.language_cd
-      AND pam.tenant_id = 'L2100'
-      AND pat1.language_cd = 'KO'
+       (select code_name from dp_pd_part_base_activity_lng where tenant_id = pam.tenant_id and activity_code = pam.activity_code and language_cd = 'KO' ) activity_name,
+       (select code_name from dp_pd_product_activity_template_lng where tenant_id = pam.tenant_id and product_activity_code = pam.product_activity_code and language_cd = 'KO' ) product_activity_name,
+       (select code_name from CM_CODE_LNG where tenant_id = pam.tenant_id and group_code = 'DP_ACTIVITY_DEPENDENCY' and code = pam.activity_dependency_code and language_cd = 'KO' ) activity_dependency_name
+FROM   DP_PD_ACTIVITY_MAPPING pam
+WHERE  pam.tenant_id = 'L2101'
+order by product_activity_code , local_update_dtm desc
 ;

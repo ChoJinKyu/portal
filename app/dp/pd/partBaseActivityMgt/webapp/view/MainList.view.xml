@@ -19,7 +19,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/PART_BASE_ACTIVITY}" />
+                    <Title text="{I18N>/PART_BASE_ACTIVITY} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -37,7 +37,7 @@
                     <form:content>                        
                          <VBox>
                             <Label
-                                text="코드/ 명/ 설명: "
+                                text="{I18N>/CODE_NAME_DESC}: "
                                 labelFor="searchPartBaseKeyword">
                             </Label>
                             <Input id="searchPartBaseKeyword" 
@@ -102,7 +102,7 @@
             columnResize="onColumnResize">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title id="mainTableTitle" text="부품 기준 Activity List {= ${list>/PdPartBaseActivityView}.length > 0 ? '(' + ${list>/PdPartBaseActivityView}.length + ')' : '(0)'}" level="H2"/>
+                    <Title id="mainTableTitle" text="{I18N>/PART_BASE_ACTIVITY} {I18N>/LIST} {= ${list>/PdPartBaseActivityView}.length > 0 ? '(' + ${list>/PdPartBaseActivityView}.length + ')' : '(0)'}" level="H2"/>
                     <ToolbarSpacer/>
                     <!-- <Button text="Copy" id="buttonCopy" press=".onCopy"  type="Transparent"/> -->
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>

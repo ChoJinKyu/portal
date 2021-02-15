@@ -5,6 +5,7 @@ using { cm as codeLng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using { cm as approvalMst } from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
 using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
+using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 using { cm as orgMapping} from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using { cm as Org} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
@@ -82,6 +83,16 @@ service DpMdCommonService {
             and a.org_type_code = b.org_type_code
         where
             b.process_type_code = 'DP05' ;
+
+    view Models as
+    select distinct key a.tenant_id, key a.model
+    from moldMst.Md_Mst a
+    where a.model is not null;
+
+    view PartNumbers as
+    select distinct key a.tenant_id, key a.mold_number, a.spec_name, a.mold_item_type_name
+    from moldMstSpecView.Md_Mst_Spec_View a
+    where a.mold_number is not null;
  
 
 }

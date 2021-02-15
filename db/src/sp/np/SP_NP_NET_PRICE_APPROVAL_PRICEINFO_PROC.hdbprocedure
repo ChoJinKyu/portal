@@ -1,18 +1,7 @@
 PROCEDURE SP_NP_NET_PRICE_APPROVAL_PRICEINFO_PROC (
      IN     I_TENANT_ID                     NVARCHAR(20)
     ,IN     I_LANGUAGE_CODE                 NVARCHAR(2)
-	,IN     I_DETAILS				        TABLE (
-	                                        		TENANT_ID	                    	NVARCHAR(5)
-	                                        	,	COMPANY_CODE                     	NVARCHAR(10)
-	                                        	,	ORG_TYPE_CODE						NVARCHAR(2)
-                                                ,	ORG_CODE							NVARCHAR(10)
-                                                ,	APPROVAL_NUMBER						NVARCHAR(50)
-                                                ,	ITEM_SEQUENCE						BIGINT
-	                                            ,	SUPPLIER_CODE                       NVARCHAR(10)
-	                                            ,	MATERIAL_CODE                       NVARCHAR(40)
-                                                ,	MARKET_CODE							NVARCHAR(30)
-                                                ,	CURRENCY_CODE						NVARCHAR(3)
-                                                )
+	,IN     I_DETAILS				        SP_NP_NET_PRICE_APPROVAL_PRICEINFO_TYPE
     ,OUT    O_RETURN_CODE                   NVARCHAR(5)
     ,OUT    O_RETURN_MSG                    NVARCHAR(4000)
 	,OUT    O_DETAILS                       TABLE (
@@ -56,6 +45,36 @@ BEGIN
     BEGIN
         -- 아무것도 하지 않습니다.
     END;
+
+
+    /* Validation /
+    BEGIN
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            SIGNAL V_USER_EXCEPTION;
+        END;
+        /
+        IF RECORD_COUNT(:I_DETAILS)<=0 THEN 
+            O_RETURN_CODE = 'E';
+            O_RETURN_MSG  = '조회대상이 없습니다.';
+            SIGNAL V_USER_EXCEPTION;
+        END IF;
+        /
+
+        CALL SP_NP_NET_PRICE_APPROVAL_PRICEINFO_VALID_PROC(
+                    I_TENANT_ID
+                ,   I_LANGUAGE_CODE
+                ,   :I_DETAILS
+                ,   O_RETURN_CODE
+                ,   O_RETURN_MSG
+            );
+
+        IF O_RETURN_CODE IS NOT NULL THEN
+            SIGNAL V_USER_EXCEPTION;
+        END IF;
+    END;
+    */
 
     BEGIN
         /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */

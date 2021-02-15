@@ -314,17 +314,15 @@ public class MoldApprovalV4 implements EventHandler {
     
     @On(event = DeleteApprovalContext.CDS_NAME)
     public void onDelete(DeleteApprovalContext context){
+        System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
 
         ApprDeleteData data = context.getInputData();
 
         Collection<ApprovalMasterV4> aMaster = data.getApprovalMaster();
         ResultMsg msg = ResultMsg.create();
-        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ? I_TENANT_ID => ?)";
+        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ?,I_TENANT_ID => ?)";
             
-        System.out.println("data>>> " + data);
         try {
-           
-
             if(!aMaster.isEmpty() && aMaster.size() > 0){
                 for(ApprovalMasterV4 row : aMaster ){
 
@@ -335,7 +333,6 @@ public class MoldApprovalV4 implements EventHandler {
                     msg.setPlantCode(row.getOrgCode());
                     
                     jdbc.update(v_sql_callProc, row.getApprovalNumber(), row.getApprovalTypeCode(), row.getTenantId());
-
                 }
             }
         }
@@ -623,10 +620,16 @@ public class MoldApprovalV4 implements EventHandler {
             // Local Temp Table에 insert
             List<Object[]> batch = new ArrayList<Object[]>();
             if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
+                String approvalNumber = "";
                 for(PaymentV4 v_inRow : v_inMultiData){
+                    if(v_inRow.getApprovalNumber().equals("New")){
+                        approvalNumber = this.APPROVAL_NUMBER;
+                    }else{
+                        approvalNumber = v_inRow.getApprovalNumber(); 
+                    }
                     Object[] valuesM = new Object[] {
                         v_inRow.get("tenant_id"),
-                        v_inRow.get("approval_number"),
+                        approvalNumber,
                         v_inRow.get("pay_sequence"),
                         v_inRow.get("split_pay_type_code"),
                         new BigDecimal((String)((v_inRow.get("pay_rate")==null||v_inRow.get("pay_rate")=="")?"0":v_inRow.get("pay_rate"))),
@@ -702,6 +705,49 @@ public class MoldApprovalV4 implements EventHandler {
     } 
 
 
+    @On(event = UpdateMoldMstStatusCodeContext.CDS_NAME)
+    public void updateMoldMstStatusCode(UpdateMoldMstStatusCodeContext context){
 
+        MoldMstStatus data = context.getInputData();
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+        Collection<ApprovalDetailsV4> approvalDetail = data.getApprovalDetails();
 
+        ResultMsg msg = ResultMsg.create();
+        msg.setMessageCode("NCM01001");
+        msg.setResultCode(0);
+        msg.setCompanyCode(aMaster.getCompanyCode());
+        msg.setPlantCode(aMaster.getOrgCode());
+
+        try {
+            if(!approvalDetail.isEmpty() && approvalDetail.size() > 0){ 
+                ApprovalMasters master =  ApprovalMasters.create();  
+                master.setTenantId(aMaster.getTenantId());
+                master.setApprovalNumber(aMaster.getApprovalNumber());
+                master.setApproveStatusCode(aMaster.getApproveStatusCode());
+                
+                CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(master);
+                Result resultDetail = moldApprovalService.run(masterUpdate);
+                   
+                for(ApprovalDetailsV4 row : approvalDetail){
+                    MoldMasters mMaster =  MoldMasters.create();  
+                    mMaster.setTenantId(row.getTenantId());
+                    mMaster.setMoldId(row.getMoldId());
+                    mMaster.setMoldProgressStatusCode("ORD_CRT");
+
+                    CqnUpdate mMasterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(mMaster);
+                    Result result = moldApprovalService.run(mMasterUpdate);
+                }  
+            }
+
+            msg.setApprovalNumber(aMaster.getApprovalNumber()); 
+            
+        } catch (Exception e) {
+            msg.setMessageCode("FAILURE");
+            msg.setResultCode(-1);
+            e.printStackTrace();
+        }
+
+        context.setResult(msg);
+        context.setCompleted();
+    }
 }

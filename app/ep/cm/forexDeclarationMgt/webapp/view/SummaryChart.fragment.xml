@@ -80,7 +80,7 @@
                                 <Text text="신고완료" />
                             </Column>
                             <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="chart bar" />
+                                <Text text="진행현황" />
                             </Column> 
                             <!-- <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="chart" />

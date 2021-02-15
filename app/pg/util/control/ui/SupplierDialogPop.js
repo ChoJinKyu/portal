@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
+    "ext/lib/util/SppUserSessionUtil",
     "ext/lib/control/DummyRenderer",
     "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/model/Filter",
@@ -14,7 +15,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ComboBox, Item, SearchField) {
+], function (Parent, SppUserSessionUtil, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ComboBox, Item, SearchField) {
     "use strict";
     var that;
     var supplierDialogPop = Parent.extend("pg.util.control.ui.SupplierDialogPop", {
@@ -56,22 +57,23 @@ sap.ui.define([
             return [
                 new Column({
                     width: "20%",
+                    hAlign : "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
                 new Column({
                     width: "35%",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_local_name}" })
                 }),
                 new Column({
                     width: "35%",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_english_name}" })
                 }),
                 new Column({
                     width: "10%",
-                    label: new Label({ text: this.getModel("I18N").getText("/STATUS") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/STATUS"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{inactive_status_name}" })
                 })
             ];
@@ -81,6 +83,23 @@ sap.ui.define([
             var aFilters = [];
             var sSupplierCodePop = this.oSupplierCodePop.getValue();
             var sSupplierNamePop = this.oSupplierNamePop.getValue();
+            var sTanentId = SppUserSessionUtil.getUserInfo().TENANT_ID,
+                sLanguageCd = SppUserSessionUtil.getUserInfo().LANGUAGE_CODE,
+                sCompanyCode = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
+
+
+            // Session Info
+            // if (!!sTanentId) {
+            //     aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
+            // }
+            
+            // if (!!sLanguageCd) {
+            //     aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
+            // }
+
+            // if (!!sCompanyCode) {
+            //     aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+            // } 
 
             if (!!this.oSearchObj.tanentId) {
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
@@ -88,10 +107,6 @@ sap.ui.define([
 
             if (!!this.oSearchObj.languageCd) {
                 aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
-            }
-
-            if (!!this.oSearchObj.companyCode) {
-                aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode)); 
             }
 
             if (!!this.oSearchObj.orgCode) {
@@ -113,7 +128,7 @@ sap.ui.define([
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierMstView", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("supplier_code", true)
+                    new Sorter("supplier_code", false)
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -136,7 +151,6 @@ sap.ui.define([
             //     this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
             // }
 
-            //this.loadData();
             this.oDialog.open();
         }
     });

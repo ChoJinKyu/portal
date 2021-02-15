@@ -140,7 +140,7 @@
                 {
                     "name": "Apply",
                     "pattern": "Apply/:fundingApplNumber:/:supplierCode:/:fundingStatusCode:",
-                    "target": ["Master", "Detail"]
+                    "target": ["Master", "Apply"]
                 }
             ],
 			"targets": {

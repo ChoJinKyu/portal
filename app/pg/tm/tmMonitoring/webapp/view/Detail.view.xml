@@ -23,12 +23,12 @@
 									<uxap:blocks>
                                         <VBox>
                                         <MessageStrip 
-            id="activeMessage_Show" 
-            text="{= ${activate_flag} === true? '이 시나리오는 활성화 상태입니다.' : '이 시나리오는 비활성화 상태입니다.'}" 
-            showIcon="true" 
-            showCloseButton="false" 
-            type="{= ${activate_flag} === true? 'Information' : 'Warning'}"
-            visible="{=!${DetailView>/isEditMode}}"/>
+                                        id="activeMessage_Show" 
+                                        text="{= ${masterModel>/masterData/activate_flag} === true? '이 시나리오는 활성화 상태입니다.' : '이 시나리오는 비활성화 상태입니다.'}" 
+                                        showIcon="true" 
+                                        showCloseButton="false" 
+                                        type="{= ${masterModel>/masterData/activate_flag} === true? 'Information' : 'Warning'}"
+                                        visible="{=!${DetailView>/isEditMode}}"/>
                                 <f:SimpleForm 
                                     id="simpleform_edit" 
                                     maxContainerCols="2" 
@@ -48,17 +48,17 @@
                                                 path: '/TaskMonitoringTypedCodeView',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                ]}"  required="true" id="combo_monitoring_type" selectedKey="{=${DetailView>/isCreate} === true ? null :  ${monitoring_type_code}}" width="100%">
+                                                ]}"  required="true" id="combo_monitoring_type" selectedKey="{=${DetailView>/isCreate} === true ? null :  ${masterModel>/masterData/monitoring_type_code}}" width="100%">
                                                 <core:ListItem key="{code}" text="{code_name}"/>
                                             </ComboBox>
-                                            <Text text="{monitoring_type_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+                                            <Text text="{masterModel>/masterData/monitoring_type_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
                                             <layoutData>
                                                 <l:GridData span="XL3 L4 M4 S12"/>
                                             </layoutData>
                                         </VBox>
                                         <VBox>
                                             <Label text="{I18N>/PURCHASING_TYPE_NAME}" required="true"/>
-                                            <MultiComboBox visible="{=${DetailView>/isEditMode}}" width="100%" selectedKeys="{=${DetailView>/isCreate} === true ? null : ${monitoring_purchasing_type_code}.split(';')}" id="combo_purchasing_type"
+                                            <MultiComboBox visible="{=${DetailView>/isEditMode}}" width="100%" selectedKeys="{=${DetailView>/isCreate} === true ? null : ${masterModel>/masterData/monitoring_purchasing_type_code}.split(';')}" id="combo_purchasing_type"
                                                 items="{
                                                     path: '/TaskMonitoringPurchaingTypeCodeView',
                                                     sorter: {path: 'code_name'},
@@ -68,7 +68,7 @@
                                                 required="true">
                                                 <core:ListItem key="{code}" text="{code_name}"/>
                                             </MultiComboBox>
-                                            <Text text="{=${monitoring_purchasing_type_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+                                            <Text text="{=${masterModel>/masterData/monitoring_purchasing_type_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
                                             <layoutData>
                                                 <l:GridData span="XL3 L4 M4 S12"/>
                                             </layoutData>
@@ -76,7 +76,7 @@
                                         <VBox>
                                             <Label text="{I18N>/ACTIVATE}" visible="{=${DetailView>/isEditMode}}" />
                                             <!-- <Switch id="switch_activate" state="{activate_flag}" customTextOn="Yes" customTextOff="No" enabled="true"/> -->
-                                            <SegmentedButton visible="{=${DetailView>/isEditMode}}" id="segmentButton_activate" selectedKey="{=${DetailView>/isCreate} === true ? 'No' : ${activate_flag} === true? 'Yes' : 'No'}">
+                                            <SegmentedButton visible="{=${DetailView>/isEditMode}}" id="segmentButton_activate" selectedKey="{=${DetailView>/isCreate} === true ? 'No' : ${masterModel>/masterData/activate_flag} === true? 'Yes' : 'No'}">
                                                 <items>
                                                     <SegmentedButtonItem text="Yes" key="Yes"/>
                                                     <SegmentedButtonItem text="No" key="No"/>
@@ -94,10 +94,10 @@
                                                 visible="{=${DetailView>/isEditMode}}"
                                                 editable="{=${DetailView>/isCreate}}" 
                                                 type="Text" 
-                                                value="{=${DetailView>/isCreate} === true ? null : ${ path: 'scenario_name', type: 'sap.ui.model.type.String', constraints: { minLength: 1, maxLength: 240}}}" 
+                                                value="{=${DetailView>/isCreate} === true ? null : ${ path: 'masterModel>/masterData/scenario_name', type: 'sap.ui.model.type.String', constraints: { minLength: 1, maxLength: 240}}}" 
                                                 showValueHelp="false" 
                                                 required="true"/>
-                                                <Text text="{scenario_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+                                                <Text text="{masterModel>/masterData/scenario_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
                                             <layoutData>
                                                 <l:GridData span="XL6 L6 M12 S12" linebreak="true"/>
                                             </layoutData>
@@ -114,7 +114,7 @@
                                                 <core:Item key="{tenant_id}" text="{tenant_name}"/>
                                                 
                                             </ComboBox>
-                                            <Text text="{tenant_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+                                            <Text text="{masterModel>/masterData/tenant_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
                                             <layoutData>
                                                 <l:GridData span="XL3 L4 M4 S12" linebreak="true"/>
                                             </layoutData>
@@ -132,11 +132,11 @@
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                 ]}" 
-                                                selectedKeys="{=${company_code}.split(';')}" 
+                                                selectedKeys="{=${masterModel>/masterData/company_code}.split(';')}" 
                                                 maxWidth="100%">
                                                 <core:ListItem key="{company_code}" text="{company_name}"/>
                                             </MultiComboBox>
-                                            <Text text="{=${company_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+                                            <Text text="{=${masterModel>/masterData/company_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
                                             <layoutData>
                                                 <l:GridData span="XL3 L4 M4 S12"/>
                                             </layoutData>
@@ -147,7 +147,7 @@
                                                 id="bizunit_edit_combo" 
                                                 width="100%"
                                                 visible="{=${DetailView>/isEditMode}}" 
-                                                selectedKeys="{=${bizunit_code}.split(';')}"
+                                                selectedKeys="{=${masterModel>/masterData/bizunit_code}.split(';')}"
                                                 items="{
                                                 path: '/OrgUnitView',
                                                 sorter: {path: 'bizunit_name'},
@@ -158,7 +158,7 @@
                                                 maxWidth="100%">
                                                 <core:ListItem key="{bizunit_code}" text="{bizunit_name}"/>
                                             </MultiComboBox>
-                                            <Text text="{=${bizunit_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+                                            <Text text="{=${masterModel>/masterData/bizunit_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
                                             <layoutData>
                                                 <l:GridData span="XL3 L4 M4 S12"/>
                                             </layoutData>
@@ -182,15 +182,15 @@
 												<f:content>
 													<VBox id="VBox_manager" class="sapUiNoMarginBottom">
 														<Label text="{I18N>/MANAGER}" labelFor="multiInputWithEmployeeValueHelp"/>
-														<Text text="{=${manager_local_name} === ''? 'No Manager Data' : ${manager_local_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
+														<Text text="{=${masterModel>/masterData/manager_local_name} === ''? 'No Manager Data' : ${masterModel>/masterData/manager_local_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
 														<MultiInput id="multiInputWithEmployeeValueHelp" visible="{=${DetailView>/isEditMode}}" tokenUpdate="onTokenUpdate" showValueHelp="false"/>
 														<layoutData>
 															<l:GridData span="XL3 L4 M4 S12"/>
 														</layoutData>
 													</VBox>
 													<VBox id="managerVBox" class="sapUiNoMarginTop">
-														<Table id="managerListTable" autoPopinMode="true" mode="MultiSelect">
-															<headerToolbar>
+														<Table id="managerListTable" class="sapUiNoMarginTop" autoPopinMode="true" items="{managerModel>/manager}" mode="MultiSelect">
+															<headerToolbar class="sapUiNoMarginTop">
 																<OverflowToolbar>
 																	<content>
 																		<ToolbarSpacer/>
@@ -230,7 +230,12 @@
 																		<Label text="{I18N>/USER_POSITION}"/>
 																	</header>
 																</Column>
-																<Column minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true" visible="{=!${DetailView>/isEditMode}}">
+																	<header>
+																		<Label text="{I18N>/SUPER_AUTHORITY_FLAG}" />
+																	</header>
+                                                                </Column>
+                                                                <Column minScreenWidth="Tablet" demandPopin="true" visible="{=${DetailView>/isEditMode}}">
 																	<header>
 																		<Label text="{I18N>/SUPER_AUTHORITY_FLAG}"/>
 																	</header>
@@ -239,13 +244,14 @@
 															<items>
 																<ColumnListItem type="Inactive">
 																	<cells>
-																		<Text text=""/>
-																		<Text text="{employee_number}"/>
-																		<Text text="{employee_name}"/>
-																		<Text text="{job_title}"/>
-																		<Text text="{mobile_phone_number}"/>
-																		<Text text="{department_id}"/>
-																		<SegmentedButton id="segmentButton_activate_flag" selectionChange=".onChangeAuthorityFlag" selectedKey="{=${monitoring_super_authority_flag} === true? 'Yes' : 'No'}" enabled="{=${DetailView>/isEditMode}}">
+																		<ObjectStatus icon="{managerModel>status}"/>
+																		<Text text="{managerModel>employee_number}"/>
+																		<Text text="{managerModel>employee_name}"/>
+																		<Text text="{managerModel>email_id}"/>
+																		<Text text="{managerModel>department_local_name}"/>
+																		<Text text="{managerModel>job_title}"/>
+                                                                        <Text text="{=${managerModel>monitoring_super_authority_flag} === true ? 'Y' : 'N'}" visible="{=!${DetailView>/isEditMode}}" />
+																		<SegmentedButton id="segmentButton_activate_flag" selectionChange=".onChangeAuthorityFlag" selectedKey="{=${managerModel>monitoring_super_authority_flag} === true? 'Yes' : 'No'}" visible="{=${DetailView>/isEditMode}}">
 																			<items>
 																				<SegmentedButtonItem text="Yes" key="Yes"/>
 																				<SegmentedButtonItem text="No" key="No"/>
@@ -278,11 +284,11 @@
 												<VBox class="sapUiSmallMarginEnd">
 													<Label text="{I18N>/OPERATION}"/>
 													<HBox id="hbox_operating">
-														<CheckBox id="search_flag" text="{I18N>/DISPLAY}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_display_flag} === 'true' ? true : false}"/>
+														<CheckBox id="search_flag" text="{I18N>/DISPLAY}" editable="{=${DetailView>/isEditMode}}" selected="{=${masterModel>/masterData/operation_mode_display_flag} === 'true' ? true : false}"/>
 														<HBox width="0.5rem"/>
-														<CheckBox id="calling_flag" text="{I18N>/EXPLAIN}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_calling_flag} === 'true' ? true : false}"/>
+														<CheckBox id="calling_flag" text="{I18N>/EXPLAIN}" editable="{=${DetailView>/isEditMode}}" selected="{=${masterModel>/masterData/operation_mode_calling_flag} === 'true' ? true : false}"/>
 														<HBox width="0.5rem"/>
-														<CheckBox id="alarm_flag" text="{I18N>/ALRAM}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_alram_flag} === 'true' ? true : false}"/>
+														<CheckBox id="alarm_flag" text="{I18N>/ALRAM}" editable="{=${DetailView>/isEditMode}}" selected="{=${masterModel>/masterData/operation_mode_alram_flag} === 'true' ? true : false}"/>
 													</HBox>
 													<layoutData>
 														<l:GridData span="XL3 L4 M4 S12"/>
@@ -290,8 +296,8 @@
 												</VBox>
 												<VBox id="cycleVBox">
 													<Label text="{I18N>/CYCLE}"/>
-													<Text text="{=${monitoring_cycle_name} === ''? 'No Cycle Data' : ${monitoring_cycle_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
-													<MultiComboBox id="multicombo_cycle" visible="{=${DetailView>/isEditMode}}" selectedKeys="{=${monitoring_cycle_code}.split(';')}" 
+													<Text text="{=${masterModel>/masterData/monitoring_cycle_name} === ''? 'No Cycle Data' : ${masterModel>/masterData/monitoring_cycle_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
+													<MultiComboBox id="multicombo_cycle" visible="{=${DetailView>/isEditMode}}" selectedKeys="{=${masterModel>/masterData/monitoring_cycle_code}.split(';')}" 
                                                          items="{
                                                             path: '/TaskMonitoringCycleCodeView',
                                                             sorter: {path: 'code_name'},
@@ -326,7 +332,7 @@
 											</VBox>
 											<VBox class="sapUiSmallMarginTop" id="scenarioVBox">
 												<Label text="{I18N>/SCENARIO_DESC}" design="Bold"/>
-												<rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop"  editorType="TinyMCE4" editable="{=${DetailView>/isEditMode}}" width="100%" height="300px" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+												<rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop"  editorType="TinyMCE4" editable="{=${DetailView>/isEditMode}}"  width="100%" height="300px" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
 												<!-- <FormattedText id="ScenarioDescFormattedText" visible="{=!${DetailView>/isEditMode}}"/> -->
 											</VBox>
 										</l:VerticalLayout>
@@ -343,7 +349,6 @@
 									<uxap:blocks>
 										<l:VerticalLayout width="100%">
 											<VBox class="sapUiSmallMarginTop" id="systemVBox">
-												<Label text="{I18N>/SOURCE_SYSTEM_DESC}" design="Bold"/>
 												<rte:RichTextEditor id="reSourceSystemDetail" wrapping="false" class="sapUiTinyMarginTop" editorType="TinyMCE4" editable="{=${DetailView>/isEditMode}}" width="100%" height="300px" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
 												<!-- <FormattedText id="ReSourceSystemFormattedText" visible="{=!${DetailView>/isEditMode}}"/> -->
 											</VBox>
@@ -359,7 +364,7 @@
 							<uxap:subSections>
 								<uxap:ObjectPageSubSection>
 									<uxap:blocks>
-										<Table id="signalList" items="{/TaskMonitoringIndicatorNumberView}" class="sapUiNoMarginTop"  autoPopinMode="true" mode="MultiSelect">
+										<Table id="signalList" class="sapUiNoMarginTop"  autoPopinMode="true" mode="MultiSelect">
 											<headerToolbar class="sapUiNoMarginTop">
 												<OverflowToolbar>
 													<content>

@@ -122,7 +122,6 @@ sap.ui.define([
 			this._toEditMode();
         },
         
-
         /**
          * function : 언어코드 테이블 행 추가 버튼 클릭 이벤트
          * 언어코드 테이블의 행을 추가 시킨다.
@@ -134,21 +133,24 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 bFlag = false;
 
-            if(oDetailsModel.getProperty("/PdProdActivityTemplateLng").length < oLangDataModel.getProperty("/").length){
-                bFlag = true;
-            }
+            // if(oDetailsModel.getProperty("/PdProdActivityTemplateLng").length < oLangDataModel.getProperty("/").length){
+            //     bFlag = true;
+            // }
 
-            if(!bFlag){
-                MessageToast.show(this.getModel("I18N").getText("/NPG00002"));
-                return;
-            }
+            // if(!bFlag){
+            //     MessageToast.show(this.getModel("I18N").getText("/NPG00002"));
+            //     return;
+            // }
 
 			oDetailsModel.addRecord({
 				"tenant_id": this._sTenantId,
 				"product_activity_code": "",
 				"language_cd": "",
 				"code_name": ""			
-            }, "/PdPartBaseActivityLng");
+            }, "/PdPartBaseActivityLng", 0);
+
+
+            
 
 		},
 
@@ -228,6 +230,16 @@ sap.ui.define([
 
         },
 
+        /**
+         * 순번 Input 값이 변할 때마다 숫자값으로 변환
+         */
+        onSequenceChange : function(oEvent){
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+                val = val.replace(/[^\d]/g, '');
+            _oInput.setValue(val); 
+        },
+
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
@@ -278,9 +290,11 @@ sap.ui.define([
                 this._sLoginUserName = "TestUserName";
             }
 
-            console.log(this._sTenantId);
-            console.log(this._sControlOptionCode);
-            console.log(this._slayout);
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+
 
             this.getView().setBusy(true);
             
@@ -479,9 +493,7 @@ sap.ui.define([
                 });
             }
 
-            input.inputData.pdDtl = pdDtlVal;
-
-            console.log(input);         
+            input.inputData.pdDtl = pdDtlVal;        
 
             if(this.validator.validate(this.byId("page")) !== true) return;
 
@@ -500,32 +512,29 @@ sap.ui.define([
                             data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
-                                  console.log(rst);
                                 if(rst.return_code =="OK"){
                                     if(CUType === "D") {
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("mainTable").
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
                                     } else if(CUType === "C"){
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                        v_this.onPageNavBackButtonPress.call(v_this);
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        v_this._onRoutedThisPage();
                                     }
                                 }else{
-                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     MessageBox.error(rst.return_msg);
                                 }
                             },
                             error: function (rst) {
                                     console.log("error");
-                                    console.log(rst);
                                     MessageBox.error("예기치 않은 오류가 발생하였습니다.");
                             }
                         });

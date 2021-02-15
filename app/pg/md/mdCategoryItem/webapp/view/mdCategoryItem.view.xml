@@ -108,7 +108,7 @@
                 inset="false" 
                 growing="true"
                 growingThreshold="15"
-                mode="SingleSelectLeft" 
+                mode="{= ${list>/mainMode}==='Main'?'SingleSelectLeft':'None'}" 
                 selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{
@@ -140,7 +140,7 @@
                 <Column  hAlign="Center" width="3em" >
                     <Text text="" />
                 </Column>
-                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" width="3em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" visible="false" width="3em" >
                     <Text text="{I18N>/SPMD_CHARACTER_SORT_SEQ}" />
                 </Column>
                 <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="false">

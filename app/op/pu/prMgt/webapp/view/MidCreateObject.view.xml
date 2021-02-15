@@ -169,7 +169,7 @@
                                     <table:template>
                                         <Input 
                                             value="{path: 'viewModel>pr_quantity', 
-                                                    type : 'sap.ui.model.odata.type.Decimal'}" 
+                                                    type : 'sap.ui.model.type.Float'}" 
                                             textAlign="End"
                                             maxLength="30"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
@@ -226,7 +226,7 @@
                                     <table:template>   
                                         <Input 
                                             value="{path: 'viewModel>estimated_price', 
-                                                    type : 'sap.ui.model.odata.type.Decimal'}" 
+                                                    type : 'sap.ui.model.type.Float'}" 
                                             textAlign="End"
                                             maxLength="30"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>
@@ -247,7 +247,7 @@
                                     <table:template> 
                                         <Input 
                                             value="{path: 'viewModel>price_unit', 
-                                                    type : 'sap.ui.model.odata.type.Decimal'}" 
+                                                    type : 'sap.ui.model.type.Float'}" 
                                             textAlign="End"
                                             maxLength="5"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/>

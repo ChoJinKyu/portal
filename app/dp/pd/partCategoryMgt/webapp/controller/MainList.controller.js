@@ -54,6 +54,13 @@ sap.ui.define([
 
             onSearch: function (event) {
                 var predicates = [];
+                if(this.byId("searchCategoryCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCategoryCombo")) !== true) {
+                    MessageToast.show("필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchCategoryCombo"));
+                }
+
                 if (!!this.byId("searchCategoryCombo").getSelectedKey()) {
                     predicates.push(new Filter("category_group_code", FilterOperator.EQ, this.byId("searchCategoryCombo").getSelectedKey()));
                 }
@@ -75,12 +82,22 @@ sap.ui.define([
                     })
                     // 성공시
                     .then((function (jNodes) {
+                        
+                        for(var i=0; i<jNodes[1].results.length; i++) {
+                            var local_update_dtm = jNodes[1].results[i].local_update_dtm;
+                            jNodes[1].results[i].local_update_dtm = this.dateFormatter.toDateTimeString(local_update_dtm);
+                        }
+
                         this.getView().setModel(new JSONModel({
                             "pdPartCategoryView": {
                                 "nodes": jNodes[0],
                                 "list": jNodes[1]
                             }
                         }), "tree");
+
+                        this.getModel("tree").getData()
+                        
+
                     }).bind(this))
                     // 실패시
                     .catch(function (oError) {
@@ -157,6 +174,13 @@ sap.ui.define([
                 this.oInfoMessageDialog.open();
             },
 
+            // onRowSelectionChange: function(oEvent) {
+            //     console.log(oEvent);
+            //     this.getRouter().navTo("addCreatePage", {
+            //         requestNumber: "CCR2102050022"
+            //     }, true);
+                
+            // }
         });
     }
 );

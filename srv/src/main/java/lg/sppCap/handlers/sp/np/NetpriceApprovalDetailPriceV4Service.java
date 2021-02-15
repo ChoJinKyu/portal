@@ -179,6 +179,30 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
         
         String tableName = "#SP_NP_NET_PRICE_APPROVAL_PRICEINFO_PROC_LOCAL_TEMP_DTL";
 
+
+        /*
+        cannot insert NULL or update to NULL: Not nullable
+        //최초에 없는 데이타도 조회해야해서 
+        jdbc.execute(new StringBuffer()
+                .append("CREATE local TEMPORARY column TABLE ").append(tableName).append(" AS (")
+                .append("  SELECT                                                                 ")
+                .append("             tenant_id                                   ")  
+                .append("           , company_code                                ")  
+                .append("           , org_type_code                               ")  
+                .append("           , org_code                                    ")  
+                .append("           , approval_number                             ")  
+                .append("           , item_sequence                               ")  
+                .append("           , supplier_code                               ")  
+                .append("           , material_code                               ")  
+                .append("           , market_code                                 ")  
+                .append("           , currency_code                               ")  
+                //.append("     , cast('' as nvarchar(1)) as _row_state_    ")  
+                .append("  FROM SP_NP_NET_PRICE_APPROVAL_DTL WHERE 1=0      ")    
+                .append(")")
+                .toString()
+                );
+                */
+
         jdbc.execute(new StringBuffer()
                     .append("CREATE local TEMPORARY column TABLE ").append(tableName).append(" (")
                     .append(" TENANT_ID                   NVARCHAR(5)")

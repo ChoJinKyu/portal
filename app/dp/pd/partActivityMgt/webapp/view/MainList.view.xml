@@ -19,7 +19,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/ACTIVITY_MANAGEMENT}" />
+                    <Title text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -52,7 +52,7 @@
                                 <items>
                                     <core:ListItem
                                         key="{company_code}"
-                                        text="{company_code}"
+                                        text="{company_name}"
                                         additionalText="{company_code}"/>
                                 </items>
                             </ComboBox>
@@ -78,7 +78,7 @@
                                 <items>
                                     <core:ListItem
                                         key="{org_code}" 
-                                        text="{org_code}" 
+                                        text="{org_name}" 
                                         additionalText="{org_code}"/>
                                 </items>
                             </ComboBox>
@@ -141,11 +141,7 @@
             <t:Table id="mainTable"
             selectionMode="MultiToggle"
             rows="{
-                path: 'list>/pdPartactivityTemplateView',
-                sorter: { 
-                    path: 'local_update_dtm',
-                    descending: true 
-                }                   
+                path: 'list>/pdPartactivityTemplateView'                               
             }"
             cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
@@ -153,7 +149,7 @@
             columnResize="onColumnResize">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title id="mainTableTitle" text="Activity List {= ${list>/pdPartactivityTemplateView}.length > 0 ? '(' + ${list>/pdPartactivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
+                    <Title id="mainTableTitle" text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/LIST} {= ${list>/pdPartactivityTemplateView}.length > 0 ? '(' + ${list>/pdPartactivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
                     <ToolbarSpacer/>
                     <Button text="Copy" id="buttonCopy" press=".onCopy"  type="Transparent"/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
@@ -192,11 +188,17 @@
                 <t:template>
                     <Text text="{list>org_name}" wrapping="false" textAlign="Center" width="100%"/>
                 </t:template>
-                </t:Column>
+                </t:Column>                
                 <t:Column id="part_project_type_code">
                 <Label text="{I18N>/PROJECT_TYPE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>part_project_type_name}" wrapping="false" textAlign="Left" width="100%"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="sequence" width="60px">
+                <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>sequence}" textAlign="Right" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>                
                 <t:Column id="activity_code">
@@ -205,12 +207,12 @@
                     <Text text="{list>activity_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="develope_event_name" width="80px">
+                <!-- <t:Column id="develope_event_name" width="80px">
                 <Label text="{I18N>/EVENT}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>develope_event_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
-                </t:Column>
+                </t:Column> -->
                 <t:Column id="actual_role_name">
                 <Label text="{I18N>/ROLE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
@@ -235,12 +237,12 @@
                     <Text text="{list>activity_complete_type_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="job_type_name">
+                <!-- <t:Column id="job_type_name">
                 <Label text="{I18N>/JOB_TYPE}" textAlign="Center" width="100%" wrapping="false"/>
                 <t:template>
                     <Text text="{list>job_type_name}" wrapping="false" textAlign="Left" width="100%"/>
                 </t:template>
-                </t:Column>
+                </t:Column> -->
                 <t:Column id="active_flag_val" width="90px">
                 <Label text="{I18N>/USE_FLAG}" textAlign="Center" width="100%" wrapping="false"/>
                 <t:template>                    

@@ -10,29 +10,29 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
-    "sap/m/Input",
-    "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
+    "sap/m/Input"
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     var MaterialClassDialog = Parent.extend("dp.util.control.ui.MaterialClassDialog", {
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "40em"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_class_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "material_class_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "material_class_code" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oMaterialClassCode = new SearchField({ 
-                placeholder : this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")
-            });
+            this.oMaterialClassCode = new Input();
+            this.oMaterialClassName = new Input();
             
             this.oMaterialClassCode.attachEvent("change", this.loadData.bind(this));
+            this.oMaterialClassName.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
@@ -40,7 +40,14 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")}),
                         this.oMaterialClassCode
                     ],
-                    layoutData: new GridData({ span: "XL6 L6 M6 S12"})
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/NAME")}),
+                        this.oMaterialClassName
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
             ];
         },
@@ -49,25 +56,44 @@ sap.ui.define([
             return [
                 new Column({
                     width: "30%",
-                    label: new Label({text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")}),
-                    template: new Text({text: "{material_class_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_class_code}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/NAME")}),
-                    template: new Text({text: "{material_class_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_class_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 })
             ];
         },
 
         loadData: function(){
             var sMaterialClassCode = this.oMaterialClassCode.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
+                sMaterialClassName = this.oMaterialClassName.getValue(),
+                aFilters = this.getProperty("items").filters || [];
 
                 if(sMaterialClassCode){
                     aFilters.push(new Filter("tolower(material_class_code)", FilterOperator.Contains, "'" + sMaterialClassCode.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sMaterialClassName){
+                    aFilters.push(new Filter("tolower(material_class_name)", FilterOperator.Contains, "'" + sMaterialClassName.toLowerCase().replace("'","''") + "'"));
                 }
 
 

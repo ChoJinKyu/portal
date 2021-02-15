@@ -22,59 +22,63 @@
   3. history
     -. 2021.02.04 : 우완희
 *************************************************/
+using { sp.Np_Net_Price_Approval_Dtl as SP_NP_NET_PRICE_APPROVAL_DTL } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_APPROVAL_DTL-model';
+using { sp.Np_Base_Price_Mst         as SP_NP_BASE_PRICE_MST         } from '../../../../../db/cds/sp/np/SP_NP_BASE_PRICE_MST-model';
+using { sp.Sm_Supplier_Mst           as SP_SM_SUPPLIER_MST           } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
+
 
 namespace sp;
 
 @path : '/sp.netpriceApprovalDetailPriceV4Service'
 service NpApprovalDetailPriceV4Service {
 
-
     type inputTableType : {
-        tenant_id                       : String(5)     ; // 'L1100'
-        company_code                    : String(10)    ; // '회사코드'
-        org_type_code                   : String(2)     ; // '구매운영조직유형'
-        org_code                        : String(10)    ; // '구매운영조직코드'
-        approval_number                 : String(50)    ; 
-        item_sequence                   : Integer64     ;   
-        supplier_code                   : String(15)    ; 
-        material_code                   : String(40)    ; 
-        market_code                     : String(30)    ; 
-        currency_code                   : String(3)     ; 
+        tenant_id                       : type of SP_NP_NET_PRICE_APPROVAL_DTL : tenant_id          ; // 'L1100'
+        company_code                    : type of SP_NP_NET_PRICE_APPROVAL_DTL : company_code       ; // '회사코드'
+        org_type_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : org_type_code      ; // '구매운영조직유형'
+        org_code                        : type of SP_NP_NET_PRICE_APPROVAL_DTL : org_code           ; // '구매운영조직코드'
+        approval_number                 : type of SP_NP_NET_PRICE_APPROVAL_DTL : approval_number    ; 
+        item_sequence                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : item_sequence      ;   
+        supplier_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : supplier_code      ; 
+        material_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : material_code      ; 
+        market_code                     : type of SP_NP_NET_PRICE_APPROVAL_DTL : market_code        ; 
+        currency_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : currency_code      ; 
     }
+    /*   _row_state_                     : String(1) @Text:'UI:Row State' @Description:'UI Table Status("D":Delete, ""|"U":Update, "C":Create)'; */
 
     /*  */
     type outTableType : {
-        tenant_id                       : String(5)     ; // 'L1100'
-        company_code                    : String(10)    ; // '회사코드'
-        org_type_code                   : String(2)     ; // '구매운영조직유형'
-        org_code                        : String(10)    ; // '구매운영조직코드'
-        approval_number                 : String(50)    ; 
-        item_sequence                   : Integer64     ;   
-        supplier_code                   : String(15)    ; 
-        supplier_name                   : String(240)   ; 
-        material_code                   : String(40)    ; 
-        market_code                     : String(30)    ; 
-        currency_code                   : String(3)     ; 
-        net_price                       : Decimal(34,10); 
-        base_price_type_code            : String(30)    ; 
-        pyear_dec_base_currency_code    : String(3)     ;
-        pyear_dec_base_price            : Decimal(34,10); 
-        pyear_dec_ci_rate               : Decimal(34,10); 
-        quarter_base_currency_code      : String(3)     ;
-        quarter_base_price              : Decimal(34,10);
-        quarter_ci_rate                 : Decimal(34,10);
-        base_date                       : Date;
-        base_currency_code              : String(3)     ; 
-        base_price                      : Decimal(34,10); 
-        base_apply_start_yyyymm         : String(6)     ; 
-        base_apply_end_yyyymm           : String(6)     ;                          
+        tenant_id                       : type of SP_NP_NET_PRICE_APPROVAL_DTL : tenant_id                       ; // 'L1100'
+        company_code                    : type of SP_NP_NET_PRICE_APPROVAL_DTL : company_code                    ; // '회사코드'
+        org_type_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : org_type_code                   ; // '구매운영조직유형'
+        org_code                        : type of SP_NP_NET_PRICE_APPROVAL_DTL : org_code                        ; // '구매운영조직코드'
+        approval_number                 : type of SP_NP_NET_PRICE_APPROVAL_DTL : approval_number                 ; 
+        item_sequence                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : item_sequence                   ;   
+        supplier_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : supplier_code                   ; 
+        supplier_name                   : type of SP_SM_SUPPLIER_MST : supplier_local_name                       ; 
+        material_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : material_code                   ; 
+        market_code                     : type of SP_NP_NET_PRICE_APPROVAL_DTL : market_code                     ; 
+        currency_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : currency_code                   ; 
+        net_price                       : type of SP_NP_NET_PRICE_APPROVAL_DTL : net_price                       ; 
+        base_price_type_code            : type of SP_NP_NET_PRICE_APPROVAL_DTL : base_price_type_code            ; 
+        pyear_dec_base_currency_code    : type of SP_NP_NET_PRICE_APPROVAL_DTL : pyear_dec_base_currency_code    ;
+        pyear_dec_base_price            : type of SP_NP_NET_PRICE_APPROVAL_DTL : pyear_dec_base_price            ; 
+        pyear_dec_ci_rate               : type of SP_NP_NET_PRICE_APPROVAL_DTL : pyear_dec_ci_rate               ; 
+        quarter_base_currency_code      : type of SP_NP_NET_PRICE_APPROVAL_DTL : quarter_base_currency_code      ;
+        quarter_base_price              : type of SP_NP_NET_PRICE_APPROVAL_DTL : quarter_base_price              ;
+        quarter_ci_rate                 : type of SP_NP_NET_PRICE_APPROVAL_DTL : quarter_ci_rate                 ;
+        base_date                       : type of SP_NP_BASE_PRICE_MST : base_date                  ;
+        base_currency_code              : type of SP_NP_BASE_PRICE_MST : currency_code              ; 
+        base_price                      : type of SP_NP_BASE_PRICE_MST : base_price                 ; 
+        base_apply_start_yyyymm         : type of SP_NP_BASE_PRICE_MST : apply_start_yyyymm         ; 
+        base_apply_end_yyyymm           : type of SP_NP_BASE_PRICE_MST : apply_end_yyyymm           ;                          
     };
 
     /* */
     type ParamType : {
-        tenant_id : String(5);
-        language_code : String(2);
-        inDetails    : array of inputTableType;
+        tenant_id                       : type of SP_NP_NET_PRICE_APPROVAL_DTL : tenant_id                       ;
+        language_code   : String(2);
+        inDetails       : array of inputTableType;
     }
 
     /*  */

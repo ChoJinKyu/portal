@@ -64,6 +64,7 @@ public class PoApprMgtV4 implements EventHandler {
                          //.append(", DECLARE_DATE DATE")
                          .append(", DECLARE_SCHEDULED_DATE NVARCHAR(50) ")
                          .append(", DECLARE_DATE NVARCHAR(50)")
+                         .append(", PROCESSED_COMPLETE_DATE NVARCHAR(50)")
                          .append(", ATTCH_GROUP_NUMBER NVARCHAR(100) ")
                          .append(", REMARK NVARCHAR(3000) ")
                          .append(", UPDATE_USER_ID NVARCHAR(255) ")
@@ -71,7 +72,7 @@ public class PoApprMgtV4 implements EventHandler {
 
         String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_EP_PO_FOREX_DECLARATION";
         
-		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_FOREX_DECLARATION VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_EP_PO_FOREX_DECLARATION VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		String v_sql_callProc = "CALL EP_PO_FOREX_DECLARATION_SAVE_PROC( I_TABLE => #LOCAL_TEMP_EP_PO_FOREX_DECLARATION, O_TABLE => ? )";
 
         Collection<SavedForexItems> v_inRows = context.getForexItems();
@@ -102,6 +103,7 @@ public class PoApprMgtV4 implements EventHandler {
                     v_inRow.get("forex_declare_status_code"),
                     v_inRow.get("declare_scheduled_date"),
                     v_inRow.get("declare_date"),
+                    v_inRow.get("processed_complete_date"),
                     v_inRow.get("attch_group_number"),
                     v_inRow.get("remark"),
                     v_inRow.get("update_user_id")

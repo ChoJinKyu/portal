@@ -1,7 +1,8 @@
 <mvc:View controllerName="dp.pd.partActivityMgt.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
-	xmlns:uxap="sap.uxap" 
+    xmlns:uxap="sap.uxap"
+    xmlns:table="sap.ui.table" 
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
@@ -23,7 +24,7 @@
                 <uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".handleClose" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-                        <Title text="{I18N>/PART_ACTIVITY_DETAIL}" wrapping="true" class="" />
+                        <Title text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/DETAIL}" wrapping="true" class="" />
                     </HBox>
                 </uxap:heading>				
                 <uxap:navigationActions>
@@ -83,9 +84,11 @@
                                         text="{master>/company_code}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <ComboBox 
+                                    <ComboBox
+                                        id="searchCompanyCombo" 
                                         width="50%"
                                         visible="{contModel>/editMode}"
+                                        change=".onComboChange"
                                         showSecondaryValues= "true"                                         
                                         selectedKey="{master>/company_code}"
                                         items="{
@@ -95,7 +98,7 @@
                                         <items>
                                             <core:ListItem
                                                 key="{company_code}" 
-                                                text="{company_code}" 
+                                                text="{company_name}" 
                                                 additionalText="{company_code}"/>
                                         </items>
                                     </ComboBox>
@@ -112,8 +115,10 @@
                                         visible="{contModel>/readMode}">
                                     </Text>
                                     <ComboBox
+                                        id="searchOrgCombo"
                                         width="50%" 
                                         visible="{contModel>/editMode}"
+                                        change=".onComboChange"
                                         showSecondaryValues= "true"                                        
                                         selectedKey="{master>/org_code}"
                                         items="{
@@ -123,7 +128,7 @@
                                         <items>
                                             <core:ListItem
                                                 key="{org_code}" 
-                                                text="{org_code}" 
+                                                text="{org_name}" 
                                                 additionalText="{org_code}"/>
                                         </items>
                                     </ComboBox>
@@ -140,8 +145,10 @@
                                         visible="{contModel>/readMode}">
                                     </Text>                                    
                                     <ComboBox
+                                        id="searchPartProjectCombo"
                                         width="50%" 
                                         visible="{contModel>/editMode}"
+                                        change=".onComboChange"
                                         showSecondaryValues= "true"                                         
                                         selectedKey="{master>/part_project_type_code}"
                                         items="{
@@ -171,10 +178,12 @@
                                         visible="{= !${contModel>/createMode} }">
                                     </Text>
                                     <Input
-                                        width="50%"                                        
+                                        width="50%"
+                                        editable="false"                                        
                                         visible="{contModel>/createMode}" 
                                         id="searchActivityInput"                                        
                                         showValueHelp="true"
+                                        change=".onInputChange"
                                         required="true"
                                         value="{master>/activity_code}"
                                         valueHelpRequest=".onDialogActivityPress"/>
@@ -194,14 +203,14 @@
                                 </VBox>
                                 <VBox width="100%">			
                                     <Label text="{I18N>/ACTIVITY_NAME}"/>
-                                    <Text
-                                        id="searchActivityName"
+                                    <Text                                        
                                         width="50%"
                                         visible="{= !${contModel>/createMode} }"
                                         text="{master>/activity_name}">                                       
                                     </Text>
                                     <Input 
                                         width="50%"
+                                        id="searchActivityName"
                                         value="{
                                             path: 'master>/activity_name'
                                         }" visible="{contModel>/createMode}" editable="false"></Input>                                    
@@ -219,9 +228,10 @@
                                     </Text>
                                     <Input 
                                         width="50%"
+                                        id="searchSequence"
                                         value="{
                                             path: 'master>/sequence'
-                                        }" type="Number"  visible="{contModel>/editMode}" editable="{= !${contModel>/createMode}}"></Input>
+                                        }" type="Number"  visible="{contModel>/editMode}" editable="true"></Input>
                                     <layoutData>
                                         <layout:GridData
                                             span="XL12 L12 M12 S12" />
@@ -259,6 +269,68 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox width="100%">			
+                                    <Label text="{I18N>/ACTIVITY_COMPLETE_TYPE}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/activity_complete_type_name}"
+                                        visible="{contModel>/readMode}">
+                                    </Text>
+                                    <ComboBox
+                                        width="50%" 
+                                        visible="{contModel>/editMode}"
+                                        showSecondaryValues= "true"                                         
+                                        selectedKey="{master>/activity_complete_type_code}"
+                                        items="{
+                                            path: 'util>/Code',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_COMPLETE_TYPE'}
+                                            ]
+                                        }" editable="{contModel>/editMode}"> 
+                                        <items>
+                                            <core:ListItem
+                                                key="{util>code}" 
+                                                text="{util>code_name}" 
+                                                additionalText="{util>code}"/>
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <!-- <VBox width="100%">			
+                                    <Label text="{I18N>/JOB_TYPE}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/job_type_name}"
+                                        visible="{contModel>/readMode}">
+                                    </Text>
+                                    <ComboBox 
+                                        width="50%"
+                                        visible="{contModel>/editMode}"
+                                        showSecondaryValues= "true"                                        
+                                        selectedKey="{master>/job_type_code}"
+                                        items="{
+                                            path: 'util>/Code',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_JOB_TYPE'}
+                                            ]
+                                        }" editable="{contModel>/editMode}"> 
+                                        <items>
+                                            <core:ListItem
+                                                key="{util>code}" 
+                                                text="{util>code_name}" 
+                                                additionalText="{util>code}"/>
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox> -->
+                                <!-- <VBox width="100%">			
                                     <Label text="{I18N>/EVENT}"/>
                                     <Text
                                         width="50%"
@@ -288,7 +360,7 @@
                                         <layout:GridData
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
-                                </VBox>
+                                </VBox> -->
                                 <VBox width="100%">
                                     <Label text="{I18N>/ATTACHMENT_MANDATORY}"/>
                                     <Text
@@ -354,74 +426,185 @@
                                         <layout:GridData
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
-                                </VBox> 
-                                <VBox width="100%">			
-                                    <Label text="{I18N>/ACTIVITY_COMPLETE_TYPE}"/>
-                                    <Text
-                                        width="50%"
-                                        text="{master>/activity_complete_type_name}"
-                                        visible="{contModel>/readMode}">
-                                    </Text>
-                                    <ComboBox
-                                        width="50%" 
-                                        visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"                                         
-                                        selectedKey="{master>/activity_complete_type_code}"
-                                        items="{
-                                            path: 'util>/Code',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_COMPLETE_TYPE'}
-                                            ]
-                                        }" editable="{contModel>/editMode}"> 
-                                        <items>
-                                            <core:ListItem
-                                                key="{util>code}" 
-                                                text="{util>code_name}" 
-                                                additionalText="{util>code}"/>
-                                        </items>
-                                    </ComboBox>
-                                    <layoutData>
-                                        <layout:GridData
-                                            span="XL12 L12 M12 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox width="100%">			
-                                    <Label text="{I18N>/JOB_TYPE}"/>
-                                    <Text
-                                        width="50%"
-                                        text="{master>/job_type_name}"
-                                        visible="{contModel>/readMode}">
-                                    </Text>
-                                    <ComboBox 
-                                        width="50%"
-                                        visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"                                        
-                                        selectedKey="{master>/job_type_code}"
-                                        items="{
-                                            path: 'util>/Code',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_JOB_TYPE'}
-                                            ]
-                                        }" editable="{contModel>/editMode}"> 
-                                        <items>
-                                            <core:ListItem
-                                                key="{util>code}" 
-                                                text="{util>code_name}" 
-                                                additionalText="{util>code}"/>
-                                        </items>
-                                    </ComboBox>
-                                    <layoutData>
-                                        <layout:GridData
-                                            span="XL12 L12 M12 S12" />
-                                    </layoutData>
-                                </VBox>                                
+                                </VBox>                         
                             </form:content>
                         </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>            				
+            </uxap:ObjectPageSection>
+            
+            <uxap:ObjectPageSection 
+                titleUppercase="false" 
+                title="{I18N>/CATEGORY}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                    <uxap:blocks>
+						<table:Table id="cateTable" selectionMode="{= ${contModel>/readMode}?'None':'MultiToggle'}" 
+                            cellClick=".onCellClick" rowSelectionChange=".onCheck" enableColumnReordering="false"
+                            filter="filterPrice"
+                            visibleRowCount="15"
+                            rows="{category>/PdPartBaseActivityCategoryView}">
+                            <table:extension>
+                                <OverflowToolbar visible="{contModel>/editMode}">			
+                                    <ToolbarSpacer/>
+                                    <Button
+                                        id="cateTableBulkAddButton" 
+                                        type="Transparent" 
+                                        text="{I18N>/INBULK_REGISTER}"
+                                        press="onBulkAddRow"/>
+                                    <!-- <Button
+                                        id="cateTableAddButton" 
+                                        type="Transparent" 
+                                        text="{I18N>/ROW_ADD}"
+                                        press=".onCateAddRow"/>
+                                    <Button
+                                        id="cateTableDeleteButton" 
+                                        type="Transparent" 
+                                        text="{I18N>/ROW_DELETE}"
+                                        press=".onCateDelRow"/>			 -->
+                                    <ToolbarSeparator/>
+                                </OverflowToolbar>
+                            </table:extension>
+                            <table:columns>	                                
+                                <table:Column id="state" width="50px" visible="{contModel>/editMode}">
+                                <Label text="" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <ObjectStatus icon="{
+                                            path: 'category>_row_state_',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
+                                </table:template>
+                                </table:Column>                                
+                                <table:Column id="category_group_name" width="100px" filterProperty="category_group_name">
+                                <Label text="{I18N>/GROUP}" wrapping="false" textAlign="Center" width="100%" required="true"/>
+                                <table:template>
+                                    <Text text="{category>category_group_name}" textAlign="Center" width="100%" wrapping="false"/>
+                                </table:template>
+                                </table:Column>                                
+                                <table:Column id="category_name_show" visible="{= !${contModel>/editMode}}" filterProperty="category_name">
+                                <Label text="{I18N>/CATEGORY}" wrapping="false" textAlign="Center" width="100%" required="true"/>
+                                <table:template>
+                                    <Text text="{category>category_name}" textAlign="Left" width="100%" wrapping="false" />
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="category_name_edit" visible="{= ${contModel>/editMode}}" filterProperty="category_name">
+                                <Label text="{I18N>/CATEGORY}" wrapping="false" textAlign="Center" width="100%" required="true"/>
+                                <table:template>                                                                           
+                                    <Input
+                                        editable="{= ${category>_row_state_} === 'C' }"
+                                        id="cateDialog"
+                                        valueHelpRequest=".onDialogCategoryPress"
+                                        value="{category>category_name}"
+                                        showValueHelp="true"
+                                        required="true"
+                                        />
+                                </table:template>
+                                </table:Column>                                
+                                <table:Column id="active_flag_show" width="70px" visible="{contModel>/readMode}">
+                                <Label text="{I18N>/USE}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Text text="{= !!${category>active_flag} ? 'Y' : 'N'}" textAlign="Center" width="100%" wrapping="false"/>                                    
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="active_flag_edit" width="70px" visible="{contModel>/editMode}">
+                                <Label text="{I18N>/USE}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>                                    
+                                    <ToggleButton                                                                                            
+                                        text="{= ${category>active_flag}? 'Yes':'No'}" 
+                                        pressed="{category>active_flag}" width="100%"/>
+                                </table:template>
+                                </table:Column>                                
+                                <table:Column id="s_grade_standard_days_show" width="80px" visible="{contModel>/readMode}" filterProperty="s_grade_standard_days">
+                                <Label text="{I18N>/S_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Text text="{category>s_grade_standard_days}" textAlign="Right" width="100%" wrapping="false"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="s_grade_standard_days_edit" width="100px" visible="{contModel>/editMode}" filterProperty="s_grade_standard_days">
+                                <Label text="{I18N>/S_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>                                    
+                                    <Input
+                                        visible="{contModel>/editMode}"
+                                        editable="{contModel>/editMode}"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"                                        
+                                        value="{category>s_grade_standard_days}" width="100%" textAlign="Right"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="a_grade_standard_days_show" width="80px" visible="{contModel>/readMode}" filterProperty="a_grade_standard_days">
+                                <Label text="{I18N>/A_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Text text="{category>a_grade_standard_days}" textAlign="Right" width="100%" wrapping="false"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="a_grade_standard_days_edit" width="100px" visible="{contModel>/editMode}" filterProperty="a_grade_standard_days">
+                                <Label text="{I18N>/A_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Input
+                                        visible="{contModel>/editMode}"
+                                        editable="{contModel>/editMode}"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
+                                        value="{category>a_grade_standard_days}" width="100%" textAlign="Right"/>
+                                </table:template>
+                                </table:Column>                                
+                                <table:Column id="b_grade_standard_days_show" width="80px" visible="{contModel>/readMode}" filterProperty="b_grade_standard_days">
+                                <Label text="{I18N>/B_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Text text="{category>b_grade_standard_days}" textAlign="Right" width="100%" wrapping="false"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="b_grade_standard_days_edit" width="100px" visible="{contModel>/editMode}" filterProperty="b_grade_standard_days">
+                                <Label text="{I18N>/B_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Input
+                                        visible="{contModel>/editMode}"
+                                        editable="{contModel>/editMode}"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
+                                        value="{category>b_grade_standard_days}" width="100%" textAlign="Right"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="c_grade_standard_days_show" width="80px" visible="{contModel>/readMode}" filterProperty="c_grade_standard_days">
+                                <Label text="{I18N>/C_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Text text="{category>c_grade_standard_days}" textAlign="Right" width="100%" wrapping="false"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="c_grade_standard_days_edit" width="100px" visible="{contModel>/editMode}" filterProperty="c_grade_standard_days">
+                                <Label text="{I18N>/C_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Input
+                                        visible="{contModel>/editMode}"
+                                        editable="{contModel>/editMode}"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
+                                        value="{category>c_grade_standard_days}" width="100%" textAlign="Right"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="d_grade_standard_days_show" width="80px" visible="{contModel>/readMode}" filterProperty="d_grade_standard_days">
+                                <Label text="{I18N>/D_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Text text="{category>d_grade_standard_days}" textAlign="Right" width="100%" wrapping="false"/>
+                                </table:template>
+                                </table:Column>
+                                <table:Column id="d_grade_standard_days_edit" width="100px" visible="{contModel>/editMode}" filterProperty="d_grade_standard_days">
+                                <Label text="{I18N>/D_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
+                                <table:template>
+                                    <Input
+                                        visible="{contModel>/editMode}"
+                                        editable="{contModel>/editMode}"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
+                                        value="{category>d_grade_standard_days}" width="100%" textAlign="Right"/>
+                                </table:template>
+                                </table:Column>                                
+                            </table:columns>
+                        </table:Table>
+                    </uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
 
 			<!-- <uxap:ObjectPageSection 
                 titleUppercase="false" 

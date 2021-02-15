@@ -84,7 +84,7 @@
 
                                 <VBox alignContent="Center"> 
                                     <Label text="공사명" design="Bold" class="sapMLabelNoText"/>
-                                    <Text text="{viewModel>/ucmaster/const_name}" width="100%"/>
+                                    <Text text="{viewModel>/ucmaster/const_name}" width="70%"/>
                                     <layoutData>
                                         <layout:GridData span="XL12 L12 M12 S12" />
                                     </layoutData> 

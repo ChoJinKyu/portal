@@ -1,0 +1,8 @@
+<mvc:View
+	displayBlock="true"
+	height="100%"
+    controllerName="sp.se.evalProgressList.controller.App"
+	xmlns="sap.f" xmlns:m="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+    <m:App id="app" />
+</mvc:View>

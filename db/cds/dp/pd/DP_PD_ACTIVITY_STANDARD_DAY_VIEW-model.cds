@@ -3,13 +3,13 @@ namespace dp;
 
 entity Pd_Activity_Standard_Day_View {	
   key tenant_id               : String(5)  not null @title: '테넌트ID' ;	
-  key company_code            : String(10) default'*' not null @title: '회사코드' ;	
-  key org_type_code           : String(2)  not null @title: '조직유형코드' ;	
-  key org_code                : String(10) not null @title: '조직코드' ;	
-  key category_group_code     : String(30) not null @title: '카테고리그룹코드' ;	
-  key category_code           : String(40) not null @title: '카테고리 코드' ;	
-  key part_project_type_code  : String(30) not null @title: '부품PJT유형' ;	
-  key activity_code           : String(40) not null @title: '부품활동코드' ;	
+      company_code            : String(10)          @title: '회사코드' ;	
+      org_type_code           : String(2)           @title: '조직유형코드' ;	
+      org_code                : String(10)          @title: '조직코드' ;	
+      category_group_code     : String(30)          @title: '카테고리그룹코드' ;	
+      category_code           : String(40)          @title: '카테고리 코드' ;	
+      part_project_type_code  : String(30)          @title: '부품PJT유형' ;	
+      activity_code           : String(40)          @title: '부품활동코드' ;	
       org_name                : String(240)         @title: '조직명' ;
       category_name           : String(240)         @title: '카테고리명' ;
 	  part_project_type_name  : String(240)         @title: '부품PJT유형' ;

@@ -3,29 +3,24 @@
 	xmlns:core="sap.ui.core">
 	<TableSelectDialog
 		id="activity"
-        contentWidth="40em"
+        contentWidth="30em"
 		noDataText="No Activity Found"
 		title="Select Activity"
 		search=".handleActivitySearch"
 		confirm=".handleActivityClose"
 		cancel=".handleActivityClose"
 		items="{
-			path : '/PdPartActivityTemplate'
+			path : '/PdSelectActivityTemplate'
 		}">
 		<columns>
-			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center" width="30%">
+			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center" width="50%">
 				<header>
 					<Text text="Activity Code" />
 				</header>
 			</Column>
-			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Left" width="30%">
+			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Left" width="50%">
 				<header>
 					<Text text="Activity Name" />
-				</header>
-			</Column>
-			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Left" width="40%">
-				<header>
-					<Text text="Activity English Name" />
 				</header>
 			</Column>
 		</columns>
@@ -33,7 +28,6 @@
 			<cells>
 				<Text text="{activity_code}" />
 				<Text text="{activity_name}" />
-				<Text text="{activity_english_name}" />
 			</cells>
 		</ColumnListItem>
 	</TableSelectDialog>

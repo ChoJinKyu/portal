@@ -52,6 +52,7 @@ BEGIN
 	변수 정의
 	***********************************************/
 	DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10);	--자금지원 신청번호
+    DECLARE V_APPL_AMOUNT DECIMAL := 0;         --신청서 마스터 신청금액 변경할 변수
 	DECLARE V_MST_SEQ INT := 0;					--투자계획서 마스터 SEQ
 	DECLARE V_DTL_SEQ INT := 0;					--투자계획서 상세 SEQ
 	
@@ -367,6 +368,25 @@ BEGIN
 		END FOR;
 			
 	END;
+
+
+    --------------------------------------------------------------------------------------[신청서 마스터 신청금액 변경]
+    SELECT IFNULL(SUM(APPL_AMOUNT),0) AS SUM_AMT
+    INTO V_APPL_AMOUNT
+    FROM SP_SF_FUNDING_INVEST_PLAN_MST
+    WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
+    ;
+
+    UPDATE SP_SF_FUNDING_APPLICATION
+    SET  FUNDING_APPL_AMOUNT            = V_APPL_AMOUNT
+        ,LOCAL_CREATE_DTM				= CURRENT_TIMESTAMP
+        ,LOCAL_UPDATE_DTM				= CURRENT_TIMESTAMP
+        ,CREATE_USER_ID					= :I_USER_ID
+        ,UPDATE_USER_ID					= :I_USER_ID
+        ,SYSTEM_CREATE_DTM				= CURRENT_TIMESTAMP
+        ,SYSTEM_UPDATE_DTM				= CURRENT_TIMESTAMP
+    WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
+    ;
 	
 
     COMMIT;

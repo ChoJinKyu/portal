@@ -125,7 +125,6 @@ sap.ui.define([
 		 */
         onPageEditButtonPress: function () {
             this._toEditMode();
-            
         },
 
 		/**

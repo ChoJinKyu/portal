@@ -10,18 +10,18 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
-    "sap/m/Input",
-    "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
+    "sap/m/Input"
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     var MaterialGroupDialog = Parent.extend("dp.util.control.ui.MaterialGroupDialog", {
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "40em"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_group_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "material_group_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "material_group_code" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
@@ -29,8 +29,11 @@ sap.ui.define([
 
         createSearchFilters: function(){
 
-            this.oMaterialGroup = new SearchField({ placeholder: this.getModel("I18N").getText("/GROUP_CODE")});
+            this.oMaterialGroup = new Input();
+            this.oMaterialGroupName = new Input();
+
             this.oMaterialGroup.attachEvent("change", this.loadData.bind(this));
+            this.oMaterialGroupName.attachEvent("change", this.loadData.bind(this));
             
             return [
                 new VBox({
@@ -38,7 +41,14 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/GROUP_CODE")}),
                         this.oMaterialGroup
                     ],
-                    layoutData: new GridData({ span: "XL6 L6 M6 S12"})
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/GROUP_CODE_NAME")}),
+                        this.oMaterialGroupName
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
             ];
         },
@@ -47,25 +57,44 @@ sap.ui.define([
             return [
                 new Column({
                     width: "30%",
-                    label: new Label({text: this.getModel("I18N").getText("/GROUP_CODE")}),
-                    template: new Text({text: "{material_group_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/GROUP_CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_group_code}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/GROUP_CODE_NAME")}),
-                    template: new Text({text: "{material_group_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/GROUP_CODE_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_group_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 })
             ];
         },
 
         loadData: function(){
             var sMaterialGroup = this.oMaterialGroup.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
+                sMaterialGroupName = this.oMaterialGroupName.getValue(),
+                aFilters = this.getProperty("items").filters || [];
 
                 if(sMaterialGroup){
                     aFilters.push(new Filter("tolower(material_group_code)", FilterOperator.Contains, "'" + sMaterialGroup.toLowerCase().replace("'","''") + "'"));
+                }
+
+                if(sMaterialGroupName){
+                    aFilters.push(new Filter("tolower(material_group_name)", FilterOperator.Contains, "'" + sMaterialGroupName.toLowerCase().replace("'","''") + "'"));
                 }
 
 

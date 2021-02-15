@@ -17,7 +17,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/ACTIVITY} {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
+                    <Title text="Activity {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
                 </f:heading>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -41,38 +41,49 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/COMPANY}: "></Label>
+                            <Label text="{I18N>/COMPANY}: " required="true"></Label>
                             <ComboBox
+                                required="true"
                                 id="searchCompanyCombo"
                                 width="100%"
                                 selectedKey="LGESL"
+                                showSecondaryValues= "true"
                                 items="{
-                                    path: 'org>/Org_Company'
-                                }">
-                                <items>
-                                    <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
-                                </items>
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S12" />
-                            </layoutData>
+                                    path: '/CompanyView'
+                                    
+                                    }">
+                                    <items>
+                                        <core:ListItem
+                                            key="{company_code}"
+                                            text="{company_name}"
+                                            additionalText="{company_code}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M3 S12" />
+                                </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/ORGANIZATION}: "></Label>
+                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo" required="true"></Label>
                             <!-- 테스트 테넌트번호 L1100, 원세팅테넌트번호 2100, 2600 -->
                             <ComboBox
+                                required="true"
                                 id="searchAUCombo"
                                 width="100%"
                                 selectedKey=""
+                                showSecondaryValues= "true"
                                 items="{
                                     path: '/OrgView'
                                 }">
                                 <items>
-                                    <core:Item key="{org_code}" text="{org_code}: {org_name}" />
+                                    <core:ListItem
+                                        key="{org_code}" 
+                                        text="{org_name}" 
+                                        additionalText="{org_code}"/>
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S12" />
+                                <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -86,11 +97,12 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/PROJECT_TYPE}: "></Label>
+                            <Label text="{I18N>/PROJECT_TYPE}: " labelFor="searchPTCombo"></Label>
                             <ComboBox
                                 id="searchPTCombo"
                                 width="100%"
                                 selectedKey=""
+                                showSecondaryValues= "true"
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
@@ -100,18 +112,20 @@
                                     sorter: { path: 'sort_no'}
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />
-                                </items>
+                                    <core:ListItem
+                                        key="{util>code}" 
+                                        text="{util>code_name}"
+                                        additionalText="{util>code}"/></items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S12" />
+                                <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/ACTIVITY_NAME}: " labelFor="searchActivity"></Label>
-                            <Input id="searchActivity"></Input>
+                            <Input id="searchActivity" change=".onPageSearchButtonPress"/>
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S12" />
+                                <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
@@ -134,7 +148,7 @@
                 width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title id="mainTableTitle" text="{I18N>/ACTIVITY} {I18N>/STANDARD_DAYS} {I18N>/DISPLAY} ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
+                        <Title id="mainTableTitle" text="Activity {I18N>/STANDARD_DAYS} {I18N>/LIST} ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
                         <ToolbarSeparator/>

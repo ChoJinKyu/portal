@@ -638,7 +638,8 @@
                                                             <Label text="BPA Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right"/>
+                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right"
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bpa_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -675,7 +676,8 @@
                                                             <Label text="Vendor Pool" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input showValueHelp="true" value="{NegoHeaders>vendor_pool_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input showValueHelp="true" value="{NegoHeaders>vendor_pool_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueHelpRequest=".createConfirmBox"/>
                                                                     <Text text="{NegoHeaders>vendor_pool_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -701,6 +703,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        placeholder="소수점 3자리까지"
                                                                         valueState="{NegoHeaders>__metadata/_valueStates/request_quantity/valueState}" 
                                                                         valueStateText="{NegoHeaders>__metadata/_valueStates/request_quantity/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>request_quantity}" visible="{=!${propInfo>/isEditMode}}" />
@@ -759,7 +762,8 @@
                                                             <Label text="회신 통화" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input showValueHelp="true" value="{NegoHeaders>response_currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input showValueHelp="true" value="{NegoHeaders>response_currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueHelpRequest=".createConfirmBox"/>
                                                                     <Text text="{NegoHeaders>response_currency_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -780,7 +784,8 @@
                                                             <Label text="Start Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
+                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" 
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bidding_start_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -802,7 +807,8 @@
                                                             <Label text="Target Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
+                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" 
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bidding_target_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1130,7 +1136,7 @@
                                                         <headerToolbar>
                                                             <OverflowToolbar visible="{=${propInfo>/isEditMode}}">
                                                                 <ToolbarSpacer/>
-                                                                <Button  text="Supplier Add" type="Transparent" press=".onSupplierLoadPopup" />
+                                                                <Button  text="{I18N>/ROW_ADD}" type="Transparent" press=".onSupplierLoadPopup" />
                                                                 <Button  text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDeleteSuppliers" />
                                                             </OverflowToolbar>
                                                         </headerToolbar>
@@ -1166,7 +1172,7 @@
                                                                     }" />
                                                                     <Label text="{NegoItemPrices>supplier_code}"/>
                                                                     <Label text="{NegoItemPrices>supplier_name}"/>
-                                                                    <Label text="{NegoItemPrices>evaluation_type_name}"/>
+                                                                    <Label text="{NegoItemPrices>supplier_register_status_name}"/>
                                                                     <Label text="{NegoItemPrices>supplier_type_name}"/>
                                                                     <Label text="{NegoItemPrices>maker_only_flag}"/>
                                                                     <Button icon="sap-icon://value-help" />

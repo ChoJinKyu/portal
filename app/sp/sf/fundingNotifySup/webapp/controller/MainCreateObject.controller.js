@@ -103,19 +103,18 @@ sap.ui.define([
                     oPramCheackValue.push("")
                 }
             }
-
                 
-            if(!this._onCheckPhone(oPramDataModel.getProperty("/appl_user_tel_number"))){
+            if(!this._onCheckPhone(oPramDataModel.getProperty("/appl_user_tel_number")) && !!oPramDataModel.getProperty("/appl_user_tel_number")){
                 MessageBox.alert("전화번호 내용을 확인 해주세요.");
                 return;
             };
 
-            if(!this._onCheckEmail(oPramDataModel.getProperty("/appl_user_email_address"))){
+            if(!this._onCheckEmail(oPramDataModel.getProperty("/appl_user_email_address")) && !!oPramDataModel.getProperty("/appl_user_email_address")){
                 MessageBox.alert("이메일 내용을 확인해 주세요.");
                 return;
             };
 
-            if(!this._onCheckDatePicker(hopeYyyyMm)){
+            if(!this._onCheckDatePicker(hopeYyyyMm) && !!hopeYyyyMm){
                 MessageBox.alert("날짜 내용을 확인해 주세요.");
                 return;
             };
@@ -167,8 +166,8 @@ sap.ui.define([
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
-            // this._onObjectRead(aFilters);
-            this.onPageNavBackButtonPress();
+            this._onObjectRead(aFilters);
+            // this.onPageNavBackButtonPress();
             MessageToast.show(oI18n.getText("/NCM01001"));
         },
 
@@ -342,6 +341,7 @@ sap.ui.define([
         //투자계획 저장 성공 후
         onAfterProcSaveInvPlan : function(oEvent){
             this.onCreatePopupClose();
+            // this.byId("inputFundingApplAmount").
             MessageToast.show("저장 하였습니다.");
         },
 
@@ -419,7 +419,8 @@ sap.ui.define([
                 that = this,
                 rowPath,
                 sInvestment_plan_sequence,
-                aControls = oView.getControlsByFieldGroupId("newRequired");
+                aControls = oView.getControlsByFieldGroupId("newInvestmentPlan");
+                
                 this._clearValueState(aControls);
 
                 
@@ -441,9 +442,11 @@ sap.ui.define([
                     return oDialog;
                 });
             };
+
             
             bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
             bFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, sInvestment_plan_sequence));
+            var statusCode = this.getModel("applicationSup").getProperty("/funding_status_code");
 
             this.pDialog.then(function (oDialog) {
                 
@@ -462,9 +465,14 @@ sap.ui.define([
                             success: function (Result) {
                                 that.byId("investmentDtl").removeSelections();
                                 that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", Result.results);
+                                if(statusCode=="120"){
+                                    that.byId("dtlAddRow").setEnabled(false);
+                                    that.byId("dtlDeleteRow").setEnabled(false);
+                                    that.byId("popupSaveButton").setEnabled(false);
+                                }
                             },
                             error: function (oError) {
-
+                                MessageBox.alert("error가 발생 하였습니다.");
                             }
                         })
                     },
@@ -535,7 +543,10 @@ sap.ui.define([
                 investmentPurchasingAmtSum += parseInt(rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl/" + i + "/investment_item_purchasing_amt"));
             };
 
-            this.byId("investment_item_purchasing_amt_sum").setText(investmentPurchasingAmtSum);
+            this.byId("applAmount").setValue(investmentPurchasingAmtSum);
+            this.getModel("applicationSup").getProperty("/popUpInvestPlanMst").sum_item_pur_amt=investmentPurchasingAmtSum;
+            // this.getModel("applicationSup").getProperty("/popUpInvestPlanMst");
+            // this.byId("investmentItemPurchasingAmtSum").setText(investmentPurchasingAmtSum);
 
         },
 
@@ -622,7 +633,9 @@ sap.ui.define([
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, this._sSupplierCode));
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
-
+            
+            this.getModel("applicationSup").setProperty("/funding_notify_number", oArgs.fundingNotifyNumber);
+            
             this._onTransactionDivision();
             this._onObjectRead(aFilters);
         },
@@ -645,15 +658,22 @@ sap.ui.define([
                         that.getModel("applicationSup").setData(oRetrievedResult.results[0]);
                         var statusCode = that.getModel("applicationSup").getProperty("/funding_status_code")
 
-                        if(statusCode=="110" || statusCode=="120" || statusCode=="230"){
+                        if(statusCode=="110" || statusCode=="230"){
                             // that.byId("productsTableToolbar").setVisible(true);
                             that.byId("pageSubmissionButton").setEnabled(true);
-                        }
+                        };
                         
                         if( !statusCode || statusCode=="110"){
                             that.byId("pageSaveButton").setEnabled(true);
                         }else{
                             that.byId("pageSaveButton").setEnabled(false);
+                        };
+
+                        if(statusCode=="120"){
+                            that.byId("pageSubmissionButton").setEnabled(false);
+                            that.byId("addRow").setEnabled(false);
+                            that.byId("deleteRow").setEnabled(false);
+                            // that.byId("popupSaveButton").setEnabled(false);
                         }
                         
                         var aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
@@ -701,50 +721,54 @@ sap.ui.define([
         _ajaxCall : function(procUrl, parmData) {
             var that = this,
                 oI18n = this.getView().getModel("I18N"),
-                messageContent;
+                messageContent,
+                messageTitle;
             
             if(procUrl==="ProcSaveTemp" || procUrl==="ProcSaveInvPlan"){
                 messageContent=oI18n.getProperty("/NCM00001");
+                messageTitle = "저장";
             }else if(procUrl==="ProcRequest"){
-                messageContent="제출 하시겠습니까?";
+                messageContent="제출 후 수정이 불가 합니다. 제출 하시겠습니까?";
+                messageTitle = "제출";
             }else if(procUrl==="ProcDelInvPlan" || procUrl==="ProcDelInvPlanDtl" ){
                 messageContent="삭제 하시겠습니까?";
+                messageTitle = "삭제";
             };
 
             MessageBox.confirm(messageContent, {
-            title: "Comfirmation",
-            initialFocus: sap.m.MessageBox.Action.CANCEL,
-            onClose: function (sButton) {
-                if (sButton === MessageBox.Action.OK) {
-                    jQuery.ajax({
-                        url: "srv-api/odata/v4/sp.FundingApplicationV4Service/"+procUrl,
-                        type: "POST",
-                        data: JSON.stringify(parmData),
-                        contentType: "application/json",
-                        success: function (oData) {
-                            if(procUrl=="ProcSaveTemp"){
-                                that.onAfterProcSaveTemp(oData);
-                            };
-                            if(procUrl=="ProcRequest"){
-                                that.onAfterProcRequest(oData);
-                            };
-                            if(procUrl=="ProcSaveInvPlan"){
-                                that.onAfterProcSaveInvPlan(oData);
-                            };
-                            if(procUrl=="ProcDelInvPlan"){
-                                that.onAfterProcDelInvPlan(oData);
-                            };
-                            if(procUrl=="ProcDelInvPlanDtl"){
-                                that.onAfterProcDelInvPlanDtl(oData);
-                            };
-                        },
-                        error: function(oError){
-                            MessageBox.alert("error가 발생 하였습니다.");
-                        }
-                    });
-                };
-            }
-        });
+                title: messageTitle,
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        jQuery.ajax({
+                            url: "srv-api/odata/v4/sp.FundingApplicationV4Service/"+procUrl,
+                            type: "POST",
+                            data: JSON.stringify(parmData),
+                            contentType: "application/json",
+                            success: function (oData) {
+                                if(procUrl=="ProcSaveTemp"){
+                                    that.onAfterProcSaveTemp(oData);
+                                };
+                                if(procUrl=="ProcRequest"){
+                                    that.onAfterProcRequest(oData);
+                                };
+                                if(procUrl=="ProcSaveInvPlan"){
+                                    that.onAfterProcSaveInvPlan(oData);
+                                };
+                                if(procUrl=="ProcDelInvPlan"){
+                                    that.onAfterProcDelInvPlan(oData);
+                                };
+                                if(procUrl=="ProcDelInvPlanDtl"){
+                                    that.onAfterProcDelInvPlanDtl(oData);
+                                };
+                            },
+                            error: function(oError){
+                                MessageBox.alert("error가 발생 하였습니다.");
+                            }
+                        });
+                    };
+                }
+            });
         },
 
         //투자계획 Table reflash
@@ -763,6 +787,13 @@ sap.ui.define([
                 filters: bFilters,
                 success: function (oRetrievedResult) {
                     that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                    var investPlanMstList= that.getModel("applicationSup").getProperty("/investPlanMst"),
+                        inputFundingApplAmount=0;
+                    for(var i=0; i < investPlanMstList.length; i++){
+                        inputFundingApplAmount += parseInt(investPlanMstList[i].sum_item_pur_amt);
+                    };
+
+                    that.byId("inputFundingApplAmount").setValue(inputFundingApplAmount);
                 },
                 error: function (oError) {
                     MessageBox.alert("error가 발생 하였습니다.");
@@ -849,7 +880,7 @@ sap.ui.define([
             var check = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/,
                 regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;
 
-            if(!check.test(str) && str != "" && !regExp.test(str)){
+            if(!check.test(str) && !regExp.test(str)){
                 return false;
             }else{
                 return true;
@@ -866,8 +897,9 @@ sap.ui.define([
                 
             oMessageManager.removeAllMessages();
             bAllValid = aControls.every(function(oControl){
-                var sEleName = oControl.getMetadata().getElementName(),
-                    sValue;
+            var sEleName = oControl.getMetadata().getElementName(),
+                sValue,
+                oContext;
                 
                 
                 switch(sEleName){
@@ -875,6 +907,7 @@ sap.ui.define([
                     case "sap.m.Input":
                     case "sap.m.TextArea":
                         sValue = oControl.getValue();
+                        oContext = oControl.getBinding("value");
                         break;
                     case "sap.m.ComboBox":
                         sValue = oControl.getSelectedKey();
@@ -893,6 +926,27 @@ sap.ui.define([
                             type: MessageType.Error
                         }));
                         bAllValid = false;
+                        oControl.focus();
+                        return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                }
+
+                if(oContext && oContext.getType()){
+                    try{
+                        oContext.getType().validateValue(sValue);
+                    }catch(e){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(e.message);
+                        oControl.focus();
+                        return false;
+                    }
+                    oControl.setValueState(ValueState.None);
+                }else if(sEleName === "sap.m.ComboBox"){
+                    if(!sValue && oControl.getValue()){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
                         oControl.focus();
                         return false;
                     }else{

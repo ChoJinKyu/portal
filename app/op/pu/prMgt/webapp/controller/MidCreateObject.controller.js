@@ -568,22 +568,12 @@ sap.ui.define([
                     that._fnReadServiceModel("", "/Pr_DtlView", aFilters, aSorters),
                     that._fnReadServiceModel("", "/Pr_Account", aAccountFilters, aSorters),
                     that._fnReadServiceModel("", "/Pr_Service", aServiceFilters, aSorters)
-            ).done(function(oDetailData, oAccountData, oServiceData){              
+            ).done(function(oDetailData, oAccountData, oServiceData){
 
-                if(oDetailData.results.length > 0) {
-                    oViewModel.setProperty("/Pr_Dtl", oDetailData.results);
-                } else {
-                    oViewModel.setProperty("/Pr_Dtl", []);
-                }
-
-                let oAccounts={}, oServices={};
-                let aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
-                if(aPrDtlData && aPrDtlData.length > 0){
-                    aPrDtlData.forEach(function(itemDtl, idx){
-                        //조직명
-                        //itemDtl["org_name_desc"] = (itemDtl.org_name ? itemDtl.org_name: itemDtl.plant_name) + " [" + itemDtl.org_code + "]";
-                        itemDtl["org_name_desc"] =that._fnGetCodeNameDesc(itemDtl.org_code, itemDtl.org_name);
-
+                let oAccounts={}, oServices={}, aPrDtlData = [];
+                let aDetailData = oDetailData.results;
+                if(aDetailData && aDetailData.length > 0){
+                    aDetailData.forEach(function(itemDtl, idx){
                         // 계정정보
                         if(oAccountData.results.length > 0){
                             oAccountData.results.forEach(function(itemAccount, idx){
@@ -595,7 +585,6 @@ sap.ui.define([
                                 }
                             });
                         }
-
                         // 서비스정보
                         if(oServiceData.results.length > 0){
                             oServiceData.results.forEach(function(itemService, idx){
@@ -607,8 +596,21 @@ sap.ui.define([
                                 }
                             });
                         }
+                        
+                        // 조직명
+                        itemDtl["org_name_desc"] = that._fnGetCodeNameDesc(itemDtl.org_code, itemDtl.org_name);
+                        // 구매요청수량
+                        itemDtl["pr_quantity"] = parseFloat(itemDtl["pr_quantity"]);
+                        // 예상가격
+                        itemDtl["estimated_price"] = parseFloat(itemDtl["estimated_price"]);
+                        // 가격단위
+                        itemDtl["price_unit"] = parseFloat(itemDtl["price_unit"]);
+
+                        aPrDtlData.push(itemDtl);
                     });
-                }                
+                }
+                
+                oViewModel.setProperty("/Pr_Dtl", aPrDtlData);
             });
         },
 
@@ -892,7 +894,7 @@ sap.ui.define([
                                 msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText; 
                                 bReturn = false;
                             }else if(key === "pr_quantity" || key === "estimated_price" || key === "price_unit"){
-                                var checkVal = Number.parseFloat(itemDtl[key]).toFixed(0);
+                                var checkVal = parseFloat(itemDtl[key]).toFixed(0);
                                 if(checkVal <= 0){
                                     msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText + " (0 보다 큰 숫자를 입력하세요)"; 
                                     bReturn = false;
@@ -1128,22 +1130,20 @@ sap.ui.define([
                         org_name            : (item.org_name) ? item.org_name : "",
                         org_name_desc       : that._fnGetCodeNameDesc(item.org_code, item.org_name),
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
+                        buyer_department_code : item.buyer_department_code || "",
                         user_local_name     : (item.user_local_name) ? item.user_local_name : "",
-                        //currency_code       : (item.currency_code) ? item.currency_code : "KRW",
-                        currency_code         : item.currency_code || "KRW",
-                        estimated_price     : (item.estimated_price && item.estimated_price !== "") ? item.estimated_price+"" : "0", 
+                        currency_code       : item.currency_code || "KRW",
+                        estimated_price     : (item.estimated_price && item.estimated_price !== "") ? parseFloat(item.estimated_price+"") : 0, 
                         material_code       : (item.material_code) ? item.material_code : "",
                         material_group_code : (item.material_group_code) ? item.material_group_code : "",
-                        pr_desc             : (item.pr_desc) ? item.pr_desc : "",                        
-                        //pr_quantity         : (item.pr_quantity) ? item.pr_quantity : "0",
-                        pr_quantity         : item.pr_quantity || "0",
+                        pr_desc             : item.pr_desc || "",    
+                        pr_quantity         : (item.pr_quantity && item.pr_quantity !== "") ? parseFloat(item.pr_quantity+"") : 0, 
                         pr_unit             : (item.pr_unit) ? item.pr_unit : "",
                         requestor_empno     : (item.requestor_empno) ? item.requestor_empno : this.$session.employee_number,
                         requestor_name      : (item.requestor_name) ? item.requestor_name : this.$session.employee_name,
                         delivery_request_date: that._fnConvertDate(item.delivery_request_date),
-                        //delivery_request_date: (item.delivery_request_date) ? item.delivery_request_date : "",
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
-                        price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
+                        price_unit          : (item.price_unit && item.price_unit !== "") ? parseFloat(item.price_unit+"") : 1,
                         pr_progress_status_code: "INIT",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
@@ -1224,8 +1224,7 @@ sap.ui.define([
                 MultiSelection: false,
                 items: {
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
-                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
                     ],
                     sorters: [
                         new Sorter("employee_number")
@@ -1235,7 +1234,8 @@ sap.ui.define([
                 var oItemData = result.getParameter("item");
                 if(oItemData.employee_number && oItemData.employee_number !== ""){
                     oSelectedData.buyer_empno = oItemData.employee_number;                    
-                    oSelectedData.user_local_name = oItemData.user_local_name;    
+                    oSelectedData.user_local_name = oItemData.user_local_name;                    
+                    oSelectedData.buyer_department_code = oItemData.department_id;  
                     oViewModel.refresh();
                 }           
             });
@@ -1350,9 +1350,6 @@ sap.ui.define([
                 }
             }), function(result) {
                 var oItemData = result.getParameter("item");
-                //var oViewModel = that.getModel("viewModel");
-                //var oSelectedData = oViewModel.getProperty(sSelectedPath);
-
                 if(oItemData.account_code && oItemData.account_code !== ""){
                     oSelectedData.account_code = oItemData.account_code;                    
                     oViewModel.refresh();
@@ -1402,7 +1399,6 @@ sap.ui.define([
                 var oItemData = result.getParameter("item");
                 oSelectedData.org_code = (oItemData.org_code && oItemData.org_code !== "") ? oItemData.org_code:"";
                 oSelectedData.org_name = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name:"";
-                // oSelectedData.org_name_desc = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name+" ["+oItemData.org_code+"]":"";
                 oSelectedData.org_name_desc =that._fnGetCodeNameDesc(oItemData.org_code, oItemData.org_name);
                 oSelectedData.org_type_code = (oItemData.org_type_code && oItemData.org_type_code !== "") ? oItemData.org_type_code:"";
                 oSelectedData.material_code = oItemData.material_code;
@@ -1456,7 +1452,6 @@ sap.ui.define([
                 if(oItemData.org_code && oItemData.org_code !== ""){
                     oSelectedData.org_code = oItemData.org_code;
                     oSelectedData.org_name = oItemData.org_name;
-                    //oSelectedData.org_name_desc = oItemData.org_name + " [" + oItemData.org_code + "]"; 
                     oSelectedData.org_name_desc =that._fnGetCodeNameDesc(oItemData.org_code, oItemData.org_name);  
                     oSelectedData.org_type_code = oItemData.org_type_code;                
                     oViewModel.refresh();
@@ -1521,7 +1516,6 @@ sap.ui.define([
                     oPrItemData.pr_item_number = iPrItemNumber;
                     oPrItemData.org_code = (item.org_code && item.org_code !== "") ? item.org_code:"";
                     oPrItemData.org_name = (item.org_name && item.org_name !== "") ? item.org_name:"";
-                    //oPrItemData.org_name_desc = item.org_name + " [" + item.org_code + "]";  
                     oPrItemData.org_name_desc =that._fnGetCodeNameDesc(item.org_code, item.org_name);                  
                     oPrItemData.material_code = item.material_code;
                     oPrItemData.pr_desc = (item.material_desc && item.material_desc !== "") ? item.material_desc:"";

@@ -24,9 +24,14 @@ import org.springframework.jdbc.core.CallableStatementCreator;
 import cds.gen.dp.productactivityv4service.*;
 import cds.gen.dp.productactivityservice.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 @ServiceName(ProductActivityV4Service_.CDS_NAME)
 public class ProductActivityMgtV4 implements EventHandler {
+
+    private final static Logger log = LoggerFactory.getLogger(ProductActivityV4Service_.class);
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -190,8 +195,12 @@ public class ProductActivityMgtV4 implements EventHandler {
 
 
         // Local Temp Table DROP
-        jdbc.execute(v_sql_dropMstTable);
-        jdbc.execute(v_sql_dropLngtable);
+        try{
+            jdbc.execute(v_sql_dropMstTable);
+            jdbc.execute(v_sql_dropLngtable);
+        }catch(Exception e){
+            log.error("Product Activity Error  : {}", e);
+        }
 
         context.setResult(v_row);
         context.setCompleted();

@@ -42,11 +42,13 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/CATEGORY_GROUP}: "></Label>
+                            <Label text="{I18N>/CATEGORY_GROUP}: " required="true"></Label>
                             <ComboBox
+                                required="true"
                                 id="searchCategoryCombo"
                                 width="100%"
                                 selectedKey=""
+                                showSecondaryValues= "true"
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
@@ -55,8 +57,11 @@
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />
-                                </items>
+                                    <core:ListItem
+                                        key="{util>code}" 
+                                        text="{util>code_name}" 
+                                        additionalText="{util>code}"/>
+                                 </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -107,7 +112,7 @@
                     }">
                     <t:extension>
                         <OverflowToolbar>
-                            <Title id="title" text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/LIST}" level="H2"/> 
+                            <Title id="title" text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/LIST} ({= ${tree>/pdPartCategoryView/list/results}.length || 0})" level="H2"/> 
                             <ToolbarSpacer/>
                             <!-- <Button id="mainTableCreate2Button" text="Creation Request" type="Transparent" press=".onMainTableCreate2ButtonPress" enabled="{= ${master>/indices} === 2 ? ${sm>/screen} === 'M' ? true : false : false}"  /> -->
                             <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
@@ -143,24 +148,24 @@
                                 <Text text="{tree>category_group_code}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/CATEGORY_GROUP} {I18N>/NAME}" hAlign="Left">    
+                        <t:Column label="{I18N>/CATEGORY} {I18N>/GROUP_NAME}" hAlign="Left" width="11%">    
                             <t:template>
                                 <Text text="{tree>category_group_name}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/STATUS}" hAlign="Center">    
+                        <t:Column label="{I18N>/STATUS}" hAlign="Center"  width="8%">    
                             <t:template>
                                 <Text text="{= ${tree>active_flag} === true ? 'Active' : 'Inactive'}"/>
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/UPDATE_USER_ID}" hAlign="Center">    
+                        <t:Column label="{I18N>/UPDATE_USER_ID}" hAlign="Center"  width="9%">    
                             <t:template>
                                 <Text text="{tree>update_user_id}" wrapping="false" />
                             </t:template>
                         </t:Column>
                         <t:Column label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Center">    
                             <t:template>
-                                <Text text="{tree>local_update_dtm}" wrapping="false" />
+                                <Text text="{path : 'tree>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"  wrapping="false" />
                             </t:template>
                         </t:Column>
                         <t:Column label="" width="2rem" >

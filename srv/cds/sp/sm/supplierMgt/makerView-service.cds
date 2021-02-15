@@ -18,7 +18,7 @@ using {cm as CntryLng} from '../../../../../db/cds/cm/CM_COUNTRY_LNG-model';
 
 namespace sp;
 
-@cds.query.limit: { max: 99999 }
+// @cds.query.limit: { max: 99999 }
 @path : '/sp.makerViewService'
 service makerViewService {
 

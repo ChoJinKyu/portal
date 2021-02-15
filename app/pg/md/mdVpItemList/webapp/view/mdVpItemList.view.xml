@@ -111,6 +111,7 @@
          
       <f:content>
         <VBox>
+                <!-- selectionMode="{{list>drill_state}==='leaf'? MultiToggle:None}" -->
             <t:TreeTable 
                 id="treeTable"
                 filter="treetablefilter"

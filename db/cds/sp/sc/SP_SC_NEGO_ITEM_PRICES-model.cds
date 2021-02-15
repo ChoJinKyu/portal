@@ -4,7 +4,7 @@ namespace sp;
 /* Transaction Association */
 using util from '../../cm/util/util-model';
 using {sp.Sc_Nego_Headers} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
-using {sp as negoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
+using {sp.Sc_Nego_Suppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 
 /* Master Association */
 /** 타스크럼 재정의[Redefined, Restricted, Materialized 등] */
@@ -120,7 +120,7 @@ entity Sc_Nego_Item_Prices {
     key tenant_id                    : String(5) not null                         @title : '테넌트ID';
     key nego_header_id               : Integer64 not null                         @title : '협상헤더ID';
     key nego_item_number             : String(10) not null                        @title : '협상품목번호';
-        Suppliers                    : Composition of many negoSuppliers.Sc_Nego_Suppliers
+        Suppliers                    : Composition of many Sc_Nego_Suppliers
                                            on Suppliers.tenant_id = $self.tenant_id
                                            and Suppliers.nego_header_id = $self.nego_header_id
                                            and Suppliers.nego_item_number = $self.nego_item_number;
@@ -184,10 +184,10 @@ entity Sc_Nego_Item_Prices {
         exrate_type_code             : String(15)                                 @title : '환율유형코드'  @description : 'UI:Exchange Rate Type';
         exrate_date                  : DateTime                                   @title : '환율일자'  @description : 'UI:Exchange Rate Date';
         //    exrate : String(15)   @title: '환율' ;
-        bidding_start_net_price      : PriceAmountT                              @title : '입찰시작단가'  @description : 'UI:Start Price(금액)';
-        bidding_start_net_price_flag : String(1)                                    @title : '입찰시작단가디스플레이여부'  @description : 'UI:Display to Supplier';
-        bidding_target_net_price     : PriceAmountT                                 @title : '입찰목표단가'  @description : 'UI:Target Price(금액)';
-        current_price                : PriceAmountT                              @title : '현재가격'      @description : 'UI:Current Price(금액)';
+        bidding_start_net_price      : PriceAmountT                               @title : '입찰시작단가'  @description : 'UI:Start Price(금액)';
+        bidding_start_net_price_flag : String(1)                                  @title : '입찰시작단가디스플레이여부'  @description : 'UI:Display to Supplier';
+        bidding_target_net_price     : PriceAmountT                               @title : '입찰목표단가'  @description : 'UI:Target Price(금액)';
+        current_price                : PriceAmountT                               @title : '현재가격'      @description : 'UI:Current Price(금액)';
         note_content                 : LargeBinary                                @title : '노트내용';
         //    award_quantity : Decimal(28,3)   @title: '낙찰수량' ;
         pr_number                    : Sc_Pu_Pr_Mst : pr_number                   @title : '구매요청번호'  @description : 'UI:Requisition No';
@@ -237,3 +237,33 @@ entity Sc_Nego_Item_Prices {
 }
 
 extend Sc_Nego_Item_Prices with util.Managed;
+
+
+entity Sc_Nego_Item_Prices_Calc_View as 
+    select from Sc_Nego_Item_Prices as Items
+    left outer one to one join ( select from Sc_Nego_Suppliers 
+                                { tenant_id _tenant_id, nego_header_id _nego_header_id, nego_item_number _nego_item_number
+                                , count(map(negotiation_supp_reg_status_cd,'S',negotiation_supp_reg_status_cd,null)) as specific_supplier_count 
+                                } group by tenant_id, nego_header_id, nego_item_number ) 
+        as Suppliers_Count on Items.tenant_id = Suppliers_Count._tenant_id and Items.nego_header_id = Suppliers_Count._nego_header_id and Items.nego_item_number = Suppliers_Count._nego_item_number
+    {
+        key tenant_id,
+        key nego_header_id,
+        key nego_item_number,
+        Suppliers_Count.specific_supplier_count as specific_supplier_count: Integer
+    };
+
+
+entity Sc_Nego_Item_Prices_View as select from Sc_Nego_Item_Prices
+mixin {
+        Suppliers_Calc : association to Sc_Nego_Item_Prices_Calc_View
+            on Suppliers_Calc.tenant_id = $projection.tenant_id
+            and Suppliers_Calc.nego_header_id = $projection.nego_header_id
+            and Suppliers_Calc.nego_item_number = $projection.nego_item_number
+            ;
+} into {
+    *,
+    operation_org.bizunit_code,                                //Supplier의 
+    Suppliers_Calc.specific_supplier_count as supplier_count,  //임시-폐기예정 : supplier_count to specific_supplier_count 변경완료후
+    Suppliers_Calc
+};

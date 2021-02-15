@@ -71,8 +71,6 @@
                 text="상환이행"
                 key="step7" />
         </items>
-        <content>
-        </content>  
         
     </IconTabBar>
     <mvc:XMLView id="beginView" viewName="sp.sf.fundingStatus.view.Apply"/>

@@ -22,12 +22,16 @@
 		editHeaderButtonPress="handleEditBtnPress" >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true" />
+				<!-- <uxap:expandedHeading>
+					<FlexBox fitContainer="true" alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
+						<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true"/>
+					</FlexBox>
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
 						<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
@@ -42,11 +46,17 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-				</uxap:actions>
+				</uxap:actions> -->
 
-                <uxap:navigationActions>
+                <!-- <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
-                </uxap:navigationActions>
+                </uxap:navigationActions> -->
+                <uxap:heading> 
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />
+                        <Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true" class="" />
+                    </HBox>
+				</uxap:heading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -123,6 +133,7 @@
 				<Button type="Transparent" text="PO Sheet"       press=".onPagePOSheetButtonPress" />
 				<Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" visible="{mode>/btnRequestCancelFlag}" />
 				<Button type="Emphasized"  text="{I18N>/REQUEST}"        press=".onPageRequestButtonPress"       visible="{mode>/btnRequestFlag}"/>
+				<Button type="Transparent" text="Approval" press=".onPageApprovalButtonPress" visible="{mode>/btnRequestCancelFlag}" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

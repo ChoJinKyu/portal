@@ -262,7 +262,8 @@
                                 icon="sap-icon://excel-attachment" 
                                 press="onExcel($event, 'Download', ${list>/Pr_ReviewListView}, {
                                     tId: 'mainTable', 
-                                    fileName: 'PR Review List'
+                                    fileName: 'PR Review List',
+                                    numbers: ['pr_quantity', 'remain_quantity', 'estimated_price']
                                 })"
                             >
                                 <layoutData>
@@ -336,10 +337,20 @@
                         <!-- 구매요청 일자 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_DATE}" />
+                            <customData>
+                                <core:CustomData key="bindName" value="request_date" />
+                                <core:CustomData key="type" value="DateTime" />
+                                <core:CustomData key="format" value="yyyy-mm-dd" />
+                            </customData>
                         </Column>
                         <!-- 납품요청 일자 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/DELIVERY_REQUEST_DATE}" />
+                            <customData>
+                                <core:CustomData key="bindName" value="delivery_request_date" />
+                                <core:CustomData key="type" value="DateTime" />
+                                <core:CustomData key="format" value="yyyy-mm-dd" />
+                            </customData>
                         </Column>
                         <!-- 진행상태 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">

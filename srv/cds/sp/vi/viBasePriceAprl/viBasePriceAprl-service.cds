@@ -4,6 +4,7 @@ using {cm.Referer as arlReferer} from '../../../../../db/cds/cm/CM_REFERER-model
 using {sp.VI_Base_Price_Aprl_Item as arlItem} from '../../../../../db/cds/sp/vi/SP_VI_BASE_PRICE_APRL_ITEM-model';
 using {sp.Vi_Base_Price_Aprl_Dtl as arlDetail} from '../../../../../db/cds/sp/vi/SP_VI_BASE_PRICE_APRL_DTL-model';
 using {sp.Vi_Base_Price_Aprl_Type as arlTyp} from '../../../../../db/cds/sp/vi/SP_VI_BASE_PRICE_APRL_TYPE-model';
+using {sp.Vi_Aprl_Dtl_View as itmDtlView} from '../../../../../db/cds/sp/vi/SP_VI_APRL_DLT_VIEW-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
@@ -20,7 +21,7 @@ using {cm.Currency as curr} from '../../../../../db/cds/cm/CM_CURRENCY-model';
 using {pg.Vp_Vendor_Pool_Item_Dtl as VPoolDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
 using {pg.Vp_Vendor_Pool_Mst as VPoolMst} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';
 
-namespace sp;
+namespace sp; 
 
 @path : '/sp.BasePriceArlService'
 service BasePriceAprlService {
@@ -203,6 +204,68 @@ service BasePriceAprlService {
 
     annotate Base_Price_Aprl_Material with {
         plant_code      @title       : '플랜트코드'  @description : '플랜트코드';
+    };
+
+ entity Base_Price_Aprl_Item_Dtl       as
+        select from itmDtlView itmdtl
+        {
+            key itmdtl.tenant_id,
+            key itmdtl.approval_number,   
+            key itmdtl.item_sequence,                 
+            key itmdtl.net_price_type_code,
+                itmdtl.net_price_type_name,           
+                itmdtl.company_code,                  
+                itmdtl.company_name,                 
+                itmdtl.affiliate_code,                
+                itmdtl.bizunit_code,                  
+                itmdtl.bizunit_name,                 
+                itmdtl.management_mprice_code,        
+                itmdtl.management_mprice_name,        
+                itmdtl.base_year,                     
+                itmdtl.apply_start_yyyymm,            
+                itmdtl.apply_end_yyyymm,              
+                itmdtl.bizdivision_code,              
+                itmdtl.bizdivision_name,              
+                itmdtl.plant_code,                    
+                itmdtl.plant_name,                    
+                itmdtl.supply_plant_code,             
+                itmdtl.supply_plant_name,             
+                itmdtl.supplier_code,                 
+                itmdtl.supplier_local_name,           
+                itmdtl.material_code,                 
+                itmdtl.material_name,                 
+                itmdtl.vendor_pool_code,              
+                itmdtl.vendor_pool_local_name,        
+                itmdtl.currency_code,                 
+                itmdtl.base_uom_code,                 
+                itmdtl.base_price,                    
+                itmdtl.buyer_empno,
+                itmdtl.buyer_empno_name,                   
+                itmdtl.pcst,                          
+                itmdtl.metal_net_price,               
+                itmdtl.ni_price,                      
+                itmdtl.co1_price,                     
+                itmdtl.co2_price,                    
+                itmdtl.mn_price,                      
+                itmdtl.li1_price,                     
+                itmdtl.li2_price,                     
+                itmdtl.li3_price,                     
+                itmdtl.li4_price,                     
+                itmdtl.w_price,                       
+                itmdtl.cu_price,                      
+                itmdtl.al_price,                      
+                itmdtl.coating_mat_net_price,         
+                itmdtl.fabric_net_price,  
+                itmdtl.local_create_dtm,
+                itmdtl.local_update_dtm,
+                itmdtl.create_user_id,
+                itmdtl.update_user_id,
+                itmdtl.system_create_dtm,
+                itmdtl.system_update_dtm
+        };
+
+    annotate Base_Price_Aprl_Item_Dtl with {
+        management_mprice_name      @title       : '관리시세구분명'  @description : '관리시세구분명';
     };
 
  }

@@ -61,7 +61,6 @@ sap.ui.define([
             that = this;
 
             this.oOperationOrgComb = new ComboBox({
-                id: "operationOrgVp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -77,7 +76,6 @@ sap.ui.define([
             });
 
             this.oOperationUnitComb = new ComboBox({
-                id: "operationUnitVp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -139,7 +137,6 @@ sap.ui.define([
             });
 
             this.oVendorPoolLvl1 = new ComboBox({
-                id: "vendorPoolLvl1Vp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -155,7 +152,6 @@ sap.ui.define([
             });
 
             this.oVendorPoolLvl2 = new ComboBox({
-                id: "vendorPoolLvl2Vp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -171,7 +167,6 @@ sap.ui.define([
             });
 
             this.oVendorPoolLvl3 = new ComboBox({
-                id: "vendorPoolLvl3Vp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -187,7 +182,6 @@ sap.ui.define([
             });
 
             this.oVendorPoolLvl4 = new ComboBox({
-                id: "vendorPoolLvl4Vp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -203,7 +197,6 @@ sap.ui.define([
             });
 
             this.oVendorPoolLvl5 = new ComboBox({
-                id: "vendorPoolLvl5Vp",
                 width : "90%",
                 enabled : false,
                 items: {
@@ -217,7 +210,6 @@ sap.ui.define([
 
              //Supplier 내부 팝업
             this.oSupplierCode = new MultiInput({
-                id : "supplierVp",
                 showValueHelp : true,
                 valueHelpOnly : true,
                 valueHelpRequest: function (oEvent) {
@@ -461,31 +453,26 @@ sap.ui.define([
                     template: new Text({ text: "{operation_unit_code}" })
                 }),
                 new Column({
-                    id : "vpColumnLvl",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "1"}),
                     template: new Text({ text: "{level1}" })
                 }),
                 new Column({
-                    id : "vpColumnLvl2",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "2" }),
                     template: new Text({ text: "{level2}" })
                 }),
                 new Column({
-                    id : "vpColumnLvl3",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "3"}),
                     template: new Text({ text: "{level3}" })
                 }),
                 new Column({
-                    id : "vpColumnLvl4",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "4" }),
                     template: new Text({ text: "{level4}" })
                 }),
                 new Column({
-                    id : "vpColumnLvl5",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "5" }),
                     template: new Text({ text: "{level5}" })
@@ -519,6 +506,8 @@ sap.ui.define([
             var aTempFilters = [];
             var vpTempFilters = [];
             var sSupplierCode,
+                sMaterialCode,
+                sEmployeeCode,
                 sDepartmentCode,
                 aSupplierToken;
             
@@ -609,9 +598,6 @@ sap.ui.define([
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
-                    
-                    that.oDialog.oTable.setBusy(false);
-
                     // test - vplevelname 
                     if (aRecords) {
                         for(var i = 0; i < aRecords.length; i++) {
@@ -627,8 +613,11 @@ sap.ui.define([
                         }
                     }
                     that.oDialog.setData(aRecords, false);
+                    that.oDialog.oTable.setBusy(false);
                 }.bind(this)
             });
+
+            this.oDialog.oTable.setBusy(false);
         },
 
 

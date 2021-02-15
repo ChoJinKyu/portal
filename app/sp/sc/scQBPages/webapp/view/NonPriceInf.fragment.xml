@@ -6,6 +6,7 @@
     xmlns:core="sap.ui.core"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:u="sap.ui.unified"
+    
     >
      <!-- <m:VBox class="sapUiSmallMargin">
         <m:VBox>
@@ -28,7 +29,7 @@
     <Dialog
         beforeOpen="NonPricePopupBeforeOpen" 
         beforeClose="NonPricePopupBeforeClose" 
-        title="Non Price" >
+        title="Non Price"  >
         <!-- contentWidth="80rem" contentHeight="40rem"  -->
         <VBox class="sapUiLargeMargin">
             <!-- Header 입력 start -->
@@ -38,8 +39,8 @@
                         <Label  text="평가항목 유형" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Select width="100%" selectedKey="{NPHeaderModel>/h1}"
-                            id="selectType" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
+                        <Select width="100%" selectedKey="{NPHeaderModel>/h1}" 
+                            enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
                             <core:Item key="1" text="Commercial" />
                             <core:Item key="2" text="Technical" />
                         </Select >
@@ -143,8 +144,7 @@
             <!-- Item 입력 start -->
             <VBox>
                 <ScrollContainer vertical="false" focusable="true" >
-                    <Table id="idProductsTable"
-                        mode="MultiSelect"
+                    <Table mode="{=${propInfo>/isEditMode} ? 'MultiSelect' : 'None' }"
                         inset="false">
                         <headerToolbar>
                             <OverflowToolbar class="NonPricePopHeader" visible="{=${propInfo>/isEditMode}}">
@@ -224,13 +224,13 @@
                             </Column>
                         </columns>
                         <items>
-                            <ColumnListItem>
+                            <!-- <ColumnListItem>
                                 <cells>
                                     <Label text="1" />
 
                                     <DatePicker editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                                        value="2015-11-23"
+                                        value="{NegoItemNonPrice>}"
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="long"/>
                                     <DatePicker editable="{=${propInfo>/isEditMode}}"
@@ -238,50 +238,18 @@
                                         value="2015-11-23"
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="long"/>
-                                    <!-- <Input value=""
-                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" /> -->
 
                                     <Input value="1" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
                                     <Input value="1.2" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
-                                    <!-- <Input value="100"
-                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" /> -->
 
                                     <Input value="" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
 
                                     <Input value="" editable="{=${propInfo>/isEditMode}}"/> 
-
-
-                                    <!-- <Text text="4" />
-                                    <Text text="5" /> -->
-                                    <!-- <ObjectIdentifier
-                                        title="{Name}"
-                                        text="{ProductId}"/>
-                                    <Text
-                                        text="{SupplierName}" />
-                                    <Text
-                                        text="{Width} x {Depth} x {Height} {DimUnit}" />
-                                    <ObjectNumber
-                                        number="{WeightMeasure}"
-                                        unit="{WeightUnit}"
-                                        state="{
-                                            parts: [
-                                                {path: 'WeightMeasure'},
-                                                {path: 'WeightUnit'}
-                                            ],
-                                            formatter: 'sap.m.sample.Table.Formatter.weightState'
-                                        }" />
-                                    <ObjectNumber
-                                            number="{
-                                                parts:[{path:'Price'},{path:'CurrencyCode'}],
-                                                type: 'sap.ui.model.type.Currency',
-                                                formatOptions: {showMeasure: false}
-                                            }"
-                                            unit="{CurrencyCode}" /> -->
                                 </cells>
-                            </ColumnListItem>
+                            </ColumnListItem> -->
                         </items>
                     </Table>
                 </ScrollContainer>

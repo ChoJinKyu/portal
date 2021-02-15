@@ -38,11 +38,13 @@
                 <!-- <form:SimpleForm id="pageSearchForm" editable="true" layout="ResponsiveGridLayout"  > -->
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/CATEGORY_GROUP}: "></Label>
+                            <Label text="{I18N>/CATEGORY_GROUP}: " required="true"></Label>
                             <ComboBox
+                                required="true"
                                 id="searchCategoryCombo"
                                 width="100%"
                                 selectedKey=""
+                                showSecondaryValues= "true"
                                 items="{
                                     path: 'common>/Code',
                                     filters: [
@@ -51,7 +53,10 @@
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                    <core:ListItem
+                                        key="{common>code}" 
+                                        text="{common>code_name}" 
+                                        additionalText="{common>code}"/>
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -96,7 +101,8 @@
                     <ToolbarSpacer/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
                     <ToolbarSeparator/>
-                    <Button text="임시 추가생성버튼" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
+                    <Button text="임시 추가생성(new)" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
+                    <Button text="임시 추가생성(완료)" id="buttonAddCreate2" press=".onAddCreate2"  type="Transparent"/>
                     <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                     
                 </OverflowToolbar>
@@ -139,7 +145,7 @@
                 <t:Column id="requestor" hAlign="Left">
                     <Label text="{I18N>/REQUESTOR}" textAlign="Center"/>
                     <t:template>
-                        <Text text="{list>requestor_empno}" textAlign="Left"/>
+                        <Text text="{list>requestor}" textAlign="Left"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="request_date_time" hAlign="Center">

@@ -43,8 +43,6 @@ sap.ui.define([
             
             this.setModel(new JSONModel(oFilterModel), "filterModel");
             this.setModel(new JSONModel(), "updateModel");
-            let oGlobalData = {tenant_id : "L2100", user_id : "A60262"};
-            this.getOwnerComponent().getModel("globalModel").setData(oGlobalData);
             this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this.onPatternMatched, this);
         }
 
@@ -138,7 +136,7 @@ sap.ui.define([
                     closeWhenApplied: bCloseWhenApplied,
                     items: {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.getModel("globalModel").getProperty("tenant_id"))
+                            new Filter("tenant_id", FilterOperator.EQ, this.getModel("rootModel").getProperty("/tenantId"))
                         ]
                     }
                 });

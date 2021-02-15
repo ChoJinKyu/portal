@@ -88,7 +88,7 @@ sap.ui.define([
 
         _setProcessStatus : function(){
             var aFilters = [
-                new Filter("tenant_id", "EQ", "L1100"),
+                new Filter("tenant_id", "EQ", "L2101"),
                 new Filter("group_code", "EQ", "DP_PD_PROGRESS_STATUS"),
                 new Filter("language_cd", "EQ", this.language_cd)
             ];
@@ -194,7 +194,7 @@ sap.ui.define([
                 }else if( flag == "A") {
                     progressCode = "C";
                 }else if( flag == "C") {
-                    progressCode = "D";
+                    progressCode = "C";
                 }else if( flag == "DL") {
                     CUType = "D";
                 }
@@ -259,12 +259,22 @@ sap.ui.define([
 
             var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
             var title, confirm;
-            if(flag!="DL") {
-                title = this.getModel("I18N").getText("/SAVE");
-                confirm = this.getModel("I18N").getText("/NCM00001");
-            } else {
+            if(flag=="DL") {    //삭제
                 title = this.getModel("I18N").getText("/DELETE");
                 confirm = this.getModel("I18N").getText("/NCM00003");
+            } else if(flag=="J") {    //반려
+                title = this.getModel("I18N").getText("/REJECT");
+                confirm = this.getModel("I18N").getText("/NSP00103");
+            } else if(flag=="A") {    //승인
+                title = this.getModel("I18N").getText("/APPROVAL");
+                confirm = this.getModel("I18N").getText("/NSP00104");
+            } else if(flag=="C") {    //확인&생성
+                var oI18NModel = this.getModel("I18N");
+                title = this.getModel("I18N").getText("/CONFIRM_CREATE");
+                confirm = oI18NModel.getText("/NDP40004", [oI18NModel.getText("/CONFIRM_CREATE")]);
+            }else {
+                title = this.getModel("I18N").getText("/SAVE");
+                confirm = this.getModel("I18N").getText("/NCM00001");
             }
 
 			oTransactionManager.setServiceModel(this.getModel());
@@ -282,7 +292,7 @@ sap.ui.define([
                             success: function (rst) {
                                 console.log(rst);
                                 if(rst.return_code =="OK"){
-                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    //sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     if(flag == "D"){
                                          sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
@@ -460,6 +470,7 @@ sap.ui.define([
                 success: function (oData) {
                     //oView.byId("ideaCompany").setValue(oData.company_code);
                     oView.setBusy(false);
+                    console.log("oData=========>",oData.results);
                     v_this._toShowMode();
                 }
             });
@@ -585,7 +596,7 @@ sap.ui.define([
                 MessageToast.show("Leaf Category만 선택할 수 있습니다.");
                 return;
             } else {
-                this.byId("searchField").setValue(row.category_code);
+                this.byId("searchField").setValue(row.category_name);
                 this.byId("similarCategoryCode").setText(row.category_code);
 
                 this.partCategoryPopupClose();

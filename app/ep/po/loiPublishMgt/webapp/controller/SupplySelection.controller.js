@@ -7,6 +7,7 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "ext/lib/util/Validator",
     "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
@@ -21,7 +22,7 @@ sap.ui.define([
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel"
-], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
+], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter, NumberFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel) {
     "use strict";
@@ -31,7 +32,7 @@ sap.ui.define([
     return BaseController.extend("ep.po.loiPublishMgt.controller.SupplySelection", {
 
         dateFormatter: DateFormatter,
-
+        numberFormatter: NumberFormatter,
         validator: new Validator(),
 
         formatter: (function () {

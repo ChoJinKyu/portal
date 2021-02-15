@@ -91,6 +91,27 @@ sap.ui.define([
 
             }, this);
         },
+        after: function() {
+
+            var [pointcut, ...args] = arguments;
+            var [fn, ...keys] = args.slice().reverse();
+            keys = keys.reverse().filter(e => typeof e == "string").join("");
+
+            Aop.around(pointcut, function(f) {
+
+                var args = f.arguments = Array.prototype.slice.call(f.arguments);
+                args = args.filter(e => typeof e == "string").join("");
+
+                setTimeout((function() {
+                    keys == args
+                    &&
+                    fn.call(this);
+                }).bind(this), 0);
+               
+                return Aop.next.call(this, f);
+
+            }, this);
+        },
         // Filter
         generateFilters: function(model, filters) {
             // model Object
@@ -275,11 +296,11 @@ sap.ui.define([
                 (r = r.value[0]);
 
                 // Message
-                (args && !args.skip)
-                &&
-                (r.return_code == "NG" 
+                r.return_code == "NG" 
                 ? MessageBox.error(r.return_msg)
-                : MessageBox.success(r.return_msg))
+                : args && !!args.skip
+                ? "skip"
+                : MessageBox.success(r.return_msg);
 
                 // Settled
                 return (
@@ -352,6 +373,7 @@ sap.ui.define([
         onButtonPress: function () {},
         onExcel: function () {
             var [event, action, items, ...args] = arguments;
+            var { numbers } = args[args.length-1];
             if (action == "Download") {
                 var today = new Date();
                 var stamp = [
@@ -368,7 +390,13 @@ sap.ui.define([
                         return items.reverse().join("_");
                     })(args.slice().reverse())) + "_" + stamp,
                     table: this.byId(args[args.length-1]["tId"]),
-                    data: items
+                    data: items.map(e => {
+                        // Trailing Zero
+                        (numbers||[]).forEach(n => {
+                            e[n] = (+e[n] || 0);
+                        });
+                        return e;
+                    })
                 });
             }
             else /*if (action == "Upload")*/ {

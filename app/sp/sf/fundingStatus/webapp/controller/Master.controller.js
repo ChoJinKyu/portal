@@ -261,7 +261,10 @@ sap.ui.define([
                 oNavParam.supplierCode = oRowData.supplier_code;
                 oNavParam.fundingStatusCode = oRowData.funding_status_code;
 
-                this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
+                if(oRowData.funding_status_code=="110" || oRowData.funding_status_code=="120" ){
+                    this.getOwnerComponent().getRouter().navTo("Apply", oNavParam);
+                }
+
             }
 
             // , onExcelExport : function(){

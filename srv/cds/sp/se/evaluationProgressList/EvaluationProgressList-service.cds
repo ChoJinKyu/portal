@@ -1,4 +1,4 @@
-using { sp.Se_Reqular_Eval_Sum as eSummary } from '../../../../../db/cds/sp/se/SP_SE_REQULAR_EVAL_SUM-model';
+using { sp.Se_Regular_Eval_Sum as eSummary } from '../../../../../db/cds/sp/se/SP_SE_REGULAR_EVAL_SUM-model';
 using { sp.Se_Operation_Unit_Mst as opMst } from '../../../../../db/cds/sp/se/SP_SE_OPERATION_UNIT_MST-model';
 using { sp.Se_Eval_Type as eType } from '../../../../../db/cds/sp/se/SP_SE_EVAL_TYPE-model';
 using { sp.Se_Eval_Target_Supplier as tSupplier } from '../../../../../db/cds/sp/se/SP_SE_EVAL_TARGET_SUPPLIER-model';

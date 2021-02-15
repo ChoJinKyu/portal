@@ -21,7 +21,11 @@ sap.ui.define([
 
 	return BaseController.extend("dp.pd.productActivityMgt.controller.MainList", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        _oViewData : {
+            tenant_id : ""
+        },
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -31,7 +35,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-            console.log("onInit");
 			var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
@@ -40,12 +43,14 @@ sap.ui.define([
             var oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+            //세션에서 tenant_id 받기 전 하드코딩 코드수정 필요
+            this._oViewData.tenant_id = "L2101"
+
             this.enableMessagePopover();
-            this._doInitTablePerso();
+            //this._doInitTablePerso();
         },
 		
         onRenderedFirst : function () {
-            console.log("onRenderedFirst");
 			this.byId("pageSearchButton").firePress();
         },
 
@@ -63,7 +68,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
-            console.log("onMainTableUpdateFinished");
 			// update the mainList's object counter after the table update
 			var sTitle,
 				oTable = oEvent.getSource(),
@@ -84,8 +88,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoButtonPressed: function(oEvent){
-            console.log("onMainTablePersoButtonPressed");
-			this._oTPC.openDialog();
+            
+			//this._oTPC.openDialog();
 		},
 
 		/**
@@ -94,7 +98,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoRefresh : function() {
-            console.log("onMainTablePersoRefresh");
 			MainListPersoService.resetPersData();
 			this._oTPC.refresh();
 		},
@@ -105,7 +108,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-            console.log("onPageSearchButtonPress");
 			if (oEvent.getParameters().refreshButtonPressed) {
 				// Search field's 'refresh' button has been pressed.
 				// This is visible if you select any master list item.
@@ -125,7 +127,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableItemPress: function(oEvent) {
-            console.log("onMainTableItemPress");
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getParameters("rowIndices").rowContext.sPath,
@@ -133,7 +134,7 @@ sap.ui.define([
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: "L2101",
+				tenantId: this._oViewData.tenant_id,
 				controlOptionCode: oRecord.product_activity_code
 			}, true);
 
@@ -141,12 +142,11 @@ sap.ui.define([
         },
         
         onCreateActivity : function(){
-            console.log("onCreateActivity");
             var that = this;
             var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: "L2101",
+				tenantId: this._oViewData.tenant_id,
 				controlOptionCode: "new"				
             });
 
@@ -164,8 +164,6 @@ sap.ui.define([
 
             var sFileName = "Product Activity_"+ this._getDTtype();
             var oData = this.getModel("list").getProperty("/PdProdActivityTemplateView"); //binded Data
-
-            console.log(oData);
 
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
@@ -200,7 +198,6 @@ sap.ui.define([
 			var oView = this.getView(),
 				oModel = this.getModel("list");
             oView.setBusy(true);
-         //  console.log(oModel);
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/PdProdActivityTemplateView", {
                 filters: aSearchFilters,
@@ -213,8 +210,6 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-
-            console.log()
 
 			var sSearchProductActivity = this.byId("searchProductActivity").getValue(),
 				sStatus = this.getView().byId("searchStatusSegmentButton").getSelectedKey();

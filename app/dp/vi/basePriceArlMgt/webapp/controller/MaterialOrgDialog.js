@@ -122,6 +122,14 @@ sap.ui.define([
 
             var aFiltersControl = [];
 
+            aFiltersControl.push(new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE")}),            // 자재코드
+                        this.oSearchCode
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+                }));
+
             if( this.tenantId === "L2100" ) {
                 aFiltersControl.push(new VBox({
                     items: [
@@ -139,13 +147,7 @@ sap.ui.define([
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }));
-            aFiltersControl.push(new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE")}),            // 자재코드
-                        this.oSearchCode
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }));
+            
             // aFiltersControl.push(new VBox({
             //         items: [
             //             new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT

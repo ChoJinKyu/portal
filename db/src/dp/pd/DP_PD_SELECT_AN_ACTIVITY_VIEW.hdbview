@@ -1,16 +1,26 @@
 VIEW DP_PD_SELECT_AN_ACTIVITY_VIEW AS
-select pa.tenant_id,
-      pa.activity_code,				
-      STRING_AGG( l.code_name, ' / ' ) as activity_name,
-      pa.active_flag
-      ,case when pa.active_flag = True then 'Active' else 'Inactive' end active_flag_val
- from 
-	( select 'L2101' as tenant_id, activity_code, active_flag from dp_pd_part_base_activity -- where tenant_id = 'L2101'
-	   minus
-	  select tenant_id, activity_code, active_flag from dp_pd_part_activity_template where tenant_id = 'L2101'
-	) pa
-      left join DP_PD_PART_BASE_ACTIVITY_LNG l
-      on ( l.tenant_id = pa.tenant_id and l.activity_code = pa.activity_code )
-where pa.tenant_id = 'L2101'
- group by pa.tenant_id, pa.activity_code, pa.active_flag
+select a.tenant_id, 
+	   a.activity_code, 
+	   (select code_name from dp_pd_part_base_activity_lng where tenant_id = a.tenant_id and activity_code = a.activity_code and language_cd = 'KO') activity_name,
+	   a.active_flag,	
+	   case when a.active_flag = True then 'Active' else 'Inactive' end active_flag_val,
+	   a.sequence, a.company_code, a.org_code, a.part_project_type_code
+from   (
+		select a.tenant_id, a.activity_code, a.active_flag, a.sequence, b.company_code, c.org_code, d.part_project_type_code
+		from   dp_pd_part_base_activity a,
+			   (select tenant_id, company_code from cm_org_company where company_code = 'LGESL') b,
+			   (select tenant_id, org_code from cm_pur_operation_org c where org_type_code = 'BU') c,
+			   (select tenant_id, code part_project_type_code from cm_code_dtl where group_code = 'DP_PART_PJT_TYPE') d
+		where  a.tenant_id = 'L2101'
+		and	   b.tenant_id = a.tenant_id
+		and	   c.tenant_id = a.tenant_id
+		and	   d.tenant_id = a.tenant_id
+		minus
+		select a.tenant_id, a.activity_code, b.active_flag, b.sequence, a.company_code, a.org_code, a.part_project_type_code
+		from   dp_pd_part_activity_template a
+			  ,dp_pd_part_base_activity b
+		where  a.tenant_id = 'L2101'
+		and	   b.tenant_id = a.tenant_id
+		and    b.activity_code = a.activity_code
+) a	   
 ;

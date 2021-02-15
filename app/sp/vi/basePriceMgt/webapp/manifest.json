@@ -208,7 +208,9 @@
       "dputil": "../../../../dp/util",
       "sp.util": "../../../util",
       "dp.util": "../../../../dp/util",
-      "cm.util": "../../../../cm/util"
+      "cm.util": "../../../../cm/util",
+      "ext.lib.fragment": "../../../../lib/upload",
+      "ext.lib.fragment.controller": "../../../../lib/upload"
       
     },
     "routing": {

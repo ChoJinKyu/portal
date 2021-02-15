@@ -91,6 +91,9 @@ sap.ui.define([
             this.getRouter().getRoute("addCreatePage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
+
+            
+
         },
 
 		/**
@@ -101,9 +104,8 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
-            console.log(oArgs);
-            this._sRequestNumber = oArgs.requestNumber;         
-            this.category_code =   oArgs.categoryCode;
+                
+            this._sRequestNumber = oArgs.requestNumber;
             
             //세션에서 받아서 넣어 주어야 함
             this._sLanguageCd = "KO";
@@ -111,11 +113,6 @@ sap.ui.define([
             // this.category_code = "PC2012300001";
 
 
-            if( oArgs.categoryCode =="new"){
-                this.viewType = false;
-            }else{
-                this.viewType = true;
-            }
             var oMasterModel = this.getModel("master");
             oMasterModel.setProperty("/pdPartCategoryCreationRequestView", {});
 
@@ -147,27 +144,39 @@ sap.ui.define([
             var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
 
 
+            this.getModel("PdPartCategoryModel").setData({});
+            this.getModel("pdPartCategoryLng").setData([]);
+            this.getModel("pdActivityStdDayView").setData({});
             //테스트 에러로 
             //oView.setBusy(true);
             oMasterModel.setTransactionModel(this.getModel());
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
-                    console.log("master");
-                    console.log(oData);
+                    // console.log("master");
+                    // console.log(oData);
                     v_this.category_group_code = oData.category_group_code;
                     v_this.request_category_name = oData.request_category_name;
                     v_this.similar_category_code = oData.similar_category_code;
+
+                    if(oData.create_category_code == null || oData.create_category_code == ""  ){
+                        v_this.category_code = "new";
+                        v_this.viewType = false;
+                    }else{
+                        v_this.category_code = oData.create_category_code;
+                        v_this.viewType = true;
+                    }
                     v_this.onSearchAfter(v_this.category_code);
+
+                    if(v_this.viewType){
+                        v_this._toShowMode();
+                    }else{
+                        v_this._toEditMode();
+                    }
+
                     oView.setBusy(false);
                 }
             });
             
-            
-            if(this.viewType){
-                v_this._toShowMode();
-            }else{
-                v_this._toEditMode();
-            }
             
 
         },
@@ -179,20 +188,25 @@ sap.ui.define([
             var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
             var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
            
-            console.log("category_code:::;"+category_code);
+            this.getModel("PdPartCategoryModel").setData({});
+            this.getModel("pdPartCategoryLng").setData([]);
+            this.getModel("pdActivityStdDayView").setData({});
+
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
             aFilters.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
             aFilters.push(new Filter("category_code", FilterOperator.EQ, category_code));
 
+            // console.log(aFilters);
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/PdPartCategory", {
                 filters: aFilters,
                 success: function (oData) {
-                    console.log("PdPartCategory");
-                    console.log(oData);
+                    // console.log("PdPartCategory");
+                    // console.log(oData);
                     //var oModel = new sap.ui.model.json.JSONModel(oData.results[0]);
-
-                    this.getModel("PdPartCategoryModel").setData(oData.results);
+                    if(oData.results.length > 0){
+                        this.getModel("PdPartCategoryModel").setData(oData.results[0]);
+                    }
                 }.bind(this)
             });
 
@@ -202,14 +216,16 @@ sap.ui.define([
             aFilters2.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
             aFilters2.push(new Filter("category_code", FilterOperator.EQ, category_code));
             // aFilters2.push(new Filter("language_cd", FilterOperator.EQ, this._sLanguageCd));
+            
+                    // console.log(aFilters2);
             //test
-            aFilters2.push(new Filter("category_code", FilterOperator.EQ, "PC2012300001"));
+            // aFilters2.push(new Filter("category_code", FilterOperator.EQ, "PC2012300001"));
 
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/pdPartCategoryLng", {
                 filters: aFilters2,
                 success: function (oData) {
-                    console.log("pdPartCategoryLng");
-                    console.log(oData);
+                    // console.log("pdPartCategoryLng");
+                    // console.log(oData);
                     if( this.category_code =="new"){
                         oData.results = [{
                             "tenant_id": this.tenant_id,
@@ -226,7 +242,14 @@ sap.ui.define([
                         }];
                     }
                     this.getModel("pdPartCategoryLng").setData(oData.results);
+                    // console.log(this.getModel("pdPartCategoryLng"));
                     this.pdPartCategoryLngArr = oData.results;
+                    
+                    // var sTitle = this.getModel("I18N").getText("/LANGUAGE")+" ";
+
+                    //console.log(sTitle+" ["+iTotalItems+"]");
+                    //this.byId("pageSectionMain2").setTitle(sTitle+"("+oData.results.length+")");
+
                 }.bind(this)
             });
 
@@ -243,7 +266,7 @@ sap.ui.define([
             var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
            
             //테스트  pdPartCategoryCreationRequestView 에서 데이터를 가져오지 못하므로 임시 작업 
-            similar_category_code = "PC2012300037";
+            //similar_category_code = "PC2012300007";
 
             var aFilters3 = [];
             aFilters3.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
@@ -251,18 +274,29 @@ sap.ui.define([
             aFilters3.push(new Filter("category_code", FilterOperator.EQ, similar_category_code ));
             // aFilters3.push(new Filter("category_code", FilterOperator.EQ, this.similar_category_code ));
 
-            console.log(aFilters3);
 
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.activityStdDayService/").read("/pdActivityStdDayView", {
                 filters: aFilters3,
                 success: function (oData) {
-                    console.log("pdActivityStdDayView");
-                    console.log(oData);
+                    // console.log("pdActivityStdDayView");
+                    // console.log(oData);
                     this.getModel("pdActivityStdDayView").setData(oData.results);
+            
+                    this.toTop();
                     
                 }.bind(this)
             });
-            
+            this.toTop();
+        },
+        /**
+         * 리스트 레코드 추가
+         * @public
+         */
+        toTop: function () {
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
         },
 
         
@@ -306,7 +340,6 @@ sap.ui.define([
             this.getModel("pdPartCategoryLng").setData(v_this.pdPartCategoryLngArr);
             oTable.removeSelections(true);
 
-            console.log(v_this.pdPartCategoryLngArr);
         },
 
 
@@ -317,7 +350,7 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function () {
             
-            console.log("onPageSaveButtonPress start");
+            // console.log("onPageSaveButtonPress start");
             var oView = this.getView(),
                 v_this = this;
                 
@@ -341,13 +374,14 @@ sap.ui.define([
             var oData = oPdPartCategory.oData;
             var CUType = "C";
 
-            console.log("onPageSaveButtonPress 11111111");
-            console.log(oData);
-            console.log(this.byId("statusButton").getSelectedKey());
+            // console.log(oData);
+            // console.log(this.byId("statusButton").getSelectedKey());
+
+            //20210209 설계자 요청으로 category_code 에 requestNumber를 마스터 데이터에 넣기로 함
             var pdMstVal = {
 					tenant_id       : this.tenant_id,
                     category_group_code   : this.category_group_code,
-                    category_code     : "new",
+                    category_code     : this._sRequestNumber,
                     parent_category_code        : oData.parent_category_code,
                     sequence     : oData.sequence.trim(),
 
@@ -366,8 +400,6 @@ sap.ui.define([
             };
             var pdDtlVal = [];
             
-            console.log("onPageSaveButtonPress 222222222");
-            console.log(this.pdPartCategoryLngArr);
             for (var i = 0; i <  this.pdPartCategoryLngArr.length; i++) {
                 pdDtlVal.push({
                     tenant_id: this.pdPartCategoryLngArr[i].tenant_id,
@@ -385,11 +417,8 @@ sap.ui.define([
             
             var pdSDVal = [];
             
-            console.log("onPageSaveButtonPress 212121212121");
             var oTableSd = this.byId("tableSd");
             var oDataSd = oPdActivityStdDayView.oData;
-            console.log(oPdActivityStdDayView);
-            console.log(oTableSd);
             
             for (var i = 0; i < oDataSd.length; i++) {
                 
@@ -412,13 +441,15 @@ sap.ui.define([
                     tenant_id: oDataSd[i].tenant_id,
                     activity_code: oDataSd[i].activity_code,
                     category_group_code: oDataSd[i].category_group_code,
-                    category_code: oDataSd[i].category_code,                    
-                    s_grade_standard_days: oDataSd[i].s_grade_standard_days,
+                    
+                    // category_code: oDataSd[i].category_code,
+                    category_code: "new",
+                    s_grade_standard_days: oDataSd[i].s_grade_standard_days.trim(),
 
-                    a_grade_standard_days: oDataSd[i].a_grade_standard_days,
-                    b_grade_standard_days: oDataSd[i].b_grade_standard_days,
-                    c_grade_standard_days: oDataSd[i].c_grade_standard_days,
-                    d_grade_standard_days: oDataSd[i].d_grade_standard_days,
+                    a_grade_standard_days: oDataSd[i].a_grade_standard_days.trim(),
+                    b_grade_standard_days: oDataSd[i].b_grade_standard_days.trim(),
+                    c_grade_standard_days: oDataSd[i].c_grade_standard_days.trim(),
+                    d_grade_standard_days: oDataSd[i].d_grade_standard_days.trim(),
 
                     active_flag: oDataSd[i].active_flag.toString(),
                     update_user_id: this.loginUserId,
@@ -427,9 +458,6 @@ sap.ui.define([
             }
             input.inputData.pdSD = pdSDVal;
 
-
-            console.log("onPageSaveButtonPress 3333333333");
-            
 
             var url = "srv-api/odata/v4/dp.partCategoryV4Service/PdPartCategorySaveProc";
             
@@ -447,26 +475,25 @@ sap.ui.define([
                             data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
-                                console.log(rst);
+                                // console.log(rst);
                                 if(rst.return_code =="OK"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     v_this.onPageNavBackButtonPress();
                                 }else{
                                     // console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error("error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
-                                    // console.log("eeeeee");
-                                    console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
-                                    // v_this.onSearch(rst.return_msg );
+                                // console.log(rst);
+                                MessageBox.error("error : "+rst.return_msg );
                             }
                         });
 					};
 				}
             });
             this.validator.clearValueState(this.byId("midObjectForm"));
+            
 
         },
 
@@ -591,9 +618,13 @@ sap.ui.define([
 
         
         , onSearchPartCategory: function (oEvent) {
-            var oButton = oEvent.getSource(),
-                oView = this.getView();
-
+           // var oArgs = oEvent.getParameter("arguments");
+        
+            this.setObj = "searchField";
+            var oView = this.getView();
+            if(oEvent == 1){
+                this.setObj = "pGroupCategory";
+            }
             if (!this.treeDialog) {
                 this.treeDialog = Fragment.load({
                     id: oView.getId(),
@@ -647,17 +678,28 @@ sap.ui.define([
         }
 
         , selectPartCategoryValue: function (oEvent) {
-            
             if( oEvent.getParameters().rowContext.sPath != undefined){
                 var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
-                console.log( row);
-                this.getView().byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
-                // this.getView().byId("similarCategoryCode").setValue( "[" + row.category_code + " ] " + row.category_name);
-                console.log(this.getView().byId("searchField").getValue());
-                this.onSearchPdActivityStdDayView(row.category_code);
+                if(this.setObj == "pGroupCategory"){
+                    if(row.drill_state == "leaf"){
+                        MessageToast.show("Parent Category만 선택할 수 있습니다.");
+                        return;
+                    } else {
+                        this.getView().byId(this.setObj).setValue(  row.category_code );
+                        this.onSearchPdActivityStdDayView(row.category_code);
+                    }
+                }else{
+                    if(row.drill_state != "leaf"){
+                        MessageToast.show("Leaf Category만 선택할 수 있습니다.");
+                        return;
+                    } else {
+                        this.getView().byId(this.setObj).setValue(  row.category_code );
+                        this.onSearchPdActivityStdDayView(row.category_code);
+                    }
+                }
             }
-
             this.partCategoryPopupClose();
+            
         }
         
         , partCategoryPopupClose: function (oEvent) {

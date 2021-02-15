@@ -80,6 +80,16 @@ BEGIN
         AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
         AND    ACTIVITY_CODE = V_ACTIVITY_CODE
         ;
+    ELSE
+
+        SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
+        INTO   V_ORG_SEQUENCE 
+        FROM   DP_PD_PART_ACTIVITY_TEMPLATE
+        WHERE  TENANT_ID = V_TENANT_ID
+        AND    COMPANY_CODE = V_COMPANY_CODE
+        AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
+        AND    ORG_CODE = V_ORG_CODE
+        AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE;
    
     END IF;
 
@@ -161,7 +171,6 @@ BEGIN
 
             UPDATE DP_PD_PART_ACTIVITY_TEMPLATE M
                SET ( M.SEQUENCE
-                    ,M.DEVELOPE_EVENT_CODE
                     ,M.ACTUAL_ROLE_CODE
                     ,M.ACTIVITY_COMPLETE_TYPE_CODE
                     ,M.JOB_TYPE_CODE
@@ -170,7 +179,6 @@ BEGIN
                     ,M.ACTIVE_FLAG
                     ,M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID ) =
                    ( SELECT SEQUENCE
-                            ,DEVELOPE_EVENT_CODE
                             ,ACTUAL_ROLE_CODE
                             ,ACTIVITY_COMPLETE_TYPE_CODE
                             ,JOB_TYPE_CODE
@@ -195,6 +203,17 @@ BEGIN
             ;
 
         ELSE
+
+            UPDATE DP_PD_PART_ACTIVITY_TEMPLATE
+            SET    SEQUENCE = SEQUENCE + 1
+            WHERE  TENANT_ID = V_TENANT_ID
+            AND    COMPANY_CODE = V_COMPANY_CODE
+            AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
+            AND    ORG_CODE = V_ORG_CODE
+            AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+            AND    SEQUENCE >= V_SEQUENCE
+            ;
+
             INSERT INTO DP_PD_PART_ACTIVITY_TEMPLATE
                       ( TENANT_ID
                         ,COMPANY_CODE
@@ -203,7 +222,6 @@ BEGIN
                         ,PART_PROJECT_TYPE_CODE
                         ,ACTIVITY_CODE
                         ,SEQUENCE
-                        ,DEVELOPE_EVENT_CODE
                         ,ACTUAL_ROLE_CODE
                         ,ACTIVITY_COMPLETE_TYPE_CODE
                         ,JOB_TYPE_CODE
@@ -223,15 +241,7 @@ BEGIN
                         ,ORG_CODE
                         ,PART_PROJECT_TYPE_CODE
                         ,V_ACTIVITY_CODE
-                         ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
-                             FROM DP_PD_PART_ACTIVITY_TEMPLATE
-                            WHERE TENANT_ID = M.TENANT_ID
-                              AND COMPANY_CODE = M.COMPANY_CODE
-                              AND ORG_TYPE_CODE = V_ORG_TYPE_CODE
-                              AND ORG_CODE = M.ORG_CODE
-                              AND PART_PROJECT_TYPE_CODE = M.PART_PROJECT_TYPE_CODE
-                            )
-                       ,DEVELOPE_EVENT_CODE
+                        ,V_SEQUENCE
                         ,ACTUAL_ROLE_CODE
                         ,ACTIVITY_COMPLETE_TYPE_CODE
                         ,JOB_TYPE_CODE

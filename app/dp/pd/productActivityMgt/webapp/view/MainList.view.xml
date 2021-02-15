@@ -33,7 +33,7 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="코드/ 명/ 설명: " labelFor="searchProductActivity"></Label>
+                            <Label text="{I18N>/CODE_NAME_DESC}: " labelFor="searchProductActivity"></Label>
                             <Input 
                                 id="searchProductActivity"
                                 change=".onPageSearchButtonPress"/>
@@ -83,7 +83,7 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/MANAGEMENT} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
+                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
                         <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>
@@ -95,7 +95,7 @@
  
                 <t:columns>
 
-                    <t:Column hAlign="End" width="60px">
+                    <t:Column width="60px">
                         <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{list>sequence}" wrapping="false" textAlign="Right" width="100%"/>  
@@ -109,10 +109,10 @@
                         </t:template>
                     </t:Column>
 
-                    <t:Column hAlign="Start">
+                    <t:Column>
                         <Label text="{I18N>/PRODUCT_ACTIVITY_NAME}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>activity_name}" wrapping="false"/>  
+                            <Text text="{list>activity_name}" wrapping="false" textAlign="Left" width="100%"/>  
                         </t:template>
                     </t:Column>
 

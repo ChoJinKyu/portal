@@ -23,9 +23,14 @@ import org.springframework.jdbc.core.CallableStatementCreator;
 
 import cds.gen.dp.partbaseactivityv4service.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 @ServiceName(PartBaseActivityV4Service_.CDS_NAME)
 public class PartBaseActivityMgtV4 implements EventHandler {
+
+    private final static Logger log = LoggerFactory.getLogger(PartBaseActivityV4Service_.class);
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -38,7 +43,7 @@ public class PartBaseActivityMgtV4 implements EventHandler {
         String crudType = context.getInputData().getCrudType();
         PdpartBaseActivityType v_pdMst = context.getInputData().getPdMst();
         Collection<PdpartBaseActivityLngType> v_pdDtl = context.getInputData().getPdDtl();
-        Collection<PdpartBaseActivityCategoryType> v_pdCat = context.getInputData().getPdCat();
+        // Collection<PdpartBaseActivityCategoryType> v_pdCat = context.getInputData().getPdCat();
         
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
@@ -76,31 +81,31 @@ public class PartBaseActivityMgtV4 implements EventHandler {
         
         String v_sql_dropLngtable = "DROP TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG";
 
-        // category 테이블
-        StringBuffer v_sql_createCateTable = new StringBuffer();
-        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
-        v_sql_createCateTable.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY (");
+        // // category 테이블
+        // StringBuffer v_sql_createCateTable = new StringBuffer();
+        // // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        // v_sql_createCateTable.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY (");
 
-        v_sql_createCateTable.append("TENANT_ID NVARCHAR(5),"); 
-        v_sql_createCateTable.append("ACTIVITY_CODE NVARCHAR(40),");
-        v_sql_createCateTable.append("CATEGORY_GROUP_CODE NVARCHAR(30),");
-        v_sql_createCateTable.append("CATEGORY_CODE NVARCHAR(40),");
-        v_sql_createCateTable.append("S_GRADE_STANDARD_DAYS INTEGER,");
+        // v_sql_createCateTable.append("TENANT_ID NVARCHAR(5),"); 
+        // v_sql_createCateTable.append("ACTIVITY_CODE NVARCHAR(40),");
+        // v_sql_createCateTable.append("CATEGORY_GROUP_CODE NVARCHAR(30),");
+        // v_sql_createCateTable.append("CATEGORY_CODE NVARCHAR(40),");
+        // v_sql_createCateTable.append("S_GRADE_STANDARD_DAYS INTEGER,");
 
-        v_sql_createCateTable.append("A_GRADE_STANDARD_DAYS INTEGER,");	
-        v_sql_createCateTable.append("B_GRADE_STANDARD_DAYS INTEGER,");	
-        v_sql_createCateTable.append("C_GRADE_STANDARD_DAYS INTEGER,");	
-        v_sql_createCateTable.append("D_GRADE_STANDARD_DAYS INTEGER,");	
-        v_sql_createCateTable.append("ACTIVE_FLAG BOOLEAN,");        
+        // v_sql_createCateTable.append("A_GRADE_STANDARD_DAYS INTEGER,");	
+        // v_sql_createCateTable.append("B_GRADE_STANDARD_DAYS INTEGER,");	
+        // v_sql_createCateTable.append("C_GRADE_STANDARD_DAYS INTEGER,");	
+        // v_sql_createCateTable.append("D_GRADE_STANDARD_DAYS INTEGER,");	
+        // v_sql_createCateTable.append("ACTIVE_FLAG BOOLEAN,");        
 
-        v_sql_createCateTable.append("UPDATE_USER_ID NVARCHAR(255),");
-        v_sql_createCateTable.append("CRUD_TYPE_CODE NVARCHAR(1) )");
+        // v_sql_createCateTable.append("UPDATE_USER_ID NVARCHAR(255),");
+        // v_sql_createCateTable.append("CRUD_TYPE_CODE NVARCHAR(1) )");
 
-        String v_sql_insertCateTable = "INSERT INTO #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        // String v_sql_insertCateTable = "INSERT INTO #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         
-        String v_sql_dropCatetable = "DROP TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY";
+        // String v_sql_dropCatetable = "DROP TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY";
 
-        String v_sql_callProc = "CALL DP_PD_PART_BASE_ACTIVITY_SAVE_PROC(CRUD_TYPE => ?, I_M => #LOCAL_TEMP_PART_BASE_ACTIVITY, I_D => #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG, I_C => #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY, O_MSG => ?)";
+        String v_sql_callProc = "CALL DP_PD_PART_BASE_ACTIVITY_SAVE_PROC(CRUD_TYPE => ?, I_M => #LOCAL_TEMP_PART_BASE_ACTIVITY, I_D => #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG, O_MSG => ?)";
 
         Collection<OutType> v_result = new ArrayList<>();
 
@@ -153,68 +158,68 @@ public class PartBaseActivityMgtV4 implements EventHandler {
             int[] updateLngCounts = jdbc.batchUpdate(v_sql_insertLngTable, batch_dtl);            
         }       
 
-        jdbc.execute(v_sql_createCateTable.toString());
+        // jdbc.execute(v_sql_createCateTable.toString());
         
-        List<Object[]> batch_cat = new ArrayList<Object[]>();
+        // List<Object[]> batch_cat = new ArrayList<Object[]>();
         
-        if(!v_pdCat.isEmpty() && v_pdCat.size() > 0){
-            boolean cate_active_flag = false;
-            Integer sGrade;
-            Integer aGrade;
-            Integer bGrade;
-            Integer cGrade;
-            Integer dGrade;
+        // if(!v_pdCat.isEmpty() && v_pdCat.size() > 0){
+        //     boolean cate_active_flag = false;
+        //     Integer sGrade;
+        //     Integer aGrade;
+        //     Integer bGrade;
+        //     Integer cGrade;
+        //     Integer dGrade;
                     
-            for(PdpartBaseActivityCategoryType v_inRow : v_pdCat){                
-                if(v_inRow.get("active_flag")!=null && (v_inRow.get("active_flag")).equals("true")){
-                    cate_active_flag = true;
-                } else {
-                    cate_active_flag = false;
-                }
-                if(v_inRow.get("s_grade_standard_days")==null){
-                    sGrade = null;
-                } else {
-                    sGrade = Integer.parseInt(String.valueOf(v_inRow.get("s_grade_standard_days")));
-                }
-                if(v_inRow.get("a_grade_standard_days")==null){
-                    aGrade = null;
-                } else {
-                    aGrade = Integer.parseInt(String.valueOf(v_inRow.get("a_grade_standard_days")));
-                }
-                if(v_inRow.get("b_grade_standard_days")==null){
-                    bGrade = null;
-                } else {
-                    bGrade = Integer.parseInt(String.valueOf(v_inRow.get("b_grade_standard_days")));
-                }
-                if(v_inRow.get("c_grade_standard_days")==null){
-                    cGrade = null;
-                } else {
-                    cGrade = Integer.parseInt(String.valueOf(v_inRow.get("c_grade_standard_days")));
-                }
-                if(v_inRow.get("d_grade_standard_days")==null){
-                    dGrade = null;
-                } else {
-                    dGrade = Integer.parseInt(String.valueOf(v_inRow.get("d_grade_standard_days")));
-                }
+        //     for(PdpartBaseActivityCategoryType v_inRow : v_pdCat){                
+        //         if(v_inRow.get("active_flag")!=null && (v_inRow.get("active_flag")).equals("true")){
+        //             cate_active_flag = true;
+        //         } else {
+        //             cate_active_flag = false;
+        //         }
+        //         if(v_inRow.get("s_grade_standard_days")==null){
+        //             sGrade = null;
+        //         } else {
+        //             sGrade = Integer.parseInt(String.valueOf(v_inRow.get("s_grade_standard_days")));
+        //         }
+        //         if(v_inRow.get("a_grade_standard_days")==null){
+        //             aGrade = null;
+        //         } else {
+        //             aGrade = Integer.parseInt(String.valueOf(v_inRow.get("a_grade_standard_days")));
+        //         }
+        //         if(v_inRow.get("b_grade_standard_days")==null){
+        //             bGrade = null;
+        //         } else {
+        //             bGrade = Integer.parseInt(String.valueOf(v_inRow.get("b_grade_standard_days")));
+        //         }
+        //         if(v_inRow.get("c_grade_standard_days")==null){
+        //             cGrade = null;
+        //         } else {
+        //             cGrade = Integer.parseInt(String.valueOf(v_inRow.get("c_grade_standard_days")));
+        //         }
+        //         if(v_inRow.get("d_grade_standard_days")==null){
+        //             dGrade = null;
+        //         } else {
+        //             dGrade = Integer.parseInt(String.valueOf(v_inRow.get("d_grade_standard_days")));
+        //         }
                 
-                Object[] values = new Object[] {
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("activity_code"),
-                    v_inRow.get("category_group_code"),
-                    v_inRow.get("category_code"),
-                    sGrade,                    
-                    aGrade,
-                    bGrade,
-                    cGrade,
-                    dGrade,                    
-                    cate_active_flag,
-                    v_inRow.get("update_user_id"),
-                    v_inRow.get("crud_type_code")
-                };                
-                batch_cat.add(values);
-            }            
-            int[] updateCateCounts = jdbc.batchUpdate(v_sql_insertCateTable, batch_cat);            
-        }
+        //         Object[] values = new Object[] {
+        //             v_inRow.get("tenant_id"),
+        //             v_inRow.get("activity_code"),
+        //             v_inRow.get("category_group_code"),
+        //             v_inRow.get("category_code"),
+        //             sGrade,                    
+        //             aGrade,
+        //             bGrade,
+        //             cGrade,
+        //             dGrade,                    
+        //             cate_active_flag,
+        //             v_inRow.get("update_user_id"),
+        //             v_inRow.get("crud_type_code")
+        //         };                
+        //         batch_cat.add(values);
+        //     }            
+        //     int[] updateCateCounts = jdbc.batchUpdate(v_sql_insertCateTable, batch_cat);            
+        // }
                 
     
         OutType v_row = OutType.create();
@@ -246,9 +251,14 @@ public class PartBaseActivityMgtV4 implements EventHandler {
 
 
         // Local Temp Table DROP
-        jdbc.execute(v_sql_dropMstTable);
-        jdbc.execute(v_sql_dropLngtable);
-        jdbc.execute(v_sql_dropCatetable);
+        try{
+            jdbc.execute(v_sql_dropMstTable);
+            jdbc.execute(v_sql_dropLngtable);
+            // jdbc.execute(v_sql_dropCatetable);
+        }catch(Exception e){
+            log.error("Part Base Activity Error  : {}", e);
+            
+        }
 
         context.setResult(v_row);
         context.setCompleted();

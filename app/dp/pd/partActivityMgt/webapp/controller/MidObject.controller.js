@@ -6,7 +6,8 @@ sap.ui.define([
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/Formatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -22,7 +23,7 @@ sap.ui.define([
     "sap/f/LayoutType",
     "dp/util/control/ui/ActivityCodeDialog"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	Formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType, ActivityCodeDialog) {
 		
 	"use strict";
@@ -32,6 +33,8 @@ sap.ui.define([
 	return BaseController.extend("dp.pd.partActivityMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
+
+        formatter: Formatter,
         
         validator: new Validator(),
         
@@ -150,22 +153,49 @@ sap.ui.define([
         
         onDialogActivityPress : function(){
 
-            if(!this.oSearchActivityDialog){
-                this.oSearchActivityDialog = new ActivityCodeDialog({
-                    title: "Select Activity",
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                        ]
-                    }
-                });
-                this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
-                    console.log(oEvent.getParameter("item"));
-                    this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
-                    this.byId("searchActivityName").setText(oEvent.getParameter("item").activity_name);
-                }.bind(this));
-            }
+            // if(!this.oSearchActivityDialog){
+            //     this.oSearchActivityDialog = new ActivityCodeDialog({
+            //         title: "Select Activity",
+            //         multiSelection: false,
+            //         items: {
+            //             filters: [
+            //                 new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+            //                 new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
+            //                 new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
+            //                 new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
+            //             ]
+            //         }                    
+            //     });
+            //     console.log(this.oSearchActivityDialog);
+            //     this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
+            //         console.log(oEvent.getParameter("item"));
+            //         this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
+            //         this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
+            //         this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
+            //     }.bind(this));
+            // }
+
+            // this.oSearchActivityDialog.open();
+
+            this.oSearchActivityDialog = new ActivityCodeDialog({
+                title: "Select Activity",
+                multiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                        new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
+                        new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
+                        new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
+                    ]
+                }                    
+            });
+            
+            this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
+                console.log(oEvent.getParameter("item"));
+                this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
+                this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
+                this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
+            }.bind(this));
 
             this.oSearchActivityDialog.open();
 
@@ -196,7 +226,37 @@ sap.ui.define([
 		// 		oModel.markRemoved(nIndex);
 		// 	});
 		// 	oTable.removeSelections(true);
-		// },
+        // },
+
+        onBulkAddRow: function () {
+            MessageBox.alert("준비중입니다.");
+        },
+        
+        onInputChange: function(oEvent){
+           
+            var _oInput = oEvent.getSource();
+            
+            _oInput.setValue("");
+               
+            this.byId("searchActivityName").setValue("");
+            
+            this.byId("searchSequence").setValue("");
+                
+        },
+
+        onComboChange: function(oEvent){
+
+            if(!(this.isValNull(this.byId("searchCompanyCombo").getValue())) && 
+            !(this.isValNull(this.byId("searchOrgCombo").getValue())) && 
+            !(this.isValNull(this.byId("searchPartProjectCombo").getValue()))){
+                this.byId("searchActivityInput").setEditable(true);
+            } else {
+                this.byId("searchActivityInput").setValue("");
+                this.byId("searchActivityName").setValue("");            
+                this.byId("searchSequence").setValue("");
+                this.byId("searchActivityInput").setEditable(false);
+            }
+        },
 		
 		/**
 		 * Event handler for saving page changes
@@ -259,11 +319,15 @@ sap.ui.define([
                     activity_code               : oMasterData.activity_code,
                     // category_group_code         : oMasterData.category_group_code,
                     sequence                    : oMasterData.sequence,
-                    develope_event_code         : oMasterData.develope_event_code,
+                    // 설계상 null 값 넘겨달라고 함.
+                    // develope_event_code         : oMasterData.develope_event_code,
+                    develope_event_code         : null,
                     actual_role_code            : oMasterData.actual_role_code,
 
                     activity_complete_type_code : oMasterData.activity_complete_type_code,
-                    job_type_code               : oMasterData.job_type_code,
+                    // 설계상 null 값 넘겨달라고 함.
+                    // job_type_code               : oMasterData.job_type_code,
+                    job_type_code               : null,
                     attachment_mandatory_flag   : attachmentMandatoryFlag,
                     approve_mandatory_flag      : approveMandatoryFlag,
                     active_flag                 : activeFlg,
@@ -350,13 +414,15 @@ sap.ui.define([
                                     
                                 }else{
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    // sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error(rst.return_msg);
                                 }
                             },
                             error: function (rst) {
                                     console.log("eeeeee");
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error("예기치 않은 오류가 발생하였습니다.");
+                                    // sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     // v_this.onSearch(rst.return_msg );
                             }
                         });
@@ -470,9 +536,9 @@ sap.ui.define([
                     "part_project_type_code": "",
                     "activity_code": "",
                     "category_group_code": "",
-                    "attachment_mandatory_flag": true,
-                    "approve_mandatory_flag": true,
-                    "active_flag": true			
+                    "attachment_mandatory_flag": "true",
+                    "approve_mandatory_flag": "true",
+                    "active_flag": "true"			
                 }, "/pdPartactivityTemplateView");
                 
 				// var oLanguagesModel = this.getModel("languages");
@@ -512,7 +578,8 @@ sap.ui.define([
 				this._toShowMode();
             }
             this.validator.clearValueState(this.byId("page"));
-			oTransactionManager.setServiceModel(this.getModel());
+            oTransactionManager.setServiceModel(this.getModel());
+            this.byId("searchActivityInput").setEditable(false);
         },
         
         _fnInitControlModel : function(){

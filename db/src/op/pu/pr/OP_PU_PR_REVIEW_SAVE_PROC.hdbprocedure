@@ -149,8 +149,13 @@ BEGIN
     FOR l_pr_item AS c_pr_item DO
         v_pr_number      = l_pr_item.PR_NUMBER;
         v_pr_item_number = l_pr_item.PR_ITEM_NUMBER;
-        v_local_dtm      = NOW();
+        --v_local_dtm      = NOW();
         v_system_dtm     = NOW();
+
+        SELECT ADD_SECONDS(TO_SECONDDATE(NOW()), 60*60*9)  -- 초*분*시간(+9시간)  -- by dokim
+        INTO   v_local_dtm
+        FROM   DUMMY
+        ;
 
         /* 공통 Check - Start */
         /* 구매요청검토 화면의 모든 작업은 구매요청생성상태코드(pr_create_status_code)가 결재완료(30), 생성완료(50) 상태에서만 가능하다. */
@@ -285,13 +290,21 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
+                        SELECT MIN(PD.PR_ITEM_NUMBER)
+                        INTO   v_pr_item_number  -- 메세지에 실제 진행중인 품목으로 보여주기 위해 설정
+                        FROM   OP_PU_PR_DTL PD
+                        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        ;
+
                         SIGNAL status_check SET MESSAGE_TEXT = '다른 진행중인 요청건이 존재해서 재작성 요청을 할 수 없습니다.';  -- NOP00019
                     END IF;
 
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(REWRITE)';  -- NOP00034
+                            SIGNAL txn_error SET MESSAGE_TEXT = '구매요청 검토 프로세스 오류.(재작성요청)';  -- NOP00034
                         END;
 
                         -- PR_NUMBER로 한번에 Update 하자.
@@ -304,11 +317,13 @@ BEGIN
                         AND    PM.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PM.PR_NUMBER      = l_pr_item.PR_NUMBER
                         ;
-
-                        /*
+                        
                         -- DTL은 Update 할 필요가 있을까? 어차피 INIT상태에서만 재작성 요청이 가능하므로 Update 안함.
+                        -- 재작성 상태로 바꾸면서 approval_date, confirmed_date를 변경해야 하나? 우선 confirmed_date를 NULL로 하자.
                         UPDATE OP_PU_PR_DTL PD
                         SET    PD.PR_PROGRESS_STATUS_CODE = 'INIT'
+                              --,PD.APPROVAL_DATE = NULL
+                              ,PD.CONFIRMED_DATE = NULL
                               ,PD.LOCAL_UPDATE_DTM  = :v_local_dtm
                               ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER
                               ,PD.SYSTEM_UPDATE_DTM = :v_system_dtm
@@ -316,7 +331,6 @@ BEGIN
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                         ;
-                        */
                     END;
 
                 ELSEIF (:I_JOB_TYPE = 'CLOSING') THEN
@@ -355,7 +369,7 @@ BEGIN
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(CLOSING)';  -- NOP00032
+                            SIGNAL txn_error SET MESSAGE_TEXT = '구매요청 검토 프로세스 오류.(마감)';  -- NOP00032
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -412,7 +426,7 @@ BEGIN
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(CLOSING_CANCEL)';  -- NOP00033
+                            SIGNAL txn_error SET MESSAGE_TEXT = '구매요청 검토 프로세스 오류.(마감취소)';  -- NOP00033
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -465,7 +479,7 @@ BEGIN
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(CHANGE)';  -- NOP00031
+                            SIGNAL txn_error SET MESSAGE_TEXT = '구매요청 검토 프로세스 오류.(구매담당자변경)';  -- NOP00031
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -516,7 +530,7 @@ BEGIN
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(RFQ)';  -- NOP00035
+                            SIGNAL txn_error SET MESSAGE_TEXT = '구매요청 검토 프로세스 오류.(RFQ작성)';  -- NOP00035
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -568,7 +582,7 @@ BEGIN
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(BIDDING)';  -- NOP00036
+                            SIGNAL txn_error SET MESSAGE_TEXT = '구매요청 검토 프로세스 오류.(입찰작성)';  -- NOP00036
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -586,7 +600,7 @@ BEGIN
                     END;
 
                 ELSE
-                    SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Processing error.(Please Check Job Type)';  -- NOP00037
+                    SIGNAL param_error SET MESSAGE_TEXT = '구매요청 검토 프로세스 오류.(작업유형을 확인하세요.)';  -- NOP00037
                 END IF;
 
         --END IF;
@@ -600,6 +614,8 @@ BEGIN
     /**** Business Logic - End ****/
 
     --COMMIT;
-    O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, 'It has been processed successfully.' AS RETURN_MSG FROM DUMMY;  -- NOP00038
+    --O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, 'It has been processed successfully.' AS RETURN_MSG FROM DUMMY;  -- NOP00038
+    O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, '성공적으로 처리되었습니다.' AS RETURN_MSG FROM DUMMY;  -- NOP00038
+    
 
 END;

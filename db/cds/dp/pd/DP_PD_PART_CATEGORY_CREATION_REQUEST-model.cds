@@ -30,6 +30,7 @@ entity Pd_Part_Category_Creation_Request_View {
         request_title                        : String;
         request_category_name                : String;
         similar_category_code                : String;
+        similar_category_name                : String;
         requestor_empno                      : String;
         requestor                            : String;
         request_date_time                    : DateTime;
@@ -40,4 +41,5 @@ entity Pd_Part_Category_Creation_Request_View {
         category_creator                     : String;
         create_category_code                 : String;
         create_category_name                 : String;
+        local_update_dtm                     : DateTime;
 };

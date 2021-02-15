@@ -75,14 +75,14 @@
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text="Level Name(Local)" design="Bold" required="true"/> 
+                                    <Label text="{I18N>/LEVEL_LOCAL_NAME}" design="Bold" required="true"/> 
                                         <Input id="general_vendor_pool_local_name" placeholder="Input data"></Input> 
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text="Level Name(Eng)*" design="Bold" required="true"/> 
+                                    <Label text="{I18N>/LEVEL_ENG_NAME}" design="Bold" required="true"/> 
                                     <Input id="general_vendor_pool_english_name" placeholder="Input data" liveChange=".chkReplaceChange"></Input> 
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
@@ -117,6 +117,7 @@
                                         <SearchField id="general_repr_department_name"
                                             search=".onDetailInputWithDeptValuePress" 
                                             change="resetDetailCode"
+                                            width="20rem"
                                             />
                                         <Input id="general_repr_department_code" placeholder="Input data" visible ="false"></Input>
                                     </HBox>
@@ -214,7 +215,7 @@
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_general_maker_material_code_mngt_flag">
-                                    <Label text="Maker P/N" design="Bold" required="true" width="8rem"/> 
+                                    <Label text="{I18N>/MAKER_MATERIAL_MNG_FLAG}" design="Bold" required="true" width="8rem"/> 
                                         <!-- <Switch id="general_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -290,7 +291,7 @@
                                 <VBox id="v_general_dom_oversea_netprice_diff_rate">
                                     <Label text = "{I18N>/OVERSEA_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                     <HBox>
-                                        <Input id="general_dom_oversea_netprice_diff_rate"></Input>
+                                        <Input id="general_dom_oversea_netprice_diff_rate" width="13rem"></Input>
                                         <Label class ="sapUiTinyMarginTop" text=" % " design="Bold" />
                                     </HBox>
                                     <layoutData>
@@ -302,7 +303,7 @@
                                 <VBox id="v_general_domestic_net_price_diff_rate">
                                     <Label text="{I18N>/DOMESTIC_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                     <HBox>
-                                        <Input id="general_domestic_net_price_diff_rate"></Input>
+                                        <Input id="general_domestic_net_price_diff_rate" width="13rem"></Input>
                                         <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                     </HBox>    
                                     <layoutData>
@@ -332,6 +333,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="sppListAdd"     type="Emphasized" text="{I18N>/ADDITION}"        press=".supplierAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="sppListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".supplierDelRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="rTableSupExportButton" text="" type="Transparent" press=".onSupExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                        
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
@@ -355,12 +357,14 @@
                                     </table:template>
                                 </table:Column>
                                 
-                                <table:Column label="{I18N>/SUPPLIER_NAME}" hAlign="Center" width="14em" filterProperty="supplier_local_name">
+                                <table:Column  width="14em" filterProperty="supplier_local_name">
+                                    <Label text="{I18N>/SUPPLIER_LOCAL_NAME}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{suplist>supplier_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/SUPPLIER_NAME}" hAlign="Center" width="14em" filterProperty="supplier_english_name">
+                                <table:Column  width="18em" filterProperty="supplier_english_name">
+                                    <Label text="{I18N>/SUPPLIER_ENGLISH_NAME}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{suplist>supplier_english_name}" wrapping="false" />
                                     </table:template>
@@ -375,9 +379,9 @@
                                         <Text text="{suplist>supplier_company_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="거래상태" hAlign="Center" width="8em" filterProperty="supplier_status_code">
+                                <table:Column label="{I18N>/STATUS}" hAlign="Center" width="6em" filterProperty="supplier_status_code">
                                     <table:template>
-                                        <Text text="{suplist>inactive_status_code}" wrapping="false" />
+                                        <Text text="{suplist>inactive_status_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <!-- <table:Column label="거래상태" width="8em" filterProperty="supplier_status_code">
@@ -385,7 +389,7 @@
                                         <Text text="{suplist>inactive_status_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>                                 -->
-                                <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" hAlign="Center" width="8em" filterProperty="supeval_control_flag">
+                                <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" hAlign="Center" width="7em" filterProperty="supeval_control_flag">
                                     <table:template>
                                         <Switch id="suptable_supeval_control_flag" state="{suplist>supeval_control_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -395,7 +399,7 @@
                                         <!-- <Text text="{suplist>supeval_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" hAlign="Center" width="10em" filterProperty="supeval_control_start_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" hAlign="Center" width="9em" filterProperty="supeval_control_start_date">
                                     <table:template>
                                         <!-- <DatePicker  
                                         placeholder="Date" 
@@ -421,7 +425,7 @@
                                         <!-- <Text text="{suplist>supeval_control_start_date}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" hAlign="Center" width="10em" filterProperty="supeval_control_end_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" hAlign="Center" width="9em" filterProperty="supeval_control_end_date">
                                     <table:template>
                                     <!-- <DatePicker 
                                      value="{ path: 'suplist>supeval_control_end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" 
@@ -442,7 +446,7 @@
                                         
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/RM_CONTROL_FLAG}" hAlign="Center" width="8em" filterProperty="supplier_rm_control_flag">
+                                <table:Column label="{I18N>/RM_CONTROL_FLAG}" hAlign="Center" width="7em" filterProperty="supplier_rm_control_flag">
                                     <table:template>
                                         <Switch id="suptable_supplier_rm_control_flag" state="{suplist>supplier_rm_control_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -458,7 +462,7 @@
                                         
                                     </table:template>
                                 </table:Column> -->
-                                <table:Column label="{I18N>/USE_FLAG}" hAlign="Center" width="8em" filterProperty="vendor_pool_mapping_use_flag">
+                                <table:Column label="{I18N>/USE_FLAG}" hAlign="Center" width="6em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
                                         <!-- <Switch id="suptable_vendor_pool_mapping_use_flag" state="{suplist>vendor_pool_mapping_use_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -473,7 +477,7 @@
                                         <Text text="{sppList>register_reason}" wrapping="false" />
                                     </table:template>
                                 </table:Column> -->
-                                <table:Column label="{I18N>/REG_DATE}" hAlign="Center" width="8em" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" hAlign="Center" width="11em" filterProperty="local_update_dtm">
                                     <table:template>
                                     <!-- <DatePicker  
                                         placeholder="Date" 
@@ -511,6 +515,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="metListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".materialAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="metListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".materialDelRow"   enabled="{mode>/viewFlag}" />                                    
+                                    <Button id="rTableMatExportButton" text="" type="Transparent" press=".onMatExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                                                                
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
@@ -549,7 +554,8 @@
                                             />                                        
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/MATERIAL_SPEC}" hAlign="Center" width="50%" filterProperty="material_desc">
+                                <table:Column  width="50%" filterProperty="material_desc">
+                                    <Label text="{I18N>/MATERIAL_SPEC}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{matlist>material_desc}" wrapping="false" />
                                     </table:template>
@@ -648,7 +654,7 @@
                                         <Text text="{manlist>user_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column> -->
-                                <table:Column label="이름(EN)" width="0em" filterProperty="user_english_name">
+                                <table:Column label="{I18N>/ENG_NAME}" width="0em" filterProperty="user_english_name">
                                     <table:template>
                                         <Text text="{manlist>user_english_name}" wrapping="false" />
                                     </table:template>
@@ -664,7 +670,8 @@
 
                                     </table:template>
                                 </table:Column>                                                             -->
-                                <table:Column label="{I18N>/DEPARTMENT}" hAlign="Center" width="40%" filterProperty="department_korean_name">
+                                <table:Column  width="40%" filterProperty="department_korean_name">
+                                    <Label text="{I18N>/DEPARTMENT}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{manlist>department_local_name}" wrapping="false" />
                                     </table:template>

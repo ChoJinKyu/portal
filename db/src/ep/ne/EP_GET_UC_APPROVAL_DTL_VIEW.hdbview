@@ -33,6 +33,7 @@ select
     ,dtl.system_update_dtm
     ,dtl.item_sequence
     ,sup.supplier_code
+    ,mst.ep_item_class_code
 from ep_uc_approval_mst as mst
 inner join ep_uc_approval_dtl as dtl
 on mst.tenant_id = dtl.tenant_id

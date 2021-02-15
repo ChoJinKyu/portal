@@ -1,0 +1,459 @@
+<mvc:View controllerName="sp.vi.materialMgt.controller.MaterialList" 
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:t="sap.ui.table"
+  xmlns:layout="sap.ui.layout"
+  xmlns:tnt="sap.tnt"
+  xmlns:lib-m="ext.lib.control.m"
+  displayBlock="true"
+  height="100%">
+    <f:DynamicPage
+        headerExpanded="true"
+        showFooter="true"
+        toggleHeaderOnTitleClick="true">
+       <f:title>
+        <f:DynamicPageTitle>
+          <f:heading>
+            <Title text="단가품의 상세 목록" />
+          </f:heading>
+          <f:actions>
+            <Button text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
+          </f:actions>
+        </f:DynamicPageTitle>
+      </f:title>
+      <f:header>
+        <f:DynamicPageHeader pinnable="true">
+          <!--Filterbar 시작-->
+          <form:SimpleForm
+            editable="true"
+            layout="ResponsiveGridLayout"
+            adjustLabelSpan="false">
+                <form:content>
+                    <!-- 플랜트(Plant) 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/PLANT}"></Label>
+                        <ComboBox width="100%" selectedKey="{filterModel>/plant_code}"
+                            items="{ path: 'rootModel>/org_Plant'}" >
+                            <items>
+                                <core:Item key="{rootModel>plant_code}" text="{rootModel>plant_code} [{rootModel>plant_name}]" />
+                            </items> 
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 플랜트(Plant) 끝 -->
+                    
+                    <!-- 적용일자(Apply Data) 시작 -->
+                   <VBox>
+                        <Label text="{I18N>/APPLY}{I18N>/APPLY}"></Label>
+                        <DateRangeSelection
+                             value="{
+                                    parts: [
+                                        {path: 'filterModel>/dateValue'}, 
+                                        {path: 'filterModel>/secondDateValue'}
+                                    ], 
+                                    type: 'sap.ui.model.type.DateInterval',
+                                    formatOptions: { UTC: true, format: 'yMd' }
+                                }" />
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 적용일자(Apply Data) 끝 -->
+
+                     <!-- 구매담당자(BUYER) 시작 -->
+                    <VBox height="56px">
+                        <Label text="{I18N>/BUYER}"></Label>
+                        <MultiInput id="multiInputWithEmployeeValueHelp"
+                            placeholder="Choose employees from the ValueHelp" showValueHelp="true"
+                            valueHelpRequest=".onMultiInputWithEmployeeValuePress($event, 'multiInputWithEmployeeValueHelp')" />
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 등록자(Register) 끝 -->
+
+                    <!-- 자재타입(Net Price Type) 시작 -->
+                    <VBox>
+                        <Label text="Net Price Type"></Label>
+                        <ComboBox width="100%" selectedKey="{filterModel>/net_price_type}"
+                            items="{ path: 'rootModel>/net_price_type'}" >
+                            <items>
+                                <core:Item key="{rootModel>code}" text="{rootModel>code_description}" />
+                            </items> 
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 자재타입(Net Price Type) 끝 -->
+
+                    <!-- 관리/시세(Management/Market Price) 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/MANAGEMENT}/{I18N>/MARKET_PRICE}"></Label>
+                        <ComboBox width="100%" selectedKey="{filterModel>/management_marketPrice}"
+                            items="{ path: 'rootModel>/management_marketPrice'}" >
+                            <items>
+                                <core:Item key="{rootModel>code}" text="{rootModel>code_description}" />
+                            </items> 
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 관리/시세(Management/Market Price) 끝 -->
+
+                    <!-- 협력사풀코드(Vendor Pool Code) 시작 -->
+                    <VBox height="56px">
+                        <Label text="{I18N>/VENDOR_POOL_CODE}"></Label>
+                        <MultiInput id="multiInputVendorPoolValueHelp"
+                            placeholder="Choose vendorpool from the ValueHelp" showValueHelp="true"
+                            valueHelpRequest="" />
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 협력사풀코드(Vendor Pool Code) 끝 -->
+
+                    <!-- 사업부(BUSINESS_DIVISION) 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/BUSINESS_DIVISION}"></Label>
+                        <ComboBox width="100%" selectedKey="{filterModel>/bizdivision_code}"
+                            items="{ path: 'rootModel>/org_Division'}" >
+                            <items>
+                                <core:Item key="{rootModel>bizdivision_code}" text="{rootModel>bizdivision_code} [{rootModel>bizdivision_name}]" />
+                            </items> 
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 사업부(BUSINESS_DIVISION) 끝 -->
+
+                    <!-- 공급업체(SUPPLIER) 시작 -->
+                    <VBox height="56px">
+                        <Label text="{I18N>/SUPPLIER}"></Label>
+                        <MultiInput valueHelpRequest=".onInputSupplierWithOrgValuePress" value="{filterModel>/supplier_local_name}"/>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 공급업체(SUPPLIER) 끝 -->
+
+                    <!-- 자재(Material) 시작 -->
+                    <VBox height="56px">
+                        <Label text="{I18N>/MATERIAL}"></Label>
+                        <MultiInput valueHelpRequest=".onInputMaterialMasterValuePress" value="{filterModel>/material_desc}"/>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 자재(Material) 끝 -->
+
+                    <!-- Effective Base(마지막 승인자재) 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/EFFECTIVE_BASE_STATUS}"></Label>
+                        <SegmentedButton id="effectiveBase" selectedKey="{filterModel>/effective_base}" class="sapUiSmallMarginBottom" width="100%" >
+                            <items>
+                                <SegmentedButtonItem text="ALL" key="" />
+                                <SegmentedButtonItem text="Yes" key="true" width="3rem" />
+                                <SegmentedButtonItem text="No" key="false" width="3rem" />
+                            </items>
+                        </SegmentedButton>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- Effective Base(마지막 승인자재) 끝 -->
+
+                    <!-- 전지 Pack 여부 시작 -->
+                    <VBox>
+                        <Label text="전지 Pack"></Label>
+                        <SegmentedButton id="electricPack" selectedKey="{filterModel>/electricPakc_status}" class="sapUiSmallMarginBottom" width="100%" >
+                            <items>
+                                <SegmentedButtonItem text="ALL" key="" />
+                                <SegmentedButtonItem text="Yes" key="true" width="3rem" />
+                                <SegmentedButtonItem text="No" key="false" width="3rem" />
+                            </items>
+                        </SegmentedButton>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 전지 Pack 여부 끝 -->
+                </form:content>
+            </form:SimpleForm>
+            <!--Filterbar 끝-->
+        </f:DynamicPageHeader>
+      </f:header>
+      <f:content>
+        <!--Base Price List 시작-->
+        <t:Table id="listTable"
+            selectionMode="Single"
+            selectionBehavior="RowOnly"
+            rows="{listModel>/results}"
+            visibleRowCountMode="Auto">
+            <t:extension>
+                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                    <Title text="{I18N>/EXCEPTION}{I18N>/MATERIAL} ({= ${listModel>/results}.length || 0})" level="H2"/>
+                    <ToolbarSpacer />
+                    <ToolbarSeparator/>
+                    <Button icon="sap-icon://excel-attachment" press=".onExcelExport" />
+                </OverflowToolbar>
+            </t:extension>
+            <t:columns>
+                <t:Column hAlign="Center" width="8rem">
+                    <Label text="{I18N>/BUSINESS_UNIT}" textAlign="Center" />
+                    <t:template>
+                        <Text text="{listModel>bizunit_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="8rem">
+                    <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>bizdivision_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="8rem">
+                    <Label text="{I18N>/COMPANY}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>affiliate_code}:{listModel>company_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="8rem">
+                    <Label text="{I18N>/PLANT}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>plant_code}:{listModel>plant_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/SUPPLIER_CODE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>supplier_code}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/SUPPLIER}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>supplier_local_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/MATERIAL_CODE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>material_code}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/MATERIAL_DESC}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>material_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/VENDOR_POOL_CODE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>vendor_pool_code}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/VP_LOCAL_NAME}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>vendor_pool_local_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/CURRENCY}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>currency_code}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/UNIT}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>base_uom_code}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/BASE} {I18N>/YEAR}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>base_year}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/APPLY_START_DATE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>apply_start_yyyymm}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/APPLY_END_DATE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>apply_end_yyyymm}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/EFFECTIVE_BASE_STATUS}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>effective_base}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/APPROVAL_NUMBER}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>approval_number}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/REG_DATE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{
+                                path: 'listModel>request_date',
+                                formatter: '.onChangeDateFormat'}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/MANAGEMENT}/{I18N>/MARKET_PRICE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>management_mprice_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="Net Price Type"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>net_price_type_name}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/BUYER}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>buyer_empnm}" />
+                    </t:template>
+                </t:Column>
+                <t:Column headerSpan="11" hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Ni $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>ni_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Co, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>co1_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Co, $/lb" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>co2_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Mn, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>mn_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Li2CO3, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>li1_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Li2CO3, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>li2_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="LiOH, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>li3_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="LiOH, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>li4_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="W, $/Kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>w_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Cu, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>cu_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <t:multiLabels>
+                        <Label text="MetalDetail Price" />
+                        <Label text="Al, $/kg" />
+                    </t:multiLabels>
+                    <t:template>
+                        <Text text="{listModel>al_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="5rem">
+                    <Label text="Fabric"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>fabric_net_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="13rem">
+                    <Label text="Coating Material/Meta"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>coating_mat_net_price}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="10rem">
+                    <Label text="Processing Cost"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>pcst}" />
+                    </t:template>
+                </t:Column>
+            </t:columns>
+        </t:Table>
+        <!--Base Price List 끝-->
+      </f:content>
+    </f:DynamicPage>
+</mvc:View>

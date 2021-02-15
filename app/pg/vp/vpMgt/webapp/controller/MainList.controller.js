@@ -42,6 +42,7 @@ sap.ui.define([
     "ext/cm/util/control/ui/EmployeeDialog",
     "ext/cm/util/control/ui/DepartmentDialog",
     "ext/pg/util/control/ui/MaterialDialogPop",
+    "ext/lib/util/ExcelUtil",
 
 ], function (BaseController,
     History,
@@ -85,7 +86,8 @@ sap.ui.define([
     Column,
     EmployeeDialog,
     DepartmentDialog,
-    MaterialDialogPop
+    MaterialDialogPop,
+    ExcelUtil
 
 
 ) {
@@ -101,6 +103,7 @@ sap.ui.define([
     var pop_orgtype = "";
     var pop_o_unitcode = "";
     var pop_d_state;
+    var pop_c_d_state;
     // var pop_vp_
     var pop_vp_cd = "";
     var pop_p_vp_cd = "";
@@ -131,7 +134,7 @@ sap.ui.define([
         onStatusColor: function (sStautsCodeParam) {
             var sReturnValue = 1;
 
-            if (sStautsCodeParam === "Complated") {
+            if (sStautsCodeParam === "Completed") {
                 sReturnValue = 7;
             }
             return sReturnValue;
@@ -492,7 +495,7 @@ sap.ui.define([
                 if (pop_d_state == "leaf") {
                     MessageToast.show("해당 Operation Unit에서 정의된 레벨 하위는 구성할 수 없습니다.");
                 }
-                else if (pop_h_lv == "1") {
+                else if (pop_d_state == "expanded" && pop_c_d_state == "leaf") {
                     pop_d_state = "leaf"
                     this.byId("pop_higher_level_path").setText(pop_lv);
                     this.byId("pop_operation_unit_name").setText(pop_org);
@@ -534,7 +537,7 @@ sap.ui.define([
                     this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
                     this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);
                 }
-                else {
+                else if (pop_d_state == "expanded" && pop_c_d_state == "expanded"){
                     this.byId("pop_higher_level_path").setText(pop_lv);
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
@@ -598,7 +601,7 @@ sap.ui.define([
                 //     this.byId("pop_operation_unit_name").setText(pop_org);
                 // }
                 // else 
-                if (pop_target_level == "2") {
+                if (pop_d_state == "leaf") {
                     this.byId("pop_higher_level_path").setText(pop_h_path);
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
@@ -686,7 +689,7 @@ sap.ui.define([
                 MessageToast.show("필수값과 Vendor Pool를 입력하세요 ");
             }
         },
-
+        //Vendor Pool Delete
         onDialogDel: function () {
 
             if (this.byId("treeTable").getSelectedIndices().length > 0) {
@@ -711,11 +714,6 @@ sap.ui.define([
                         user_no: "testerNo"
                     }
                 };
-
-
-                // if(){
-
-                // }    
 
                 vpMstList.push({
 
@@ -840,6 +838,7 @@ sap.ui.define([
             // pop_hierarchy_level= row.;
             
             pop_d_state = row.drill_state;
+            pop_c_d_state = row.child_drill_state;
             pop_vp_cd = row.vendor_pool_code;
             console.log(this.getModel("util"));
 
@@ -874,7 +873,7 @@ sap.ui.define([
             this.getView().byId("pop_domestic_net_price_diff_rate").setValue("");
             this.byId("v_pop_plan_base").setVisible(false);
         },
-
+        //Create Vendor Pool PopUp mtl Combo Box View Control
         handlemtlChang: function (event) {
 
             var mtl = this.getView().byId("pop_inp_type_code").getSelectedKey();
@@ -886,7 +885,7 @@ sap.ui.define([
             }
 
         },
-
+        //Vendor Pool Mgt View Control
         handleTable: function (event) {
 
 
@@ -966,7 +965,7 @@ sap.ui.define([
 
         },
 
-
+        //Create Vendor Pool Save
         handleSave: function (oEvent) {
 
             var stenant_id = pop_t_id;
@@ -1559,7 +1558,7 @@ sap.ui.define([
             this.createTreePopupClose();
 
         },
-
+        //Vendor Pool PopUp Tree Table Search
         onDialogSearch: function (event) {
 
             var predicates = [];
@@ -1662,6 +1661,7 @@ sap.ui.define([
             // }
             // this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
         },
+        //Detail Infomation Call (Asap Delete)
         onCellClick: function (oEvent) {
 
             var rowData = oEvent.getParameter('rowBindingContext').getObject();
@@ -1711,6 +1711,7 @@ sap.ui.define([
 
 
         },
+        //Detail Infomation Call
         onMainTableEditButtonPress: function(){
             var oView = this.getView(),
                 oTable = this.byId("mainTable"),         
@@ -1797,6 +1798,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
 		 */
+        //Search Button Press Action
         onPageSearchButtonPress: function (oEvent) {
             // if (oEvent.getParameters().refreshButtonPressed) {
             // 	// Search field's 'refresh' button has been pressed.
@@ -1921,7 +1923,7 @@ sap.ui.define([
 		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
 		 * @private
 		 */
-
+        //Vendor Pool Search
         _applySearch: function (aSearchFilters) {
             console.log("_applySearch!!!");
             that.mainTable = this.byId("mainTable");
@@ -2029,10 +2031,8 @@ sap.ui.define([
             that.mainTable.setVisibleRowCount(oDataLen);
             oView.setBusy(false);
         },
-
+        //Apply Search filter Set
         _getSearchStates: function () {
-
-
 
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
@@ -2262,6 +2262,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -2276,6 +2277,7 @@ sap.ui.define([
                 that.byId("search_Man_Code").setValue(oEvent.mParameters.item.employee_number);
             }.bind(this));
         },
+
         onPopInputWithDeptValuePress: function(){
              this.oPopDeptDialog = new DepartmentDialog({
                 // id:"employeeDialog" ,
@@ -2283,6 +2285,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -2305,6 +2308,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -2319,7 +2323,7 @@ sap.ui.define([
                 that.byId("search_Dept_Code").setValue(oEvent.mParameters.item.department_id);
             }.bind(this));
         },
-
+        //PG Util Supplier PopUp Call
         vhSupplier: function () {
 
             if (this.byId("search_Vp_Code").getValue()) {
@@ -2382,6 +2386,22 @@ sap.ui.define([
 
             //     console.groupEnd();
         },
+        //Vendor Pool MGT Excel Download
+        onExportPress: function (_oEvent) {
+            console.log("export");
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "Vendor Pool List";
+            var oData = this.getModel("list").getProperty("/vpSearchOrderView"); //binded Data
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
+        //ORG, Operation Unit에 해당하는 Vendor Pool Max Lv Check View Control
         checkOrg: function () {
 
             // debugger

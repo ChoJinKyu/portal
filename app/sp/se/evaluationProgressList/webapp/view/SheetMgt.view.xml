@@ -1,0 +1,404 @@
+<mvc:View controllerName="sp.se.evalProgressList.controller.SheetMgt" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:t="sap.ui.table"
+	height="100%">
+    <uxap:ObjectPageLayout 
+        id="sheetMgtPage"
+		alwaysShowContentHeader = "true"
+		upperCaseAnchorBar="false"
+        showFooter="true"
+        toggleHeaderOnTitleClick="false"
+        headerContentPinnable="false"
+        preserveHeaderStateOnScroll="true"
+    >
+		<uxap:headerTitle>
+            <!-- 상세 -->
+            <uxap:ObjectPageDynamicHeaderTitle 
+                pinnable="false"
+            >
+                <uxap:heading>
+                    <Toolbar style="Clear">
+                        <Button icon="sap-icon://nav-back"/>
+                        <Title text="...평가 Sheet 관리"/>
+                    </Toolbar >
+                </uxap:heading>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+            <IconTabBar
+                id="progressBar"
+                expandable="false"
+                expanded="true"
+                class="sapUiNoContentPadding"
+                applyContentPadding="false"
+                select="onSelectIconTabBar"
+                selectedKey="SheetMgt"
+            >
+                <items>
+                    <IconTabFilter
+                        icon="sap-icon://documents"
+                        iconColor="Positive"
+                        text="...평가 Sheet 관리"
+                        design="Horizontal"
+                        key="SheetMgt" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://create-entry-time"
+                        iconColor="Contrast"
+                        text="...평가발의"
+                        design="Horizontal"
+                        key="EvaluInstance" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://show"
+                        iconColor="Negative"
+                        text="...평가 모니터링"
+                        design="Horizontal"
+                        count="0 of 128"
+                        key="" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://kpi-corporate-performance"
+                        iconColor="Critical"
+                        text="...평가 결과조회"
+                        design="Horizontal"
+                        key="" />
+                </items>
+            </IconTabBar>
+		</uxap:headerContent>
+
+		<uxap:sections>
+            <!-- 일반정보 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/GENERAL_INFO}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <form:SimpleForm 
+                            layout="ResponsiveGridLayout"
+                        >
+                            <VBox>
+                                <!-- 평가운영단위 -->
+                                <Label text="{I18N>/EVAL_OP_UNT}" required="true"/>
+                                <ComboBox 
+                                    width="100%"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L2 M3 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <!-- 평가유형 -->
+                                <Label text="{I18N>/VALUATION_TYPE}" required="true"/>
+                                <ComboBox 
+                                    width="100%"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L2 M3 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <!-- 평가연도 -->
+                                <Label text="...평가연도" required="true"/>
+                                <ComboBox 
+                                    width="100%"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L2 M3 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <!-- 평가기간 -->
+                                <Label text="{I18N>/EVAL_PERIOD}" required="true"/>
+                                <SegmentedButton />
+                                <layoutData>
+                                    <layout:GridData span="L6 M3 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <!-- 평가명 -->
+                                <Label text="{I18N>/EVAL_NAME}" required="true"/>
+                                <Input 
+                                    
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L6 M9 S12" linebreak="true"/>
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <!-- 실적집계기간 -->
+                                <Label text="{I18N>/EVAL_AGGRE_PERIOD}" required="true"/>
+                                <DateRangeSelection 
+                                    
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L2 M3 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/EVAL_ITEM}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <t:TreeTable 
+                            id="tblEvaluItem"
+                            enableSelectAll="false"
+                            minAutoRowCount="10"
+                            visibleRowCountMode="Auto"
+                            enableColumnReordering="false"
+                            class="sapFDynamicPageAlignContent" 
+                            rowSelectionChange="onRowSelectionChange"
+                            selectionMode="Single"
+                            selectionBehavior="Row"
+                            fixedColumnCount="1"
+                            rows="{
+                                path : 'viewModel>/Tree',
+                                parameters : {
+                                    arrayNames: ['nodes'],
+                                    numberOfExpandedLevels: 5
+                                }
+                            }"
+                        >
+                            <t:extension>
+                                <OverflowToolbar>
+                                    <Title id="title" text="{I18N>/EVAL_ITEM}({=${viewModel>/Tree/list}.length || 0})" level="H2"/> 
+                                    <ToolbarSeparator/>
+                                    <ToolbarSpacer/>
+                                    <Button 
+                                        text="{I18N>/NEW}" type="Transparent" press="onPressCreate($event, 'NewLevel')" 
+                                        visible="{=
+                                            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded' &amp;&amp;
+                                            ${viewModel>/Btn/UserEvalType}
+                                        }"
+                                    />
+                                    <Button 
+                                        text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" 
+                                        visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
+                                    />
+                                    <Button 
+                                        text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" 
+                                        visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
+                                    />
+                                    <MenuButton 
+                                        icon="sap-icon://create-form"
+                                        visible="{=${viewModel>/App/layout} === 'TwoColumnsMidExpanded'}"
+                                    >
+                                        <menu>
+                                            <Menu>
+                                                <MenuItem 
+                                                    text="{I18N>/NEW}" press="onPressCreate($event, 'NewLevel')"
+                                                    visible="{=
+                                                        !!${viewModel>/Btn/UserEvalType}
+                                                    }"
+                                                />
+                                                <MenuItem text="{I18N>/CREATE_SAME_LEVEL}" press="onPressCreate($event, 'SameLevel')"/>
+                                                <MenuItem text="{I18N>/CREATE_LOWER_LEVEL}" press="onPressCreate($event, 'LowLevel')"/>
+                                            </Menu>
+                                        </menu>
+                                    </MenuButton>
+                                    <Button icon="sap-icon://expand-all" tooltip="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
+                                    <Button icon="sap-icon://collapse-all" tooltip="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
+                                    <Button icon="sap-icon://excel-attachment" type="Transparent" press="onExcelExport" />
+                                    <Button icon="sap-icon://action-settings" type="Transparent" press="onMainTablePersoButtonPressed"/>
+                                </OverflowToolbar>
+                            </t:extension>
+                            
+                            <t:columns>
+                                <!-- 평가항목 -->
+                                <t:Column label="{I18N>/EVAL_ITEM}" name="" width="20em">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_article_name}" tooltip="{viewModel>evaluation_article_name}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_article_name"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 평가운영단위 -->
+                                <t:Column label="{I18N>/EVAL_OP_UNT}" name="" width="7em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_operation_unit_name}" tooltip="{viewModel>evaluation_operation_unit_name}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_operation_unit_name"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 평가유형명 -->
+                                <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" name="" width="7em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_type_name}" tooltip="{viewModel>evaluation_type_name}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_type_name"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 평가수행방식 -->
+                                <t:Column label="{I18N>/EVAL_EXEC_MODE}" name="" width="7em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_execute_mode_name}" tooltip="{viewModel>evaluation_execute_mode_name}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_execute_mode_name"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 평가항목구분-->
+                                <t:Column label="{I18N>/EVAL_ITEM_TYPE}" name="" width="7em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_article_type_name}" tooltip="{viewModel>evaluation_article_type_name}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_article_type_name"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 배점유형 -->
+                                <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" name="" width="7em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_distrb_scr_type_name}" tooltip="{viewModel>evaluation_distrb_scr_type_name}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_distrb_scr_type_name"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- Scale유형 -->
+                                <t:Column label="{I18N>/SCLE_TYPE}" name="" width="7em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_result_input_type_name}" tooltip="{viewModel>evaluation_result_input_type_name}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_result_input_type_name"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 평가항목설명 -->
+                                <t:Column label="{I18N>/EVAL_ITEM_DESC}" name="" width="20em">    
+                                    <t:template>
+                                        <Text text="{viewModel>evaluation_article_desc}" tooltip="{viewModel>evaluation_article_desc}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="evaluation_article_desc"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 정렬 -->
+                                <t:Column label="{I18N>/SORT}" name="" width="5em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>sort_sequence}" tooltip="{viewModel>sort_sequence}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="sort_sequence"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 작성자 -->
+                                <t:Column label="{I18N>/WRITER}" name="" width="8em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{viewModel>writer}" tooltip="{viewModel>writer}" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="writer"/>
+                                    </t:customData>
+                                </t:Column>
+                                <!-- 작성일자 -->
+                                <t:Column label="{I18N>/WRITE_DATE}" width="8em" hAlign="Center">    
+                                    <t:template>
+                                        <Text text="{
+                                            path:'viewModel>write_tm',
+                                            type:'sap.ui.model.odata.type.DateTime',
+                                            constraints : {
+                                                displayFormat: 'Date'
+                                            }
+                                        }" tooltip="{
+                                            path:'viewModel>write_tm',
+                                            type:'sap.ui.model.odata.type.DateTime',
+                                            constraints : {
+                                                displayFormat: 'Date'
+                                            }
+                                        }" wrapping="false" />
+                                    </t:template>
+                                    <t:customData>
+                                        <core:CustomData key="property" value="write_tm"/>
+                                        <core:CustomData key="type" value="date"/>
+                                    </t:customData>
+                                </t:Column>
+
+
+                                <!-- <t:Column id="colNone" label="" width="2rem" >
+                                    <t:template>
+                                        <ObjectStatus icon="sap-icon://feeder-arrow"   />
+                                    </t:template>
+                                </t:Column> -->
+                            </t:columns>
+                        </t:TreeTable>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="...배점설계">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <t:Table
+
+                        >
+
+                        </t:Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="...평가 배점설계 지정">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <t:Table
+                            
+                        >
+
+                        </t:Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+            
+		</uxap:sections>
+
+		<uxap:footer>
+			<OverflowToolbar>
+                <ToolbarSpacer />
+                <Button 
+                    text="{I18N>/UPDATE}" 
+                    enabled="{=
+                        !${viewModel>/App/EditMode} &amp;&amp;
+                        ${viewModel>/Args/new} !== 'Y'
+                    }"
+                    type="Transparent" 
+                    press="onPressModeChange($event, 'UPDATE')" 
+                />
+				<Button 
+                    text="{I18N>/CANCEL}" 
+                    enabled="{viewModel>/App/EditMode}"
+                    type="Transparent" 
+                    press="onPressModeChange($event, 'CANCEL')" 
+                />
+				<Button 
+                    text="{I18N>/DELETE}" 
+                    enabled="{=
+                        !${viewModel>/App/EditMode} &amp;&amp;
+                        ${viewModel>/Args/new} !== 'Y'
+                    }"
+                    type="Transparent" 
+                    press="onPressDelete" 
+                />
+                <Button 
+                    text="{I18N>/SAVE}" 
+                    enabled="{=
+                        ${viewModel>/App/EditMode} ||
+                        ${viewModel>/Args/new} === 'Y'
+                    }"
+                    type="Emphasized" 
+                    press="onPressSave" 
+                />
+			</OverflowToolbar>
+		</uxap:footer>
+        
+	</uxap:ObjectPageLayout>
+</mvc:View>

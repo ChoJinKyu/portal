@@ -17,9 +17,19 @@ sap.ui.define([
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
 
-            var oBasePriceArlMgtRootData = {tenantId: "L2100", company_code : "LGCKR", number: {symbol: "", currency: "KRW"}};
+             var oUserInfo = {"tenantId" : "L2100", 
+                             "company_code" : "LGCKR",
+                             "user_empno" : "5453",
+                             "user_empnm" : "**영",
+                             "bizunit_code" : "BIZ00100",
+                             "bizunit_name" : "석유화학"
+                            };
+                             
 
-            this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
+            this.setModel(new JSONModel(oUserInfo), "userModel");
+            var oUserModel = this.getModel("userModel");
+
+            this.setModel(new JSONModel(), "rootModel");
             this.setModel(new Multilingual().getModel(), "I18N");
 
             this.setModel(new JSONModel(), "currModel");
@@ -32,7 +42,7 @@ sap.ui.define([
             // 품의 유형
             var oCodeModel = this.getModel("codeMgt");
             var aOrgDivFilter = [];
-                aOrgDivFilter.push(new Filter("tenant_id", FilterOperator.Contains, oRootModel.getProperty("/tenantId")));
+                aOrgDivFilter.push(new Filter("tenant_id", FilterOperator.Contains, oUserModel.getProperty("/tenantId")));
                 aOrgDivFilter.push(new Filter("group_code", FilterOperator.Contains, 'SP_VI_NET_PRICE_TYPE_CODE'));
             oCodeModel.read("/CodeLanguages", {
                 filters : aOrgDivFilter,
@@ -48,7 +58,7 @@ sap.ui.define([
             
             // 사업부 조회
             var oOrgModel = this.getModel("orgCode");
-            var aOrgDivFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            var aOrgDivFilter = [new Filter("tenant_id", FilterOperator.EQ, oUserModel.getProperty("/tenantId"))];
             oOrgModel.read("/Org_Division", {
                 filters : aOrgDivFilter,
                 success : function(data){
@@ -62,7 +72,7 @@ sap.ui.define([
             });
 
             // 법인 조회
-            var aOrgCompFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            var aOrgCompFilter = [new Filter("tenant_id", FilterOperator.EQ, oUserModel.getProperty("/tenantId"))];
             oOrgModel.read("/Org_Company", {
                 filters : aOrgCompFilter,
                 success : function(data){
@@ -77,7 +87,7 @@ sap.ui.define([
 
             // 통화 조회
             var oCurryModel = this.getModel("currencyODataModel");
-            var aOrgCompFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            var aOrgCompFilter = [new Filter("tenant_id", FilterOperator.EQ, oUserModel.getProperty("/tenantId"))];
             oCurryModel.read("/Currency", {
                 filters : aOrgCompFilter,
                 success : function(data){
@@ -91,7 +101,7 @@ sap.ui.define([
             });
 
             // 플랜트 조회
-            var aOrgPlantFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            var aOrgPlantFilter = [new Filter("tenant_id", FilterOperator.EQ, oUserModel.getProperty("/tenantId"))];
             oOrgModel.read("/Org_Plant", {
                 filters : aOrgPlantFilter,
                 success : function(data){
@@ -121,7 +131,7 @@ sap.ui.define([
             var oBasePriceArlModel = this.getModel("basePriceArl");
             oBasePriceArlModel.setSizeLimit(3000);
             var aOrgMetalFilter = [];
-                aOrgMetalFilter.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
+                aOrgMetalFilter.push(new Filter("tenant_id", FilterOperator.EQ, oUserModel.getProperty("/tenantId")));
             oBasePriceArlModel.read("/Base_Price_Aprl_Material", {
                 filters : aOrgMetalFilter,
                 success : function(data){
@@ -155,7 +165,7 @@ sap.ui.define([
 
             //상태값 조회
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oUserModel.getProperty("/tenantId")));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
 
             this.getModel("commonODataModel").read("/Code", {

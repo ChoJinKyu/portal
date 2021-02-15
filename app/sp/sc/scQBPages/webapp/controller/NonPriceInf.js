@@ -28,6 +28,13 @@ sap.ui.define([
             // }
 
         },
+        // onExit: function() {
+        //     console.log( "onExit!!!!!!!!!");
+        //     if (that._NonPriceInfPopup) {
+        //         that._NonPriceInfPopup.destroy(true);
+        //     }
+
+        // },
         showNonPriceInfo: function () {
 
             if (!that._NonPriceInfPopup) {
@@ -58,7 +65,7 @@ sap.ui.define([
                 console.log("조회 번호", that._NPSelectIndex);
                 var oModel = that.getView().getModel("NegoHeaders"); //viewModel
 
-                var oNPHeader = oModel.getData().ItemsNonPrice[that._NPSelectIndex];
+                var oNPHeader = that._selectedNPItem;//oModel.getData().ItemsNonPrice[that._NPSelectIndex];
                 // var oNPHeader = oModel.oData.NPHeader[that._NPSelectIndex];
                 // var oHeader = oNPHeaderModel.oData
 
@@ -92,28 +99,35 @@ sap.ui.define([
 
                     oCells[0].setText(String(i + 1));
 
-                    if (h4 == "1") {
+                    oCells[1].setDateValue( new Date(aa.supeval_from_date) );
+                    oCells[2].setDateValue( new Date(aa.supeval_to_date) );
+                    oCells[3].setValue(aa.supeval_from_value);
+                    oCells[4].setValue(aa.supeval_to_value);
+                    oCells[5].setValue(aa.supeval_text_value);
+                    oCells[6].setValue(aa.supeval_score);
 
-                        oCells[1].setValue(aa.v1);
+                    // if (h4 == "1") {
 
-                        oCells[2].setValue(aa.v2);
+                    //     oCells[1].setValue(aa.v1);
 
-                        oCells[3].setValue(aa.v3);
+                    //     oCells[2].setValue(aa.v2);
 
-                    } else if (h4 == "2") {
+                    //     oCells[3].setValue(aa.v3);
 
-                        oCells[4].setValue(aa.v1);
+                    // } else if (h4 == "2") {
 
-                        oCells[5].setValue(aa.v2);
+                    //     oCells[4].setValue(aa.v1);
 
-                        oCells[6].setValue(aa.v3);
+                    //     oCells[5].setValue(aa.v2);
 
-                    } else if (h4 == "3") {
+                    //     oCells[6].setValue(aa.v3);
 
-                        oCells[7].setValue(aa.v1);
+                    // } else if (h4 == "3") {
 
-                        oCells[8].setValue(aa.v2);
-                    }
+                    //     oCells[7].setValue(aa.v1);
+
+                    //     oCells[8].setValue(aa.v2);
+                    // }
                     tab.addItem(addItem);
                 }
 
@@ -155,7 +169,7 @@ sap.ui.define([
                 // type: sap.m.ButtonType.Emphasized,
                 text: "취소",
                 press: function (e) {
-                    that._NonPriceInfPopup.close();
+                    that._NonPriceInfPopup.close();                    
                     this._NPTableClear(e);
                 }.bind(this)
             });
@@ -233,8 +247,6 @@ sap.ui.define([
                 }
             }
 
-
-
         },
         _NPTableArrayAdd: function (NPHeaderData) {
             var oModel = that.getView().getModel("NegoHeaders");//that.getView().getModel("viewModel");
@@ -250,9 +262,9 @@ sap.ui.define([
 
         },
         _NPTableArrayUpdate: function (NPHeaderData) {
-            var oModel = that.getView().getModel("viewModel");
+            var oModel = that.getView().getModel("NegoHeaders");//that.getView().getModel("viewModel");
 
-            var oNPHeader = oModel.oData.NPHeader;
+            var oNPHeader = oModel.getData().ItemsNonPrice;// oModel.oData.NPHeader;
 
             oNPHeader[that._NPSelectIndex] = NPHeaderData;
 
@@ -294,7 +306,7 @@ sap.ui.define([
                 flag = false;
                 errorObject.push("h6");
             } else {
-                var ItemCheckFlag = this._NPCheckItem(e, oPopupType, oHeader.h6);
+                var ItemCheckFlag = this._NPCheckItem(e, oPopupType, oHeader.target_score);
                 if (ItemCheckFlag == false) {
                     flag = ItemCheckFlag;
                 }
@@ -326,11 +338,11 @@ sap.ui.define([
                 var checkTemp2 = oPopupType === "1" ? "supeval_to_date" : oPopupType === "2" ? "supeval_to_value" : "supeval_score";
                 var checkTemp3 = "supeval_score";
 
-                if (oItems[i][checkTemp1].length < 1) {
+                if (oItems[i][checkTemp1] === null || oItems[i][checkTemp1].length < 1) {
                     Iflag = false;
                     oErrorRow.push("1");
                 }
-                if (oItems[i][checkTemp2].length < 1) {
+                if (oItems[i][checkTemp2] === null || oItems[i][checkTemp2].length < 1) {
                     Iflag = false;
                     oErrorRow.push("2");
                 }
@@ -429,13 +441,18 @@ sap.ui.define([
                 var errItem = errItemObject[k];
                 var oItem = oItems[errItem.index];
                 var oCells = oItem.getCells();
+                
+                // target score
+                oCells[6].setValueState("Error");
+                oCells[6].setValueStateText("필수 입력")
+
                 // var oValue = errItem.
-                for (var j = 0; j < errItem.value.length; j++) {
-                    var CellNumber = errItem.value[j];
-                    CellNumber = parseInt(CellNumber) + (3 * IntType - 3);
-                    oCells[CellNumber].setValueState("Error");
-                    oCells[CellNumber].setValueStateText("필수 입력")
-                }
+                // for (var j = 0; j < errItem.value.length; j++) {
+                //     var CellNumber = errItem.value[j];
+                //     CellNumber = parseInt(CellNumber) + (3 * IntType - 3);
+                //     oCells[CellNumber].setValueState("Error");
+                //     oCells[CellNumber].setValueStateText("필수 입력")
+                // }
 
                 console.log("errItem === ", errItem);
             }
@@ -500,7 +517,7 @@ sap.ui.define([
                     //     continue;
                     // }
 
-                    if (oItem.getCells()[1].getDateValue() > oItem.getCells()[2].getDateValue() && oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
+                    if (oItem.getCells()[1].getDateValue() > oItem.getCells()[2].getDateValue() ){//&& oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
                         oItem.getCells()[1].setValueState("Error");
                         // oItem.getCells()[1].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
                         oItem.getCells()[1].setValueStateText("'Response Value From' must be less than 'Response Value To'");
@@ -514,6 +531,16 @@ sap.ui.define([
                 //     oCell = oItem.getCells()[6];
                 // } else if (IntType == "3") {
                 //     oCell = oItem.getCells()[8];
+                }else if( IntType == "2") {
+                    if( Number(oItem.getCells()[3].getValue()) > Number(oItem.getCells()[4].getValue()) ){//&& oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
+                        oItem.getCells()[3].setValueState("Error");
+                        oItem.getCells()[3].setValueStateText("'Response Value From' must be less than 'Response Value To'");
+                        oItem.getCells()[4].setValueState("Error");
+                        oItem.getCells()[4].setValueStateText("'Response Value From' must be less than 'Response Value To'");
+
+                        flag = false;
+                        console.log("from : to =====", oItem.getCells()[3].getValue(), " : ", oItem.getCells()[4].getValue());
+                    }
                 }
                 var value = oCell.getValue();
 
@@ -536,7 +563,7 @@ sap.ui.define([
             var PVbox = e.oSource.getParent().getContent()[0].getItems()[0];
 
             var oNPHeaderData = {};
-            oNPHeaderData._row_state_                       = "C";
+            oNPHeaderData._row_state_                       = that._selectedNPItem === null ? "C" : "";//"C";
             oNPHeaderData.nonpr_supeval_attr_type_code      = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
             oNPHeaderData.nonpr_requirements_text           = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
             oNPHeaderData.note_content                      = PVbox.getItems()[1].getItems()[0].getItems()[1].getValue();

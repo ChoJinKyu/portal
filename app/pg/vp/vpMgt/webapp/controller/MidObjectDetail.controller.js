@@ -27,6 +27,7 @@ sap.ui.define([
     "sap/ui/table/Column",  
     'sap/m/Label',   
     "ext/pg/util/control/ui/MaterialDialogPop",
+    "ext/lib/util/ExcelUtil",
 ], function (
     BaseController, 
     History, 
@@ -55,12 +56,19 @@ sap.ui.define([
     HBox,
     Column,
     Label,
-    MaterialDialogPop) {
+    MaterialDialogPop,
+    ExcelUtil) {
     "use strict";
     
     var oTransactionManager;
     var that;
     var generaloDataRst = {};
+    var rsTenantId;
+	var rsVendorPool;
+    var rsOrgCode;
+    var rsOperationUnitCode;
+    var rsTempType;
+    var rsDrill;
 	return BaseController.extend("pg.vp.vpMgt.controller.MidObjectDetail", {
 
         dateFormatter: DateFormatter,
@@ -442,7 +450,7 @@ sap.ui.define([
 		 * @public
 		 */
         onDetailSaveButtonPress: function(){
-			 MessageToast.show("Do 1st Proc!");
+			//  MessageToast.show("Do 1st Proc!");
             var doSave =  true;
              var oModel = this.getModel("vpMappingProc"),
                 oView = this.getView(),   
@@ -651,7 +659,7 @@ sap.ui.define([
             if(!doSave){
                 return false;
             }
-
+            that = this;
             $.ajax({
                 url: urlInfo,
                 type: "POST",
@@ -675,8 +683,11 @@ sap.ui.define([
                     sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
                     //MessageToast.show(sMsg);
                     console.log(data.value[0].return_msg);
-                    alert(sMsg);
+                    // alert(sMsg);
                     MessageToast.show(sMsg);
+
+                    that.onReSearchThisPageDtl();
+
                 },
                 error: function (e) {
                     var eMessage = "callProcError",
@@ -704,9 +715,9 @@ sap.ui.define([
 
                     sMsg = oBundle.getText(eMessage);
                     if(errorType === 'E'){
-                        alert(sMsg);                    
+                        // alert(sMsg);                    
                     }else{
-                        alert(eMessageDetail);                    
+                        // alert(eMessageDetail);                    
                     }
                     
                     
@@ -747,6 +758,14 @@ sap.ui.define([
             this._sTempType = oArgs.temptype;
             this._sDrill = oArgs.drill;
 
+            rsTenantId = oArgs.tenantId;
+            rsVendorPool = oArgs.vendorPool;
+            rsOrgCode = oArgs.orgCode;
+            rsOperationUnitCode = oArgs.operationUnitCode;
+            rsTempType = oArgs.temptype;
+            rsDrill = oArgs.temptype;
+
+
             var predicates = [];
             var predicates1 = [];
             var predicates2 = [];
@@ -782,11 +801,13 @@ sap.ui.define([
             this._metrialSearch(predicates3);
             this._managerSearch(predicates2);
 
-            // this.sppListTbl = this.byId("sppListTbl"); 
+            // this.sppListTbl = this.byId("sppListTbl"); .clearSelection();
             this.sppListTbl = this.byId("sppListTbl");
             this.metListTbl = this.byId("metListTbl");
             this.mngListTbl = this.byId("mngListTbl");
-
+            this.sppListTbl.clearSelection();
+            this.metListTbl.clearSelection();
+            this.mngListTbl.clearSelection();
 
             if(this._sDrill == "leaf"){
                 this.byId("pageSubSection2").setVisible(true);
@@ -846,6 +867,149 @@ sap.ui.define([
 
         },
 
+        onReSearchThisPageDtl: function() {
+
+            var oView = this.getView();
+            // this.getView().setModel(this.getOwnerComponent().getModel());
+
+            // rsTenantId;
+            // rsVendorPool;
+            // rsOrgCode;
+            // rsOperationUnitCode;
+            // rsTempType;
+            // rsDrill;
+
+
+            var predicates = [];
+            var predicates1 = [];
+            var predicates2 = [];
+            var predicates3 = [];
+            if (!!this._sTenantId) {
+                    predicates.push(new Filter("tenant_id", FilterOperator.EQ, rsTenantId));
+                    predicates1.push(new Filter("tenant_id", FilterOperator.EQ, rsTenantId));
+                    predicates2.push(new Filter("tenant_id", FilterOperator.EQ, rsTenantId));
+                    predicates3.push(new Filter("tenant_id", FilterOperator.EQ, rsTenantId));
+                }
+            if (!!this._sOrgCode) {
+                    predicates.push(new Filter("org_code", FilterOperator.EQ, rsOrgCode));
+                    predicates1.push(new Filter("org_code", FilterOperator.EQ, rsOrgCode));
+                    predicates2.push(new Filter("org_code", FilterOperator.EQ, rsOrgCode));
+                    predicates3.push(new Filter("org_code", FilterOperator.EQ, rsOrgCode));
+                }
+            if (!!this._sOperationUnitCode) {
+                    predicates1.push(new Filter("operation_unit_code", FilterOperator.EQ, rsOperationUnitCode));
+                }         
+            if (!!this._sVendorPool) {
+                    predicates.push(new Filter("vendor_pool_code", FilterOperator.EQ, rsVendorPool));
+                    predicates1.push(new Filter("vendor_pool_code", FilterOperator.EQ, rsVendorPool));
+                    predicates2.push(new Filter("vendor_pool_code", FilterOperator.EQ, rsVendorPool));
+                    predicates3.push(new Filter("vendor_pool_code", FilterOperator.EQ, rsVendorPool));
+                }  
+            if (!!this._sTempType) {
+                    predicates.push(new Filter("temp_type", FilterOperator.EQ, rsTempType));
+                }  
+
+            predicates.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
+            this._generalInfo(predicates1);
+            this._supplySearch(predicates);
+            this._metrialSearch(predicates3);
+            this._managerSearch(predicates2);
+
+            // this.sppListTbl = this.byId("sppListTbl"); 
+            this.sppListTbl = this.byId("sppListTbl");
+            this.metListTbl = this.byId("metListTbl");
+            this.mngListTbl = this.byId("mngListTbl");
+            this.sppListTbl.clearSelection();
+            this.metListTbl.clearSelection();
+            this.mngListTbl.clearSelection();
+
+            if(this._sDrill == "leaf"){
+                this.byId("pageSubSection2").setVisible(true);
+                this.byId("pageSubSection3").setVisible(true);
+                this.byId("pageSubSection4").setVisible(true);
+
+                // this.byId("v_derail_information").setVisible(true);
+                this.byId("v_general_repr_department_code").setVisible(true);
+                this.byId("v_general_industry_class_code").setVisible(true);
+                this.byId("v_general_inp_type_code").setVisible(true);
+                this.handlemtlChang(event);
+                // this.byId("v_general_plan_base").setVisible(false);
+                this.byId("v_general_regular_evaluation_flag").setVisible(true);
+                this.byId("v_general_maker_material_code_mngt_flag").setVisible(true);
+                this.byId("v_general_sd_exception_flag").setVisible(true);
+                // this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(true);
+                this.byId("v_general_equipment_grade_code").setVisible(true);
+                this.byId("v_general_equipment_type_code").setVisible(true);
+                this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(true);
+                this.byId("v_general_domestic_net_price_diff_rate").setVisible(true);
+
+
+                if (this._sOperationUnitCode == "EQUIPMENT") {
+                    this.byId("v_general_equipment_grade_code").setVisible(true);
+                    this.byId("v_general_equipment_type_code").setVisible(true);
+                    this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(false);
+                    this.byId("v_general_domestic_net_price_diff_rate").setVisible(false);
+                    // this.byId("equipment_box").setVisible(true);
+                    // this.byId("rate_box").setVisible(false);
+                } else {
+                    this.byId("v_general_equipment_grade_code").setVisible(false);
+                    this.byId("v_general_equipment_type_code").setVisible(false);
+                    this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(true);
+                    this.byId("v_general_domestic_net_price_diff_rate").setVisible(true);
+                    // this.byId("equipment_box").setVisible(false);
+                    // this.byId("rate_box").setVisible(true);                
+                }
+
+            }else{
+                this.byId("pageSubSection2").setVisible(false);
+                this.byId("pageSubSection3").setVisible(false);
+                this.byId("pageSubSection4").setVisible(false);
+
+                // this.byId("v_derail_information").setVisible(false);
+                this.byId("v_general_repr_department_code").setVisible(false);
+                this.byId("v_general_industry_class_code").setVisible(false);
+                this.byId("v_general_inp_type_code").setVisible(false);
+                this.byId("v_general_regular_evaluation_flag").setVisible(false);
+                this.byId("v_general_maker_material_code_mngt_flag").setVisible(false);
+                this.byId("v_general_sd_exception_flag").setVisible(false);
+                // this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(false);
+                this.byId("v_general_equipment_grade_code").setVisible(false);
+                this.byId("v_general_equipment_type_code").setVisible(false);
+                this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(false);
+                this.byId("v_general_domestic_net_price_diff_rate").setVisible(false);                
+            }
+
+        },
+        //Supplier Excel Download
+        onSupExportPress: function (_oEvent) {
+            console.log("export");
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "Supplier List";
+            var oData = this.getModel("suplist").getProperty("/VpSupplierDtlView"); //binded Data
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
+        //Material Excel Download
+        onMatExportPress: function (_oEvent) {
+            console.log("export");
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "Material list";
+            var oData = this.getModel("matlist").getProperty("/vpMaterialDtlView"); //binded Data
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },        
         //행추가
         supplierAddRow: function () {
             var oModel = this.getModel("suplist");

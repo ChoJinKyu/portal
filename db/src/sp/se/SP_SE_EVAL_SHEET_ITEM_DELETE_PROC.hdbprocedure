@@ -1,0 +1,67 @@
+PROCEDURE SP_SE_EVAL_SHEET_ITEM_DELETE_PROC (
+    IN I_ITEM_TYPE TABLE(TENANT_ID     NVARCHAR(5)                       /*테넌트ID*/
+                        ,COMPANY_CODE  NVARCHAR(10)                      /*회사코드*/
+                        ,ORG_TYPE_CODE NVARCHAR(2)                       /*조직유형코드*/
+                        ,ORG_CODE      NVARCHAR(10)                      /*조직코드*/
+                        ,EVALUATION_OPERATION_UNIT_CODE   NVARCHAR(30)   /*평가운영단위코드*/
+                        ,EVALUATION_TYPE_CODE             NVARCHAR(30)   /*평가유형코드*/
+                        ,EVALUATION_ARTICLE_CODE          NVARCHAR(15)   /*평가항목코드*/
+                        ,REGULAR_EVALUATION_ID            NVARCHAR(100)  /*정기평가ID*/
+                        )
+   ,IN I_USER_ID NVARCHAR(255)
+   ,OUT O_MSG TABLE(RETURN_CODE NVARCHAR(2),
+                    RETURN_MSG NVARCHAR(1000))
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN
+    /*평가Sheet관리 - 평가항목삭제*/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+    /* SQL Error 처리 */
+    BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+        
+            O_MSG = SELECT  'NG' RETURN_CODE, 'Insert Evaluation Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
+            RESIGNAL;
+        END;
+    
+        /*Node 삭제*/
+        DELETE
+        FROM   SP_SE_EVAL_SHEET_EVAL_ITEM ESEI
+        WHERE  EXISTS (SELECT 1
+                       FROM   (SELECT EIET.TENANT_ID
+                                     ,EIET.COMPANY_CODE
+                                     ,EIET.ORG_TYPE_CODE
+                                     ,EIET.ORG_CODE
+                                     ,EIET.EVALUATION_OPERATION_UNIT_CODE
+                                     ,EIET.EVALUATION_TYPE_CODE
+                                     ,EIET.EVALUATION_ARTICLE_CODE
+                                     ,ITEM.REGULAR_EVALUATION_ID
+                               FROM   SP_SE_EVAL_ITEM_EXPORT_TREE_VIEW EIET
+                                     ,:I_ITEM_TYPE ITEM
+                               WHERE  1=1
+                               AND    EIET.TENANT_ID                      = ITEM.TENANT_ID                     
+                               AND    EIET.COMPANY_CODE                   = ITEM.COMPANY_CODE                  
+                               AND    EIET.ORG_TYPE_CODE                  = ITEM.ORG_TYPE_CODE                 
+                               AND    EIET.ORG_CODE                       = ITEM.ORG_CODE                      
+                               AND    EIET.EVALUATION_OPERATION_UNIT_CODE = ITEM.EVALUATION_OPERATION_UNIT_CODE
+                               AND    EIET.EVALUATION_TYPE_CODE           = ITEM.EVALUATION_TYPE_CODE          
+                               AND    INSTR(EIET.EVALUATION_ARTICLE_PATH_CODE, ITEM.EVALUATION_ARTICLE_CODE) > 0
+                              ) SUB_I
+                       WHERE  1 = 1
+                       AND    SUB_I.TENANT_ID                      = ESEI.TENANT_ID                     
+                       AND    SUB_I.COMPANY_CODE                   = ESEI.COMPANY_CODE                  
+                       AND    SUB_I.ORG_TYPE_CODE                  = ESEI.ORG_TYPE_CODE                 
+                       AND    SUB_I.ORG_CODE                       = ESEI.ORG_CODE                      
+                       AND    SUB_I.EVALUATION_OPERATION_UNIT_CODE = ESEI.EVALUATION_OPERATION_UNIT_CODE
+                       AND    SUB_I.EVALUATION_TYPE_CODE           = ESEI.EVALUATION_TYPE_CODE
+                       AND    SUB_I.EVALUATION_ARTICLE_CODE        = ESEI.EVALUATION_ARTICLE_CODE
+                       AND    SUB_I.REGULAR_EVALUATION_ID          = ESEI.REGULAR_EVALUATION_ID
+                      );
+        
+    END;
+    COMMIT;
+    :O_MSG.INSERT(('OK','Successfully Saved.==>'||RECORD_COUNT(:I_ITEM_TYPE)),1);
+END

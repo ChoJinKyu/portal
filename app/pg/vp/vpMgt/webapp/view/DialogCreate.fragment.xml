@@ -249,6 +249,7 @@
                                         <SearchField id="pop_repr_department_name"
                                             search=".onPopInputWithDeptValuePress" 
                                             change="resetCode"
+                                            width="20rem"
                                             />
                                         <Input id="pop_repr_department_code" placeholder="Input data" visible ="false"></Input>
                                     </HBox>                                        
@@ -347,7 +348,7 @@
                                     </layoutData> 
                                 </VBox>                         
                                 <VBox id="v_pop_maker_material_code_mngt_flag" >
-                                    <Label text = "Maker P/N" design="Bold" required="true" width="8rem"/> 
+                                    <Label text = "{I18N>/MAKER_MATERIAL_MNG_FLAG}" design="Bold" required="true" width="8rem"/> 
                                     
                                         <!-- <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -417,7 +418,7 @@
                                 <VBox id="v_internal_rate">
                                     <Label text = "{I18N>/OVERSEA_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                         <HBox>
-                                            <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" ></Input> 
+                                            <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  width="13rem"></Input> 
                                             <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                         </HBox>                                
                                     <layoutData>
@@ -427,7 +428,7 @@
                                 <VBox id="v_external_rate">
                                     <Label text = "{I18N>/DOMESTIC_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                         <HBox>
-                                            <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  ></Input> 
+                                            <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" width="13rem" ></Input> 
                                             <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                         </HBox>
                                     <layoutData>

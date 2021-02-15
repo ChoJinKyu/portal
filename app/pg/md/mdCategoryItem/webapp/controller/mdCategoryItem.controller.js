@@ -116,6 +116,7 @@ sap.ui.define([
 
       // Display row number without changing data
       onAfterRendering: function () {
+        this.getModel("list").setProperty("/mainMode", "Main"); 
         var qs = this.getQueryStringObject();
         
         if(qs != ""){
@@ -267,20 +268,46 @@ sap.ui.define([
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
+
+        if (this.getModel("list").getChanges().length > 0) {
+            MessageBox.confirm(this.getModel("I18N").getText("/NPG10018"), {
+                title: this.getModel("I18N").getText("/CONFIRM"),
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        
+                        this.getModel("list").setProperty("/mainMode", "Detail");  
+                        this.getRouter().navTo("midPage", {
+                            layout: oNextUIState.layout, 
+                            company_code: oRecord.company_code,
+                            org_type_code: oRecord.org_type_code,
+                            org_code: oRecord.org_code,
+                            spmd_category_code: oRecord.spmd_category_code,
+                            spmd_character_code: oRecord.spmd_character_code,
+                            spmd_character_sort_seq: oRecord.spmd_character_sort_seq
+                        });
+                    }
+                }.bind(this)
+            })
+        }else{
+            this.getModel("list").setProperty("/mainMode", "Detail"); 
+            this.getRouter().navTo("midPage", {
+                layout: oNextUIState.layout, 
+                company_code: oRecord.company_code,
+                org_type_code: oRecord.org_type_code,
+                org_code: oRecord.org_code,
+                spmd_category_code: oRecord.spmd_category_code,
+                spmd_character_code: oRecord.spmd_character_code,
+                spmd_character_sort_seq: oRecord.spmd_character_sort_seq
+            });
+        }
                 
-        this.getRouter().navTo("midPage", {
-            layout: oNextUIState.layout, 
-            company_code: oRecord.company_code,
-            org_type_code: oRecord.org_type_code,
-            org_code: oRecord.org_code,
-            spmd_category_code: oRecord.spmd_category_code,
-            spmd_character_code: oRecord.spmd_character_code,
-            spmd_character_sort_seq: oRecord.spmd_character_sort_seq
-        });
+        
             
     },
 
       onSearch: function () {
+            this.mainModeFlag = this.getModel("list").getProperty("/mainMode");
             var aFilters = [];
             var aSorter = [];
             // aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
@@ -294,11 +321,11 @@ sap.ui.define([
             var org_combo = this.getView().byId("searchChain");
             var category = this.getView().byId("searchCategory");
             if(bizunit_combo == null || org_combo.getValue() == ""){
-                MessageToast.show("사업본부를 설정해주세요.");
+			    MessageToast.show(this.getModel("I18N").getText("/NPG10003"));
                 return;
             }
             if(category_combo == null || category.getValue() == ""){
-                MessageToast.show("범주를 설정해주세요.");
+			    MessageToast.show(this.getModel("I18N").getText("/NPG10012"));//범주를 설정해주세요
                 return;
             }
 
@@ -342,7 +369,14 @@ sap.ui.define([
                         "$expand": "org_infos,category_infos"
                     },
                     success: (function (oData) {
-                    this.getView().setBusy(false);
+                        // this.onSearch();
+                        this.getView().setBusy(false);
+                        if(oData.results == null || oData.results.length < 1){
+                            MessageToast.show(this.getModel("I18N").getText("/NPG10004"));
+                        }else{
+                            this.getModel("list").setProperty("/mainMode", this.mainModeFlag); 
+                            //MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));
+                        }
                     }).bind(this)
                 });
 
@@ -351,9 +385,28 @@ sap.ui.define([
         },
       
       onAdd: function () { 
+
+            if (this.getModel("list").getChanges().length > 0) {
+                MessageBox.confirm(this.getModel("I18N").getText("/NPG10018"), {
+                    title: this.getModel("I18N").getText("/CONFIRM"),
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            this.onNavToMidPage();
+                        }
+                    }.bind(this)
+                })
+            }else{
+                this.onNavToMidPage();
+            }
+ 
+        },
+
+        onNavToMidPage: function(){
+            this.getModel("list").setProperty("/mainMode", "Detail"); 
             var ctgrCode = this.getView().byId("searchCategory").setSelectedItem().getSelectedKey();
             if(ctgrCode=="" || ctgrCode==null){
-                MessageToast.show("범주를 설정해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NPG10012"));
                 return;
             }         
             var oTable = this.byId("mainTable"), 
@@ -382,38 +435,6 @@ sap.ui.define([
                 spmd_character_code: "new",
                 spmd_character_sort_seq: ctgrSeq
             });
-
-            // var [tId, mName, sEntity, aCol] = arguments;
-            // //tableId modelName EntityName tenant_id
-            // var oTable = this.byId(tId), //mainTable
-            //     oModel = this.getView().getModel(mName); //list
-            // var oDataArr, oDataLength, lastCtgrSeq, ctgrSeq;
-            // // this._setEditChange(this.rowIndex,"R");
-
-            // if(oModel.oData){
-            //     oDataArr = oModel.getProperty("/MdCategoryItem"); 
-            //     oDataLength = oDataArr.length;
-            //     lastCtgrSeq = oDataArr[oDataLength-1].spmd_character_sort_seq;
-            //     ctgrSeq = String(parseInt(lastCtgrSeq)+1);
-            // }
-
-            // oModel.addRecord({
-			// 	"tenant_id": "L2100",
-			// 	"company_code": "*",
-			// 	"org_type_code": "BU",
-            //     "org_code": "BIZ00200",
-            //     "spmd_category_code":"C001", //*************파라미터값으로 변경 필요************ */
-			// 	"spmd_character_code": "",
-			// 	"spmd_character_sort_seq": ctgrSeq,
-            //     "spmd_character_code_name": "",
-            //     "spmd_character_desc": ""
-            //     // "local_create_dtm": new Date(),
-            //     // "local_update_dtm": new Date()
-            // }, "/MdCategoryItem" , oDataLength);  
-
-            // this.rowIndex = oDataLength;
-		    // this.byId("buttonMainAddRow").setEnabled(false);
-            // // this._setEditChange(this.rowIndex,"E");  
         },
 
       onSave: function () {
@@ -422,26 +443,26 @@ sap.ui.define([
         var model = view.getModel(mName);
         // Validation
         if (model.getChanges() <= 0) {
-			MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-          return;
+            MessageToast.show(this.getModel("I18N").getText("/NPG10010"));
+            return;
         }
         if(this.Validator.validate(this.byId(tId)) !== true){
             // MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
             return;
         }
 
-        MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+        MessageBox.confirm(this.getModel("I18N").getText("/NPG10011"), {
           title: this.getModel("I18N").getText("/SAVE"),
           initialFocus: sap.m.MessageBox.Action.CANCEL,
           onClose: function (sButton) {
             if (sButton === MessageBox.Action.OK) {
               view.setBusy(true);
               model.submitChanges({
-                groupId: "MdCategoryItem",
                 success: function (oEvent) {
                   view.setBusy(false);
                   MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
-                  this.byId("mainTable").getBinding("items").refresh();
+                //   this.byId("mainTable").getBinding("items").refresh();
+                  this.onSearch();
                 }.bind(this)
               });
             }
@@ -529,7 +550,7 @@ sap.ui.define([
         var category_combo = this.getView().byId("searchChain");
         var sChain = this.getView().byId("searchChain").getSelectedKey();
         if(sChain == null || category_combo.getValue() == ""){
-            MessageToast.show("사업본부를 설정해주세요.");
+			    MessageToast.show(this.getModel("I18N").getText("/NPG10003"));
             return;
         }
         this.moveSelectedItem("Up");
@@ -539,7 +560,7 @@ sap.ui.define([
         var category_combo = this.getView().byId("searchChain");
         var sChain = this.getView().byId("searchChain").getSelectedKey();
         if(sChain == null || category_combo.getValue() == ""){
-            MessageToast.show("사업본부를 설정해주세요.");
+			    MessageToast.show(this.getModel("I18N").getText("/NPG10003"));
             return;
         }
         this.moveSelectedItem("Down");
@@ -571,8 +592,9 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
      * @private
      */
-    _onRoutedThisPage: function(){            
-        // this.getModel("list").setProperty("/headerExpanded", true);            
+    _onRoutedThisPage: function(){     
+        this.mainModeFlag = "Main";
+        this.getModel("list").setProperty("/mainMode", "Main");                
     },
 
     });

@@ -56,6 +56,11 @@
                     <!-- 작업일 -->
                     <Column hAlign="Center" width="auto">
                         <Text text="{I18N>/WORK_DATE}" />
+                        <customData>
+                            <core:CustomData key="bindName" value="local_update_dtm" />
+                            <core:CustomData key="type" value="DateTime" />
+                            <core:CustomData key="format" value="yyyy-mm-dd HH:mm:ss" />
+                        </customData>
                     </Column>
                     <!-- 작업유형 -->
                     <Column hAlign="Center" width="auto">

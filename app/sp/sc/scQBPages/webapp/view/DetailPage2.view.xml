@@ -526,8 +526,17 @@
                                                     <VBox width="25%">
                                                         <Label  text="{I18N>/CONTACT_POINT}:" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input id="inputContactPoint" placeholder="사용자 이름" width="90%" showValueHelp="true" valueHelpRequest=".onPressBuyerPop" 
-                                                            value="{NegoHeaders>/contact_point/employee_name}"/>
+                                                        <!-- <Input id="inputContactPoint" placeholder="사용자 이름" width="90%" showValueHelp="true" valueHelpRequest=".onPressBuyerPop" 
+                                                            value="{NegoHeaders>/contact_point/employee_name}"/> -->
+                                                            <!-- ,
+                                                                sorter: { path: 'NegoHeaders>/contact_point' } -->
+                                                        <MultiInput id="inputContactPoint" width="90%" showValueHelp="true" valueHelpRequest=".onPressBuyerPop" valueHelpOnly="true"
+                                                            maxTokens="1" 
+                                                            suggestionItems="{
+                                                                path: 'NegoHeaders>/contact_point'
+                                                            }">
+                                                            <core:Item text="{employee_name}" key="{employee_number}"/>
+                                                        </MultiInput>
                                                     </VBox>
                                                     <!-- <VBox width="15%" /> -->
                                                     <VBox width="25%">
@@ -857,7 +866,6 @@
                                                         <Button  text="{I18N>/VENDOR_POOL} Change" type="Transparent" press=".createConfirmBox"  />
                                                         <Button  text="{I18N>/SIMPLE_CHANGE}" type="Transparent" press=".onSimpleChangePress"  /> 
 
-
                                                         <u:FileUploader uploadComplete="handleUploadComplete" change=".createConfirmBox" style="Transparent" 
                                                             buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"  />
                                                         
@@ -998,7 +1006,8 @@
                                                             <Label text="BPA Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right"/>
+                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right" 
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bpa_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1035,7 +1044,8 @@
                                                             <Label text="Vendor Pool" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input showValueHelp="true" value="{NegoHeaders>vendor_pool_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input showValueHelp="true" value="{NegoHeaders>vendor_pool_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueHelpRequest=".createConfirmBox"/>
                                                                     <Text text="{NegoHeaders>vendor_pool_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1061,6 +1071,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        placeholder="소수점 3자리까지"
                                                                         valueState="{NegoHeaders>__metadata/_valueStates/request_quantity/valueState}" 
                                                                         valueStateText="{NegoHeaders>__metadata/_valueStates/request_quantity/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>request_quantity}" visible="{=!${propInfo>/isEditMode}}" />
@@ -1119,7 +1130,8 @@
                                                             <Label text="회신 통화" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input showValueHelp="true" value="{NegoHeaders>response_currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input showValueHelp="true" value="{NegoHeaders>response_currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueHelpRequest=".createConfirmBox"/>
                                                                     <Text text="{NegoHeaders>response_currency_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1140,7 +1152,8 @@
                                                             <Label text="Start Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
+                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number"
+                                                                         placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bidding_start_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1162,7 +1175,8 @@
                                                             <Label text="Target Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
+                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number"
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bidding_target_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1352,7 +1366,6 @@
                                                 </t:Table>  
                                             </smartTable:SmartTable>
 
-
                                             <Panel id="panel_SuppliersContent" width="100%" expandable="true" expanded="false" headerText="{I18N>/SUPPLIERS_TITLE}">
                                                 <form:SimpleForm editable="true"  layout="ColumnLayout"
                                                     columnsM="2" width="100%" 
@@ -1491,7 +1504,7 @@
                                                         <headerToolbar>
                                                             <OverflowToolbar visible="{=${propInfo>/isEditMode}}">
                                                                 <ToolbarSpacer/>
-                                                                <Button  text="Supplier Add" type="Transparent" press=".onSupplierLoadPopup" />
+                                                                <Button  text="{I18N>/ROW_ADD}" type="Transparent" press=".onSupplierLoadPopup" />
                                                                 <Button  text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDeleteSuppliers" />
                                                             </OverflowToolbar>
                                                         </headerToolbar>
@@ -1527,9 +1540,9 @@
                                                                     }" />
                                                                     <Label text="{NegoItemPrices>supplier_code}"/>
                                                                     <Label text="{NegoItemPrices>supplier_name}"/>
-                                                                    <Label text="{NegoItemPrices>evaluation_type_name}"/>
+                                                                    <Label text="{NegoItemPrices>supplier_register_status_name}"/>
                                                                     <Label text="{NegoItemPrices>supplier_type_name}"/>
-                                                                    <Label text="{NegoItemPrices>only_maker_flag}"/>
+                                                                    <Label text="{NegoItemPrices>maker_only_flag}"/>
                                                                     <Button icon="sap-icon://value-help" />
                                                                 </cells>
                                                             </ColumnListItem>

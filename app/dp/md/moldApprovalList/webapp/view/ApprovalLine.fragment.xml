@@ -108,8 +108,13 @@
                                 </Input>
                                 <Text text="{approver>approve_comment}" />
                                 <Text text="{approver>approve_status_code}" />
-                                <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
-                                <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
+                                <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" enabled="{mode>/editFlag}"/>
+                                <Button
+                                        icon="sap-icon://delete" 
+                                        press=".setApproverRemoveRow(${approver>approve_sequence})" 
+                                        tooltip="delete" 
+                                        enabled="{= ${approver>/Approvers}.length === 1 ? false : ${mode>/editFlag}}"
+                                />
                             </cells>
                         </ColumnListItem>
                     </items>
