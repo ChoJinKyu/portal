@@ -28,6 +28,13 @@ sap.ui.define([
             // }
 
         },
+        // onExit: function() {
+        //     console.log( "onExit!!!!!!!!!");
+        //     if (that._NonPriceInfPopup) {
+        //         that._NonPriceInfPopup.destroy(true);
+        //     }
+
+        // },
         showNonPriceInfo: function () {
 
             if (!that._NonPriceInfPopup) {
@@ -162,7 +169,7 @@ sap.ui.define([
                 // type: sap.m.ButtonType.Emphasized,
                 text: "취소",
                 press: function (e) {
-                    that._NonPriceInfPopup.close();
+                    that._NonPriceInfPopup.close();                    
                     this._NPTableClear(e);
                 }.bind(this)
             });
@@ -257,9 +264,9 @@ sap.ui.define([
 
         },
         _NPTableArrayUpdate: function (NPHeaderData) {
-            var oModel = that.getView().getModel("viewModel");
+            var oModel = that.getView().getModel("NegoHeaders");//that.getView().getModel("viewModel");
 
-            var oNPHeader = oModel.oData.NPHeader;
+            var oNPHeader = oModel.getData().ItemsNonPrice;// oModel.oData.NPHeader;
 
             oNPHeader[that._NPSelectIndex] = NPHeaderData;
 
@@ -436,13 +443,18 @@ sap.ui.define([
                 var errItem = errItemObject[k];
                 var oItem = oItems[errItem.index];
                 var oCells = oItem.getCells();
+                
+                // target score
+                oCells[6].setValueState("Error");
+                oCells[6].setValueStateText("필수 입력")
+
                 // var oValue = errItem.
-                for (var j = 0; j < errItem.value.length; j++) {
-                    var CellNumber = errItem.value[j];
-                    CellNumber = parseInt(CellNumber) + (3 * IntType - 3);
-                    oCells[CellNumber].setValueState("Error");
-                    oCells[CellNumber].setValueStateText("필수 입력")
-                }
+                // for (var j = 0; j < errItem.value.length; j++) {
+                //     var CellNumber = errItem.value[j];
+                //     CellNumber = parseInt(CellNumber) + (3 * IntType - 3);
+                //     oCells[CellNumber].setValueState("Error");
+                //     oCells[CellNumber].setValueStateText("필수 입력")
+                // }
 
                 console.log("errItem === ", errItem);
             }
@@ -553,7 +565,7 @@ sap.ui.define([
             var PVbox = e.oSource.getParent().getContent()[0].getItems()[0];
 
             var oNPHeaderData = {};
-            oNPHeaderData._row_state_                       = "C";
+            oNPHeaderData._row_state_                       = that._selectedNPItem === null ? "C" : "";//"C";
             oNPHeaderData.nonpr_supeval_attr_type_code      = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
             oNPHeaderData.nonpr_requirements_text           = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
             oNPHeaderData.note_content                      = PVbox.getItems()[1].getItems()[0].getItems()[1].getValue();
