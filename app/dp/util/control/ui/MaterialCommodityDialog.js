@@ -27,7 +27,7 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oMaterialCommodity = new Input({ placeholder: this.getModel("I18N").getText("/COMMODITY")});
+            this.oMaterialCommodity = new Input();
             
             this.oMaterialCommodity.attachEvent("change", this.loadData.bind(this));
             

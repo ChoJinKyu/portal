@@ -28,7 +28,7 @@ sap.ui.define([
 
         createSearchFilters: function(){
 
-            this.oMaterialGroup = new Input({ placeholder: this.getModel("I18N").getText("/GROUP_CODE")});
+            this.oMaterialGroup = new Input();
             this.oMaterialGroup.attachEvent("change", this.loadData.bind(this));
             
             return [
