@@ -82,6 +82,7 @@ sap.ui.define([
                                 "list": jNodes[1]
                             }
                         }), "tree");
+
                     //    var treeData = this.getModel("tree").oData.pdPartCategoryView.list.results;
 
                     //    for(var i=0; i>treeData.legnth; i++) {
@@ -167,6 +168,13 @@ sap.ui.define([
                 this.oInfoMessageDialog.open();
             },
 
+            onRowSelectionChange: function(oEvent) {
+                console.log(oEvent);
+                this.getRouter().navTo("addCreatePage", {
+                    requestNumber: "CCR2102050022"
+                }, true);
+                
+            }
         });
     }
 );
