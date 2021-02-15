@@ -137,7 +137,7 @@ sap.ui.define([
                     });
                     this.oSearchMaterialClassDialog.attachEvent("apply", function(oEvent){ 
                         console.log(oEvent.getParameter("item"));
-                        this.byId("searchMaterialClassInput").setValue(oEvent.getParameter("item").material_class_name);
+                        this.byId("searchMaterialClassInput").setValue(oEvent.getParameter("item").material_class_code);
                     }.bind(this));
                 }
 
@@ -183,7 +183,7 @@ sap.ui.define([
                     });
                     this.oSearchMaterialCommodityDialog.attachEvent("apply", function(oEvent){ 
                         console.log(oEvent.getParameter("item"));
-                        this.byId("searchMaterialCommodityInput").setValue(oEvent.getParameter("item").commodity_name);
+                        this.byId("searchMaterialCommodityInput").setValue(oEvent.getParameter("item").commodity_code);
                     }.bind(this));
                 }
 
@@ -228,7 +228,7 @@ sap.ui.define([
                     });
                     this.oSearchMaterialGroupDialog.attachEvent("apply", function(oEvent){ 
                         console.log(oEvent.getParameter("item"));
-                        this.byId("searchMaterialGroupInput").setValue(oEvent.getParameter("item").material_group_name);
+                        this.byId("searchMaterialGroupInput").setValue(oEvent.getParameter("item").material_group_code);
                     }.bind(this));
                 }
 
@@ -319,7 +319,7 @@ sap.ui.define([
                     });
                     this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
                         console.log(oEvent.getParameter("item"));
-                        this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_name);
+                        this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
                     }.bind(this));
                 }
 

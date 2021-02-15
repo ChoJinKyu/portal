@@ -10,9 +10,8 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
-    "sap/m/Input",
-    "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
+    "sap/m/Input"
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     var MaterialGroupDialog = Parent.extend("dp.util.control.ui.MaterialGroupDialog", {
@@ -29,7 +28,7 @@ sap.ui.define([
 
         createSearchFilters: function(){
 
-            this.oMaterialGroup = new SearchField({ placeholder: this.getModel("I18N").getText("/GROUP_CODE")});
+            this.oMaterialGroup = new Input({ placeholder: this.getModel("I18N").getText("/GROUP_CODE")});
             this.oMaterialGroup.attachEvent("change", this.loadData.bind(this));
             
             return [
@@ -47,13 +46,29 @@ sap.ui.define([
             return [
                 new Column({
                     width: "30%",
-                    label: new Label({text: this.getModel("I18N").getText("/GROUP_CODE")}),
-                    template: new Text({text: "{material_group_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/GROUP_CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_group_code}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/GROUP_CODE_NAME")}),
-                    template: new Text({text: "{material_group_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/GROUP_CODE_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_group_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 })
             ];
         },
@@ -61,7 +76,7 @@ sap.ui.define([
         loadData: function(){
             var sMaterialGroup = this.oMaterialGroup.getValue(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
                 ];
 
                 if(sMaterialGroup){

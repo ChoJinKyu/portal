@@ -10,9 +10,8 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
-    "sap/m/Input",
-    "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
+    "sap/m/Input"
+], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     var MaterialClassDialog = Parent.extend("dp.util.control.ui.MaterialClassDialog", {
@@ -28,7 +27,7 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oMaterialClassCode = new SearchField({ 
+            this.oMaterialClassCode = new Input({ 
                 placeholder : this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")
             });
             
@@ -49,13 +48,29 @@ sap.ui.define([
             return [
                 new Column({
                     width: "30%",
-                    label: new Label({text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")}),
-                    template: new Text({text: "{material_class_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_class_code}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/NAME")}),
-                    template: new Text({text: "{material_class_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{material_class_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 })
             ];
         },
@@ -63,7 +78,7 @@ sap.ui.define([
         loadData: function(){
             var sMaterialClassCode = this.oMaterialClassCode.getValue(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
                 ];
 
                 if(sMaterialClassCode){

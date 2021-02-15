@@ -107,23 +107,55 @@ sap.ui.define([
             return [
                 new Column({
                     width: "10%",
-                    label: new Label({text: this.getModel("I18N").getText("/COMPANY_CODE")}),
-                    template: new Text({text: "{company_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/COMPANY_CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{company_code}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "15%",
-                    label: new Label({text: this.getModel("I18N").getText("/BIZUNIT_CODE")}),
-                    template: new Text({text: "{bizunit_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/BIZUNIT_CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{bizunit_code}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "20%",
-                    label: new Label({text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")}),
-                    template: new Text({text: "{idea_manager_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{idea_manager_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "50%",
-                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
-                    template: new Text({text: "{department_local_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{department_local_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 })
             ];
         },
