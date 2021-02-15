@@ -903,7 +903,9 @@ sap.ui.define([
         },
         _loadFragment: function (sFragmentName, oHandler) {
             var that = this;
-            if (!this._oFragments[sFragmentName]) {
+            //if (!this._oFragments[sFragmentName]) {
+            if (!this._oFragments[sFragmentName] || !this._oFragments[sFragmentName].getParent()) {
+                if (this._oFragments[sFragmentName]) this._oFragments[sFragmentName].destroy();
                 Fragment.load({
                     id: this.getView().getId(),
                     name: "ep.ne.ucQuotationMgtSup.view." + sFragmentName,

@@ -1096,7 +1096,9 @@ sap.ui.define([
         },
 
         _loadFragment: function (sFragmentName, oHandler) {
-            if (!this._oFragments[sFragmentName]) {
+            //if (!this._oFragments[sFragmentName]) {
+            if (!this._oFragments[sFragmentName] || !this._oFragments[sFragmentName].getParent()) {
+                if (this._oFragments[sFragmentName]) this._oFragments[sFragmentName].destroy();
                 Fragment.load({
                     id: this.getView().getId(),
                     name: "ep.po.loiRequestMgt.view." + sFragmentName,
