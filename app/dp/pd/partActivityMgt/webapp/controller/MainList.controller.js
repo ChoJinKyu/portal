@@ -277,6 +277,9 @@ sap.ui.define([
 
         _getSorter: function () {
             var aSorter = [];
+            aSorter.push(new Sorter("company_code", false));
+            aSorter.push(new Sorter("org_code", false));
+            aSorter.push(new Sorter("part_project_type_code", false));
             aSorter.push(new Sorter("sequence", false));
             return aSorter;
         },
