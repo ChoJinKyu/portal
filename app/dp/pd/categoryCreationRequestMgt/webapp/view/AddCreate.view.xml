@@ -123,9 +123,9 @@
 								<OverflowToolbar>
 									<ToolbarSpacer/>
                                     <Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Emphasized" press=".onAdd" 
-                                        enabled="{viewModel>/editMode}"/>
+                                        visible="{viewModel>/editMode}"/>
 									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDelete"
-                                        enabled="{viewModel>/editMode}"/>
+                                        visible="{viewModel>/editMode}"/>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -143,30 +143,35 @@
 								<ColumnListItem press=".onMidTableItemPress">
 									<cells>
                                         <!-- 상태 -->
-										<Text text="{pdPartCategoryLng>_row_state_}"/>
+										<Text text="{pdPartCategoryLng>_row_state_}"  visible="{viewModel>/editMode}" />
                                         <!-- 언어코드 -->
-                                        
-                                        <ComboBox   
-                                            width="100%"
-                                            enabled="{viewModel>/editMode}"
-                                            placeholder="All"
-                                            showSecondaryValues= "true"
-                                            selectedKey="{pdPartCategoryLng>language_cd}"
-                                            items="{
-                                                path: 'common>/Code',
-                                                filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
-                                                {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                                ]
-                                            }"
-                                        >
-                                        <core:ListItem 
-                                                key="{common>code}" 
-                                                text="{common>code_name}"
-                                                additionalText="{common>code}"/>
-                                        </ComboBox>
+                                        <VBox>
+                                            <ComboBox   
+                                                width="100%"
+                                                visible="{viewModel>/editMode}"
+                                                placeholder="All"
+                                                showSecondaryValues= "true"
+                                                selectedKey="{pdPartCategoryLng>language_cd}"
+                                                items="{
+                                                    path: 'common>/Code',
+                                                    filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                                    ]
+                                                }"
+                                            >
+                                            <core:ListItem 
+                                                    key="{common>code}" 
+                                                    text="{common>code_name}"
+                                                    additionalText="{common>code}"/>
+                                            </ComboBox>
+                                            <Text text="{pdPartCategoryLng>language_cd}" visible="{viewModel>/showMode}" width="100%" textAlign="Center" />
+                                        </VBox>
                                         <!-- 메뉴명 -->
-										<Input value="{pdPartCategoryLng>code_name}"  required="true" enabled="{viewModel>/editMode}"  />
+                                        <VBox>
+										    <Input value="{pdPartCategoryLng>code_name}"  required="true" visible="{viewModel>/editMode}"  />
+                                            <Text text="{pdPartCategoryLng>code_name}" visible="{viewModel>/showMode}" width="100%" textAlign="Left" />
+                                        </VBox>
 
 									</cells>
 								</ColumnListItem>
@@ -204,6 +209,7 @@
                                         required="true"/>
                                     <VBox>
                                         <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" />
+                                        <!-- <Text id="textCateCode"  text="{master>similar_category_code}" visible="{viewModel>/showMode}" width="100%"  /> -->
                                             
                                     </VBox>
                                 </OverflowToolbar>
@@ -319,8 +325,10 @@
                                         <Label text="s" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template  >
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>s_grade_standard_days}"  placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+                                        <VBox>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>s_grade_standard_days}"  placeholder="0" textAlign="Right"  visible="{viewModel>/editMode}"  />
 										<Text text="{pdActivityStdDayView>s_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
+                                        </VBox>
                                     </t:template>
                                 </t:Column>
                                 <t:Column
@@ -331,8 +339,10 @@
                                         <Label text="a" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>a_grade_standard_days}" placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+                                        <VBox>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>a_grade_standard_days}" placeholder="0" textAlign="Right"  visible="{viewModel>/editMode}"  />
 										<Text text="{pdActivityStdDayView>a_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
+                                        </VBox>
                                     </t:template>
                                 </t:Column>
                                 <t:Column
@@ -343,8 +353,10 @@
                                         <Label text="b" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>b_grade_standard_days}"  placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+                                        <VBox>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>b_grade_standard_days}"  placeholder="0" textAlign="Right"  visible="{viewModel>/editMode}"  />
 										<Text text="{pdActivityStdDayView>b_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
+                                        </VBox>
                                     </t:template>
                                 </t:Column>
                                 <t:Column
@@ -355,8 +367,10 @@
                                         <Label text="c" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>c_grade_standard_days}"   placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+                                        <VBox>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>c_grade_standard_days}"   placeholder="0" textAlign="Right"   visible="{viewModel>/editMode}"  />
 										<Text text="{pdActivityStdDayView>c_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
+                                        </VBox>
                                     </t:template>
                                 </t:Column>
                                 <t:Column
@@ -367,8 +381,10 @@
                                         <Label text="d" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>d_grade_standard_days}"  placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}" />
+                                        <VBox>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>d_grade_standard_days}"  placeholder="0" textAlign="Right"  visible="{viewModel>/editMode}" />
 										<Text text="{pdActivityStdDayView>d_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
+                                        </VBox>
                                     </t:template>
                                 </t:Column>
                                 

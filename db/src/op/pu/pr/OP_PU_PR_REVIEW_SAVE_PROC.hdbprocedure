@@ -305,12 +305,11 @@ BEGIN
                         AND    PM.PR_NUMBER      = l_pr_item.PR_NUMBER
                         ;
                         
-                        /*
                         -- DTL은 Update 할 필요가 있을까? 어차피 INIT상태에서만 재작성 요청이 가능하므로 Update 안함.
-                        -- 재작성 상태로 바꾸면서 approval_date, confirmed_date를 변경해야 하나?  -- by dokim
+                        -- 재작성 상태로 바꾸면서 approval_date, confirmed_date를 변경해야 하나? 우선 confirmed_date를 NULL로 하자.
                         UPDATE OP_PU_PR_DTL PD
                         SET    PD.PR_PROGRESS_STATUS_CODE = 'INIT'
-                              ,PD.APPROVAL_DATE = NULL
+                              --,PD.APPROVAL_DATE = NULL
                               ,PD.CONFIRMED_DATE = NULL
                               ,PD.LOCAL_UPDATE_DTM  = :v_local_dtm
                               ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER
@@ -319,7 +318,6 @@ BEGIN
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                         ;
-                        */
                     END;
 
                 ELSEIF (:I_JOB_TYPE = 'CLOSING') THEN

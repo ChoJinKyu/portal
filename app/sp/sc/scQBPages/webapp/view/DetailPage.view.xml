@@ -638,7 +638,8 @@
                                                             <Label text="BPA Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right"/>
+                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right"
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bpa_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -702,6 +703,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        placeholder="소수점 3자리까지"
                                                                         valueState="{NegoHeaders>__metadata/_valueStates/request_quantity/valueState}" 
                                                                         valueStateText="{NegoHeaders>__metadata/_valueStates/request_quantity/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>request_quantity}" visible="{=!${propInfo>/isEditMode}}" />
@@ -782,7 +784,8 @@
                                                             <Label text="Start Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
+                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" 
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bidding_start_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -804,7 +807,8 @@
                                                             <Label text="Target Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
+                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" 
+                                                                        placeholder="소수점 5자리까지"/>
                                                                     <Text text="{NegoHeaders>bidding_target_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>

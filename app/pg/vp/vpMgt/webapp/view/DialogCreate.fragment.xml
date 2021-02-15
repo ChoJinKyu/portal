@@ -249,6 +249,7 @@
                                         <SearchField id="pop_repr_department_name"
                                             search=".onPopInputWithDeptValuePress" 
                                             change="resetCode"
+                                            width="20rem"
                                             />
                                         <Input id="pop_repr_department_code" placeholder="Input data" visible ="false"></Input>
                                     </HBox>                                        
@@ -417,7 +418,7 @@
                                 <VBox id="v_internal_rate">
                                     <Label text = "{I18N>/OVERSEA_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                         <HBox>
-                                            <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" ></Input> 
+                                            <Input id="pop_dom_oversea_netprice_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  width="13rem"></Input> 
                                             <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                         </HBox>                                
                                     <layoutData>
@@ -427,7 +428,7 @@
                                 <VBox id="v_external_rate">
                                     <Label text = "{I18N>/DOMESTIC_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                         <HBox>
-                                            <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate"  ></Input> 
+                                            <Input id="pop_domestic_net_price_diff_rate" textAlign="Right" type="Number" change=".fnCalcRate" width="13rem" ></Input> 
                                             <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
                                         </HBox>
                                     <layoutData>

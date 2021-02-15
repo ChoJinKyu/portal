@@ -495,7 +495,13 @@ sap.ui.define([
         , onAddCreate: function (oEvent) {
             //인자값을 받아서 넘기는 방식이므로 하드 코딩하고 가져다 붙일때는 넘겨 받은 인자값을 넣으면 됨
             this.getRouter().navTo("addCreatePage", {
-                requestNumber: "CCR2102080028"
+                requestNumber: "CCR2102040006"
+            }, true);
+        }
+        , onAddCreate2: function (oEvent) {
+            //인자값을 받아서 넘기는 방식이므로 하드 코딩하고 가져다 붙일때는 넘겨 받은 인자값을 넣으면 됨
+            this.getRouter().navTo("addCreatePage", {
+                requestNumber: "CCR2102050022"
             }, true);
         }
     });

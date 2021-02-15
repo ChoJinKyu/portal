@@ -96,7 +96,8 @@
                     <ToolbarSpacer/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
                     <ToolbarSeparator/>
-                    <Button text="임시 추가생성버튼" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
+                    <Button text="임시 추가생성(new)" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
+                    <Button text="임시 추가생성(완료)" id="buttonAddCreate2" press=".onAddCreate2"  type="Transparent"/>
                     <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                     
                 </OverflowToolbar>

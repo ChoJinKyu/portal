@@ -66,15 +66,22 @@ sap.ui.define([
 
             // //MakerRegistrationRequestView count
             this.setModel(new JSONModel(), "countModel");
-            this._getListCount();
+
+            //filter model
+            this.setModel(new JSONModel(), "filterModel");
+
 
         },
 
-      
+        onAfterRendering: function () {
+            this.byId("mainTable").getBinding("items").filter([new Filter("tenant_id", FilterOperator.EQ, "  ")]);
+            this.getModel("countModel").setProperty("/count", 0);
+        },
+
         /**
         * Search 버튼 클릭(Filter 추출)
         */
-        onSearch: function (oEvent) {
+        onSearch: function (init) {
             var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                 sProgress = this.byId("searchProgressSegmentButton").getSelectedKey(),
                 sTaxId = this.byId("searchTaxId").getValue(),

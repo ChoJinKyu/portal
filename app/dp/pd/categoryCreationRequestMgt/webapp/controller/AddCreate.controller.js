@@ -657,6 +657,8 @@ sap.ui.define([
             if( oEvent.getParameters().rowContext.sPath != undefined){
                 var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
                 this.getView().byId("searchField").setValue(  row.category_code );
+                //this.getView().byId("textCateCode").setText(  row.category_code );
+                
                 // this.getView().byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
                 // this.getView().byId("similarCategoryCode").setValue( "[" + row.category_code + " ] " + row.category_name);
                 this.onSearchPdActivityStdDayView(row.category_code);
