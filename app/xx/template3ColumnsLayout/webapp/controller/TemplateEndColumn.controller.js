@@ -3,7 +3,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
-	"ext/lib/core/service/ServiceProvider",
+	"ext/lib/core/service/ODataXhrService",
     "ext/lib/util/Validator",
 	"ext/lib/formatter/Formatter",
 	"ext/lib/formatter/DateFormatter",
@@ -20,7 +20,7 @@ sap.ui.define([
 	"ext/lib/control/m/CodeComboBox",
 	"cm/util/control/ui/EmployeeDialog",
 	"sap/ui/core/Item",
-], function (BaseController, ManagedModel, ManagedListModel, JSONModel, ServiceProvider, Validator, Formatter, DateFormatter, 
+], function (BaseController, ManagedModel, ManagedListModel, JSONModel, ODataXhrService, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
         ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, EmployeeDialog, Item) {
 	"use strict";
@@ -288,18 +288,20 @@ sap.ui.define([
 						delete oData["department"]["company_name"];
 						delete oData["department"]["parent_department_name"];
 						delete oData["department"]["parent_department_korean_name"];
-						delete oData["department"]["parent_department_english_name"];
-                        var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v4/xx.TemplateV4Service");
+                        delete oData["department"]["parent_department_english_name"];
+                        
+                        var oXhr = new ODataXhrService();
                         oXhr.ajax({
                             url: "srv-api/odata/v4/xx.TemplateV4Service/SetDepartmentAndEmployees",
-                            method: "POST",
+                            method: "POST", 
                             data: JSON.stringify(oData)
                         }).then(function(e){
+                            MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                             oView.setBusy(false);
-                        }).catch(function(e){
+                        }.bind(this)).catch(function(e){
                             debugger;
                             oView.setBusy(false);
-                        });
+                        }.bind(this));
 
 						// oTransactionManager.submit({
 						// 	success: function(ok){
