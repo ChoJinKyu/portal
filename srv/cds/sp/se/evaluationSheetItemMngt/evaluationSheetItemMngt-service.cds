@@ -7,6 +7,10 @@ namespace sp;
 @path : '/sp.evaluationSheetItemMngtService'
 service EvaluationSheetItemMngtService {
 
+    /*가중치 콤보 */
+    entity EvalDistrbScoreWeightCombo as projection on exportSheetTreeView;
+    
+    
     /* Eval Sheet Item List View */
     view  EvalSheetItemListView as
     SELECT esei.parent_id

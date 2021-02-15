@@ -1,0 +1,118 @@
+PROCEDURE SP_SE_EVAL_SHEET_ITEM_COPY_PROC (
+    IN I_TENANT_ID     NVARCHAR(5)                      /*테넌트ID*/
+   ,IN I_COMPANY_CODE  NVARCHAR(10)                     /*회사코드*/
+   ,IN I_ORG_TYPE_CODE NVARCHAR(2)                      /*조직유형코드*/
+   ,IN I_ORG_CODE      NVARCHAR(10)                     /*조직코드*/
+   ,IN I_EVALUATION_OPERATION_UNIT_CODE  NVARCHAR(30)   /*평가운영단위코드*/
+   ,IN I_EVALUATION_TYPE_CODE            NVARCHAR(30)   /*평가유형코드*/
+   ,IN I_REGULAR_EVALUATION_ID           NVARCHAR(100)  /*정기평가ID*/
+   ,IN I_USER_ID NVARCHAR(255)
+   ,OUT O_MSG TABLE(RETURN_CODE NVARCHAR(2),
+                    RETURN_MSG NVARCHAR(1000))
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN
+    /*평가Sheet관리 - 평가항목복사*/
+    DECLARE V_IST_CNT INT = 0;
+    DECLARE NOT_INSERT_CNT CONDITION FOR SQL_ERROR_CODE 10000;
+    --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+    
+    /* SQL Error 처리 */
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        :O_MSG.INSERT(('NG','Copy Evaluation Sheet error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'),1);
+    END;
+
+    SELECT  IFNULL(:I_USER_ID, 'SYSTEM') INTO I_USER_ID FROM DUMMY;
+
+    /*입력*/
+    INSERT INTO SP_SE_EVAL_SHEET_EVAL_ITEM
+    (
+     TENANT_ID                        /*테넌트ID*/
+    ,COMPANY_CODE                     /*회사코드*/
+    ,ORG_TYPE_CODE                    /*조직유형코드*/
+    ,ORG_CODE                         /*조직코드*/
+    ,EVALUATION_OPERATION_UNIT_CODE   /*평가운영단위코드*/
+    ,EVALUATION_TYPE_CODE             /*평가유형코드*/
+    ,REGULAR_EVALUATION_ID            /*정기평가ID*/
+    ,EVALUATION_ARTICLE_CODE          /*평가항목코드*/
+    ,EVALUATION_ARTICLE_NAME          /*평가항목명*/
+    ,PARENT_EVALUATION_ARTICLE_CODE   /*상위평가항목코드*/
+    ,EVALUATION_DISTRB_SCORE_WEIGHT   /*평가배점가중치*/
+    ,EVALUATION_EXECUTE_MODE_CODE     /*평가실행방식코드*/
+    ,EVALUATION_ARTICLE_TYPE_CODE     /*평가항목구분코드*/
+    ,EVALUATION_DISTRB_SCR_TYPE_CD    /*평가배점유형코드*/
+    ,EVALUATION_RESULT_INPUT_TYPE_CD  /*평가결과입력유형코드*/
+    ,QTTIVE_ITEM_UOM_CODE             /*정량항목측정단위코드*/
+    ,QTTIVE_EVAL_ARTICLE_CALC_FORMULA /*정량평가항목계산공식*/
+    ,EVALUATION_ARTICLE_DESC          /*평가항목설명*/
+    ,EVALUATION_ARTICLE_LVL_ATTR_CD   /*평가항목레벨속성코드*/
+    ,SORT_SEQUENCE                    /*정렬순서*/
+    ,LOCAL_CREATE_DTM
+    ,LOCAL_UPDATE_DTM
+    ,CREATE_USER_ID
+    ,UPDATE_USER_ID
+    ,SYSTEM_CREATE_DTM
+    ,SYSTEM_UPDATE_DTM
+    )
+    SELECT ESEI.TENANT_ID
+          ,ESEI.COMPANY_CODE
+          ,ESEI.ORG_TYPE_CODE
+          ,ESEI.ORG_CODE
+          ,ESEI.EVALUATION_OPERATION_UNIT_CODE
+          ,ESEI.EVALUATION_TYPE_CODE
+          ,:I_REGULAR_EVALUATION_ID
+          ,ESEI.EVALUATION_ARTICLE_CODE
+          ,ESEI.EVALUATION_ARTICLE_NAME
+          ,ESEI.PARENT_EVALUATION_ARTICLE_CODE
+          ,0 AS EVALUATION_DISTRB_SCORE_WEIGHT   /*최초입력시는 가중치가 없음*/
+          ,ESEI.EVALUATION_EXECUTE_MODE_CODE
+          ,ESEI.EVALUATION_ARTICLE_TYPE_CODE
+          ,ESEI.EVALUATION_DISTRB_SCR_TYPE_CD
+          ,ESEI.EVALUATION_RESULT_INPUT_TYPE_CD
+          ,ESEI.QTTIVE_ITEM_UOM_CODE
+          ,ESEI.QTTIVE_EVAL_ARTICLE_CALC_FORMULA
+          ,ESEI.EVALUATION_ARTICLE_DESC
+          ,ESEI.EVALUATION_ARTICLE_LVL_ATTR_CD
+          ,SORT_SEQUENCE
+          ,NOW()
+          ,NOW()
+          ,:I_USER_ID
+          ,:I_USER_ID
+          ,NOW()
+          ,NOW()
+    FROM   SP_SE_EVAL_SHEET_EVAL_ITEM ESEI
+          ,SP_SE_REGULAR_EVAL_SUM     RES
+    WHERE  ESEI.TENANT_ID     = RES.TENANT_ID
+    AND    ESEI.COMPANY_CODE  = RES.COMPANY_CODE
+    AND    ESEI.ORG_TYPE_CODE = RES.ORG_TYPE_CODE
+    AND    ESEI.ORG_CODE      = RES.ORG_CODE
+    AND    ESEI.EVALUATION_OPERATION_UNIT_CODE = RES.EVALUATION_OPERATION_UNIT_CODE
+    AND    ESEI.EVALUATION_TYPE_CODE = RES.EVALUATION_TYPE_CODE
+    AND    ESEI.TENANT_ID     = :I_TENANT_ID
+    AND    ESEI.COMPANY_CODE  = :I_COMPANY_CODE
+    AND    ESEI.ORG_TYPE_CODE = :I_ORG_TYPE_CODE
+    AND    ESEI.ORG_CODE      = :I_ORG_CODE
+    AND    ESEI.EVALUATION_OPERATION_UNIT_CODE = :I_EVALUATION_OPERATION_UNIT_CODE
+    AND    ESEI.EVALUATION_TYPE_CODE           = :I_EVALUATION_TYPE_CODE
+    AND    (RES.REGULAR_EVALUATION_YEAR, RES.REGULAR_EVALUATION_PERIOD_CODE) = (SELECT TO_VARCHAR(ADD_YEARS(TO_DATE (RES.REGULAR_EVALUATION_YEAR, 'YYYY'), -1),'YYYY') AS REGULAR_EVALUATION_YEAR
+                                                                                      ,RES.REGULAR_EVALUATION_PERIOD_CODE
+                                                                                FROM   SP_SE_REGULAR_EVAL_SUM RES
+                                                                                WHERE  RES.REGULAR_EVALUATION_ID = :I_REGULAR_EVALUATION_ID
+                                                                               )
+    ;
+
+    V_IST_CNT = ::ROWCOUNT;
+
+    IF V_IST_CNT = 0 THEN
+        SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'Previous year data not found.';
+    END IF;
+
+
+    COMMIT;
+    :O_MSG.INSERT(('OK','Successfully Saved'),1);
+END
