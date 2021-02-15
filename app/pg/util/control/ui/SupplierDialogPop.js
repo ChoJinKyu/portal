@@ -63,17 +63,17 @@ sap.ui.define([
                 }),
                 new Column({
                     width: "35%",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_local_name}" })
                 }),
                 new Column({
                     width: "35%",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_english_name}" })
                 }),
                 new Column({
                     width: "10%",
-                    label: new Label({ text: this.getModel("I18N").getText("/STATUS") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/STATUS"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{inactive_status_name}" })
                 })
             ];

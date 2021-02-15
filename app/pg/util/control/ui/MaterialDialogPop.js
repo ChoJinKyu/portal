@@ -66,12 +66,12 @@ sap.ui.define([
                 new Column({
                     width: "25%",
                     hAlign : "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE"), textAlign:"Center"}),  // 자재코드
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE")}),  // 자재코드
                     template: new Text({text: "{material_code}"})
                 }),
                 new Column({
                     width: "75%",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),  // 자재설명
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign: "Center", width: "100%"}),  // 자재설명
                     template: new Text({text: "{material_desc}"})
                 })
                 // new Column({
