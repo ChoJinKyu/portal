@@ -523,7 +523,7 @@ END;
             , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
             , NOW() system_update_dtm 
         FROM :I_TABLE_NEGOSUPPLIERS NS
-            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_prices_map V_NIPM
+            LEFT OUTER MANY TO ONE JOIN :vt_nego_item_prices_map V_NIPM
             ON NS.tenant_id = V_NIPM.tenant_id_tmp AND NS.nego_header_id = V_NIPM.nego_header_id_tmp AND NS.nego_item_number = V_NIPM.nego_item_number_tmp
             LEFT OUTER ONE TO ONE JOIN SP_SC_NEGO_SUPPLIERS EXIST ON NS.tenant_id = EXIST.tenant_id and NS.nego_header_id = EXIST.nego_header_id
                 AND NS.nego_item_number = EXIST.nego_item_number AND NS.nego_item_number = EXIST.item_supplier_sequence
@@ -613,7 +613,7 @@ END;
             , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
             , NOW() system_update_dtm 
         FROM :I_TABLE_NEGOITEMNONPRICEDTLS ND
-            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_non_prices_map V_NINPM
+            LEFT OUTER MANY TO ONE JOIN :vt_nego_item_non_prices_map V_NINPM
             ON ND.tenant_id = V_NINPM.tenant_id_tmp AND ND.nego_header_id = V_NINPM.nego_header_id_tmp AND ND.nonpr_item_number = V_NINPM.nonpr_item_number_tmp
             LEFT OUTER ONE TO ONE JOIN SP_SC_NEGO_ITEM_NON_PRICE_DTL EXIST ON ND.tenant_id = EXIST.tenant_id and ND.nego_header_id = EXIST.nego_header_id
                 AND ND.nonpr_item_number = EXIST.nonpr_item_number AND ND.nonpr_dtl_item_number = EXIST.nonpr_dtl_item_number
