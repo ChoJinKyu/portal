@@ -1002,7 +1002,7 @@ BEGIN
 								   ,SUPEVAL_CONTROL_END_DATE            = TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
 								   ,SUPPLIER_RM_CONTROL_FLAG            = IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE) 
 								   ,SUPPLIER_BASE_PORTION_RATE			= loop_sup.SUPPLIER_BASE_PORTION_RATE
-								   --,VENDOR_POOL_MAPPING_USE_FLAG		= loop_sup.VENDOR_POOL_MAPPING_USE_FLAG
+								   ,VENDOR_POOL_MAPPING_USE_FLAG		= true
 								   ,LOCAL_UPDATE_DTM       				= NOW()
 								   ,UPDATE_USER_ID         				= I_USER_ID
 								   ,SYSTEM_UPDATE_DTM      				= NOW()
