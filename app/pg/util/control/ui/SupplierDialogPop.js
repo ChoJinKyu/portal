@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
+    "ext/lib/util/SppUserSessionUtil",
     "ext/lib/control/DummyRenderer",
     "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/model/Filter",
@@ -14,7 +15,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ComboBox, Item, SearchField) {
+], function (Parent, SppUserSessionUtil, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ComboBox, Item, SearchField) {
     "use strict";
     var that;
     var supplierDialogPop = Parent.extend("pg.util.control.ui.SupplierDialogPop", {
@@ -81,26 +82,31 @@ sap.ui.define([
             var aFilters = [];
             var sSupplierCodePop = this.oSupplierCodePop.getValue();
             var sSupplierNamePop = this.oSupplierNamePop.getValue();
+            var sTanentId = SppUserSessionUtil.getUserInfo().TENANT_ID,
+                sLanguageCd = SppUserSessionUtil.getUserInfo().LANGUAGE_CODE,
+                sCompanyCode = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
 
-            if (!!this.oSearchObj.tanentId) {
-                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+
+            // Session Info
+            if (!!sTanentId) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
+            }
+            
+            if (!!sLanguageCd) {
+                aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
             }
 
-            if (!!this.oSearchObj.languageCd) {
-                aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
-            }
+            if (!!sCompanyCode) {
+                aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+            } 
 
-            if (!!this.oSearchObj.companyCode) {
-                aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode)); 
-            }
+            // if (!!this.oSearchObj.orgCode) {
+            //     aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+            // }
 
-            if (!!this.oSearchObj.orgCode) {
-                aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
-            }
-
-            if (!!this.oSearchObj.orgUnitCode) {
-                aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
-            }
+            // if (!!this.oSearchObj.orgUnitCode) {
+            //     aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
+            // }
 
             if (!!sSupplierCodePop) {
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCodePop.toUpperCase() + "'"));
@@ -135,8 +141,7 @@ sap.ui.define([
             //     this.oSupplierCodePop.setValue(null);
             //     this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
             // }
-
-            //this.loadData();
+            
             this.oDialog.open();
         }
     });
