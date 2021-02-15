@@ -69,9 +69,10 @@ sap.ui.define([
         },
 
 
-        onRenderedFirst: function () {
-            this.byId("pageSearchButton").firePress();
-        },
+        // onRenderedFirst: function () {
+        //     console.log("onRenderedFirst========");
+        //     this.byId("pageSearchButton").firePress();
+        // },
 
         onAfterRendering: function () {
             // var oSegmentedButton = this.getView().byId("searchStatusCode");
@@ -152,19 +153,22 @@ sap.ui.define([
             console.log("oEvent.getSource=", oEvent.getSource());
 
             var oViewModel = this.getModel('viewModel');
+            var sPath = "";
 
             var bindingContext = oEvent.getParameters().rowBindingContext;
             if (bindingContext) {
-                var sPath = oEvent.getParameters().rowBindingContext.getPath();
-                // console.log("sPath=", sPath);
-                var oRecord = oViewModel.getProperty(sPath);
-                // console.log("oRecord=", oRecord);
-
-                this.getRouter().navTo("detailPage", {
-                    netPriceContractDocumentNo: oRecord.net_price_contract_document_no,
-                    netPriceContractDegree: oRecord.net_price_contract_degree,
-                }, true);
+                sPath = oEvent.getParameters().rowBindingContext.getPath();
+            } else {
+                sPath = oEvent.getParameters()["row"].getBindingContext("viewModel").getPath()
             }
+            console.log("sPath=", sPath);
+            var oRecord = oViewModel.getProperty(sPath);
+            // console.log("oRecord=", oRecord);
+
+            this.getRouter().navTo("detailPage", {
+                netPriceContractDocumentNo: oRecord.net_price_contract_document_no,
+                netPriceContractDegree: oRecord.net_price_contract_degree,
+            }, true);
         },
 
 		/**
@@ -339,7 +343,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oRootModel = this.getModel(),
                 oViewModel = this.getModel("viewModel");
-
+            console.log("Search Start========");
             oView.setBusy(true);
             oRootModel.read("/UcApprovalMstView", {
                 filters: aSearchFilters,

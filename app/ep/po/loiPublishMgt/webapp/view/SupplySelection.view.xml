@@ -128,7 +128,7 @@
                                 constraints: {
                                     maxLength: 50
                                 }
-                            }" class="sapMLabelNoText" required="true" width="98%" visible="{midObjectViewModel>/isEditMode}"/>
+                            }" class="sapMLabelNoText" required="true" width="70%" visible="{midObjectViewModel>/isEditMode}"/>
                             <Label  text="* 품의명" 
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
@@ -180,7 +180,7 @@
                                     <Text text="{details>plant_name}"/>
                                 </t:template>
                                 </t:Column>
-                                <t:Column id="mainLoiRequestTitle" width="6rem">
+                                <t:Column id="mainLoiRequestTitle" width="12rem">
                                 <Label text="품명" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>item_desc}" />
@@ -258,7 +258,10 @@
                                                         }" 
                                                         textAlign="Right" 
                                                         visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === true ? true : false }" />
-                                        <Text text="{details>offline_quotation_amount}" textAlign="Right" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />                     
+                                        <Text text="{
+                                                    path: 'details>offline_quotation_amount',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }" textAlign="Right" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />                     
                                     </HBox>                      
                                 </t:template>
                                 </t:Column>
