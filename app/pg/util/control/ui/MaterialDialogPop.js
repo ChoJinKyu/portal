@@ -113,9 +113,11 @@ sap.ui.define([
 
             if (!!this.oSearchObj.tanentId) {
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+            }
 
             if (!!this.oSearchObj.languageCd) {
                 aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+            }
 
             if (!!this.oSearchObj.orgCode) {
                 aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
