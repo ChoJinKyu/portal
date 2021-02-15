@@ -42,6 +42,7 @@ sap.ui.define([
     "ext/cm/util/control/ui/EmployeeDialog",
     "ext/cm/util/control/ui/DepartmentDialog",
     "ext/pg/util/control/ui/MaterialDialogPop",
+    "ext/lib/util/ExcelUtil",
 
 ], function (BaseController,
     History,
@@ -85,7 +86,8 @@ sap.ui.define([
     Column,
     EmployeeDialog,
     DepartmentDialog,
-    MaterialDialogPop
+    MaterialDialogPop,
+    ExcelUtil
 
 
 ) {
@@ -2383,6 +2385,20 @@ sap.ui.define([
             // this._oValueHelpDialog.open();
 
             //     console.groupEnd();
+        },
+        onExportPress: function (_oEvent) {
+            console.log("export");
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "Vendor Pool List";
+            var oData = this.getModel("list").getProperty("/vpSearchOrderView"); //binded Data
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
         },
         checkOrg: function () {
 

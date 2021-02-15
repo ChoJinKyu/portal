@@ -215,7 +215,7 @@
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_general_maker_material_code_mngt_flag">
-                                    <Label text="Maker P/N" design="Bold" required="true" width="8rem"/> 
+                                    <Label text="{I18N>/MAKER_MATERIAL_MNG_FLAG}" design="Bold" required="true" width="8rem"/> 
                                         <!-- <Switch id="general_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -333,6 +333,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="sppListAdd"     type="Emphasized" text="{I18N>/ADDITION}"        press=".supplierAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="sppListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".supplierDelRow"   enabled="{mode>/viewFlag}" />
+                                    <!-- <Button id="rTableSupExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onSupExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                         -->
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
@@ -512,6 +513,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="metListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".materialAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="metListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".materialDelRow"   enabled="{mode>/viewFlag}" />                                    
+                                    <!-- <Button id="rTableMatExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onMatExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                                                                                                 -->
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
