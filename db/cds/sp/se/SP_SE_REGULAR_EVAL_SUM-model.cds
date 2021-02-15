@@ -1,7 +1,7 @@
 namespace sp;	
 using util from '../../cm/util/util-model'; 
 	
-entity Se_Reqular_Eval_Sum {	
+entity Se_Regular_Eval_Sum {	
   key tenant_id                      : String(5)   not null @title: '테넌트ID' ;	
   key company_code                   : String(10)  not null @title: '회사코드' ;	
   key org_type_code                  : String(2)   not null @title: '조직유형코드' ;	
@@ -18,4 +18,4 @@ entity Se_Reqular_Eval_Sum {
       regular_evaluation_exec_str_dt : String(8)            @title: '정기평가실행시작일자' ;	
       regular_evaluation_exec_end_dt : String(8)            @title: '정기평가실행종료일자' ;	
 }	
-extend Se_Reqular_Eval_Sum with util.Managed;	
+extend Se_Regular_Eval_Sum with util.Managed;	
