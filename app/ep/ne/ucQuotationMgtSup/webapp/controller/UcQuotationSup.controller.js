@@ -1371,6 +1371,10 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             console.log(" edit before----------------->" , dtlData[index]["row_state"]); 
             console.log(" edit extra_rate----------------->" , dtlData[index]["extra_rate"]); 
 
+
+            if(!dtlData[index]["extra_rate"]){
+                dtlData[index]["extra_rate"] = 1;
+            }
             
 
             dtlData[index]["material_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["material_net_price"];
@@ -1400,6 +1404,10 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
 
             var dtlData = oViewModel.getProperty("/ucdetails");
 
+            if(!dtlData[index]["extra_rate"]){
+                dtlData[index]["extra_rate"] = 1;
+            }
+
             dtlData[index]["material_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["quotation_quantity"]; //자재단가 * 수량
             dtlData[index]["labor_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["extra_rate"] * dtlData[index]["labor_net_price"]; //수량 * 노무단가
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
@@ -1424,6 +1432,10 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             console.log(" index obj ----------------->" , index); 
 
             var dtlData = oViewModel.getProperty("/ucdetails");
+
+            if(!dtlData[index]["extra_rate"]){
+                dtlData[index]["extra_rate"] = 1;
+            }
 
             dtlData[index]["labor_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["quotation_quantity"]; //노무단가 * 수량
             dtlData[index]["material_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["extra_rate"] * dtlData[index]["material_net_price"]; //수량 * 자재단가
