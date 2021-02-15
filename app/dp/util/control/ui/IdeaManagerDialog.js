@@ -23,7 +23,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "55em"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
                 textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
             }
