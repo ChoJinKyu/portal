@@ -88,7 +88,6 @@ sap.ui.define([
              *  @public
              */
             onSearchTable: function (oEvent) {
-                this.byId("MonitorListTable").getModel().refresh(true);
                 var mBindingParams = oEvent.getParameter("bindingParams");
                 var oSmtFilter = this.getView().byId("smartFilterBar");
                 var tenant_combo = this.getView().byId("tenant_combo"),         //회사 콤보박스

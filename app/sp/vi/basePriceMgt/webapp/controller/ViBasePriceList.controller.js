@@ -332,8 +332,8 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-            // MessageBox.show("준비중입니다. ", {at: "Center Center"});
-            // return;
+             MessageBox.show("준비중입니다. ", {at: "Center Center"});
+             return;
 
             var oListModel = this.getModel("listModel");
             var oBindingContext = oEvent.getParameter("rowBindingContext");

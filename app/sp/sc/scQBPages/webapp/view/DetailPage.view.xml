@@ -1136,7 +1136,7 @@
                                                         <headerToolbar>
                                                             <OverflowToolbar visible="{=${propInfo>/isEditMode}}">
                                                                 <ToolbarSpacer/>
-                                                                <Button  text="Supplier Add" type="Transparent" press=".onSupplierLoadPopup" />
+                                                                <Button  text="{I18N>/ROW_ADD}" type="Transparent" press=".onSupplierLoadPopup" />
                                                                 <Button  text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDeleteSuppliers" />
                                                             </OverflowToolbar>
                                                         </headerToolbar>

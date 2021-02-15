@@ -274,3 +274,7 @@ tax_id: null
 tenant_id: "L2100"
 type_code: "RAW_MATERIAL"
 type_name: "원자재"
+
+
+
+

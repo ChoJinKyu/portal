@@ -357,12 +357,14 @@
                                     </table:template>
                                 </table:Column>
                                 
-                                <table:Column label="{I18N>/SUPPLIER_LOCAL_NAME}" hAlign="Center" width="14em" filterProperty="supplier_local_name">
+                                <table:Column  width="14em" filterProperty="supplier_local_name">
+                                    <Label text="{I18N>/SUPPLIER_LOCAL_NAME}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{suplist>supplier_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/SUPPLIER_ENGLISH_NAME}" hAlign="Center" width="18em" filterProperty="supplier_english_name">
+                                <table:Column  width="18em" filterProperty="supplier_english_name">
+                                    <Label text="{I18N>/SUPPLIER_ENGLISH_NAME}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{suplist>supplier_english_name}" wrapping="false" />
                                     </table:template>
@@ -552,7 +554,8 @@
                                             />                                        
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/MATERIAL_SPEC}" hAlign="Center" width="50%" filterProperty="material_desc">
+                                <table:Column  width="50%" filterProperty="material_desc">
+                                    <Label text="{I18N>/MATERIAL_SPEC}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{matlist>material_desc}" wrapping="false" />
                                     </table:template>
@@ -651,7 +654,7 @@
                                         <Text text="{manlist>user_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column> -->
-                                <table:Column label="이름(EN)" width="0em" filterProperty="user_english_name">
+                                <table:Column label="{I18N>/ENG_NAME}" width="0em" filterProperty="user_english_name">
                                     <table:template>
                                         <Text text="{manlist>user_english_name}" wrapping="false" />
                                     </table:template>
@@ -667,7 +670,8 @@
 
                                     </table:template>
                                 </table:Column>                                                             -->
-                                <table:Column label="{I18N>/DEPARTMENT}" hAlign="Center" width="40%" filterProperty="department_korean_name">
+                                <table:Column  width="40%" filterProperty="department_korean_name">
+                                    <Label text="{I18N>/DEPARTMENT}" width="100%" textAlign="Center"/>
                                     <table:template>
                                         <Text text="{manlist>department_local_name}" wrapping="false" />
                                     </table:template>

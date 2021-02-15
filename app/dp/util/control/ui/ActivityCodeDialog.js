@@ -21,7 +21,8 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "40em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "activity_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "activity_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "activity_name" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
@@ -89,9 +90,11 @@ sap.ui.define([
 
         loadData: function(){
             var sActivityName = this.oActivityName.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                ];
+                aFilters = this.getProperty("items").filters || []
+                
+                // aFilters = [
+                //     new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                // ];
 
                 if(sActivityName){
                     aFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'" + sActivityName.toLowerCase().replace("'","''") + "'"));

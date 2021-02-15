@@ -66,12 +66,12 @@ sap.ui.define([
                 new Column({
                     width: "25%",
                     hAlign : "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE"), textAlign:"Center"}),  // 자재코드
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE")}),  // 자재코드
                     template: new Text({text: "{material_code}"})
                 }),
                 new Column({
                     width: "75%",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),  // 자재설명
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign: "Center", width: "100%"}),  // 자재설명
                     template: new Text({text: "{material_desc}"})
                 })
                 // new Column({
@@ -99,17 +99,29 @@ sap.ui.define([
                 sCompanyCode = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
 
             // Session Info
-            if (!!sTanentId) {
-                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
-            }
+        //     if (!!sTanentId) {
+        //         aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
+        //     }
             
-            if (!!sLanguageCd) {
-                aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
+        //     if (!!sLanguageCd) {
+        //         aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
+        //     }
+
+        //    if (!!sCompanyCode) {
+        //         aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+        //     } 
+
+            if (!!this.oSearchObj.tanentId) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             }
 
-           if (!!sCompanyCode) {
-                aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
-            } 
+            if (!!this.oSearchObj.languageCd) {
+                aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+            }
+
+            if (!!this.oSearchObj.orgCode) {
+                aFilters.push(new Filter("bizunit_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+            }
 
             // Input Info
             if (!!sMatrialCodePop) {

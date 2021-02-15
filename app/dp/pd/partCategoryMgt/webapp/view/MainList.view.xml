@@ -152,7 +152,7 @@
                                 <Text text="{tree>category_group_name}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/STATUS}" hAlign="Center"  width="6%">    
+                        <t:Column label="{I18N>/STATUS}" hAlign="Center"  width="8%">    
                             <t:template>
                                 <Text text="{= ${tree>active_flag} === true ? 'Active' : 'Inactive'}"/>
                             </t:template>
@@ -164,8 +164,7 @@
                         </t:Column>
                         <t:Column label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Center">    
                             <t:template>
-                                <Text text="{tree>local_update_dtm}" wrapping="false" />
-                                <!-- <Text text="{path : 'tree>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" /> -->
+                                <Text text="{path : 'tree>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"  wrapping="false" />
                             </t:template>
                         </t:Column>
                         <t:Column label="" width="2rem" >

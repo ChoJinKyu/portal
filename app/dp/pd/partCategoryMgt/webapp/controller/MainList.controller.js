@@ -167,13 +167,13 @@ sap.ui.define([
                 this.oInfoMessageDialog.open();
             },
 
-            onRowSelectionChange: function(oEvent) {
-                console.log(oEvent);
-                this.getRouter().navTo("addCreatePage", {
-                    requestNumber: "CCR2102050022"
-                }, true);
+            // onRowSelectionChange: function(oEvent) {
+            //     console.log(oEvent);
+            //     this.getRouter().navTo("addCreatePage", {
+            //         requestNumber: "CCR2102050022"
+            //     }, true);
                 
-            }
+            // }
         });
     }
 );

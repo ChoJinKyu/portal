@@ -10,6 +10,14 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("sp.se.evalProgressList.controller.BaseController", {
+        onSelectIconTabBar : function(oEvent){
+            var oControl, sSelectedKey;
+
+            oControl = oEvent.getSource();
+            sSelectedKey = oEvent.getParameter("selectedKey");
+
+            this.getOwnerComponent().getRouter().navTo(sSelectedKey,{new :"Y"});
+        },
         /***
          * OdataModel read를 위한 함수 프로미스 구현
          * @Param oParam.model OdataModel

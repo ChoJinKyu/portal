@@ -63,17 +63,17 @@ sap.ui.define([
                 }),
                 new Column({
                     width: "35%",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_local_name}" })
                 }),
                 new Column({
                     width: "35%",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_english_name}" })
                 }),
                 new Column({
                     width: "10%",
-                    label: new Label({ text: this.getModel("I18N").getText("/STATUS") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/STATUS"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{inactive_status_name}" })
                 })
             ];
@@ -89,25 +89,33 @@ sap.ui.define([
 
 
             // Session Info
-            if (!!sTanentId) {
-                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
-            }
+            // if (!!sTanentId) {
+            //     aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
+            // }
             
-            if (!!sLanguageCd) {
-                aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
+            // if (!!sLanguageCd) {
+            //     aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
+            // }
+
+            // if (!!sCompanyCode) {
+            //     aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+            // } 
+
+            if (!!this.oSearchObj.tanentId) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             }
 
-            if (!!sCompanyCode) {
-                aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
-            } 
+            if (!!this.oSearchObj.languageCd) {
+                aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+            }
 
-            // if (!!this.oSearchObj.orgCode) {
-            //     aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
-            // }
+            if (!!this.oSearchObj.orgCode) {
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+            }
 
-            // if (!!this.oSearchObj.orgUnitCode) {
-            //     aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
-            // }
+            if (!!this.oSearchObj.orgUnitCode) {
+                aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
+            }
 
             if (!!sSupplierCodePop) {
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCodePop.toUpperCase() + "'"));

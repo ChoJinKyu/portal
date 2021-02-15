@@ -146,6 +146,11 @@
                     "target": ["SheetMgt"]
                 },
                 {
+                    "name": "EvaluInstance",
+                    "pattern": "EvaluInstance/{new}",
+                    "target": ["EvaluInstance"]
+                },
+                {
                     "name": "MainList",
                     "pattern": ":search:",
                     "target": ["MainList"]
@@ -168,7 +173,16 @@
                     "viewLevel": 2,
 					"clearControlAggregation": true
                     
-				}
+                },
+                "EvaluInstance": {
+					"viewType": "XML",
+					"transition": "slide",
+					"viewName": "EvaluInstance",
+					"viewId": "EvaluInstance",
+                    "viewLevel": 2,
+					"clearControlAggregation": true
+                    
+                }
 			}
 		}
 	}

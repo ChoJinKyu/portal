@@ -47,22 +47,20 @@ BEGIN
     END;
 
 
-
-    /* Validation */
+    /* Validation /
     BEGIN
 
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             SIGNAL V_USER_EXCEPTION;
         END;
-
-        /*
+        /
         IF RECORD_COUNT(:I_DETAILS)<=0 THEN 
             O_RETURN_CODE = 'E';
             O_RETURN_MSG  = '조회대상이 없습니다.';
             SIGNAL V_USER_EXCEPTION;
         END IF;
-        */
+        /
 
         CALL SP_NP_NET_PRICE_APPROVAL_PRICEINFO_VALID_PROC(
                     I_TENANT_ID
@@ -76,7 +74,7 @@ BEGIN
             SIGNAL V_USER_EXCEPTION;
         END IF;
     END;
-    
+    */
 
     BEGIN
         /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */

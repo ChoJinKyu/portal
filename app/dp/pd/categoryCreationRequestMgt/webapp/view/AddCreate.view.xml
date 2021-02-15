@@ -19,7 +19,6 @@
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
-		showTitleSelector="true"
 		showEditHeaderButton="true" 
         showFooter="false"
         >
@@ -76,15 +75,19 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/PARENT_CATEGORY_CODE}: " labelFor="pGroupCategory"   required="true"></Label>
-                                    <Input id="pGroupCategory"  width="80%"   visible="{viewModel>/editMode}"  required="true"
+                                    
+                                    <SearchField id="pGroupCategory" placeholder=" "  search=".onSearchPartCategory(1)"  width="50%"  value="{master>/parent_category_code}" enabled="{viewModel>/editMode}" />
+
+                                    <!-- <Input id="pGroupCategory"  width="80%"   visible="{viewModel>/editMode}"  required="true"
                                         placeholder="{I18N>/PARENT_CATEGORY_CODE} {I18N>/NAME}" value="{PdPartCategoryModel>/parent_category_code}"/>
-                                    <Text id="pGroupCategoryTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/parent_category_code}" visible="{viewModel>/showMode}"/>
+                                    <Text id="pGroupCategoryTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/parent_category_code}" visible="{viewModel>/showMode}"/> -->
                                 </VBox>
                                 <VBox>
-                                    <Label text="{I18N>/SEQUENCE}: " labelFor="sequence" required="true" ></Label>
-                                    <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="10%"   visible="{viewModel>/editMode}"  required="true"
-                                        placeholder="{I18N>/SEQUENCE}" value="{PdPartCategoryModel>/sequence}"/>
-                                    <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/sequence}" visible="{viewModel>/showMode}"/>
+                                    <Label text="{I18N>/SEQUENCE}: " labelFor="sequence"  ></Label>
+                                    <Input id="sequence"  width="10%"   enabled="false" value="{PdPartCategoryModel>/sequence}"/>
+                                    <!-- <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="10%"   enabled="false"
+                                        placeholder="{I18N>/SEQUENCE}" value="{PdPartCategoryModel>/sequence}"/> -->
+                                    <!-- <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/sequence}" visible="{viewModel>/showMode}"/> -->
 
                 
                                 </VBox>
@@ -110,7 +113,8 @@
 			</uxap:ObjectPageSection>
 
             <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" 
-                 title="{I18N>/LANGUAGE} ({= (${pdPartCategoryLng})?${pdPartCategoryLng}.length:0})">
+                 title="{I18N>/LANGUAGE}">
+                 <!-- title="{I18N>/LANGUAGE} ({= (${pdPartCategoryLng})?${pdPartCategoryLng}.length:0})"> -->
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection2" >
 						<Table id="midTable2" 
@@ -209,7 +213,7 @@
                                         labelFor="input"
                                         required="true"/>
                                     <VBox>
-                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" />
+                                        <SearchField id="searchField" search=".onSearchPartCategory(2)" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" />
                                         <!-- <Text id="textCateCode"  text="{master>similar_category_code}" visible="{viewModel>/showMode}" width="100%"  /> -->
                                             
                                     </VBox>

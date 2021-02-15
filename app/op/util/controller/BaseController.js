@@ -392,10 +392,9 @@ sap.ui.define([
                     table: this.byId(args[args.length-1]["tId"]),
                     data: items.map(e => {
                         // Trailing Zero
-                        numbers.forEach(n => {
+                        (numbers||[]).forEach(n => {
                             e[n] = (+e[n] || 0);
-                            return e[n]+"";
-                        })
+                        });
                         return e;
                     })
                 });

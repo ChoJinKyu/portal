@@ -83,9 +83,11 @@
                                         text="{master>/company_code}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <ComboBox 
+                                    <ComboBox
+                                        id="searchCompanyCombo" 
                                         width="50%"
                                         visible="{contModel>/editMode}"
+                                        change=".onComboChange"
                                         showSecondaryValues= "true"                                         
                                         selectedKey="{master>/company_code}"
                                         items="{
@@ -112,8 +114,10 @@
                                         visible="{contModel>/readMode}">
                                     </Text>
                                     <ComboBox
+                                        id="searchOrgCombo"
                                         width="50%" 
                                         visible="{contModel>/editMode}"
+                                        change=".onComboChange"
                                         showSecondaryValues= "true"                                        
                                         selectedKey="{master>/org_code}"
                                         items="{
@@ -140,8 +144,10 @@
                                         visible="{contModel>/readMode}">
                                     </Text>                                    
                                     <ComboBox
+                                        id="searchPartProjectCombo"
                                         width="50%" 
                                         visible="{contModel>/editMode}"
+                                        change=".onComboChange"
                                         showSecondaryValues= "true"                                         
                                         selectedKey="{master>/part_project_type_code}"
                                         items="{
@@ -171,11 +177,12 @@
                                         visible="{= !${contModel>/createMode} }">
                                     </Text>
                                     <Input
-                                        width="50%"                                        
+                                        width="50%"
+                                        editable="false"                                        
                                         visible="{contModel>/createMode}" 
                                         id="searchActivityInput"                                        
                                         showValueHelp="true"
-                                        liveChange=".onInputChange"
+                                        change=".onInputChange"
                                         required="true"
                                         value="{master>/activity_code}"
                                         valueHelpRequest=".onDialogActivityPress"/>
@@ -220,9 +227,10 @@
                                     </Text>
                                     <Input 
                                         width="50%"
+                                        id="searchSequence"
                                         value="{
                                             path: 'master>/sequence'
-                                        }" type="Number"  visible="{contModel>/editMode}" editable="{= !${contModel>/createMode}}"></Input>
+                                        }" type="Number"  visible="{contModel>/editMode}" editable="true"></Input>
                                     <layoutData>
                                         <layout:GridData
                                             span="XL12 L12 M12 S12" />
@@ -260,6 +268,68 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox width="100%">			
+                                    <Label text="{I18N>/ACTIVITY_COMPLETE_TYPE}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/activity_complete_type_name}"
+                                        visible="{contModel>/readMode}">
+                                    </Text>
+                                    <ComboBox
+                                        width="50%" 
+                                        visible="{contModel>/editMode}"
+                                        showSecondaryValues= "true"                                         
+                                        selectedKey="{master>/activity_complete_type_code}"
+                                        items="{
+                                            path: 'util>/Code',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_COMPLETE_TYPE'}
+                                            ]
+                                        }" editable="{contModel>/editMode}"> 
+                                        <items>
+                                            <core:ListItem
+                                                key="{util>code}" 
+                                                text="{util>code_name}" 
+                                                additionalText="{util>code}"/>
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <!-- <VBox width="100%">			
+                                    <Label text="{I18N>/JOB_TYPE}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/job_type_name}"
+                                        visible="{contModel>/readMode}">
+                                    </Text>
+                                    <ComboBox 
+                                        width="50%"
+                                        visible="{contModel>/editMode}"
+                                        showSecondaryValues= "true"                                        
+                                        selectedKey="{master>/job_type_code}"
+                                        items="{
+                                            path: 'util>/Code',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_JOB_TYPE'}
+                                            ]
+                                        }" editable="{contModel>/editMode}"> 
+                                        <items>
+                                            <core:ListItem
+                                                key="{util>code}" 
+                                                text="{util>code_name}" 
+                                                additionalText="{util>code}"/>
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox> -->
+                                <!-- <VBox width="100%">			
                                     <Label text="{I18N>/EVENT}"/>
                                     <Text
                                         width="50%"
@@ -289,7 +359,7 @@
                                         <layout:GridData
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
-                                </VBox>
+                                </VBox> -->
                                 <VBox width="100%">
                                     <Label text="{I18N>/ATTACHMENT_MANDATORY}"/>
                                     <Text
@@ -355,69 +425,7 @@
                                         <layout:GridData
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
-                                </VBox> 
-                                <VBox width="100%">			
-                                    <Label text="{I18N>/ACTIVITY_COMPLETE_TYPE}"/>
-                                    <Text
-                                        width="50%"
-                                        text="{master>/activity_complete_type_name}"
-                                        visible="{contModel>/readMode}">
-                                    </Text>
-                                    <ComboBox
-                                        width="50%" 
-                                        visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"                                         
-                                        selectedKey="{master>/activity_complete_type_code}"
-                                        items="{
-                                            path: 'util>/Code',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_COMPLETE_TYPE'}
-                                            ]
-                                        }" editable="{contModel>/editMode}"> 
-                                        <items>
-                                            <core:ListItem
-                                                key="{util>code}" 
-                                                text="{util>code_name}" 
-                                                additionalText="{util>code}"/>
-                                        </items>
-                                    </ComboBox>
-                                    <layoutData>
-                                        <layout:GridData
-                                            span="XL12 L12 M12 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox width="100%">			
-                                    <Label text="{I18N>/JOB_TYPE}"/>
-                                    <Text
-                                        width="50%"
-                                        text="{master>/job_type_name}"
-                                        visible="{contModel>/readMode}">
-                                    </Text>
-                                    <ComboBox 
-                                        width="50%"
-                                        visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"                                        
-                                        selectedKey="{master>/job_type_code}"
-                                        items="{
-                                            path: 'util>/Code',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},                                        
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_JOB_TYPE'}
-                                            ]
-                                        }" editable="{contModel>/editMode}"> 
-                                        <items>
-                                            <core:ListItem
-                                                key="{util>code}" 
-                                                text="{util>code_name}" 
-                                                additionalText="{util>code}"/>
-                                        </items>
-                                    </ComboBox>
-                                    <layoutData>
-                                        <layout:GridData
-                                            span="XL12 L12 M12 S12" />
-                                    </layoutData>
-                                </VBox>                                
+                                </VBox>                         
                             </form:content>
                         </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
