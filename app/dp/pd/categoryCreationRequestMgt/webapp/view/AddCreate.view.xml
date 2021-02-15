@@ -109,7 +109,7 @@
 			</uxap:ObjectPageSection>
 
             <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" 
-                title="{I18N>/LANGUAGE} ({= (${pdPartCategoryLng})?${pdPartCategoryLng}.length:0})">
+                 title="{I18N>/LANGUAGE} ({= (${pdPartCategoryLng})?${pdPartCategoryLng}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection2" >
 						<Table id="midTable2" 

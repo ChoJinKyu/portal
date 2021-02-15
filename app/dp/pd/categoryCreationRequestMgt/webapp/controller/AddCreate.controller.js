@@ -70,7 +70,7 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
             this.setModel(new ManagedModel(), "PdPartCategoryModel");
-            this.setModel(new ManagedModel(), "pdPartCategoryLng");
+            this.setModel(new ManagedListModel(), "pdPartCategoryLng");
             this.setModel(new ManagedModel(), "pdActivityStdDayView");
 
 			var oViewModel = new JSONModel({
@@ -142,15 +142,15 @@ sap.ui.define([
 
 
             this.getModel("PdPartCategoryModel").setData({});
-            this.getModel("pdPartCategoryLng").setData({});
+            this.getModel("pdPartCategoryLng").setData([]);
             this.getModel("pdActivityStdDayView").setData({});
             //테스트 에러로 
             //oView.setBusy(true);
             oMasterModel.setTransactionModel(this.getModel());
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
-                    console.log("master");
-                    console.log(oData);
+                    // console.log("master");
+                    // console.log(oData);
                     v_this.category_group_code = oData.category_group_code;
                     v_this.request_category_name = oData.request_category_name;
                     v_this.similar_category_code = oData.similar_category_code;
@@ -186,7 +186,7 @@ sap.ui.define([
             var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
            
             this.getModel("PdPartCategoryModel").setData({});
-            this.getModel("pdPartCategoryLng").setData({});
+            this.getModel("pdPartCategoryLng").setData([]);
             this.getModel("pdActivityStdDayView").setData({});
 
             var aFilters = [];
@@ -194,12 +194,12 @@ sap.ui.define([
             aFilters.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
             aFilters.push(new Filter("category_code", FilterOperator.EQ, category_code));
 
-            console.log(aFilters);
+            // console.log(aFilters);
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/PdPartCategory", {
                 filters: aFilters,
                 success: function (oData) {
-                    console.log("PdPartCategory");
-                    console.log(oData);
+                    // console.log("PdPartCategory");
+                    // console.log(oData);
                     //var oModel = new sap.ui.model.json.JSONModel(oData.results[0]);
                     if(oData.results.length > 0){
                         this.getModel("PdPartCategoryModel").setData(oData.results[0]);
@@ -239,7 +239,14 @@ sap.ui.define([
                         }];
                     }
                     this.getModel("pdPartCategoryLng").setData(oData.results);
+                    // console.log(this.getModel("pdPartCategoryLng"));
                     this.pdPartCategoryLngArr = oData.results;
+                    
+                    // var sTitle = this.getModel("I18N").getText("/LANGUAGE")+" ";
+
+                    //console.log(sTitle+" ["+iTotalItems+"]");
+                    //this.byId("pageSectionMain2").setTitle(sTitle+"("+oData.results.length+")");
+
                 }.bind(this)
             });
 
@@ -459,14 +466,12 @@ sap.ui.define([
                                     v_this.onPageNavBackButtonPress();
                                 }else{
                                     // console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error("error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
-                                    // console.log("eeeeee");
-                                    // console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
-                                    // v_this.onSearch(rst.return_msg );
+                                // console.log(rst);
+                                MessageBox.error("error : "+rst.return_msg );
                             }
                         });
 					};

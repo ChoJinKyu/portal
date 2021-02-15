@@ -20,6 +20,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.core.CallableStatementCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cds.gen.dp.partcategoryv4service.*;
 
@@ -30,6 +32,8 @@ public class PartCategoryV4 implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
     
+    private final static Logger log = LoggerFactory.getLogger(TemplateV4Service.class);
+
     @Transactional(rollbackFor = SQLException.class)
     @On(event = PdPartCategorySaveProcContext.CDS_NAME)
     public void PdPartCategorySaveProc(PdPartCategorySaveProcContext context) {
@@ -236,10 +240,16 @@ public class PartCategoryV4 implements EventHandler {
         
 
 
-        // Local Temp Table DROP
-        jdbc.execute(v_sql_dropable);
-        jdbc.execute(v_sql_dropable2);
-        jdbc.execute(v_sql_dropable3);
+        // 아래 주석 처리는 표준 try 처리 나오기 전까지 꼭 함께 가져가십시요.
+        //프로시저에서 오류 발생시 드랍 테이블에서 오류가 발생하여 오류 발생 시점을 알수 없으므로 msg를 가져 갈수 있도록 try 처리함
+        //실제 프로시저 오류는 아래 드랍 테이블을 주석 처리 하면 나옴  
+        try{
+            jdbc.execute(v_sql_dropable);
+            jdbc.execute(v_sql_dropable2);
+            jdbc.execute(v_sql_dropable3);
+        }catch(Exception e){
+            log.error("PartCategoryV4  PdPartCategorySaveProc Error : {}", v_row);
+        }
 
         context.setResult(v_row);
         context.setCompleted();
