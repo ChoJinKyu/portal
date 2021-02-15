@@ -247,8 +247,6 @@ sap.ui.define([
                 }
             }
 
-
-
         },
         _NPTableArrayAdd: function (NPHeaderData) {
             var oModel = that.getView().getModel("NegoHeaders");//that.getView().getModel("viewModel");

@@ -428,7 +428,7 @@ sap.ui.define([
             getDecodeString: function (oData) {
                 var result = "";
                 if( oData ){
-                        result =  decodeURIComponent(escape(window.atob(oData)))
+                        result = decodeURIComponent(escape(window.atob(oData)))
                 } 
                 return result;
             },
@@ -592,7 +592,8 @@ sap.ui.define([
                     var oObj = {
                         _row_state_                     : "D",
                         contact                         : element.contact,
-                        evaluation_type_code            : element.evaluation_type_code,
+                        // evaluation_type_code            : element.evaluation_type_code,
+                        supplier_register_status_code   : element.supplier_register_status_code,
                         excl_flag                       : element.excl_flag,
                         excl_reason_desc                : element.excl_reason_desc,
                         include_flag                    : element.include_flag,
@@ -666,12 +667,14 @@ sap.ui.define([
                                     objTemp.supplier_name = pToken[i].business_partner_local_name;
                                     objTemp.supplier_type_code = pToken[i].type_code;
                                     objTemp.supplier_type_name = pToken[i].type_name;
-                                    objTemp.evaluation_type_code = pToken[i].business_partner_register_status_code;
-                                    objTemp.evaluation_type_name = pToken[i].business_partner_register_status_name;
+                                    objTemp.supplier_register_status_code = pToken[i].business_partner_register_status_code;
+                                    objTemp.supplier_register_status_name = pToken[i].business_partner_register_status_name;
+
+                                    objTemp.operation_org_code = pToken[i].org_code;
 
                                     console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
 
-                                    objTemp.only_maker_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
+                                    objTemp.maker_only_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
         
                                     var supplierItem_S = this.getSupplierItem(objTemp);
         
@@ -734,15 +737,15 @@ sap.ui.define([
                                 objTemp.supplier_name = pToken[i].business_partner_local_name;
                                 objTemp.supplier_type_code = pToken[i].type_code;
                                 objTemp.supplier_type_name = pToken[i].type_name;
-                                objTemp.evaluation_type_code = pToken[i].business_partner_register_status_code;
-                                objTemp.evaluation_type_name = pToken[i].business_partner_register_status_name;
+                                objTemp.supplier_register_status_code = pToken[i].business_partner_register_status_code;
+                                objTemp.supplier_register_status_name = pToken[i].business_partner_register_status_name;
 
                                 objTemp.operation_org_code = pToken[i].org_code;
                                 // objTemp.operation_org_type_code = pToken[i].type_code;
 
                                 console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
 
-                                objTemp.only_maker_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
+                                objTemp.maker_only_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
     
                                 var supplierItem_S = this.getSupplierItem(objTemp);
     
@@ -753,6 +756,8 @@ sap.ui.define([
                                 oModel.refresh();
                             }
                         }
+
+                        this.getView().getModel("NegoHeaders").refresh();
     
                         var bLength = this.getView().byId("table_Specific").getItems().length;
                         this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[13].getAggregation("items")[0].setValue(bLength );
@@ -783,34 +788,36 @@ sap.ui.define([
 
             getSupplierItem: function(oObj) {
                 var supplierItem = {
-                    "_row_state_" : "C",
-                    "tenant_id": oObj.tenant_id,
-                    "nego_header_id": Number(this.getCheckObject(oObj,"nego_header_id",-1)),
-                    "nego_item_number": oObj.nego_item_number,
-                    "item_supplier_sequence": this.getCheckObject(oObj,"item_supplier_sequence", ""),
-                    "operation_org_code": oObj.operation_org_code,
-                    "operation_org_type_code": oObj.operation_org_type_code,
-                    "operation_unit_code": oObj.operation_unit_code,
-                    "nego_supplier_register_type_code": "S",
-                    "evaluation_type_code": oObj.evaluation_type_code,
-                    "evaluation_type_name" : oObj.evaluation_type_name,
-                    "supplier_code": oObj.supplier_code,
-                    "supplier_name": oObj.supplier_name,
-                    "supplier_type_code": oObj.supplier_type_code,
-                    "supplier_type_name": oObj.supplier_type_name,
-                    "excl_flag": null,
-                    "excl_reason_desc": null,
-                    "include_flag": null,
-                    "nego_target_include_reason_desc": null,
-                    "only_maker_flag": oObj.only_maker_flag,
-                    "contact": null,
-                    "note_content": null,
+                    "_row_state_"                       : "C",
+                    "tenant_id"                         : oObj.tenant_id,
+                    "nego_header_id"                    : Number(this.getCheckObject(oObj,"nego_header_id",-1)),
+                    "nego_item_number"                  : oObj.nego_item_number,
+                    "item_supplier_sequence"            : this.getCheckObject(oObj,"item_supplier_sequence", ""),
+                    "operation_org_code"                : oObj.operation_org_code,
+                    "operation_org_type_code"           : oObj.operation_org_type_code,
+                    "operation_unit_code"               : oObj.operation_unit_code,
+                    "nego_supplier_register_type_code"  : "S",
+                    // "evaluation_type_code"              : oObj.evaluation_type_code,
+                    // "evaluation_type_name"              : oObj.evaluation_type_name,
+                    "supplier_code"                     : oObj.supplier_code,
+                    "supplier_name"                     : oObj.supplier_name,
+                    "supplier_register_status_code"     : oObj.supplier_register_status_code,
+                    "supplier_register_status_name"     : oObj.supplier_register_status_name,
+                    "supplier_type_code"                : oObj.supplier_type_code,
+                    "supplier_type_name"                : oObj.supplier_type_name,
+                    "excl_flag"                         : null,
+                    "excl_reason_desc"                  : null,
+                    "include_flag"                      : null,
+                    "nego_target_include_reason_desc"   : null,
+                    "maker_only_flag"                   : oObj.maker_only_flag,
+                    "contact"                           : null,
+                    "note_content"                      : null,
                     // "local_create_dtm": "2021-01-12T10:30:26Z",
-                    "local_update_dtm": new Date(),
+                    "local_update_dtm"                  : new Date(),
                     // "create_user_id": "997F8D5A04E2433AA7341CADC74AF683_9H28CV9CYJ9DKMI39B4ARVOWS_RT",
-                    "update_user_id":  oObj.update_user_id,
+                    "update_user_id"                    :  oObj.update_user_id,
                     // "system_create_dtm": "2021-01-12T10:30:26Z",
-                    "system_update_dtm": new Date()
+                    "system_update_dtm"                 : new Date()
                 };
                 return supplierItem;
             },
@@ -1599,7 +1606,8 @@ sap.ui.define([
                                 operation_org_code               : this.getCheckObject(element2,"operation_org_code",""),
                                 operation_unit_code              : this.getCheckObject(element2,"operation_unit_code",""),
                                 nego_supplier_register_type_code : this.getCheckObject(element2,"nego_supplier_register_type_code",""),
-                                evaluation_type_code             : this.getCheckObject(element2,"evaluation_type_code",""),
+                                // evaluation_type_code             : this.getCheckObject(element2,"evaluation_type_code",""),
+                                supplier_register_status_code    : this.getCheckObject(element2,"supplier_register_status_code",""),
                                 nego_supeval_type_code           : this.getCheckObject(element2,"nego_supeval_type_code",""),
                                 supplier_code                    : this.getCheckObject(element2,"supplier_code",""),
                                 supplier_name                    : this.getCheckObject(element2,"supplier_name",""),
