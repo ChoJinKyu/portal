@@ -401,9 +401,9 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
-                                            <Label text="(New)Price" textAlign="Right" />
+                                            <Label text="(New)Price" textAlign="Center" width="100%"/>
                                             <t:template>
-                                                <Input type="Number" value="{generalInfoList>net_price}" editable="{detailViewModel>/viewMode}" />
+                                                <Input type="Number" value="{generalInfoList>net_price}" editable="{detailViewModel>/viewMode}" textAlign="Right" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">

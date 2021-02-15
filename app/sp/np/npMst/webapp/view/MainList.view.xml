@@ -134,7 +134,7 @@
                                 <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Matrial" labelFor="search_material_code"></Label>
+                                <Label text="Material" labelFor="search_material_code"></Label>
                                 <Input id="search_material_code" type="Text" value="" placeholder="" showValueHelp="true" valueHelpRequest=".vhMatrialCode"/>
                                 <layoutData><layout:GridData span="XL1 L1 M1 S12"/></layoutData>
                             </VBox>

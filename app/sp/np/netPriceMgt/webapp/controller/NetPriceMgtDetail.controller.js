@@ -87,7 +87,7 @@ sap.ui.define([
             /*========================================= Init : End ===============================*/
 
             fnBtnCtrlFnc: function (approveStatus) {
-                console.log("approveStatus:" + approveStatus);
+                //console.log("approveStatus:" + approveStatus);
                 that.byId("draftBtn").setVisible(false);
                 that.byId("deleteBtn").setVisible(false);
                 that.byId("requestBtn").setVisible(false);
@@ -795,7 +795,6 @@ sap.ui.define([
                                         eMessageDetail = e.responseJSON.error.message.substring(9);
                                         errorType = e.responseJSON.error.message.substring(0, 1);
                                         console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
-
                                     }
 
                                     MessageToast.show(eMessageDetail);
