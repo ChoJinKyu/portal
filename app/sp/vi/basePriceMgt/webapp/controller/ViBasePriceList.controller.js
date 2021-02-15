@@ -38,8 +38,8 @@ sap.ui.define([
         },
 
         onInit: function () {
-            var oRootModel = this.getOwnerComponent().getModel("rootModel");
-            sTenantId = oRootModel.getProperty("/tenantId");
+            var oUserModel = this.getOwnerComponent().getModel("userModel");
+            sTenantId = oUserModel.getProperty("/tenantId");
 
             var oToday = new Date();
             this.setModel(new JSONModel(), "listModel");
@@ -219,6 +219,7 @@ sap.ui.define([
          */
         
         , onExcelExport: function (oEvent) {
+            debugger;
             var sTableId = oEvent.getSource().getParent().getParent().getId();
             if ( !sTableId ) { 
                 return; 
@@ -298,7 +299,8 @@ sap.ui.define([
         handleConfirm: function (oEvent) {
             var id = toggleButtonId.split('--')[4];
             var approvalTarget = "";
-            var oRootModel = this.getModel("rootModel");           
+            var oRootModel = this.getModel("rootModel");  
+            oRootModel.setProperty("/selectedData", null);
 
              if( !id ){       
                  MessageBox.error("품의서 유형을 선택해주세요");
@@ -330,8 +332,8 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-            MessageBox.show("준비중입니다. ", {at: "Center Center"});
-            return;
+            // MessageBox.show("준비중입니다. ", {at: "Center Center"});
+            // return;
 
             var oListModel = this.getModel("listModel");
             var oBindingContext = oEvent.getParameter("rowBindingContext");

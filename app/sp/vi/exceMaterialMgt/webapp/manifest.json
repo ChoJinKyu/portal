@@ -1,0 +1,147 @@
+{
+  "_version": "1.12.0", 
+  "sap.app": {
+    "id": "sp.vi.exceMaterialMgt",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "ach": "ach",
+    "sourceTemplate": {
+      "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
+      "version": "1.40.12"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "srv-api/odata/v2/sp.BasePriceArlService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
+        }
+      },
+     "OrgMgtService": {
+        "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+        "type": "OData",
+        "settings": {
+            "odataVersion": "2.0",
+            "localUri": "localService/metadata.xml"
+        }
+      }
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "sppCap_ui_dev"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "rootView": {
+      "viewName": "sp.vi.exceMaterialMgt.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.60.1",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "sp.vi.exceMaterialMgt.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+        "orgCode": {
+            "dataSource": "OrgMgtService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": true,
+                "useBatch": true
+            }
+        }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "resourceRoots": {
+      "ext.lib": "../../../../lib",
+      "dpmd": "../../../../dp/md",
+      "dputil": "../../../../dp/util",
+      "sp.util": "../../../util",
+      "dp.util": "../../../../dp/util",
+      "cm.util": "../../../../cm/util"
+      
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true,
+        "viewPath": "sp.vi.exceMaterialMgt.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "clearControlAggregation": false,
+        "transition": "slip"
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "ExceMaterialList",
+          "target": "ExceMaterialList"
+        }
+      ],
+      "targets": {
+        "ExceMaterialList": {
+          "viewId": "ExceMaterialList",
+          "viewName": "ExceMaterialList"
+        }
+      }
+    }
+  }
+}

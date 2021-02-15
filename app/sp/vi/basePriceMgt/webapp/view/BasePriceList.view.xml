@@ -156,19 +156,17 @@
                 <t:Column hAlign="Center" width="12rem">
                     <Label text="{I18N>/SP_APPROVAL_TYPE}"  textAlign="Center" width="100%" />
                     <t:template>
-                        <tnt:InfoLabel 
-                            text="{listModel>net_price_type_code_nm}" 
-                            colorScheme="{
-                                path: 'listModel>net_price_type_code',
-                                formatter: '.onStatusColor'
-                            }" />
+                        <tnt:InfoLabel text="{listModel>net_price_type_code_nm}" 
+                                colorScheme="{
+                                    path: 'listModel>net_price_type_code',
+                                    formatter: '.onStatusColor'
+                                }" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
                     <Label text="{I18N>/STATUS}"  textAlign="Center" width="100%" />
                     <t:template>
-                        <tnt:InfoLabel 
-                            text="{listModel>approve_status_code_nm}" 
+                        <tnt:InfoLabel text="{listModel>approve_status_code_nm}" 
                             colorScheme="{
                                 path: 'listModel>approve_status_code',
                                 formatter: '.onStatusColor'

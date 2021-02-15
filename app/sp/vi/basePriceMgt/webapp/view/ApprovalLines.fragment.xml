@@ -31,37 +31,45 @@
                          singleContainerFullSize="true">
 			<form:content>
 				<!-- Approval Line --> 
-                <t:Table id="ApproverTable" selectionMode="MultiToggle" rowSelectionChange=".onApprRowSelectionChange" 
-                                 fixedColumnCount="3" visibleRowCount="5" rows="{approverModel>/details}" >
+                <t:Table id="ApproverTable" selectionMode="{= ${detailViewModel>/viewMode} ? 'MultiToggle' : 'None'}"
+                    rowSelectionChange=".onApprRowSelectionChange" fixedColumnCount="3" visibleRowCount="5" rows="{approverModel>/results}" >
                      <t:extension>
                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                             <Title text="Approval Line" level="H2"/>
                         <ToolbarSpacer />
-                        <Button text="{I18N>/ROW_ADD}" type="Emphasized" press="onApprRowdd" />
-                        <Button text="{I18N>/ROW_DELETE}" type="Emphasized" press="onApprtRowDelete" />
+                        <Button text="{I18N>/ROW_ADD}" type="Emphasized" press="onApprRowdd" visible="{= ${detailViewModel>/viewMode}}" />
+                        <Button text="{I18N>/ROW_DELETE}" type="Emphasized" press="onApprtRowDelete" visible="{= ${detailViewModel>/viewMode}}" />
                         </OverflowToolbar>
                     </t:extension>
                     <t:columns>
                         <t:Column hAlign="Left" width="3rem">
                             <Label text="{I18N>/SEQUENCE}" textAlign="Center" width="100%"/>
                             <t:template>
-                                <Text text="{approverModel>sequence}" />
+                                <Text text="{approverModel>approve_sequence}" />
                             </t:template>
                         </t:Column>
                         <t:Column hAlign="Left" width="8rem">
                             <Label text="{I18N>/TYPE}" textAlign="Center" width="100%"/>
                             <t:template>
-                                <ComboBox selectedKey="{approverModel>appr_type}"  items="{ path: 'approverModel>/appr_type' }">
-                                    <items>
-                                        <core:Item key="{approverModel>code}" text="{approverModel>text}" />
-                                    </items>
-                                </ComboBox>
+                                <VBox>
+                                    <ComboBox selectedKey="{approverModel>appr_type}"  items="{ path: 'approverModel>/appr_type' }"
+                                        visible="{= ${detailViewModel>/viewMode}}" editable="true" >
+                                        <items>
+                                            <core:Item key="{approverModel>code}" text="{approverModel>text}" />
+                                        </items>
+                                    </ComboBox>
+                                    <Text text="승인자" visible="{= !${detailViewModel>/viewMode}}" />
+                                </VBox>
                             </t:template>
                         </t:Column>
-                        <t:Column hAlign="Left" width="10rem">
+                        <t:Column hAlign="Left" width="20rem">
                             <Label text="{I18N>/NAME}/{I18N>/DEPARTMENT}" textAlign="Center" width="100%"/>
                             <t:template>
-                                <MultiInput valueHelpRequest="onApprEmployeeDialogPress" value="{approverModel>empNM}/{approverModel>Department}"/>
+                                <VBox>
+                                    <MultiInput valueHelpRequest="onApprEmployeeDialogPress" visible="{= ${detailViewModel>/viewMode}}"
+                                        value="{approverModel>approver_local_nm}/{approverModel>approver_dept_local_nm}"/>
+                                    <Text text="{approverModel>approver_local_nm}/{approverModel>approver_dept_local_nm}" visible="{= !${detailViewModel>/viewMode}}" />
+                                </VBox>
                             </t:template>
                         </t:Column>
                         <t:Column hAlign="Left" width="5rem">
@@ -73,7 +81,8 @@
                         <t:Column hAlign="Left" width="100%">
                             <Label text="{I18N>/COMMENT}" textAlign="Center" width="100%"/>
                             <t:template>
-                                <Input value="{approverModel>comment}"/>
+                                <Input value="{approverModel>comment}" visible="{= !${detailViewModel>/viewMode}}" />
+                                <Text text="{approverModel>comment}" visible="{= ${detailViewModel>/viewMode}}" />
                             </t:template>
                         </t:Column>
                     </t:columns>
@@ -111,8 +120,7 @@
                                 placeholder="Choose codes from the ValueHelp"
                                 showValueHelp="true" 
                                 valueHelpRequest=".onMultiInputWithEmployeeValuePress"
-                                editable="true"
-                                >
+                                editable="true" >
                         </MultiInput>
                     </layout:VerticalLayout>
                     <layoutData>

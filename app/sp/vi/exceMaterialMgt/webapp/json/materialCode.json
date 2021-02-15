@@ -1,0 +1,6 @@
+{"familyMaterialCode": [],
+    "materialCode": [{"org_code": "CNZ", "material_code": "12345678", "description": "Electronic Part, Unclassified", "spec":"NCN-PRODUCT PART", "commondify":"", "uom":"EA", "uit":"G", "item_status":"Obsolete"},
+    {"org_code": "CVZ", "material_code": "1234567888", "description": "Electronic Part, Unclassified", "spec":"NCN-PRODUCT PART", "commondify":"", "uom":"EA", "uit":"P", "item_status":"Obsolete"},
+    {"org_code": "CVZ", "material_code": "1234567777", "description": "Electronic Part, Unclassified", "spec":"NCN-PRODUCT PART", "commondify":"", "uom":"EA", "uit":"G", "item_status":"Obsolete"},
+    {"org_code": "CVZ", "material_code": "12345678AA", "description": "Electronic Part, Unclassified", "spec":"NCN-PRODUCT PART", "commondify":"", "uom":"EA", "uit":"G", "item_status":"Obsolete"},
+    {"org_code": "DR2", "material_code": "12345678BB", "description": "Electronic Part, Unclassified", "spec":"NCN-PRODUCT PART", "commondify":"", "uom":"EA", "uit":"G", "item_status":"To be obsolete"}]}
