@@ -427,10 +427,10 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Maker code" textAlign="Center" editable="{detailViewModel>/viewMode}" />
                                             <t:template>
-                                                <Input type="Text" showValueHelp="true" value="{generalInfoList>maker_code}" editable="{detailViewModel>/viewMode}" />
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhMakerCode" value="{generalInfoList>maker_code}" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
+                                        <t:Column hAlign="Center" width="15rem">
                                             <Label text="Maker" textAlign="Center" />
                                             <t:template>
                                                 <Input type="Text" value="{generalInfoList>maker_name}" />
