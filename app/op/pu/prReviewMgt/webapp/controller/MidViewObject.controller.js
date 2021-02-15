@@ -61,7 +61,7 @@ sap.ui.define([
         onButtonPress: function () {
 
             var [ event, type, item, ...args ] = arguments;
-            var { action, service, entry, tId, title } = args[args.length-1];
+            var { action, service, entry, tId } = args[args.length-1];
             var message, value;
             var table = this.byId(tId);
 
@@ -160,7 +160,7 @@ sap.ui.define([
             }, {
                 onAfterOpen: (function() {
                     this.setModel(new JSONModel({ 
-                        title: title,
+                        title: this.getModel("I18N").getText("/CHANGE_HISTORY"),
                         Pr_ReviewDtlHistView: []
                     }), "history");
                     var { tenant_id, company_code, pr_number, pr_item_number } = this.key;

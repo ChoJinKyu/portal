@@ -770,42 +770,38 @@
                                                 <t:Column width="" hAlign="Center" >
                                                     <Label text="평가항목 유형" />
                                                     <t:template>
-                                                        <!-- <Button 
-                                                            icon="sap-icon://account" press="onSupplierButtonPress" >
-                                                        </Button> -->
-                                                        <Text text="{viewModel>h1}"/>
+                                                         <!-- <Text text="{viewModel>h1}"/> -->
+                                                        <Text text="{NegoHeaders>nonpr_supeval_attr_type_code}"/>
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="요구사항" />
                                                     <t:template>
-                                                        <Text text="{viewModel>h2}" />
+                                                        <Text text="{NegoHeaders>nonpr_requirements_text}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="비고" />
                                                     <t:template>
-                                                    <Label text="{viewModel>h3}" />
+                                                        <Label text="{NegoHeaders>note_content}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="평가속성" />
                                                     <t:template>
-                                                        <!-- <Input id="abc" showValueHelp="true" valueHelpRequest="."></Input> -->
-                                                        <Text text="{viewModel>h4}" />
+                                                       <Text text="{NegoHeaders>nonpr_supeval_attr_val_type_cd}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
                                                     <Label text="점수 산정 방법" />
                                                     <t:template>
-                                                        <!-- <Input id="inputPartNo" showValueHelp="true" valueHelpRequest=".onPartNoPress" ></Input> -->
-                                                        <Text text="{viewModel>h5}" />
+                                                        <Text text="{NegoHeaders>nonpr_score_comput_method_code}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
                                                     <Label text="Target Score"/>
                                                     <t:template>
-                                                        <Label text="{viewModel>h6}" />
+                                                        <Label text="{NegoHeaders>target_score}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
@@ -1521,18 +1517,10 @@
                                                             <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="10%">
                                                                 <Text text="Contact" />
                                                             </Column>
-                                                            <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                                                <Text text="Delete" />
-                                                            </Column> -->
                                                         </columns>
                                                         <items>
                                                             <ColumnListItem type="Inactive" >
                                                                 <cells>
-                                                                    <!-- <Text text="{NegoItemPrices>item_supplier_sequence}">
-                                                                        <customData>
-                                                                            <core:CustomData key="item_supplier_sequence" value='{NegoItemPrices>item_supplier_sequence}'/>
-                                                                        </customData>
-                                                                    </Text> -->
                                                                     <ObjectStatus icon="{
                                                                         path: 'NegoItemPrices>_row_state_',
                                                                         formatter: '.formatter.toModelStateColumnIcon'
@@ -1543,7 +1531,6 @@
                                                                     <Label text="{NegoItemPrices>supplier_type_name}"/>
                                                                     <Label text="{NegoItemPrices>only_maker_flag}"/>
                                                                     <Button icon="sap-icon://value-help" />
-                                                                    <!-- <Text text=""/> -->
                                                                 </cells>
                                                             </ColumnListItem>
                                                         </items>

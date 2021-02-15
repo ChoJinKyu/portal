@@ -66,7 +66,8 @@ sap.ui.define([
                 if(sFirstKey){
                     oEvent.getSource().setSelectedKey(sFirstKey);
                 }else{
-                    sFirstKey = oEvent.getSource().getItems().length && oEvent.getSource().getItems()[0].getKey();
+                    oEvent.getSource().setSelectedIndex(0);
+                    sFirstKey = oEvent.getSource().getItems().length && oEvent.getSource().getSelectedKey();
                 };
                 
                 if(sFirstKey){

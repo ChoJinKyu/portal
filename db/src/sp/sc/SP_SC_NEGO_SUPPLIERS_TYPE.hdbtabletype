@@ -3,11 +3,14 @@ tenant_id                          NVARCHAR(5) NOT NULL       ,  --#01
 nego_header_id                     BIGINT NOT NULL            ,  --#02
 nego_item_number                   NVARCHAR(10) NOT NULL      ,  --#03
 item_supplier_sequence             NVARCHAR(10) NOT NULL      ,  --#04
+operation_org_type_code            NVARCHAR(30)               ,  --#05
 operation_org_code                 NVARCHAR(30)               ,  --#05
 operation_unit_code                NVARCHAR(30)               ,  --#06
-nego_supplier_register_type_code   NVARCHAR(10)               ,  --#07
-evaluation_type_code               NVARCHAR(10)               ,  --#08
-nego_supeval_type_code             NVARCHAR(10)               ,  --#09
+nego_supplier_register_type_code   NVARCHAR(10)               ,  --#07-폐기예정
+negotiation_supp_reg_status_cd     NVARCHAR(10)               ,  --#07
+evaluation_type_code               NVARCHAR(10)               ,  --#08-폐기예정
+nego_supeval_type_code             NVARCHAR(10)               ,  --#09-폐기예정
+supplier_register_status_code      NVARCHAR(10)               ,  --#08
 supplier_code                      NVARCHAR(10)               ,  --#10
 supplier_name                      NVARCHAR(300)              ,  --#11
 supplier_type_code                 NVARCHAR(30)               ,  --#12

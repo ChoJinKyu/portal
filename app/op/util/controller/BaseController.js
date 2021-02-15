@@ -248,7 +248,7 @@ sap.ui.define([
         // Service
         /////////////////////////////////////////////////////////////
         // call procedure
-        procedure: function(service, entry, input) {
+        procedure: function(service, entry, input, args) {
 
             var mDeferred = $.Deferred();
             (function(){
@@ -273,8 +273,14 @@ sap.ui.define([
                 r.value instanceof Array
                 && 
                 (r = r.value[0]);
+
                 // Message
-                MessageBox.success(r.return_msg);
+                (args && !args.skip)
+                &&
+                (r.return_code == "NG" 
+                ? MessageBox.error(r.return_msg)
+                : MessageBox.success(r.return_msg))
+
                 // Settled
                 return (
                     r.return_code == "NG" 
@@ -351,7 +357,7 @@ sap.ui.define([
                 var stamp = [
                     today.getFullYear(), 
                     ((today.getMonth()+1)+"").length == 1 ? "0" + (today.getMonth()+1) : today.getMonth()+1, 
-                    ((today.getDay())+"").length == 1 ? "0" + (today.getDay()) : today.getDay(), 
+                    ((today.getDate())+"").length == 1 ? "0" + (today.getDate()) : today.getDate(), 
                     ((today.getHours())+"").length == 1 ? "0" + (today.getHours()) : today.getHours(), 
                     ((today.getMinutes())+"").length == 1 ? "0" + (today.getMinutes()) : today.getMinutes(), 
                     ((today.getSeconds())+"").length == 1 ? "0" + (today.getSeconds()) : today.getSeconds()

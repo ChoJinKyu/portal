@@ -10,7 +10,7 @@
 
         <form:SimpleForm id="ucUcQuotationSupForm1Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="* 공사명" required="true" design="Bold" class="sapMLabelNoText"/>
+                <Label text="공사명" required="true" design="Bold" class="sapMLabelNoText"/>
                 <Input value="{
                     path: 'viewModel>/ucmaster/const_name',
                     type: 'sap.ui.model.type.String',
@@ -24,7 +24,7 @@
         <form:SimpleForm id="ucUcQuotationSupForm2Edit" editable="true">
 
             <VBox alignContent="Center">
-                <Label text="* 대분류(공종)" design="Bold" class="sapMLabelNoText" />
+                <Label text="대분류(공종)" required="true" design="Bold" class="sapMLabelNoText" />
                 <ComboBox   
                                 id="searchEpItemCode"
                                 placeholder="All"
@@ -34,7 +34,7 @@
                                 items="{
                                     path: '/ItemClassView'
                                 }"
-                            >
+                            required="true">
                                <core:ListItem 
                                     key="{code}" 
                                     text="{name}"/>
@@ -45,7 +45,7 @@
             </VBox>        
 
             <VBox alignContent="Center">
-                <Label text="* 공사기간" design="Bold" class="sapMLabelNoText"/>
+                <Label text="공사기간" required="true" design="Bold" class="sapMLabelNoText"/>
                 <!-- <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/> -->
                 <HBox>
                     <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/const_start_date}" required="true" placeholder="Date" width="100%"/>

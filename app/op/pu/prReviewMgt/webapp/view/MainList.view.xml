@@ -277,13 +277,13 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <!-- 구매요청 번호 -->
-                        <Column hAlign="Center" width="auto">
-                            <Text text="{I18N>/PR_NUMBER}" />
-                        </Column>
                         <!-- 구매요청 유형 -->
                         <Column hAlign="Center" width="8em">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
+                        </Column>
+                        <!-- 구매요청 번호 -->
+                        <Column hAlign="Center" width="auto">
+                            <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
                         <!-- 품목 번호 -->
                         <Column hAlign="Center" width="auto">
@@ -293,6 +293,10 @@
                         <Column hAlign="Center" width="auto">
                             <Text text="{I18N>/ORG_CODE}" />
                         </Column>
+                        <!-- 조직명 -->
+                        <Column hAlign="Center" width="auto">
+                            <Text text="{I18N>/ORG_NAME}" />
+                        </Column>
                         <!-- 자재코드 -->
                         <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto">
                             <Text text="{I18N>/MATERIAL_CODE}" />
@@ -300,10 +304,6 @@
                         <!-- 구매요청 품명 -->
                         <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
                             <Text text="{I18N>/ITEM_NAME}" />
-                        </Column>
-                        <!-- 단위 -->
-                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="{I18N>/UNIT}" />
                         </Column>
                         <!-- 요청수량 -->
                         <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto">
@@ -313,9 +313,9 @@
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/REMAIN_QUANTITY}" />
                         </Column>
-                        <!-- 납품요청 일자 -->
+                        <!-- 단위 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="{I18N>/DELIVERY_REQUEST_DATE}" />
+                            <Text text="{I18N>/UNIT}" />
                         </Column>
                         <!-- 금액 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
@@ -337,6 +337,10 @@
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_DATE}" />
                         </Column>
+                        <!-- 납품요청 일자 -->
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
+                            <Text text="{I18N>/DELIVERY_REQUEST_DATE}" />
+                        </Column>
                         <!-- 진행상태 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PROGRESS_STATUS}" />
@@ -345,20 +349,20 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
                             <cells>
-                                <!-- 구매요청 번호 -->
-                                <Text text="{list>pr_number}" width="10em"/>
                                 <!-- 구매요청 유형 -->
                                 <Text text="{list>pr_type_name}"/>
+                                <!-- 구매요청 번호 -->
+                                <Text text="{list>pr_number}"/>
                                 <!-- 품목 번호 -->
                                 <Text text="{list>pr_item_number}"/>
                                 <!-- 조직코드 -->
                                 <Text text="{list>org_code}"/>
+                                <!-- 조직 -->
+                                <Text text="{list>org_name}"/>
                                 <!-- 자재코드 -->
                                 <Text text="{list>material_code}" width="10em"/>
                                 <!-- 구매요청 품명 -->                            
                                 <Text text="{list>pr_desc}"/>
-                                <!-- 단위 -->
-                                <Text text="{list>pr_unit}"/>
                                 <!-- 요청수량 -->
                                 <Text text="{
                                     path: 'list>pr_quantity', 
@@ -369,11 +373,8 @@
                                     path: 'list>remain_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
                                 }"/>
-                                <!-- 납품요청 일자 -->
-                                <Text text="{
-                                    path: 'list>delivery_request_date',
-                                    formatter: '.dateFormatter.toUTCDateString'
-                                }"/>
+                                <!-- 단위 -->
+                                <Text text="{list>pr_unit}"/>
                                 <!-- 금액 -->
                                 <Text text="{
                                     path: 'list>estimated_price', 
@@ -388,6 +389,11 @@
                                 <!-- 구매요청 일자 -->
                                 <Text text="{
                                     path: 'list>request_date',
+                                    formatter: '.dateFormatter.toUTCDateString'
+                                }"/>
+                                <!-- 납품요청 일자 -->
+                                <Text text="{
+                                    path: 'list>delivery_request_date',
                                     formatter: '.dateFormatter.toUTCDateString'
                                 }"/>
                                 <!-- 진행상태 -->

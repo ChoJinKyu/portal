@@ -95,7 +95,7 @@ END;
 		SELECT tenant_id, nego_header_id, reference_nego_header_id, previous_nego_header_id, operation_org_code, operation_unit_code, reference_nego_document_number, nego_document_round, nego_document_number, nego_document_title, nego_document_desc, nego_progress_status_code, award_progress_status_code, reply_times, supplier_count, nego_type_code, outcome_code, negotiation_output_class_code, buyer_empno, buyer_department_code, immediate_apply_flag, open_date, closing_date, auto_rfq, items_count, negotiation_style_code, close_date_ext_enabled_hours, close_date_ext_enabled_count, actual_extension_count, remaining_hours, note_content, award_type_code, award_method_code, target_amount_config_flag, target_currency, target_amount, supplier_participation_flag, partial_allow_flag, bidding_result_open_status_code, max_round_count, auto_round, auto_round_terms, previous_round, number_of_award_supplier, order_rate_01, order_rate_02, order_rate_03, order_rate_04, order_rate_05, bid_conference, bid_conference_date, bid_conference_place, contact_point_empno, phone_no FROM SP_SC_NEGO_HEADERS MAIN
             WHERE 1=0
                 OR EXISTS ( SELECT * FROM :I_TABLE_NEGOITEMPRICES WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID )
-                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOSUPPLIERS WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID  )
+                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOSUPPLIERS  WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID  )
         ;
 	else
 		vt_nego_headers_tmp = SELECT tenant_id, nego_header_id, reference_nego_header_id, previous_nego_header_id, operation_org_code, operation_unit_code, reference_nego_document_number, nego_document_round, nego_document_number, nego_document_title, nego_document_desc, nego_progress_status_code, award_progress_status_code, reply_times, supplier_count, nego_type_code, outcome_code, negotiation_output_class_code, buyer_empno, buyer_department_code, immediate_apply_flag, open_date, closing_date, auto_rfq, items_count, negotiation_style_code, close_date_ext_enabled_hours, close_date_ext_enabled_count, actual_extension_count, remaining_hours, note_content, award_type_code, award_method_code, target_amount_config_flag, target_currency, target_amount, supplier_participation_flag, partial_allow_flag, bidding_result_open_status_code, max_round_count, auto_round, auto_round_terms, previous_round, number_of_award_supplier, order_rate_01, order_rate_02, order_rate_03, order_rate_04, order_rate_05, bid_conference, bid_conference_date, bid_conference_place, contact_point_empno, phone_no FROM :I_TABLE_NEGOHEADERS;
@@ -466,11 +466,14 @@ END;
             , nego_header_id
             , nego_item_number
             , item_supplier_sequence
+            , operation_org_type_code
             , operation_org_code
             , operation_unit_code
             , nego_supplier_register_type_code
+            , negotiation_supp_reg_status_cd
             , evaluation_type_code
             , nego_supeval_type_code
+            , supplier_register_status_code
             , supplier_code
             , supplier_name
             , supplier_type_code
@@ -494,11 +497,14 @@ END;
             , MAP(NS.item_supplier_sequence
                 , '', LPAD(IFNULL(V_NIPM.item_supplier_sequence_max,0)+ROW_NUMBER() OVER(PARTITION BY NS.tenant_id, NS.nego_header_id, NS.nego_item_number ORDER BY NS.nego_supplier_register_type_code) ,5 ,'0')
                 , NS.item_supplier_sequence) AS item_supplier_sequence
+            , ifnull(nullif(NS.operation_org_type_code,''),'BU') AS operation_org_type_code
             , NS.operation_org_code
             , NS.operation_unit_code
             , NS.nego_supplier_register_type_code
+            , NS.negotiation_supp_reg_status_cd
             , NS.evaluation_type_code
             , NS.nego_supeval_type_code
+            , NS.supplier_register_status_code
             , NS.supplier_code
             , NS.supplier_name
             , NS.supplier_type_code

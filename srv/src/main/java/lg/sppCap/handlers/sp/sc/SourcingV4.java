@@ -197,11 +197,14 @@ public class SourcingV4 implements EventHandler {
                 .append("    , nego_header_id                                               ")  //#02
                 .append("    , nego_item_number                                             ")  //#03
                 .append("    , item_supplier_SEQUENCE                                       ")  //#04
+                .append("    , operation_org_type_code                                      ")  //#05
                 .append("    , operation_org_code                                           ")  //#05
                 .append("    , operation_unit_code                                          ")  //#06
-                .append("    , nego_supplier_register_type_code                             ")  //#07
-                .append("    , evaluation_type_code                                         ")  //#08
-                .append("    , nego_supeval_type_code                                       ")  //#09
+                .append("    , nego_supplier_register_type_code                             ")  //#07-폐기예정
+                .append("    , negotiation_supp_reg_status_cd                               ")  //#07
+                .append("    , evaluation_type_code                                         ")  //#08-폐기예정
+                .append("    , nego_supeval_type_code                                       ")  //#09-폐기예정
+                .append("    , supplier_register_status_code                                ")  //#08
                 .append("    , supplier_code                                                ")  //#10
                 .append("    , supplier_name                                                ")  //#11
                 .append("    , supplier_type_code                                           ")  //#12
@@ -274,7 +277,7 @@ public class SourcingV4 implements EventHandler {
         StringBuffer v_sql_insertTable_negosuppliers= new StringBuffer();
 		v_sql_insertTable_negosuppliers.append("insert into #local_temp_negosuppliers values ")
         // v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: negoitemnonprices
         StringBuffer v_sql_insertTable_negoitemnonprices= new StringBuffer();
@@ -505,11 +508,14 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("nego_header_id"                           ),
                     v_inRow.get("nego_item_number"                         ),
                     v_inRow.get("item_supplier_sequence"                   ),
+                    v_inRow.get("operation_org_type_code"                  ),
                     v_inRow.get("operation_org_code"                       ),
                     v_inRow.get("operation_unit_code"                      ),
-                    v_inRow.get("nego_supplier_register_type_code"         ),
-                    v_inRow.get("evaluation_type_code"                     ),
-                    v_inRow.get("nego_supeval_type_code"                   ),
+                    v_inRow.get("nego_supplier_register_type_code"         ),  //#07-폐기예정
+                    v_inRow.get("negotiation_supp_reg_status_cd"           ),  //#07
+                    v_inRow.get("evaluation_type_code"                     ),  //#08-폐기예정
+                    v_inRow.get("nego_supeval_type_code"                   ),  //#09-폐기예정
+                    v_inRow.get("supplier_register_status_code"            ),  //#08
                     v_inRow.get("supplier_code"                            ),
                     v_inRow.get("supplier_name"                            ),
                     v_inRow.get("supplier_type_code"                       ),

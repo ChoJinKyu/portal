@@ -285,6 +285,15 @@ sap.ui.define([
             //var dtl_net_price_contract_degree_ = dtlData[this.rateIndex].const_quotation_item_number;
             var rate_len = 0;
             console.log("reteDate ----------> " , reteDate);
+
+            // dtlData.map(function(e) { 
+
+            //     console.log("e.quotation_quantity ----------> " , e.quotation_quantity);
+            //     if(!e.quotation_quantity){
+            //         MessageToast.show("수량을 입력해주세요~");
+            //         return;
+            //     }
+            // });
             
 
             if (reteDate === undefined) {
@@ -395,8 +404,11 @@ sap.ui.define([
                     afterDelCnt++;
                 }
                 
+                // if(!e.quotation_quantity){
+                //     MessageBox.show("수량을 입력해주세요~");
+                //     return;
+                // }
 
-                
 
                 console.log(" seq_input ::: ", seq_input);
 
@@ -523,134 +535,6 @@ sap.ui.define([
 
             console.log("orate ---> " , orate);
 
-            // return;
-
-            // // '221010'	'BM등록요청'
-            // // '221020'	'물량확정요청'
-            // // '221030'	'물량수정요청'
-            // // '221040'	'물량확정'
- 
-            // var statusCode = "221010";
-            // var statusName = "BM등록요청";
-            // // if (flag == "R") {
-            // //     statusCode = "221020";
-            // //     statusName = "물량확정요청";
-            // // } else if (flag == "B") {
-            // //     statusCode = "221030";
-            // //     statusName = "물량수정요청";
-            // // } else {
-            // //     statusCode = "221040";
-            // //     statusName = "물량확정";
-            // // }
-
-            // var input = {};
-            // var inputData = {};
-            // //var detailData = this._sLoiDtlArr;
-            // var tenantId = oMasterModel.getData().tenant_id;
-            // if (tenantId.indexOf(",") > -1) {
-            //     tenantId = tenantId.split(",")[0];
-            // }
-            // var companyCode = oMasterModel.getData().company_code;
-            // if (companyCode.indexOf(",") > -1) {
-            //     companyCode = companyCode.split(",")[0];
-            // }
-
-
-            // oDetailsModel.getData().map(r => {
-
-            //     console.log("const_quotation_number ---> " , r["const_quotation_number"] == "undefined" ? 0 : r["const_quotation_number"]);
-            //     console.log("const_quotation_item_number ---> " , r["const_quotation_item_number"]);
-            //     console.log("item_sequence ---> " , r["item_sequence"]);
-            //     console.log("ep_item_code ---> " , r["ep_item_code"]);
-            //     console.log("item_desc ---> " , r["item_desc"]);
-            //     console.log("spec_desc ---> " , r["spec_desc"]);
-            //     console.log("quotation_quantity ---> " , r["quotation_quantity"]);
-            //     console.log("unit ---> " , r["unit"]);
-            //     console.log("material_apply_flag ---> " , r["material_apply_flag"]);
-            //     console.log("labor_apply_flag ---> " , r["labor_apply_flag"]);
-            //     console.log("net_price_change_allow_flag ---> " , r["net_price_change_allow_flag"]);
-            //     console.log("base_material_net_price ---> " , r["base_material_net_price"]);
-            //     console.log("material_net_price ---> " , r["material_net_price"]);
-            //     console.log("material_amount ---> " , r["material_amount"]);
-            //     console.log("labor_net_price ---> " , r["labor_net_price"]);
-            //     console.log("labor_amount ---> " , r["labor_amount"]);
-            //     console.log("sum_amount ---> " , r["sum_amount"]);
-            //     console.log("currency_code ---> " , r["currency_code"]);
-            //     console.log("extra_rate ---> " , r["extra_rate"]);
-            //     console.log("net_price_contract_document_no ---> " , r["net_price_contract_document_no"]);
-            //     console.log("net_price_contract_degree ---> " , r["net_price_contract_degree"]);
-            //     console.log("net_price_contract_item_number ---> " , r["net_price_contract_item_number"]);
-            //     console.log("supplier_item_create_flag ---> " , r["supplier_item_create_flag"]);
-            //     console.log("remark ---> " , r["remark"]);
-
-
-               
-
-                
-            //     details.push({
-            //             tenant_id: r["tenant_id"],
-            //             company_code: r["company_code"],
-            //             const_quotation_number: '0000871814',//(r["const_quotation_number"] == undefined ? '' : r["const_quotation_number"]),
-            //             item_sequence: (!r["item_sequence"] ? 10 : parseFloat(String(itemSeq))),
-            //             ep_item_code: r["ep_item_code"],
-            //             item_desc: r["item_desc"],
-            //             spec_desc: r["spec_desc"],
-            //             quotation_quantity: (!r["quotation_quantity"] ? null : r["quotation_quantity"]),
-            //             unit: r["unit"],
-            //             material_apply_flag: r["material_apply_flag"],
-            //             labor_apply_flag: r["labor_apply_flag"],
-            //             net_price_change_allow_flag: (!r["net_price_change_allow_flag"] ? false : r["net_price_change_allow_flag"]),
-            //             base_material_net_price: (!r["base_material_net_price"] ? null : parseFloat(r["base_material_net_price"])),
-            //             base_labor_net_price: (!r["base_labor_net_price"] ? null : parseFloat(r["base_labor_net_price"])),
-            //             material_net_price: (!r["material_net_price"] ? null : parseFloat(r["material_net_price"])),
-            //             material_amount: (!r["material_amount"] ? null : parseFloat(r["material_amount"])),
-            //             labor_net_price: (!r["labor_net_price"] ? null : parseFloat(r["labor_net_price"])),
-            //             labor_amount: (!r["labor_amount"] ? null : parseFloat(r["labor_amount"])),
-            //             sum_amount: (!r["sum_amount"] ? null: parseFloat(r["sum_amount"])),
-            //             currency_code: r["currency_code"],
-            //             extra_rate: (!r["extra_rate"] ? null : parseFloat(r["extra_rate"])),
-            //             net_price_contract_document_no: r["net_price_contract_document_no"],
-            //             net_price_contract_degree: (!r["net_price_contract_degree"] ? null : parseInt(r["net_price_contract_degree"])),
-            //             net_price_contract_item_number: r["net_price_contract_item_number"],
-            //             supplier_item_create_flag: (!r["supplier_item_create_flag"] ? false : r["supplier_item_create_flag"]),
-            //             remark:  (r["remark"] == null ? '' : r["remark"])
-
-            //             //delivery_request_date: that.getFormatDate(r["delivery_request_date"]),
-
-                        
-            //         });
-
-            //         console.log("details ---> " , details);
-            // });
-
-
-
-            // inputData = {
-            //     "tenant_id": tenantId,
-            //     "company_code": companyCode,
-            //     "const_quotation_number": oMasterModel.getData().const_quotation_number,
-            //     "const_name": oMasterModel.getData().const_name,
-
-
-            //     "ep_item_code": oMasterModel.getData().ep_item_code,
-            //     "const_start_date": oMasterModel.getData().const_start_date,
-            //     "const_end_date": oMasterModel.getData().const_end_date,
-            //     "currency_code": oMasterModel.getData().currency_code,
-                
-            //     "const_person_empno": oMasterModel.getData().const_person_empno,
-
-            //     "purchasing_department_code": oMasterModel.getData().purchasing_department_code,
-            //     "buyer_empno": oMasterModel.getData().buyer_empno,
-
-            //     "remark": oMasterModel.getData().remark,
-            //     "attch_group_number": oMasterModel.getData().attch_group_number,
-            //     "user_id": '9586',
-            //     //"details": detailData
-            // }
-
-            //console.log("input====", JSON.stringify(inputData));
-
-            //input.inputData = inputData;
 
             console.log("input====", input);
 
@@ -660,6 +544,8 @@ sap.ui.define([
             // }
 
             if (this.validator.validate(this.byId("ucUcQuotationSupEditBox")) !== true) return;
+            if (this.validator.validate(this.byId("ucCompletionEditBox")) !== true) return;
+            if (this.validator.validate(this.byId("mainTable")) !== true) return;
 
             var url = "ep/ne/ucQuotationMgtSup/webapp/srv-api/odata/v4/ep.UcQuotationMgtV4Service/SaveUcQuotationDtlProc";
 
@@ -790,6 +676,7 @@ sap.ui.define([
                         
                         console.log(" UcQuotationListView ::: ", oData.results);
 
+                        oData.results[0]["quotation_write_date"] = that.convertDateToString(oData.results[0]["quotation_write_date"]);
                         oData.results[0]["const_start_date"] = that.convertDateToString(oData.results[0]["const_start_date"]);
                         oData.results[0]["const_end_date"] = that.convertDateToString(oData.results[0]["const_end_date"]);
                         oData.results[0]["completion_date"] = that.convertDateToString(oData.results[0]["completion_date"]);
@@ -897,12 +784,12 @@ sap.ui.define([
             //this.byId("pageNavBackButton").setEnabled(false);
             this.byId("pageSaveButton").setVisible(true);
             this.byId("pageRequestButton").setVisible(true);
-            if (statusCode === "221010") { //BM등록요청
+            if (statusCode === "221010" || statusCode == "221030") { //BM등록요청
                 this.byId("pageSaveButton").setEnabled(true);
             } else {
                 this.byId("pageSaveButton").setEnabled(false);
             }
-            if (statusCode === "221020") {
+            if (statusCode === "221020" || statusCode == "221040") {
                 this.byId("pageRequestButton").setEnabled(false);
             } else {
                 this.byId("pageRequestButton").setEnabled(true);
@@ -931,9 +818,9 @@ sap.ui.define([
             console.log("statusCode=", statusCode);
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             this.getModel("midObjectViewModel").setProperty("/isShowMode", true);
-            this._showFormFragment('UcQuotationSup_Show');
+           this._showFormFragment('UcQuotationSup_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
-            if (statusCode == "221040" || statusCode == "221030" ) {
+            if (statusCode == "221040" || statusCode == "221020" ) {
                 this.byId("page").setProperty("showFooter", false);
             } else {
                 this.byId("page").setProperty("showFooter", true);
@@ -945,7 +832,7 @@ sap.ui.define([
             // } else {
             //this.byId("pageEditButton").setVisible(true);
 
-            if (statusCode === "221010") { //BM등록요청
+            if (statusCode === "221010" || statusCode == "221030") { //BM등록요청
                 this.byId("pageEditButton").setVisible(true);
             } else {
                 this.byId("pageEditButton").setVisible(false);
@@ -1066,8 +953,12 @@ sap.ui.define([
                 oModel = this.getModel(),
                 oViewModel = this.getModel("viewModel"),
                 that = this;
-
+            
             var mstData = oViewModel.getProperty("/ucmaster");
+            var dtlData = oViewModel.getProperty("/ucdetails");
+            
+
+            
 
             console.log("mstData.tenant_id  ------> " , mstData.tenant_id);
             console.log("mstData.company_code  ------> " , mstData.company_code);
@@ -1110,6 +1001,15 @@ sap.ui.define([
 
                 oView.byId("searchPopEpItemClassCode").setSelectedKey(mstData.ep_item_code); 
                 oView.byId("searchPopOrgCode").setText(mstData.org_name);
+                oView.byId("popTable").clearSelection();
+
+                console.log("dtlData ---> " , dtlData);
+
+            //     var popDtlModel = this.getSchema("UcQuotationDtlView");
+            // console.log("popDtlModel=================", popDtlModel);
+            //     oViewModel.setProperty("/popUcdetails", popDtlModel);
+                oViewModel.setProperty("/popUcdetails", dtlData);
+                //oView.getModel("popSelectUcQuotationSup").setData(dtlData);
 
 
             }).bind(this));
@@ -1428,9 +1328,12 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             var dtlData = oViewModel.getProperty("/ucdetails");
 
             console.log(" edit before----------------->" , dtlData[index]["row_state"]); 
+            console.log(" edit extra_rate----------------->" , dtlData[index]["extra_rate"]); 
 
-            dtlData[index]["material_amount"] = val * dtlData[index]["material_net_price"];
-            dtlData[index]["labor_amount"] = val * dtlData[index]["labor_net_price"];
+            
+
+            dtlData[index]["material_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["material_net_price"];
+            dtlData[index]["labor_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["labor_net_price"];
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
             if(dtlData[index]["row_state"] != "C"){
                 dtlData[index]["row_state"] = "U";
@@ -1456,8 +1359,8 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
 
             var dtlData = oViewModel.getProperty("/ucdetails");
 
-            dtlData[index]["material_amount"] = val * dtlData[index]["quotation_quantity"]; //자재단가 * 수량
-            dtlData[index]["labor_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["labor_net_price"]; //수량 * 노무단가
+            dtlData[index]["material_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["quotation_quantity"]; //자재단가 * 수량
+            dtlData[index]["labor_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["extra_rate"] * dtlData[index]["labor_net_price"]; //수량 * 노무단가
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
             if(dtlData[index]["row_state"] != "C"){
                 dtlData[index]["row_state"] = "U";
@@ -1481,8 +1384,8 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
 
             var dtlData = oViewModel.getProperty("/ucdetails");
 
-            dtlData[index]["labor_amount"] = val * dtlData[index]["quotation_quantity"]; //노무단가 * 수량
-            dtlData[index]["material_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["material_net_price"]; //수량 * 자재단가
+            dtlData[index]["labor_amount"] = val * dtlData[index]["extra_rate"] * dtlData[index]["quotation_quantity"]; //노무단가 * 수량
+            dtlData[index]["material_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["extra_rate"] * dtlData[index]["material_net_price"]; //수량 * 자재단가
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
             if(dtlData[index]["row_state"] != "C"){
                 dtlData[index]["row_state"] = "U";
@@ -1550,6 +1453,7 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             var mstData = oViewModel.getProperty("/ucmaster");
             var dtlData = oViewModel.getProperty("/ucdetails");
             var rateData = oViewModel.getProperty("/ucRate");
+            
 
             console.log("dtlData  ------> " , dtlData);
 
@@ -1602,7 +1506,7 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             this._extraRateDialog.then((function (extraRateDialog) {
                 extraRateDialog.open();
 
-                console.log("rateData  ------> " , rateData);
+               
 
                 // if(!rateData){
                 // // Master 조회
@@ -1626,6 +1530,7 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
 
                 this._bindView().then((function () {
                     oView.setBusy(true);
+                 //console.log("rateData  ------> " , rateData);
 
                 // 저장되어있는 할증 조회
                 oModel.read("/UcQuotationExtraRateView", {
@@ -1648,24 +1553,33 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
                         var net_price_contract_document_no_ = "";
                         var net_price_contract_degree_ = "";
                         var net_price_contract_extra_seq_ = "";
+                        var popExtraRate = oView.getModel("popExtraRate");
                         
                         var test_index = 0;
 
-                        var dtl_net_price_contract_document_no = (!dtlData[beforeIndex]["net_price_contract_document_no"] ? '' : dtlData[beforeIndex]["net_price_contract_document_no"]); 
-                        var dtl_net_price_contract_degree = (!dtlData[beforeIndex]["net_price_contract_degree"] ? '' : dtlData[beforeIndex]["net_price_contract_degree"]); 
-                        var dtl_net_price_contract_extra_seq = (!dtlData[beforeIndex]["net_price_contract_extra_seq"] ? '' : dtlData[beforeIndex]["net_price_contract_extra_seq"]); 
+
+                        console.log(" before beforeRateData ::: ", beforeRateData);
+                        for(var idx = 0; idx < beforeRateData.length; idx++){
+
+                        var dtl_net_price_contract_document_no = (!beforeRateData[idx]["net_price_contract_document_no"] ? '' : beforeRateData[idx]["net_price_contract_document_no"]); 
+                        var dtl_net_price_contract_degree = (!beforeRateData[idx]["net_price_contract_degree"] ? '' : beforeRateData[idx]["net_price_contract_degree"]); 
+                        var dtl_net_price_contract_extra_seq = (!beforeRateData[idx]["net_price_contract_extra_seq"] ? '' : beforeRateData[idx]["net_price_contract_extra_seq"]); 
 
 
-                        console.log(" rateData----------------->" ,rateData); 
+                        console.log(" popExtraRate----------------->" ,popExtraRate.getData()); 
 
-                        if(rateData){
+                        //if(rateData){
                             console.log(" 1111111111111----------------->", dtl_net_price_contract_document_no);  
-                            rateData.map(r => {
+                            test_index = 0;
+                            popExtraRate.getData().map(r => {
                             
                                 net_price_contract_document_no_ = (!r["net_price_contract_document_no"] ? '' : r["net_price_contract_document_no"]); 
                                 net_price_contract_degree_ = (!r["net_price_contract_degree"] ? '' : r["net_price_contract_degree"]); 
                                 net_price_contract_extra_seq_ = (!r["net_price_contract_extra_seq"] ? '' : r["net_price_contract_extra_seq"]); 
-console.log(" 222222222222----------------->" ,net_price_contract_document_no_);  
+console.log(" document_no----------------->" ,net_price_contract_document_no_ + " degree----------------->" ,net_price_contract_degree_ + " seq----------------->" ,net_price_contract_extra_seq_);  
+console.log(" check document_no----------------->" ,dtl_net_price_contract_document_no + " degree----------------->" ,dtl_net_price_contract_degree + " seq----------------->" ,dtl_net_price_contract_extra_seq);  
+
+
 
                                 // if (((dtl_net_price_contract_document_no.includes(net_price_contract_document_no_)) 
                                 // && (dtl_net_price_contract_degree.includes(net_price_contract_degree_)) 
@@ -1696,18 +1610,21 @@ console.log(" 222222222222----------------->" ,net_price_contract_document_no_);
 
                             });
 
+                        }
+
                             console.log(" test_val----------------->", test_val);
                             oView.byId("popRateTable").clearSelection();
                             for(var i=0; i < test_val.length ; i++){
-                                oView.byId("popRateTable").addSelectionInterval(i,1);
-                                console.log("############################################" , i);
+                                oView.byId("popRateTable").addSelectionInterval(test_val[i],test_val.length);
+                                console.log("############################################" , test_val[i]);
                             }
 
-                        }
-                        console.log(" beforeRateData----------------->", beforeRateData[0]); 
-                        console.log(" beforeRateData- net_price_contract_title---------------->", beforeRateData[0]["net_price_contract_title"]);   
+                        //}
+                        
+                        //console.log(" beforeRateData----------------->", beforeRateData[0]); 
+                        //console.log(" beforeRateData- net_price_contract_title---------------->", beforeRateData[0]["net_price_contract_title"]);   
 
-                        oView.byId("searchNetPriceContractTitle").setText(beforeRateData[0]["net_price_contract_title"]);
+                        //oView.byId("searchNetPriceContractTitle").setText(beforeRateData[0]["net_price_contract_title"]);
             
 
                         oView.setBusy(false);
@@ -1769,7 +1686,7 @@ console.log(" 222222222222----------------->" ,net_price_contract_document_no_);
                 
             // });
 
-             console.log("oDtlData=", oDtlData);
+            console.log("oDtlData=", oDtlData);
             oViewModel.setProperty("/ucdetails", oDtlData);
             this.byId("mainTable").clearSelection();
         },
@@ -2072,6 +1989,243 @@ console.log("@@@@@@@@@@@@@@@@@@ 0 " , oEvent.mParameters.item.department_local_n
             return dateString;
 
         },
+
+        moveToTable11: function() {
+			this.getSelectedRowContext("table2", function(oSelectedRowContext, iSelectedRowIndex, oTable2) {
+				// reset the rank property and update the model to refresh the bindings
+				this.oProductsModel.setProperty("Rank", this.config.initialRank, oSelectedRowContext);
+				this.oProductsModel.refresh(true);
+
+				// select the previous row when there is no row to select
+				var oNextContext = oTable2.getContextByIndex(iSelectedRowIndex + 1);
+				if (!oNextContext) {
+					oTable2.setSelectedIndex(iSelectedRowIndex - 1);
+				}
+			});
+		},
+
+        moveToTable22: function() {
+			this.getSelectedRowContext("popTable", function(oSelectedRowContext) {
+				var oTable2 = this.byId("popTable2");
+				var oFirstRowContext = oTable2.getContextByIndex(0);
+
+				// insert always as a first row
+				var iNewRank = this.config.defaultRank;
+				if (oFirstRowContext) {
+					iNewRank =  this.config.rankAlgorithm.Before(oFirstRowContext.getProperty("Rank"));
+				}
+
+				this.oProductsModel.setProperty("Rank", iNewRank, oSelectedRowContext);
+				this.oProductsModel.refresh(true);
+
+				// select the inserted row
+				oTable2.setSelectedIndex(0);
+			});
+        },
+        
+        getSelectedRowContext: function(sTableId, fnCallback) {
+            var oTable = this.byId(sTableId);
+            
+            console.log("oTable ---> " ,oTable)
+			var iSelectedIndex = oTable.getSelectedIndex();
+
+			if (iSelectedIndex === -1) {
+				MessageToast.show("Please select a row!");
+				return;
+			}
+
+			var oSelectedContext = oTable.getContextByIndex(iSelectedIndex);
+			if (oSelectedContext && fnCallback) {
+				fnCallback.call(this, oSelectedContext, iSelectedIndex, oTable);
+			}
+
+			return oSelectedContext;
+        },
+
+
+        moveToTable2: function() {
+            
+            var oView = this.getView();
+            var oTable = this.byId("popTable"),
+                oModel = this.getView().getModel("popUcQuotationSup"),
+                oViewModel = this.getModel("viewModel"),
+                oSelected = oTable.getSelectedIndices();
+            var dtlData = oViewModel.getProperty("/popUcdetails");
+            //var table = this.byId("mainTable");
+            var input = [];
+
+             dtlData.forEach(function (item, index) {
+                 input.push(dtlData[index]);
+             });
+            
+            var document_no = "";
+            var degree = "";
+            var item_number = "";
+            var document_no_ = "";
+            var degree_ = "";
+            var item_number_ = "";
+            var real_val = 9999;
+            var sel_val= [];
+            var sel_index = 0;
+            var cnt_index = 0;
+
+            var seq = 0;
+            //seq = (dtlData.length+1) * 10;
+
+            if (oSelected.length > 0) {
+                
+                // console.log("oSelected.length ---> " , oSelected.length);
+                // console.log("dtlData ---> " , dtlData.length );
+                oSelected.some(function (chkIdx, index) {
+
+                //console.log("chkIdx ---> " , chkIdx);
+                    document_no_ = (!oModel.getData()[chkIdx].net_price_contract_document_no ? '' : oModel.getData()[chkIdx].net_price_contract_document_no); 
+                    degree_ = (!oModel.getData()[chkIdx].net_price_contract_degree ? '' : oModel.getData()[chkIdx].net_price_contract_degree);
+                    item_number_ = (!oModel.getData()[chkIdx].net_price_contract_item_number ? '' : oModel.getData()[chkIdx].net_price_contract_item_number);
+
+                    
+                if(dtlData.length > 0){
+                        dtlData.map(r => {
+                        
+                             document_no = (!r["net_price_contract_document_no"] ? '' : r["net_price_contract_document_no"]); 
+                            degree = (!r["net_price_contract_degree"] ? '' : r["net_price_contract_degree"]);
+                            item_number = (!r["net_price_contract_item_number"] ? '' : r["net_price_contract_item_number"]);
+
+                            // console.log("document_no ---> " , document_no   + " ^^^^^^^^ document_no_ ---> " , document_no_);
+                            // console.log("degree ---> " , degree   + " ^^^^^^^^ degree_ ---> " , degree_);
+                            // console.log("item_number ---> " , item_number   + " ^^^^^^^^ item_number_ ---> " , item_number_);
+
+
+                            console.log("<<-----------------chkIdx ----------------> " , chkIdx );
+
+                            if (((document_no.includes(document_no_)) 
+                                && (degree.includes(degree_)) 
+                                && (item_number.includes(item_number_)))) {
+                                console.log("@@@@@===", document_no_ + "@@@@@===", degree_  + "@@@@@===", item_number_ );
+
+                                sel_val[sel_index] = chkIdx;
+                                console.log("this.sel_val========", sel_val);
+                                sel_index++;
+                            }
+                        });
+                    }
+
+                });
+            }
+
+
+            console.log("sel_val.length========", sel_val);
+            console.log("oSelected========", oSelected);
+
+
+            let uniqueArr = [];
+            oSelected.forEach((element) => {
+                if (!sel_val.includes(element)) {
+                    uniqueArr.push(element);
+                }
+            });
+
+
+            console.log("uniqueArr========", uniqueArr);
+
+             for(var idx = 0; idx < uniqueArr.length; idx++){
+
+                input.push(oModel.getData()[uniqueArr[idx]]); 
+             }
+
+            console.log("@@@@@@@@@@@@@@@@input========", input);
+
+            oViewModel.setProperty("/popUcdetails", input);
+        
+
+
+            
+        },
+
+        moveToTable1: function() {
+            
+            var oView = this.getView();
+            var oTable = this.byId("popTable2"),
+                oModel = this.getView().getModel("popUcQuotationSup"),
+                oViewModel = this.getModel("viewModel"),
+                oSelected = oTable.getSelectedIndices();
+            var dtlData = oViewModel.getProperty("/popUcdetails");
+            var input = [];
+
+             dtlData.forEach(function (item, index) {
+                 input.push(dtlData[index]);
+             });
+
+             
+            
+            var document_no = "";
+            var degree = "";
+            var item_number = "";
+            var document_no_ = "";
+            var degree_ = "";
+            var item_number_ = "";
+            var real_val = 9999;
+            var sel_val= [];
+            var sel_index = 0;
+            var cnt_index = 0;
+
+            var seq = 0;
+            //seq = (dtlData.length+1) * 10;
+            //oTable2.setSelectedIndex(iSelectedRowIndex - 1);
+
+            if (oSelected.length > 0) {
+                
+                 console.log("oSelected.length ---> " , oSelected.length);
+                // console.log("dtlData ---> " , dtlData.length );
+                oSelected.some(function (chkIdx, index) {
+
+                //console.log("chkIdx ---> " , chkIdx);
+
+                                //oView.byId("popTable2").removeSelectionInterval(chkIdx,1);
+                                
+
+                                dtlData.splice(chkIdx, 1);
+
+                                console.log("############################################" , chkIdx);
+
+                    
+
+                });
+            }
+
+            console.log("dtlData=", dtlData);
+            oViewModel.setProperty("/ucdetails", dtlData);
+
+            oView.byId("popTable2").clearSelection();
+
+            // console.log("sel_val.length========", sel_val);
+            // console.log("oSelected========", oSelected);
+
+
+            // let uniqueArr = [];
+            // oSelected.forEach((element) => {
+            //     if (!sel_val.includes(element)) {
+            //         uniqueArr.push(element);
+            //     }
+            // });
+
+
+            // console.log("uniqueArr========", uniqueArr);
+
+            //  for(var idx = 0; idx < uniqueArr.length; idx++){
+
+            //     input.push(oModel.getData()[uniqueArr[idx]]); 
+            //  }
+
+            // console.log("@@@@@@@@@@@@@@@@input========", input);
+
+            // oViewModel.setProperty("/popUcdetails", input);
+        
+
+
+            
+        },
+
 
     });
 });

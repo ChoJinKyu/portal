@@ -70,13 +70,16 @@ entity Sc_Nego_Suppliers {
                                                on  Item.tenant_id        = $self.tenant_id
                                                and Item.nego_header_id   = $self.nego_header_id
                                                and Item.nego_item_number = $self.nego_item_number;
+        operation_org_type_code          : String(30)          @title : '운영조직타입코드';
         operation_org_code               : String(30)          @title : '운영조직코드';
         operation_unit_code              : String(30)          @title : '운영단위코드--삭제예정';
         
-        nego_supplier_register_type_code : String(10)          @title : '협상공급업체등록유형코드';
+        nego_supplier_register_type_code : String(10)          @title : '협상공급업체등록유형코드-폐기예정' @description : 'UI:-폐기예정';
+        negotiation_supp_reg_status_cd   : String(10)          @title : '협상공급업체등록상태코드' @description : 'UI:';
         //View에서 추가// supplier_register_type_code      : String(10)          @title : '협상공급업체등록유형코드';
-        evaluation_type_code             : String(10)          @title : '_평가유형코드-폐기예정' @description : 'UI:';
-        nego_supeval_type_code           : String(10)          @title : '협상공급업체평가유형코드';
+        evaluation_type_code             : String(10)          @title : '_평가유형코드-폐기예정' @description : 'UI:-폐기예정';
+        nego_supeval_type_code           : String(10)          @title : '협상공급업체평가유형코드' @description : 'UI:-폐기예정';
+        supplier_register_status_code    : String(10)          @title : '공급업체등록상태코드' @description : 'UI:쓰기전용필드-폐기판단';
         supplier_code                    : String(10)          @title : '공급업체코드';
         supplier                         : Association to Sc_Sm_Supplier_Mst
                                                on  supplier.tenant_id     = $self.tenant_id
@@ -131,15 +134,18 @@ mixin {
 } into {
     *,
     Item.company_code,
-    Item.operation_org_code,
-    Item.operation_org_type_code,
+    // Item.operation_org_code,
+    // Item.operation_org_type_code,
     supplier_org.supplier_register_status_code,
     supplier_org.supplier_register_status_name,
+    supplier_org.supplier_register_status_code as evaluation_type_code,
     supplier_org.supplier_type_code,
     supplier_org.supplier_type_name,
     supplier_org.maker_only_flag
 } excluding {
     only_maker_flat,
+    evaluation_type_code,
+    supplier_register_status_code,
     supplier_type_code,
     supplier_type
 };
@@ -148,10 +154,13 @@ annotate Sc_Nego_Suppliers_View with @(
     title       : '공급업체조직',
     description : '공급업체조직'
 ) {
-    company_code                  @readonly;
-    operation_org_code            @readonly;
-    operation_org_type_code       @readonly;
-    supplier_register_status_code @readonly;
-    supplier_register_status_name @readonly;
-    maker_only_flag               @readonly;
+    company_code                  @title:'' @description:'UI:' @readonly;
+    operation_org_code            @title:'' @description:'UI:' @readonly;
+    operation_org_type_code       @title:'' @description:'UI:' @readonly;
+    supplier_register_status_code @title:'' @description:'UI:' @readonly;
+    supplier_register_status_name @title:'' @description:'UI:' @readonly;
+    evaluation_type_code          @title:'' @description:'UI:폐기예정' @readonly;
+    supplier_type_code            @title:'' @description:'UI:' @readonly;
+    supplier_type_name            @title:'' @description:'UI:' @readonly;
+    maker_only_flag               @title:'' @description:'UI:' @readonly;
 };

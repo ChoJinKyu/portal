@@ -69,13 +69,13 @@
                     <Column hAlign="Center" width="auto">
                         <Text text="{I18N>/CHANGE_AFTER}" />
                     </Column>
-                    <!-- 비고 -->
-                    <Column hAlign="Center" width="auto">
-                        <Text text="{I18N>/REMARK}" />
-                    </Column>
                     <!-- 처리자 -->
                     <Column hAlign="Center" width="auto">
                         <Text text="{I18N>/PR_WORKER}" />
+                    </Column>
+                    <!-- 비고 -->
+                    <Column hAlign="Center" width="auto">
+                        <Text text="{I18N>/REASON}" />
                     </Column>
                 </columns>
                 <items>
@@ -96,10 +96,10 @@
                             <Text text="{history>before_desc}"/>
                             <!-- 변경후 -->
                             <Text text="{history>after_desc}"/>
-                            <!-- 비고 -->
-                            <Text text="{history>processed_reason}"/>
                             <!-- 처리자 -->
                             <Text text="{history>worker_name}"/>
+                            <!-- 비고 -->
+                            <Text text="{history>processed_reason}"/>
                         </cells>
                     </ColumnListItem>
                 </items>

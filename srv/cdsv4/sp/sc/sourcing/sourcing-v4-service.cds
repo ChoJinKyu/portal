@@ -219,11 +219,14 @@ service SourcingV4Service {
         nego_header_id                   : type of Sc_Nego_Suppliers : nego_header_id;
         nego_item_number                 : type of Sc_Nego_Suppliers : nego_item_number;
         item_supplier_sequence           : type of Sc_Nego_Suppliers : item_supplier_sequence;
+        operation_org_type_code          : type of Sc_Nego_Suppliers : operation_org_type_code;
         operation_org_code               : type of Sc_Nego_Suppliers : operation_org_code;
         operation_unit_code              : type of Sc_Nego_Suppliers : operation_unit_code;
-        nego_supplier_register_type_code : type of Sc_Nego_Suppliers : nego_supplier_register_type_code;
-        evaluation_type_code             : type of Sc_Nego_Suppliers : evaluation_type_code;
-        nego_supeval_type_code           : type of Sc_Nego_Suppliers : nego_supeval_type_code;
+        nego_supplier_register_type_code : type of Sc_Nego_Suppliers : nego_supplier_register_type_code;  //#06-폐기예정
+        negotiation_supp_reg_status_cd   : type of Sc_Nego_Suppliers : negotiation_supp_reg_status_cd; 
+        evaluation_type_code             : type of Sc_Nego_Suppliers : evaluation_type_code;              //#08-폐기예정
+        nego_supeval_type_code           : type of Sc_Nego_Suppliers : nego_supeval_type_code;            //#09-폐기예정
+        supplier_register_status_code    : type of Sc_Nego_Suppliers : supplier_register_status_code;
         supplier_code                    : type of Sc_Nego_Suppliers : supplier_code;
         supplier_name                    : type of Sc_Nego_Suppliers : supplier_name;
         supplier_type_code               : type of Sc_Nego_Suppliers : supplier_type_code;
