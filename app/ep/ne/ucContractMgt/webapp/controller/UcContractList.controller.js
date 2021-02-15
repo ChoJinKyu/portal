@@ -150,7 +150,7 @@ sap.ui.define([
 
         onTableItemPress: function (oEvent) {
 
-            console.log("oEvent.getSource=", oEvent.getSource());
+            // console.log("oEvent.getSource=", oEvent.getSource());
 
             var oViewModel = this.getModel('viewModel');
             var sPath = "";
@@ -161,7 +161,7 @@ sap.ui.define([
             } else {
                 sPath = oEvent.getParameters()["row"].getBindingContext("viewModel").getPath()
             }
-            console.log("sPath=", sPath);
+            // console.log("sPath=", sPath);
             var oRecord = oViewModel.getProperty(sPath);
             // console.log("oRecord=", oRecord);
 
@@ -246,7 +246,7 @@ sap.ui.define([
                 oViewData = oViewModel.getProperty("/list"),
                 oSelected = oTable.getSelectedIndices();
 
-            console.log("oViewData=", oViewData);
+            // console.log("oViewData=", oViewData);
 
             var loiNumberArr = [];
 
@@ -272,7 +272,7 @@ sap.ui.define([
                 MessageToast.show("한개이상 선택해주세요.");
             }
 
-            console.log("canSelect=", canSelect);
+            // console.log("canSelect=", canSelect);
             if (canSelect) {
 
                 var deleteReason = "";
@@ -289,11 +289,11 @@ sap.ui.define([
                         deleteReason = oViewData[chkIdx].delete_reason;
 
 
-                        console.log("####tenant_id====", tenantId);
-                        console.log("####company_code====", companyCode);
-                        console.log("####netPriceContractDocumentNo====", netPriceContractDocumentNo);
-                        console.log("####netPriceContractDegree====", netPriceContractDegree);
-                        console.log("####deleteReason====", deleteReason);
+                        // console.log("####tenant_id====", tenantId);
+                        // console.log("####company_code====", companyCode);
+                        // console.log("####netPriceContractDocumentNo====", netPriceContractDocumentNo);
+                        // console.log("####netPriceContractDegree====", netPriceContractDegree);
+                        // console.log("####deleteReason====", deleteReason);
 
                         var inputData = {
                             "tenant_id": tenantId,
@@ -307,11 +307,11 @@ sap.ui.define([
 
                     });
                 }
-                console.log("####saveContractEnd====", saveContractEnd);
+                // console.log("####saveContractEnd====", saveContractEnd);
 
                 input.inputData = saveContractEnd;
                 oViewModel.setProperty("/contractEnd", input);
-                console.log("####contractEnd====", oViewModel.getProperty("/contractEnd"));
+                // console.log("####contractEnd====", oViewModel.getProperty("/contractEnd"));
 
                 var oView = this.getView();
                 if (!this._contractEndDialog) {
@@ -328,7 +328,7 @@ sap.ui.define([
                 this._contractEndDialog.then(function (contractEndDialog) {
                     contractEndDialog.open();
                     oView.byId("saveDeleteReason").setValue(deleteReason);
-                    console.log("#saveDeleteReason=", oView.byId("saveDeleteReason").getValue());
+                    // console.log("#saveDeleteReason=", oView.byId("saveDeleteReason").getValue());
                 });
 
             }
@@ -343,9 +343,9 @@ sap.ui.define([
             var oView = this.getView(),
                 oRootModel = this.getModel(),
                 oViewModel = this.getModel("viewModel");
-            console.log("Search Start========");
-            console.log("aSearchFilters========", aSearchFilters);
-            console.log("aSorter========", aSorter);
+            // console.log("Search Start========");
+            // console.log("aSearchFilters========", aSearchFilters);
+            // console.log("aSorter========", aSorter);
             oView.setBusy(true);
             oRootModel.read("/UcApprovalMstView", {
                 filters: aSearchFilters,
@@ -354,7 +354,7 @@ sap.ui.define([
                     console.log("oData111====", oData);
                     //oView.getModel("list").setData(oData.results);
                     oViewModel.setProperty("/list", oData.results);
-                    console.log("list====333", oViewModel.getProperty("/list"));
+                    // console.log("list====333", oViewModel.getProperty("/list"));
                     //oView.getModel("list").updateBindings(true);
                     oView.setBusy(false);
                 }.bind(this),
@@ -395,15 +395,15 @@ sap.ui.define([
                 searchSupplierName = found2[1];
             }
 
-            console.log("searchOrgCode==", searchOrgCode);
-            console.log("searchTitle==", searchTitle);
-            console.log("endDateFromDate==", endDateFromDate);
-            console.log("endDateToDate==", endDateToDate);
-            console.log("searchDocumentNo==", searchDocumentNo);
-            console.log("searchStatusCode==", searchStatusCode);
-            console.log("searchEffectiveStatus==", searchEffectiveStatus);
-            console.log("searchDayCount==", searchDayCount);
-            console.log("searchSupplierName==", searchSupplierName);
+            // console.log("searchOrgCode==", searchOrgCode);
+            // console.log("searchTitle==", searchTitle);
+            // console.log("endDateFromDate==", endDateFromDate);
+            // console.log("endDateToDate==", endDateToDate);
+            // console.log("searchDocumentNo==", searchDocumentNo);
+            // console.log("searchStatusCode==", searchStatusCode);
+            // console.log("searchEffectiveStatus==", searchEffectiveStatus);
+            // console.log("searchDayCount==", searchDayCount);
+            // console.log("searchSupplierName==", searchSupplierName);
 
             var aSearchFilters = [];
             if (searchOrgCode) {
@@ -448,7 +448,7 @@ sap.ui.define([
             if (searchSupplierName) {
                 aSearchFilters.push(new Filter("supplier_code", FilterOperator.Contains, searchSupplierName));
             }
-            console.log("aSearchFilters==", aSearchFilters);
+            // console.log("aSearchFilters==", aSearchFilters);
             return aSearchFilters;
         },
 
@@ -475,7 +475,7 @@ sap.ui.define([
                     }
                 });
                 this.oCmDialogHelp.attachEvent("apply", function (oEvent) {
-                    console.log("1111==", oEvent.getParameter("item"));
+                    // console.log("1111==", oEvent.getParameter("item"));
                     this.byId("searchOrgCode").setValue("(" + oEvent.getParameter("item").bizdivision_code + ")" + oEvent.getParameter("item").bizdivision_name);
                 }.bind(this));
             }
