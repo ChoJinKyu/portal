@@ -9,6 +9,7 @@ SELECT pcc.TENANT_ID,
     pcc.REQUEST_TITLE,
     pcc.REQUEST_CATEGORY_NAME,
     pcc.SIMILAR_CATEGORY_CODE,
+    pc1.CODE_NAME as SIMILAR_CATEGORY_NAME,
     pcc.REQUESTOR_EMPNO,
     CM_GET_EMP_NAME_FUNC('L2101', pcc.REQUESTOR_EMPNO) as REQUESTOR,    
     pcc.REQUEST_DATE_TIME,
@@ -27,9 +28,13 @@ SELECT pcc.TENANT_ID,
 	on pcc.PROGRESS_STATUS_CODE = cl.CODE
 	left join (select code_name, tenant_id, category_group_code, category_code
 	        from DP_PD_PART_CATEGORY_LNG 
+	        where TENANT_ID = 'L2101' and CATEGORY_GROUP_CODE = 'CO' and LANGUAGE_CD='KO') pc1
+	on pcc.CATEGORY_GROUP_CODE = pc1.CATEGORY_GROUP_CODE AND pcc.CREATE_CATEGORY_CODE = pc1.CATEGORY_CODE
+	left join (select code_name, tenant_id, category_group_code, category_code
+	        from DP_PD_PART_CATEGORY_LNG 
 	        where TENANT_ID = 'L2101' and CATEGORY_GROUP_CODE = 'CO' and LANGUAGE_CD='KO') pc2
 	on pcc.CATEGORY_GROUP_CODE = pc2.CATEGORY_GROUP_CODE AND pcc.CREATE_CATEGORY_CODE = pc2.CATEGORY_CODE
-	left join (select code, code_name
+    left join (select code, code_name
 	        from CM_CODE_LNG 
 	        where TENANT_ID = 'L2101' AND group_code='DP_PD_CATEGORY_GROUP' and LANGUAGE_CD='KO') cl2
 	on pcc.CATEGORY_GROUP_CODE = cl2.CODE
