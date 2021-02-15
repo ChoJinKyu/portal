@@ -48,7 +48,6 @@ sap.ui.define([
                         }
                     });
                     this.oSearchIdeaManagerDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
                         this.byId("searchIdeaManagerInput").setValue(oEvent.getParameter("item").idea_manager_name);
                     }.bind(this));
                 }
@@ -92,7 +91,6 @@ sap.ui.define([
                         }
                     });
                     this.oSearchHsCodeDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
                         this.byId("searchHsCodeInput").setValue(oEvent.getParameter("item").hs_code);
                     }.bind(this));
                 }
@@ -136,7 +134,6 @@ sap.ui.define([
                         }
                     });
                     this.oSearchMaterialClassDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
                         this.byId("searchMaterialClassInput").setValue(oEvent.getParameter("item").material_class_code);
                     }.bind(this));
                 }
@@ -182,7 +179,6 @@ sap.ui.define([
                         }
                     });
                     this.oSearchMaterialCommodityDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
                         this.byId("searchMaterialCommodityInput").setValue(oEvent.getParameter("item").commodity_code);
                     }.bind(this));
                 }
@@ -227,7 +223,6 @@ sap.ui.define([
                         }
                     });
                     this.oSearchMaterialGroupDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
                         this.byId("searchMaterialGroupInput").setValue(oEvent.getParameter("item").material_group_code);
                     }.bind(this));
                 }
@@ -273,7 +268,6 @@ sap.ui.define([
                         }
                     });
                     this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
                         this.byId("searchCategoryInput").setValue(oEvent.getParameter("item").category_name);
                     }.bind(this));
                 }
@@ -318,7 +312,6 @@ sap.ui.define([
                         }
                     });
                     this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
                         this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
                     }.bind(this));
                 }

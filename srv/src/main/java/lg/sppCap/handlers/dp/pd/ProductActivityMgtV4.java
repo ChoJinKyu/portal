@@ -190,8 +190,12 @@ public class ProductActivityMgtV4 implements EventHandler {
 
 
         // Local Temp Table DROP
-        jdbc.execute(v_sql_dropMstTable);
-        jdbc.execute(v_sql_dropLngtable);
+        try{
+            jdbc.execute(v_sql_dropMstTable);
+            jdbc.execute(v_sql_dropLngtable);
+        }catch(Exception e){
+            
+        }
 
         context.setResult(v_row);
         context.setCompleted();
