@@ -53,15 +53,140 @@ sap.ui.define([
 
         onAfterRendering: function (oEvent) {
             this.getModel("viewModel");
-        },
 
+            var oSheetMgtPage, sId;
+
+            oSheetMgtPage = this.byId("pageApply");
+            sId = oSheetMgtPage.getHeaderContent()[0].getParent().getId();
+            
+            jQuery("#"+sId).removeClass("sapFDynamicPageHeaderWithContent");
+            oSheetMgtPage.getHeaderContent()[0].getParent().onAfterRendering = function(){
+                jQuery("#"+this.getId()).removeClass("sapFDynamicPageHeaderWithContent");
+            }
+        }
+
+        /**
+             * detail 페이지 종료
+             */
+        , onPressPageNavBack : function(){
+            this.getOwnerComponent().getRouter().navTo("Master");
+        }
+
+        ,onPressLayoutChange : function(oEvent){
+            var oControl, oView, oViewModel, sLayout, sIcon, sBtnScreenText;
+
+            oControl = oEvent.getSource();
+            oView = this.getView();
+            oViewModel = oView.getModel("viewModel");
+            sIcon = oControl.getIcon();
+
+            if(sIcon === "sap-icon://full-screen"){
+                sLayout = "MidColumnFullScreen";
+                sBtnScreenText = "sap-icon://exit-full-screen";
+            }else{
+                sLayout = "TwoColumnsMidExpanded";
+                sBtnScreenText = "sap-icon://full-screen";
+            }
+
+            oViewModel.setProperty("/App/layout", sLayout);
+            oViewModel.setProperty("/App/btnScreen", sBtnScreenText);
+            
+            
+        }
         /**
          * When it routed to this page from the other page.
          * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
          * @private
          */
-        _onRoutedThisPage: function (oEvent) {
-                      
+        , _onRoutedThisPage: function (oEvent) {
+            var oArgs, oComponent, oViewModel,
+                oView, aControls, oTable, oDetailData,
+                sParmaModel=this.getModel("viewModel"),
+                oDataModel = this.getModel(),
+                aFilters = [],
+                bFilters=[],
+                aArr = [],
+                aChecked,
+                aCheckedData,
+                that=this;
+
+            oArgs = oEvent.getParameter("arguments");
+            oComponent = this.getOwnerComponent();
+            oViewModel = oComponent.getModel("viewModel");
+            oView = this.getView();
+
+            oViewModel.setProperty("/Args", oArgs);
+            oDetailData = oViewModel.getProperty("/Detail");
+
+            if(!oDetailData){
+                oDetailData = {};
+            }
+            
+            oDetailData.Header = {};
+
+            oViewModel.setProperty("/detailControll",{checkModel : []});
+            oViewModel.setProperty("/Detail", oDetailData);
+            oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
+            oViewModel.setProperty("/App/btnScreen", "sap-icon://full-screen");
+            
+            this.searchInit();
+        }
+        
+        ,searchInit : function (){
+            var sParmaModel=this.getModel("viewModel"),
+                oDataModel = this.getModel(),
+                oComponent = this.getOwnerComponent(),
+                aFilters = [],
+                bFilters=[],
+                aArr = [],
+                aChecked,
+                aCheckedData,
+                that=this;
+
+            aFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, sParmaModel.getProperty("/Args").fundingApplNumber));
+            aFilters.push(new Filter("supplier_code", FilterOperator.EQ, sParmaModel.getProperty("/Args").supplierCode));
+            
+            oDataModel.read("/FundingApplDataView", {
+                filters: aFilters,
+                success: function (oRetrievedResult) {
+                    aCheckedData = that.getModel("viewModel").getProperty("/detailControll/checkModel") || [];
+                    var oMasterPage = oComponent.byId("Master");
+                    if(oMasterPage){
+                        oMasterPage.byId("page").setHeaderExpanded(false);
+                    }
+
+                    if(!!oRetrievedResult.results[0]){
+                        sParmaModel.setProperty("/Detail/Apply", oRetrievedResult.results[0]);
+                        aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
+                        aChecked.forEach(function (item) {
+                            aArr.push(!!item);
+                        });
+                    }else{
+                        aArr = aCheckedData.map(function (item) {
+                            return false;
+                        });
+                    };
+                    that.getModel("viewModel").setProperty("/detailControll",{checkModel : []});
+                    that.getModel("viewModel").setProperty("/detailControll/checkModel", aArr);
+                    
+                    bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
+
+                    oDataModel.read("/InvestPlanMstListView", {
+                        //Filter : 공고번호, sub 정보
+                        filters: bFilters,
+                        success: function (oRetrievedResult) {
+                            that.getModel("viewModel").setProperty("/Detail/Apply/investPlanMst", oRetrievedResult.results);
+                            
+                        },
+                        error: function (oError) {
+                            MessageBox.alert("에러 입니다.");
+                        }
+                    });
+                },
+                error: function (oError) {
+                    // oAppView.setBusy(false);
+                }
+            });  
         }
 
         //동적 체크박스 
@@ -90,9 +215,10 @@ sap.ui.define([
                     
                 }
             });
-        },
-
-        onOpenInvestmentDtl: function(oEvent){
+        }
+        
+        ,onOpenInvestmentDtl: function(oEvent){
+            var oMasterPage, oDynamicPage;
             var oView = this.getView(),
                 oModel = this.getModel("viewModel"),
                 oDataModel = this.getOwnerComponent().getModel(),
@@ -155,18 +281,6 @@ sap.ui.define([
         , onCreatePopupClose: function(){
             this.byId("investmentPlanDetails").close();
         }
-        // , _formatChange: function(sValue){
-        //     var test;
-            
-        //     if(sValue){
-        //         test = sValue.toString().subString(0,4);
-        //     }else{
-        //         test = sValue;
-        //     }
-
-
-        //     return test;
-        // }
         
     })
 });

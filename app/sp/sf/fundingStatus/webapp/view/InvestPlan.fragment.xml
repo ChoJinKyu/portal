@@ -67,7 +67,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="투자기간 :"/>
+                            <Label text="투자년월 :"/>
                             <Text design="Bold"
                                 displayFormat='yyyy-MM'
                                 valueFormat ="yyyy-MM"
@@ -79,13 +79,11 @@
                         </VBox>
                         <VBox>
                             <Label text="신청금액(원) :"/>
-                            <Text design="Bold"
-                                type="Number" 
+                            <Text 
                                 text="{
-                                    path: 'viewModel>/Detail/Apply/popUpInvestPlanMst/appl_amount', 
-                                    type: 'sap.ui.model.type.Integer'
-                                }"
-                            />
+                                    path: 'viewModel>/Detail/Apply/popUpInvestPlanMst/appl_amount',
+                                    type: 'sap.ui.model.odata.type.Decimal'
+                                }" design="Bold"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
@@ -116,12 +114,11 @@
                         </VBox>
                         <VBox>
                             <Label text="년간 예상물동 :" />
-                            <Text design="Bold" 
+                            <Text 
                                 text="{
-                                    path: 'viewModel>/Detail/Apply/popUpInvestPlanMst/annual_mtlmob_quantity', 
-                                    type: 'sap.ui.model.type.Integer'
-                                }"
-                            />
+                                    path: 'viewModel>/Detail/Apply/popUpInvestPlanMst/annual_mtlmob_quantity',
+                                    type: 'sap.ui.model.odata.type.Decimal'
+                                }" design="Bold"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
@@ -138,7 +135,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="집행시기 :" />
+                            <Label text="집행년월 :" />
                             <Text design="Bold"
                                 displayFormat='yyyy-MM'
                                 valueFormat ="yyyy-MM"
@@ -203,9 +200,11 @@
                             <Column hAlign="Right">
                                 <Label text="구입금액(원)"/>
                                 <footer>
-                                    <Text text="총 구입금액 : {
-                                        path: 'viewModel>/Detail/Apply/popUpInvestPlanMst/sum_item_pur_amt', 
-                                        type: 'sap.ui.model.type.Integer'}" />
+                                    <Text 
+                                        text="{
+                                            path: 'viewModel>/Detail/Apply/popUpInvestPlanMst/sum_item_pur_amt',
+                                            type: 'sap.ui.model.odata.type.Decimal'
+                                        }" design="Bold"/>
                                 </footer>
                             </Column>
                         </columns>
@@ -223,17 +222,20 @@
                                     />
                                     <Text 
                                         text="{
-                                            path: 'viewModel>investment_item_purchasing_price', 
-                                            type: 'sap.ui.model.type.Integer'
-                                        }"
-                                    />
+                                            path: 'viewModel>investment_item_purchasing_price',
+                                            type: 'sap.ui.model.odata.type.Decimal'
+                                        }" design="Bold"/>
+                                    <Text 
+                                        text="{
+                                            path: 'viewModel>investment_item_purchasing_qty',
+                                            type: 'sap.ui.model.odata.type.Decimal'
+                                        }" design="Bold"/>
                                     <Text  
                                         text="{
-                                            path: 'viewModel>investment_item_purchasing_qty', 
-                                            type: 'sap.ui.model.type.Integer'
+                                            path: 'viewModel>investment_item_purchasing_amt', 
+                                            type: 'sap.ui.model.odata.type.Decimal'
                                         }"
                                     />
-                                    <Text textAlign="Right" text="{viewModel>investment_item_purchasing_amt}"/>
                                 </cells>
                             </ColumnListItem>
                         </items>

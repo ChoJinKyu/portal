@@ -281,7 +281,12 @@
                     <t:Column width="8em" hAlign="Right">
                         <Label text="신청금액" tooltip="신청금액" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{viewModel>funding_appl_amount}" tooltip="{funding_appl_amount}" wrapping="false" />
+                            <Text text="{
+                                    path: 'viewModel>funding_appl_amount',
+                                    type: 'sap.ui.model.odata.type.Decimal'
+                                }" 
+                                tooltip="{funding_appl_amount}"
+                            />
                         </t:template>
                     </t:Column>
                 </t:columns>

@@ -8,60 +8,139 @@
 	xmlns:core="sap.ui.core"
     height="100%">
     
-	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="false"
+    <uxap:ObjectPageLayout 
+        id="pageApply"
 		alwaysShowContentHeader = "true"
-		preserveHeaderStateOnScroll="true"
-        headerContentPinnable="false"
-        isChildPage="true"
 		upperCaseAnchorBar="false"
-		showTitleInHeaderContent="true"
-		showEditHeaderButton="true" 
-        showFooter="true">
+        showFooter="false"
+        toggleHeaderOnTitleClick="false"
+        headerContentPinnable="false"
+        preserveHeaderStateOnScroll="true">
         
 		<uxap:headerTitle>
 			<!-- 타이틀 영역 -->
-			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})" wrapping="true" />
-				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})" wrapping="true" />
-				</uxap:snappedHeading>
-				<uxap:snappedTitleOnMobile>
-					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})"/>
-				</uxap:snappedTitleOnMobile>
+			<uxap:ObjectPageDynamicHeaderTitle objectTitle="자금지원현황" width="100%">
+                <uxap:heading>
+                    <Toolbar style="Clear" width="100%">
+                        <Button icon="sap-icon://nav-back" press=".onPressPageNavBack"/>
+                        <Title text="자금지원현황" level="H2" wrapping="true"/>
+                        <ToolbarSpacer/>
+                        <OverflowToolbarButton type="Transparent" icon="{viewModel>/App/btnScreen}" text="screen" tooltip="screen change" press="onPressLayoutChange" />
+                    </Toolbar>
+                </uxap:heading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
-            <!-- <layout:VerticalLayout> -->
-                <FlexBox id="headerContentId" height="80px" alignItems="Start" justifyContent="Start" >
-                    <VBox>
-                        <Label text="Supplier Code :"  class="sapUiLargeMarginBegin" />
-                        <Label text="{viewModel>/Detail/Apply/supplier_code}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                        <Label text="대표자명 :"  class="sapUiLargeMarginBegin" />
-                        <Label text="{viewModel>/Detail/Apply/repre_name}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                    </VBox>
-                    <VBox>
-                        <Label text="사업자번호 :" class="sapUiLargeMarginBegin" />
-                        <Label text="{viewModel>/Detail/Apply/tax_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                        <Label text="대표자 Mail Address :" class="sapUiLargeMarginBegin" />
-                        <Label text="{viewModel>/Detail/Apply/email_address}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                    </VBox>
-                    <VBox>
-                        <Label text="Supplier Name :"  class="sapUiLargeMarginBegin" />
-                        <Label text="{viewModel>/Detail/Apply/supplier_name}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                        <Label text="전화번호 :"  class="sapUiLargeMarginBegin" />
-                        <Label text="{viewModel>/Detail/Apply/tel_number}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                    </VBox>
-                    <VBox>
-                        <Label text="주소 :" class="sapUiLargeMarginBegin" />
-                        <Label text="{viewModel>/Detail/Apply/local_full_address}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                        <Label text="협력회 여부 :" class="sapUiLargeMarginBegin" />
-                        <Label text="" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                    </VBox>
-                </FlexBox>          
+            <!-- <Toolbar>
+                <Title text="자금지원" wrapping="true"/>
+                <ToolbarSpacer/>
+                <OverflowToolbarButton type="Transparent" icon="{viewModel>/App/btnScreen}" text="screen" tooltip="screen change" press="onPressLayoutChange" />
+                <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
+            </Toolbar> -->
+            
+            <IconTabBar
+                id="idIconTabBar"
+                select=".onFilterSelect"
+                expandable="false"
+                expanded="true"
+                class="sapUiResponsiveContentPadding, iconTabBarContent">
+                <items>
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        count="{/ProductCollectionStats/Counts/Weight/Ok}"
+                        text="신청"
+                        key="step1" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        count="{/ProductCollectionStats/Counts/Weight/Heavy}"
+                        text="심의"
+                        key="step2" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                        text="담보물"
+                        key="step3" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                        text="상환계획"
+                        key="step4" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                        text="계획"
+                        key="step5" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                        text="실사"
+                        key="step6" />
+                    <IconTabSeparator icon="sap-icon://open-command-field" />
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                        text="상환이행"
+                        key="step7" />
+                </items>
+                <content>
+                    <Panel width="100%">
+                        <form:SimpleForm  
+                            editable="true"
+                            layout="ResponsiveGridLayout"
+                            class="sapUiNoMarginBottom">
+                            <form:toolbar>
+                                <Toolbar>
+                                    <Title text="신청({viewModel>/Detail/Apply/funding_status_code_name})"/>
+                                </Toolbar>
+                            </form:toolbar>
+                            <!-- <form:title>
+                                <core:Title text="신청({viewModel>/Detail/Apply/funding_status_code_name})" level="H1"/>
+                            </form:title> -->
+                            <form:content>
+                                <VBox>
+                                    <Label text="Supplier Code :"  class="sapUiLargeMarginBegin" />
+                                    <Text text="{viewModel>/Detail/Apply/supplier_code}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="대표자명 :"  class="sapUiLargeMarginBegin" />
+                                    <Text text="{viewModel>/Detail/Apply/repre_name}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="사업자번호 :" class="sapUiLargeMarginBegin" />
+                                    <Text text="{viewModel>/Detail/Apply/tax_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="대표자 Mail Address :" class="sapUiLargeMarginBegin" />
+                                    <Text text="{viewModel>/Detail/Apply/email_address}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Supplier Name :"  class="sapUiLargeMarginBegin" />
+                                    <Text text="{viewModel>/Detail/Apply/supplier_name}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="전화번호 :"  class="sapUiLargeMarginBegin" />
+                                    <Text text="{viewModel>/Detail/Apply/tel_number}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="협력회 여부 :" class="sapUiLargeMarginBegin" />
+                                    <Text text="" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="주소 :" class="sapUiLargeMarginBegin" />
+                                    <Text text="{viewModel>/Detail/Apply/local_full_address}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                </VBox>
+                            </form:content>
+                        </form:SimpleForm >
+                    </Panel>
+                </content>
+                
+            </IconTabBar>
+                    
             <!-- </layout:VerticalLayout> -->
 		</uxap:headerContent>
 
@@ -139,7 +218,11 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="전년도매출액(백만원) :"/>
-                                    <Text text="{viewModel>/Detail/Apply/pyear_sales_amount}" design="Bold"/>
+                                    <Text 
+                                        text="{
+                                            path: 'viewModel>/Detail/Apply/pyear_sales_amount',
+                                            type: 'sap.ui.model.odata.type.Decimal'
+                                        }" design="Bold"/>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12"/>
                                     </layoutData>
@@ -153,7 +236,11 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="신청금액(원) :" />
-                                    <Text text="{viewModel>/Detail/Apply/funding_appl_amount}" design="Bold"/>
+                                    <Text 
+                                        text="{
+                                            path: 'viewModel>/Detail/Apply/funding_appl_amount',
+                                            type: 'sap.ui.model.odata.type.Decimal'
+                                        }" design="Bold"/>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
                                     </layoutData>
@@ -250,9 +337,11 @@
                                 <Column hAlign="Left">
                                     <Text text="투자장소" />
                                     <footer>
-                                        <Text text="총 신청금액 : {
-                                            path: 'viewModel>/Detail/Apply/funding_appl_amount', 
-                                            type: 'sap.ui.model.type.Integer'}" />
+                                        <Text 
+                                        text="{
+                                            path: 'viewModel>/Detail/Apply/funding_appl_amount',
+                                            type: 'sap.ui.model.odata.type.Decimal'
+                                        }" design="Bold"/>
                                     </footer>
                                 </Column>
                             </columns>
@@ -262,7 +351,11 @@
                                         <Link text="{viewModel>investment_project_name}" press=".onOpenInvestmentDtl"/>
                                         <Text text="{viewModel>investment_desc}"/>
                                         <Text text="{viewModel>execution_yyyymm}"/>
-                                        <Text text="{viewModel>appl_amount}"/>
+                                        <Text 
+                                            text="{
+                                                path: 'viewModel>appl_amount',
+                                                type: 'sap.ui.model.odata.type.Decimal'
+                                            }" design="Bold"/>
                                         <Text text="{viewModel>apply_model_name}"/>
                                         <Text text="{viewModel>investment_place}"/>
                                     </cells>
@@ -290,7 +383,11 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="담보금액(원) :"/>
-                                    <Text text="{viewModel>/Detail/Apply/collateral_amount}" design="Bold"/>
+                                    <Text 
+                                        text="{
+                                            path: 'viewModel>/Detail/Apply/collateral_amount',
+                                            type: 'sap.ui.model.odata.type.Decimal'
+                                        }" design="Bold"/>
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>

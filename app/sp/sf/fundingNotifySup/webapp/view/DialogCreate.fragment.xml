@@ -87,7 +87,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="투자기간 :" required="true"/>
+                            <Label text="투자년월 :" required="true"/>
                             <DatePicker 
                                 displayFormat='yyyy-MM'
                                 valueFormat ="yyyy-MM"
@@ -183,7 +183,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="집행시기 :" required="true"/>
+                            <Label text="집행년월 :" required="true"/>
                             <DatePicker 
                                 displayFormat='yyyy-MM'
                                 valueFormat ="yyyy-MM"
