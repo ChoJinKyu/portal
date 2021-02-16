@@ -241,8 +241,8 @@
                         <Button text="{I18N>/LOAD_BOM}" type="Transparent" press=".onBomInfo" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <ToolbarSeparator/>
                         <Button text="{I18N>/INITIALIZE}" type="Emphasized" press=".onSearchButtonPress" />
-                        <Button text="Save" type="Emphasized" press=".onDraftPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
-                        <Button text="Save &amp; Next" type="Emphasized" press=".onSaveNext" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="{I18N>/SAVE}" type="Emphasized" press=".onDraftPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="{I18N>/SAVE_NEXT}" type="Emphasized" press=".onSaveNext" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://upload" press=".onImportSheet" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <Button icon="sap-icon://excel-attachment" press=".onExportSheet"/>

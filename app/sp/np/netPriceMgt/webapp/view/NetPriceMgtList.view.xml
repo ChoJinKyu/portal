@@ -212,8 +212,8 @@
                             <Text text="{list>approval_number}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="20rem">
-                        <Label text="{I18N>/TITLE}" textAlign="Left" />
+                    <t:Column width="20rem">
+                        <Label text="{I18N>/TITLE}" width="100%" textAlign="Center"/>
                         <t:template>
                             <Text text="{list>approval_title}" />
                         </t:template>

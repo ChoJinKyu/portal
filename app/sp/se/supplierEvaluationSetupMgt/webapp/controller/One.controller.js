@@ -1430,29 +1430,36 @@ sap.ui.define([
                         oView.getModel("DetailView").setProperty("/vpOperationUnit/vendor_pool_operation_unit_code", oValues.vendor_pool_operation_unit_code.split(","));
                         
                         var iLvl = Number(oView.getModel("DetailView").getProperty("/OperationUnitMst").eval_apply_vendor_pool_lvl_no);
-                        
-
-                        if(iLvl < 3)
-                        iLvl = 3;
-
-                         var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
-                            oSegmentedButton.destroyItems();
-                            for(var i=0;i<iLvl;i++){
-                                        oSegmentedButton.addItem(
-                                            new SegmentedButtonItem({ 
-                                                text : (i+1)+" Level", 
-                                                key : (i+1)
-                                            })
-                                        );
-                                    }
-                            oSegmentedButton.setSelectedKey(iLvl);
-                        }
-
-
-                        // var oVPCombo = this.byId("searchMultiComboCode");
-                        // var sKey = this.getModel("DetailView").getProperty("/vpOperationUnit/vendor_pool_operation_unit_code").split(",");                        
-                        // oVPCombo.setSelectedKeys(sKey);
-
+                        var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
+                        var iKeys = oValues.vendor_pool_operation_unit_code;
+                        var url = `srv-api/odata/v4/sp.supEvalSetupV4Service/VpLevelChipView(tenant_id='${this.tenant_id}',org_code='${this.org_code}',op_unit_code='${iKeys}')/Set`;
+                                    
+                                    $.ajax({
+                                        url: url,
+                                        type: "GET",
+                                        datatype: "json",
+                                        contentType: "application/json",
+                                        success: function(data){
+                                            
+                                            oSegmentedButton.destroyItems();
+                                            for(var i=0;i<data.value.length;i++){
+                                                        oSegmentedButton.addItem(
+                                                            new SegmentedButtonItem({ 
+                                                                text : data.value[i].level_name, 
+                                                                key : data.value[i].level_no
+                                                            })
+                                                        );
+                                                    }
+                                            // oSegmentedButton.setSelectedKey(data.value.length);
+                                            
+                                        },
+                                        error: function(req){
+                                            
+                                        }
+                                    });
+                    
+                                    oSegmentedButton.setSelectedKey(iLvl);
+                                 }
                             };
 
                         }.bind(this),

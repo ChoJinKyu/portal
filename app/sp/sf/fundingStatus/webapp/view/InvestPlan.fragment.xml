@@ -201,7 +201,7 @@
                                 <Label text="구입금액(원)"/>
                                 <footer>
                                     <Text 
-                                        text="{
+                                        text="총 구입금액 : {
                                             path: 'viewModel>/Detail/Apply/popUpInvestPlanMst/sum_item_pur_amt',
                                             type: 'sap.ui.model.odata.type.Decimal'
                                         }" design="Bold"/>

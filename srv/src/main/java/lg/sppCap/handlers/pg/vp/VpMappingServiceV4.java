@@ -380,8 +380,18 @@ public class VpMappingServiceV4 implements EventHandler {
             @Override
             public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                 CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-                callableStatement.setString("I_USER_ID", sppUserSession.getUserId());//context.getInputData().getUserId()
-                callableStatement.setString("I_USER_NO", sppUserSession.getEmployeeNumber());//context.getInputData().getUserNo()
+                if("".equals(sppUserSession.getUserId())){
+                    callableStatement.setString("I_USER_ID", "TESTER");//context.getInputData().getUserId()
+                }else{
+                    callableStatement.setString("I_USER_ID", sppUserSession.getUserId());//context.getInputData().getUserId()
+                } 
+
+                if("".equals(sppUserSession.getEmployeeNumber())){
+                    callableStatement.setString("I_USER_NO", "TST_NO");//context.getInputData().getUserNo()
+                }else{
+                    callableStatement.setString("I_USER_NO", sppUserSession.getEmployeeNumber());//context.getInputData().getUserNo()
+                }
+                
                 return callableStatement;
             }
         }, paramList);
@@ -799,8 +809,19 @@ public class VpMappingServiceV4 implements EventHandler {
             @Override
             public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                 CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-                callableStatement.setString("I_USER_ID", sppUserSession.getUserId());//context.getInputData().getUserId()
-                callableStatement.setString("I_USER_NO", sppUserSession.getEmployeeNumber());//context.getInputData().getUserNo()
+                //callableStatement.setString("I_USER_ID", sppUserSession.getUserId());//context.getInputData().getUserId()
+                //callableStatement.setString("I_USER_NO", sppUserSession.getEmployeeNumber());//context.getInputData().getUserNo()
+                if("".equals(sppUserSession.getUserId())){
+                    callableStatement.setString("I_USER_ID", "TESTER");//context.getInputData().getUserId()
+                }else{
+                    callableStatement.setString("I_USER_ID", sppUserSession.getUserId());//context.getInputData().getUserId()
+                } 
+                               
+                if("".equals(sppUserSession.getEmployeeNumber())){
+                    callableStatement.setString("I_USER_NO", "TST_NO");//context.getInputData().getUserNo()
+                }else{
+                    callableStatement.setString("I_USER_NO", sppUserSession.getEmployeeNumber());//context.getInputData().getUserNo()
+                }
                 return callableStatement;
             }
         }, paramList);

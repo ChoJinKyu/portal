@@ -697,6 +697,8 @@ sap.ui.define([
             /*========================================= Footer Button Action ===============================*/
 
             onDraft: function () {
+
+                
                 var procObj = {};
                 var generalList = [];
                 procObj = {
@@ -911,15 +913,15 @@ sap.ui.define([
             },
 
             /**
-             * 상신
+             * 승인요청
              */
             onRequest: function () {
-                this.onChangeStatus("AR", this.getModel("I18N").getText("/NSP00105"));
+                this.onChangeStatus("AR", this.getModel("I18N").getText("/NSP00104"));
             },
 
-            /*승인요청 버튼 */
+            /*승인 버튼 */
             onApprove: function () {
-                this.onChangeStatus("AP", this.getModel("I18N").getText("/NSP00104"));
+                this.onChangeStatus("AP", this.getModel("I18N").getText("/NSP00105"));
             },
 
             /*반려 버튼 */

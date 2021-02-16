@@ -41,7 +41,7 @@
                             <m:MultiComboBox id="supplierCompany" editable="false" forceSelection="false" width="100%" selectedKey="" change="handleChangeImpComp" items="{
                                 path: 'cmOrgModel>/Org_Company',
                                 filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                 ],
                                 sorter: { path: 'company_code'}
                             }">
@@ -62,7 +62,7 @@
                             <m:MultiComboBox id="supplierPlant" editable="false" forceSelection="false" width="100%" selectedKey="" selectionFinish="" items="{
                                 path: 'dseModel>/Divisions',
                                 filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                     
                                     
                                 ],

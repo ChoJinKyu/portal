@@ -611,8 +611,7 @@
     <t:Table id="tblSimilModel"
             visible="{detailModel>/mode/readMode}"
             selectionMode="None"
-            visibleRowCountMode="Auto"
-            minAutoRowCount="3"
+            visibleRowCount="{= ${similarModel>/results}.length || 0 }"
             width="auto"
             rows="{similarModel>/results}"
             >

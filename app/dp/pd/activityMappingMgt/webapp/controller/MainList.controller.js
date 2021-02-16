@@ -20,8 +20,9 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
-    "sap/ui/core/Fragment"
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
+    "sap/ui/core/Fragment",
+    "sap/ui/model/Sorter"
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, Sorter) {
     "use strict";
 
     return BaseController.extend("dp.pd.activityMappingMgt.controller.MainList", {
@@ -74,6 +75,7 @@ sap.ui.define([
                 this.onRefresh();
             } else {
                 var aSearchFilters = this._getSearchStates();
+                var aSorter = this._getSorter();
                     
                 if(this.byId("searchCompanyCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCompanyCombo")) !== true) {
                     MessageToast.show("필수 선택 항목입니다.");
@@ -82,29 +84,28 @@ sap.ui.define([
                     this.validator.clearValueState(this.byId("searchCompanyCombo"));
                 }
 
-                if(this.byId("searchAUCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchAUCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
-                    return;
-                } else {
-                    this.validator.clearValueState(this.byId("searchAUCombo"));
-                }
-                this._applySearch(aSearchFilters);
+                this._applySearch(aSearchFilters, aSorter);
             }
         },
 
-        _applySearch: function (aSearchFilters) {
+        _getSorter: function () {
+            var aSorter = [];
+            aSorter.push(new Sorter("local_update_dtm", true));
+            return aSorter;
+        },
+
+        _applySearch: function (aSearchFilters, aSorter) {
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 
-            //this.byId("mainTableDelButton").setEnabled(false);
             this.byId("mainTableCancButton").setEnabled(false);
-            //this.byId("mainTableSaveButton").setEnabled(false);
 
             var oTable = this.byId("mainTable");
             oModel.read("/ActivityMappingNameView", {
                 filters: aSearchFilters,
+                sorters: aSorter,
                 success: function (oData) {
                     oView.setBusy(false);
 
@@ -199,7 +200,7 @@ sap.ui.define([
             oModel.addRecord({
                 "tenant_id": "L2101",
                 "company_code": "LGESL",
-                "org_type_code": "AU",
+                "org_type_code": "AU",  // AU
                 "org_code": this.byId("searchAUCombo").getSelectedKey(),
                 "activity_code": null,
                 "product_activity_code": null,

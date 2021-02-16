@@ -339,10 +339,10 @@
                                     <Text text="투자장소" />
                                     <footer>
                                         <Text 
-                                        text="{
-                                            path: 'viewModel>/Detail/Apply/funding_appl_amount',
-                                            type: 'sap.ui.model.odata.type.Decimal'
-                                        }" design="Bold"/>
+                                            text="총 신청금액 : {
+                                                path: 'viewModel>/Detail/Apply/funding_appl_amount',
+                                                type: 'sap.ui.model.odata.type.Decimal'
+                                            }" design="Bold"/>
                                     </footer>
                                 </Column>
                             </columns>

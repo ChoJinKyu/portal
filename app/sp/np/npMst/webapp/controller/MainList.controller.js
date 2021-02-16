@@ -216,14 +216,14 @@ sap.ui.define([
                     oFilter.push(new Filter("net_price_type_code", FilterOperator.EQ, netPriceType));
                 }
 
-                var searchEffectiveEndDate = that.byId("search_effective_end_date").getValue().replace(/\./gi, "");
+                var searchEffectiveEndDate = that.byId("search_effective_end_date").getValue().replace(/\-/gi, "");
                 var searchEffectiveStartDate = that.byId("search_effective_start_date");
 
                 if (!!searchEffectiveEndDate) {
                     if (status === "all" || status === "expPrc") {
                         oFilter.push(new Filter("effective_end_date", FilterOperator.LE, searchEffectiveEndDate));
                     } else if (status === "effPrc") {
-                        oFilter.push(new Filter("effective_end_date", FilterOperator.GE, that.getToday().replace(/\./gi, "")));
+                        oFilter.push(new Filter("effective_end_date", FilterOperator.GE, that.getToday().replace(/\-/gi, "")));
                     }
                 }
 

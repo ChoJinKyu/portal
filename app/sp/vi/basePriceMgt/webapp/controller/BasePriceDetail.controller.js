@@ -141,9 +141,10 @@ sap.ui.define([
                     filters : aFilters,
                     success : function(data){
                         oView.setBusy(false);
-                        debugger;
-                        oRefererModel.getProperty("/results").push({ApprEmpNo : data.results[0].referer_empno});
-                        oRefererModel.refrsh();
+                        oRefererModel.setData(data);
+                        // debugger;
+                        // oRefererModel.getProperty("/results").push({ApprEmpNo : data.results[0].referer_empno});
+                        // oRefererModel.refrsh();
                     }.bind(this),
                     error : function(data){
                         oView.setBusy(false);
@@ -317,6 +318,8 @@ sap.ui.define([
          * 시세의 경우 적용시작월 선택시 적종종료월이 적용시작월로 픽스(수정불가)
          */
         , onChangeStartData : function(oEvent) {
+            debugger;
+
             var oDetailModel = this.getModel("detailModel");
             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
             var oDetailData = oDetailModel.getProperty(sSelectedPath);
@@ -328,7 +331,7 @@ sap.ui.define([
                 management_mprice_code = "MPRICE"
 
                 //oDetailData.apply_end_data = oDetailData.apply_start_date;
-                oDetailModel.setProperty(sSelectedPath+"/apply_end_date", oDetailData.apply_start_yyyymm);
+                oDetailModel.setProperty(sSelectedPath+"/apply_end_yyyymm", oDetailData.apply_start_yyyymm);
                 oDetailModel.refresh();
             }
             debugger;         
@@ -356,15 +359,15 @@ sap.ui.define([
             var oDetailData = oDetailModel.getProperty(sSelectedPath);
 
             var nAfterBase_year = Number(oDetailData.base_year) + 1;
-            var EndData = this.getFormatDateYYYYMM(oDetailData.apply_end_date);
+            var EndData = this.getFormatDateYYYYMM(oDetailData.apply_end_yyyymm);
             if( EndData < oDetailData.base_year+"01"){
                 MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
-                oDetailData.apply_end_date = "";
+                oDetailData.apply_end_yyyymm = "";
                 return;
 
             }else if( EndData >= String(nAfterBase_year)+"01"){
                 MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
-                oDetailData.apply_end_date = "";
+                oDetailData.apply_end_yyyymm = "";
                 return;
             }
 
@@ -673,10 +676,14 @@ sap.ui.define([
             var oApproverModel = this.getModel("approverModel");
             var oApproverData = oApproverModel.getData();
             var aApproverList = oApproverData.results;
-            if(aApproverList.length === 0){
-                 MessageBox.show("결재자가 없습니다. ");
-                 return;
+
+            if( approval_status_code != 'DR'){
+                if(aApproverList.length === 0){
+                    MessageBox.show("결재자가 없습니다. ");
+                    return;
+                }
             }
+            
             aApproverList.forEach(function(oPrice, idx) {
                 var oNewApproverObj = {};
                     oNewApproverObj['tenant_id'] = sTenantId;
@@ -694,10 +701,12 @@ sap.ui.define([
                 aViApproverType.push(oNewApproverObj);
 
                     for (var i=0; i<=aViApproverType.length-1; i++){
-                        if (!aApproverList[idx].approver_empno){
-                            MessageBox.show("결재자가 없습니다. ");
-                            return;
-                        }
+                        if( approval_status_code != 'DR'){
+                            if (!aApproverList[idx].approver_empno){
+                                MessageBox.show("결재자가 없습니다. ");
+                                return;
+                            }
+                        } 
                     }
                     
                 });
@@ -911,7 +920,7 @@ sap.ui.define([
             debugger;
             console.log("SendData");
             console.log(oSendData);
-            if (oData.approval_number === null) {
+            if (!oData.approval_number) {
                 this._SendDataSave(oSendData, "insert");
             }else {
                 this._SendDataSave(oSendData, "update");

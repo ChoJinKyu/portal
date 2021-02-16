@@ -378,6 +378,9 @@ sap.ui.define([
          * 보기모드로 전환
          */
         , onReadPress: function(oEvent) {
+            //취소시 수정중인 데이터는 reset시킨다.
+            this._getProjectDetail();
+            
             this.getModel("detailModel").setProperty("/mode/readMode", true);
             this.getModel("detailModel").setProperty("/mode/editMode", false);
         }

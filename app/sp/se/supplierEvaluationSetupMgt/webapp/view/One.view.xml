@@ -228,11 +228,11 @@
                                                         id="vendor_pool_lvl"
                                                         selectedKey="{DetailView>/OperationUnitMst/eval_apply_vendor_pool_lvl_no}"
                                                         enabled="{DetailView>/isEditMode}">
-                                                             <items>
+                                                             <!-- <items>
                                                                 <SegmentedButtonItem text="1 Level" key="1"/>
                                                                 <SegmentedButtonItem text="2 Level" key="2" />
                                                                 <SegmentedButtonItem text="3 Level" key="3" />
-                                                            </items> 
+                                                            </items>  -->
                                                         </SegmentedButton>                                                                    
 
                                                 </f:content>
