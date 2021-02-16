@@ -170,7 +170,7 @@ sap.ui.define([
                     'orgCode':self.plant_code,
                     'isMulti':true
                 }
-                
+                console.log("param >>>>>>>>>>>>>>", param);
                 self.supplierSelection.showSupplierSelection(param, function(tokens){
                 // this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.plant_code, function(data){
 
@@ -323,9 +323,9 @@ sap.ui.define([
          * @public 
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
          */
-        onExit: function () {
-            this.byId("dialogMolItemSelection").close();
-        },
+        // onExit: function () {
+        //     this.byId("dialogMolItemSelection").close();
+        // },
 
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
@@ -335,15 +335,13 @@ sap.ui.define([
                 , detailModel = this.getModel("mdItemMaster")
                 , oSelected = psTable.getSelectedIndices();
             ;
-
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    detailModel.removeRecord(idx)
-                    //  detailModel.markRemoved(idx)
+            if(psTable.getSelectedIndices().length > 0){
+                    psTable.getSelectedIndices().reverse().forEach(function (idx) {
+                        detailModel.markRemoved(idx);
                 });
                 psTable.clearSelection();
-
-            } else {
+            }
+            else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         } ,

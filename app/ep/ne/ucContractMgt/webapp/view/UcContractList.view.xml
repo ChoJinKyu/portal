@@ -8,6 +8,7 @@
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
     xmlns:u="sap.ui.unified"
+    xmlns:tnt="sap.tnt"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -171,7 +172,7 @@
                 <Title text="공사단가계약 {= ${viewModel>/list}.length > 0 ? '(' + ${viewModel>/list}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
                 <Button text="신규작성" id="RfqButton" press=".onAddButtonPress" type="Transparent"/>
-                <Button text="계약변경" id="supplierSelectionButton" press=".onSupplierSelectionButtonPress" type="Transparent"/>
+                <Button text="계약변경" id="supplierSelectionButton" press=".onContractModifydButtonPress" type="Transparent"/>
                 <Button text="계약종료" id="publishButton" press=".onContractEndButtonPress"   type="Transparent"/>
                 <ToolbarSeparator/>
                 <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
@@ -236,7 +237,12 @@
                 <Label text="계약진행상태" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_status_name}"/>
-                    <!-- <Link text="{viewModel>net_price_contract_status_name}" press="onTableItemPress" enabled="{= ${viewModel>net_price_contract_status_name} !== '' ? true : false }" /> -->
+                    <tnt:InfoLabel 
+                        text="{viewModel>net_price_contract_status_name}" 
+                        colorScheme="{
+                                path: 'viewModel>net_price_contract_status_color',
+                                formatter: '.onStatusColor'
+                            }" />
                 </t:template>
                 </t:Column>
                 <t:Column id="mainEffectiveStatusName" width="7rem" hAlign="Center">

@@ -99,11 +99,13 @@
                                                 ],
                                                 sorter: { path: 'sort_no'} 
                                             }"
-                                    editable="{approver>selRow}" >  
+                                    editable="{= ${mode>/viewFlag} ? false: ${approver>selRow}}"
+                                    
+                                    >  
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </ComboBox>
                                 <Input value="{approver>approver_name}" placeholder="Search employee"
-                                    editable="{approver>selRow}"
+                                    editable="{= ${mode>/viewFlag} ? false: ${approver>selRow}}"
                                     showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                 </Input>
                                 <Text text="{approver>approve_comment}" />
@@ -155,8 +157,12 @@
                                 placeholder="Choose codes from the ValueHelp"
                                 showValueHelp="true" 
                                 valueHelpRequest=".onMultiInputWithEmployeeValuePress"
-                                editable="{mode>/editFlag}"
+                                editable="{mode>/editFlag}" 
+                                tokens="{path: 'referer>/Referers'}" 
                                 >
+                                <tokens>
+                                    <Token key="{referer>referer_empno}" text="{referer>referer_name}"/>
+                                </tokens>	
                         </MultiInput>
                         <!-- <MultiComboBox
                             selectionChange="handleSelectionChangeReferer"

@@ -133,7 +133,7 @@ service MoldApprovalListService {
 	   key rf.referer_empno ,
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as referer_name : String(240)
     from referer.Referer rf 
-    join emp.Hr_Employee emp on emp.employee_number = rf.referer_empno 
+    join emp.Hr_Employee emp on emp.employee_number = rf.referer_empno and rf.tenant_id = emp.tenant_id 
     join Dept hr on hr.department_code = emp.department_code 
     and hr.tenant_id = emp.tenant_id ;
 

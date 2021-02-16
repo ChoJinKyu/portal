@@ -54,19 +54,21 @@ sap.ui.define([
 
             this.setModel(new JSONModel(), "forexDtl");
 
-            // this._oTPC = new TablePersoController({
-            //     customDataKey: "forexDeclarationMgt",
-            //     persoService: MainListPersoService
-            // }).setTable(this.byId("mainTable"));
-
-
-            this.getView().setModel(new JSONModel({summaryChart: []}), "popup");
+            this._oTPC = new TablePersoController({
+                customDataKey: "forexDeclarationMgt",
+                persoService: MainListPersoService
+            }).setTable(this.byId("mainTable"));
+            
             this.enableMessagePopover();
 
-            // var today = new Date();
-            // this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
-            // this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().setModel(new JSONModel({summaryChart: []}), "popup");
+            
+
+            var today = new Date();
+            this.getView().byId("searchPoDate").setDateValue(new Date(today.getFullYear(), today.getMonth() - 12, today.getDate()));
+            this.getView().byId("searchPoDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
+
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
@@ -290,8 +292,10 @@ sap.ui.define([
             console.log("this.sFrom :::: " , this.sFrom);
             console.log("this.sTo :::: " , this.sTo);
 
+            //alert(oView.byId("searchChartPoDate").getDateValue()); 
 
-            // console.log("_chartDialog :::: " , this._chartDialog);
+
+             //console.log("_chartDialog :::: " , this._chartDialog);
 
             //   var today = new Date();
 

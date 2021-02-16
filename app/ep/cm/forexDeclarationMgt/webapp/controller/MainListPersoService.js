@@ -167,6 +167,7 @@ sap.ui.define(["jquery.sap.global"],
             }
         };
 
+        MainListPersoService.delPersData = MainListPersoService.resetPersData;
         return MainListPersoService;
 
     });

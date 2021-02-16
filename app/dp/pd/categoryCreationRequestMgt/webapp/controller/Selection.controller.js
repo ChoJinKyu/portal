@@ -96,7 +96,7 @@ sap.ui.define([
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/cm.util.CommonService/").read("/Code", {
                     filters: aFilters,
                     success: function(oData){
-                    this.getModel("processModel").setData(oData.results);
+                        this.getModel("processModel").setData(oData.results);
                 }.bind(this)
             });
         },
@@ -189,8 +189,10 @@ sap.ui.define([
                 }else if( flag == "R"){
                     statsCode = "SUBMIT";
                     progressCode = "B";
-                }else if( flag == "J") {
+                }else if( flag == "E") {
                     progressCode = "E";
+                }else if( flag == "F") {
+                    progressCode = "F";
                 }else if( flag == "A") {
                     progressCode = "C";
                 }else if( flag == "C") {
@@ -262,12 +264,15 @@ sap.ui.define([
             if(flag=="DL") {    //삭제
                 title = this.getModel("I18N").getText("/DELETE");
                 confirm = this.getModel("I18N").getText("/NCM00003");
-            } else if(flag=="J") {    //반려
+            } else if(flag=="E") {    //반려
                 title = this.getModel("I18N").getText("/REJECT");
                 confirm = this.getModel("I18N").getText("/NSP00103");
+            } else if(flag=="F") {    //취소
+                title = this.getModel("I18N").getText("/CANCEL");
+                confirm = this.getModel("I18N").getText("/NCM00002");
             } else if(flag=="A") {    //승인
                 title = this.getModel("I18N").getText("/APPROVAL");
-                confirm = this.getModel("I18N").getText("/NSP00104");
+                confirm = this.getModel("I18N").getText("/NSP00105");
             } else if(flag=="C") {    //확인&생성
                 var oI18NModel = this.getModel("I18N");
                 title = this.getModel("I18N").getText("/CONFIRM_CREATE");
@@ -290,7 +295,6 @@ sap.ui.define([
                             data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
-                                console.log(rst);
                                 if(rst.return_code =="OK"){
                                     //sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     if(flag == "D"){
@@ -299,8 +303,11 @@ sap.ui.define([
                                     }else if(flag == "R"){
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
-                                    }else if(flag == "J"){
-                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    }else if(flag == "E"){
+                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NDP60004"));
+                                        v_this.onPageNavBackButtonPress();
+                                    }else if(flag == "F"){
+                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NDP60003"));
                                         v_this.onPageNavBackButtonPress();
                                     }else if(flag == "A"){
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
@@ -309,27 +316,25 @@ sap.ui.define([
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));
                                         v_this.onPageNavBackButtonPress();
                                     }else if(flag == "C"){
-                                        MessageBox.confirm("검토 완료되었습니다. \n Category를 생성을 진행하시겠습니까?", {
-                                            title : "Confirmation",
-                                            initialFocus : sap.m.MessageBox.Action.CANCEL,
-                                            onClose : function(sButton) {
-                                                if (sButton === MessageBox.Action.OK) {
-                                                    v_this.onMoveAddCreate();
-                                                } else {
-                                                    v_this.onPageNavBackButtonPress();
-                                                }
-                                            }
-                                        });
+                                        v_this.onMoveAddCreate();
+                                        // MessageBox.confirm("검토 완료되었습니다. \n Category를 생성을 진행하시겠습니까?", {
+                                        //     title : "Confirmation",
+                                        //     initialFocus : sap.m.MessageBox.Action.CANCEL,
+                                        //     onClose : function(sButton) {
+                                        //         if (sButton === MessageBox.Action.OK) {
+                                                    
+                                        //         } else {
+                                        //             v_this.onPageNavBackButtonPress();
+                                        //         }
+                                        //     }
+                                        // });
                                     }
                                     
                                 }else{
-                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
-                                console.log("eeeeee");
-                                console.log(rst);
                                 sap.m.MessageToast.show( "error : "+rst.return_msg );
                             }
                         });
@@ -470,7 +475,6 @@ sap.ui.define([
                 success: function (oData) {
                     //oView.byId("ideaCompany").setValue(oData.company_code);
                     oView.setBusy(false);
-                    console.log("oData=========>",oData.results);
                     v_this._toShowMode();
                 }
             });

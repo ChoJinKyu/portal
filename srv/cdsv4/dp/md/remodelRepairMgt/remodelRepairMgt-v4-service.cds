@@ -1,10 +1,12 @@
 using { dp as item } from  '../../../../../db/cds/dp/md/DP_MD_REPAIR_ITEM-model';
+using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 
 namespace dp;
 @path : '/dp.RemodelRepairMgtV4Service' 
 service RemodelRepairMgtV4Service { 
 
     entity RepairItem as projection on item.Md_Repair_Item; // 저장 엔터티 
+    entity MoldMaster as projection on moldMst.Md_Mst; // 저장 엔터티 
 
     // 파라미터 타입
     type RepairItem_v4 {
@@ -16,6 +18,7 @@ service RemodelRepairMgtV4Service {
         repair_request_date         : String;
         repair_type_code            : String;
         repair_progress_status_code : String;
+        mold_mfger_code             : String; // MoldMaster
         mold_moving_plan_date       : String;
         mold_complete_plan_date     : String;
         mold_moving_result_date     : String;

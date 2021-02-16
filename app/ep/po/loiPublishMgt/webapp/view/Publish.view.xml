@@ -158,31 +158,31 @@
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-                                <Column minScreenWidth="Tablet" hAlign="Center" width="150px">
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="5em">
 									<Text text="플랜트" />
 								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Center">
 									<Text text="품명" />
 								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Center"  width="200px">
+								<Column minScreenWidth="Tablet" hAlign="Center" width="12em">
 									<Text text="규격" />
 								</Column>                                
-                                <Column minScreenWidth="Tablet" hAlign="Center"  width="70px" >
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="5em" >
 									<Text text="단위" />
 								</Column>
-                                <Column  minScreenWidth="Tablet" hAlign="Center"  width="80px">
+                                <Column  minScreenWidth="Tablet" hAlign="Center" width="6em">
 									<Text text="수량" />
                                 </Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center"  width="120px">
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
 									<Text text="단가" />
                                 </Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center"  width="120px">
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
 									<Text text="금액" />
                                 </Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center"  width="120px">
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
 									<Text text="납기일자" />
 								</Column>                                                                                                
-                                <Column minScreenWidth="Tablet" hAlign="Center" >
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="15em">
 									<Text text="비고" />
 								</Column>
 

@@ -68,6 +68,10 @@ sap.ui.define([
 
         },
 
+        onStatusColor: function (statusColor) {
+            if(!statusColor) return 1;
+            return parseInt(statusColor);
+        },
 
         // onRenderedFirst: function () {
         //     console.log("onRenderedFirst========");
@@ -223,6 +227,10 @@ sap.ui.define([
                 }
             });
 
+        },
+
+        onContractModifydButtonPress: function () {
+            MessageToast.show("계약변경은 추후 개발예정입니다.");
         },
 
         /**

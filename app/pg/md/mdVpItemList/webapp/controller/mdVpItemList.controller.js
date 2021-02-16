@@ -39,6 +39,7 @@ sap.ui.define([
             customDataKey: "mdCategoryItem"
             }).setTable(this.byId("treeTable"));
 
+            this.oSelectedItems = [];
             //테넌트, 사업본부 기본셋팅
             // this.getView().byId("searchTenantCombo").setSelectedKey("L2100");
             // this.getView().byId("searchChain").setSelectedKey("BIZ00200");
@@ -134,6 +135,18 @@ sap.ui.define([
             this.onOpenCategoryItemPage(oTenantId,oOrgCode,oCategoryCode);    
         },
 
+        //checkBox items
+        setIdSelect: function(oEvent) {
+            var itemPath = oEvent.getSource().getBindingContext("list").getPath();
+            var idx = this.oSelectedItems.indexOf(itemPath);
+
+            if(oEvent.getSource().getSelected() && idx < 0){
+                this.oSelectedItems.push(itemPath);
+            }else{
+                this.oSelectedItems.splice(idx,1);
+            }
+        },
+
         onMainTableItemMappingButtonPress: function () {
             //List 선택후 클릭시 Mapping화면 (1-3) pop-up호출
             
@@ -141,15 +154,18 @@ sap.ui.define([
                 oTable = this.byId("treeTable"),         
                 that = this;
 
-            var items = oTable.getSelectedIndices();
-            if(items.length>1 || items.length<1){
+            // var items = oTable.getSelectedIndices();
+            
+            if(this.oSelectedItems.length>1 || this.oSelectedItems.length<1){
                 MessageToast.show(this.getModel("I18N").getText("/NPG10016"));
                 return;
             }
 
-            var nSelIdx = oTable.getSelectedIndex();
-            var oContext = oTable.getContextByIndex(nSelIdx);
-            var sPath = oContext.getPath();
+            // var nSelIdx = oTable.getSelectedIndex();
+            // var oContext = oTable.getContextByIndex(nSelIdx);
+            // var sPath = oContext.getPath();
+
+            var sPath = this.oSelectedItems[0];
             var oData = oTable.getBinding().getModel().getProperty(sPath);
             if(oData.drill_state != "leaf"){
                 MessageToast.show(this.getModel("I18N").getText("/NPG10015"));
@@ -176,6 +192,10 @@ sap.ui.define([
 
         onSearch:function () {
             var oView = this.getView();
+            
+            // tableChkBox 초기화
+            this.oSelectedItems.length=0;
+
             this.mainTreeListModel = this.mainTreeListModel || new TreeListModel(this.getView().getModel("list"), { returnType: "Array" });
 
             //filters
@@ -202,11 +222,8 @@ sap.ui.define([
             if(sVpName.length > 0){             
                 url = url +" and vendor_pool_code eq '"+ this.searchVpVode +"'"; 
             }
-         
-			// if (sStatusflag != "" && sStatusflag.length > 0) {
-            //     url = url +" and confirmed_status_code eq '"+ sStatusflag +"'"; 
-            // }
 
+            oView.setBusy(true);
             jQuery.ajax({
                 url: url, 
                 contentType: "application/json",
@@ -214,6 +231,7 @@ sap.ui.define([
                 // filters: aSearchFilters,    
                 // sorters: [new Sorter("hierarchy_rank")],
                 success: function(oData){ 
+                    oView.setBusy(false);
                     if(oData.value.length >0 && (sVpName.length > 0 || sStatusflag.length > 0)){
                         var url2 = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
                             +"?$filter=tenant_id eq '"+tenant_combo+"' and "
@@ -252,8 +270,6 @@ sap.ui.define([
                             success: function(oData2){
                                 //path_code추출
                                 this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData2.value.length+")");
-
-
                                 this.setItemList(oData2);
                             }.bind(this)   
                                                 
@@ -285,16 +301,22 @@ sap.ui.define([
             }  
 
             //treeList-item mapping
-            if(dataArr.length>0){
+            if(dataArr.length>0){ //전체 
                 var itemArr;
+                var oRows = this.byId("treeTable").getRows();
+                
                 for(var i=0; i<dataArr.length; i++){
 
                     var itemCnt = dataArr[i].vendor_pool_item_mapping_cnt;
                     var leafNode = dataArr[i].drill_state;
                     if(leafNode != "leaf"){
+                        var oRow =  oRows[i];
+                        // var oCells = oRow.getCells();
+                        // oCells[0].setVisible(false);
                         // this.byId("treeTable").setSelectionMode(sap.ui.table.SelectionMode.None);
                     }
 
+                    //관리특성 있는 경우
                     if(itemCnt != 0){ //itemArr != null ){
                         for(var j=1; j<=itemCnt; j++){
                             if(j<10){
@@ -318,7 +340,6 @@ sap.ui.define([
                 }
                 
             }
-
             
 
             //treeList-treeModel
@@ -329,16 +350,6 @@ sap.ui.define([
                 }
             }),"list");
 
-            
-            // var oTable = this.byId("treeTable");
-            // oTable.getRows().some(function (oRows) {
-                
-            //     if (oRows.getBindingContext() === oContext) {
-            //         oRows.focus();
-            //         oRows.setSelected(true);       
-            //         return true;
-            //     }
-            // });
         },
 
         onMainTableexpandAll: function(e) {
@@ -356,7 +367,8 @@ sap.ui.define([
                 oModel = this.getModel("list"),
                 that = this;
                 
-            var selectedItems = oTable.getSelectedIndices();
+            // var selectedItems = oTable.getSelectedIndices();
+            var selectedItems = this.oSelectedItems;
             if(selectedItems.length<1){
                 MessageToast.show(this.getModel("I18N").getText("/NPG00016"));
                 return;
@@ -364,8 +376,8 @@ sap.ui.define([
                 var param = {};
                 var items = [];
                 for(var i = 0 ; i < selectedItems.length; i++){
-                    var oContext = oTable.getContextByIndex(selectedItems[i]);
-                    var sPath = oContext.getPath();
+                    //var oContext = oTable.getContextByIndex(selectedItems[i]);
+                    var sPath = selectedItems[i] //oContext.getPath();
                     var oData = oTable.getBinding().getModel().getProperty(sPath);
                     if(oData.drill_state != "leaf"){
                         MessageToast.show(this.getModel("I18N").getText("/NPG10014"));
@@ -637,7 +649,7 @@ sap.ui.define([
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		onOpenCategoryItemPage: function(oTenantId,oOrgCode,oCategoryCode){
-            window.open("/pg/md/mdCategoryItem/webapp/index.html?"
+            window.open("./../pg/md/mdCategoryItem/webapp/index.html?"
                         +"tenant_id="+oTenantId
                         +"&org_code="+oOrgCode
                         +"&spmd_category_code="+oCategoryCode,"","_blank");

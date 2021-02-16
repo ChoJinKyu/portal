@@ -9,7 +9,7 @@
 
         <form:SimpleForm> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="* 계약명" required="true" design="Bold"/>
+                <Label text="계약명" required="true" design="Bold"/>
                 <Input value="{
                     path: 'viewModel>/mst/net_price_contract_title',
                     type: 'sap.ui.model.type.String',
@@ -23,7 +23,7 @@
         <form:SimpleForm>
             
             <VBox alignContent="Center">
-                <Label text="* 운영단위(플랜트)" required="true" design="Bold" class="sapMLabelNoText" />
+                <Label text="운영단위(플랜트)" required="true" design="Bold" class="sapMLabelNoText" />
                 <Input id="savePlantName" value="{viewModel>/mst/org_name}" required="true" placeholder="플랜트" showValueHelp="true" valueHelpRequest=".openPlantPopup" width="50%" />
                 <Input id="savePlantCode" value="{viewModel>/mst/org_code}" visible="false" />
                 <layoutData>
@@ -32,7 +32,7 @@
             </VBox>   
 
             <VBox alignContent="Center">
-                <Label text="* 계약기간" design="Bold" required="true"/>
+                <Label text="계약기간" design="Bold" required="true"/>
                 <HBox>
                     <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/mst/net_price_contract_start_date}" required="true" placeholder="Date" width="100%"/>
                     <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd sapUiTinyMarginTop" />
@@ -47,7 +47,7 @@
 
         <form:SimpleForm> 
             <VBox alignContent="Center">
-                <Label text="* 대분류" design="Bold" required="true" class="sapUiSmallMarginTop"/>
+                <Label text="대분류" design="Bold" required="true" class="sapUiSmallMarginTop"/>
                 <ComboBox selectedKey="{viewModel>/mst/ep_item_class_code}" 
                         selectionChange="setItemClass"
                         width="50%" required="true"
@@ -69,7 +69,7 @@
             </VBox> 
 
             <VBox alignContent="Center"> 
-                <Label text="* 견적참조정보" design="Bold" class="sapUiSmallMarginTop"/>
+                <Label text="견적참조정보" design="Bold" class="sapUiSmallMarginTop"/>
                 <Input value="{
                     path: 'viewModel>/mst/quotation_reference_info',
                     type: 'sap.ui.model.type.String',
@@ -85,7 +85,7 @@
 
         <form:SimpleForm> 
             <VBox alignContent="Center"> 
-                <Label  text="* 비고" 
+                <Label  text="비고" 
                             design="Bold" 
                             class="sapUiSmallMarginTop"/>
                 <TextArea value="{viewModel>/mst/remark}" rows="4" width="100%" />            
@@ -94,7 +94,7 @@
 
         <form:SimpleForm visible="{= ${viewModel>/mst/net_price_contract_chg_type_cd} === 'D' ? true : false }"> 
             <VBox alignContent="Center"> 
-                <Label  text="* 계약종료사유" 
+                <Label  text="계약종료사유" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
                 <TextArea value="{viewModel>/mst/delete_reason}" rows="4" width="100%" /> 

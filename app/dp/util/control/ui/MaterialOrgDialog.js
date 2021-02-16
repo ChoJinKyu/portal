@@ -30,7 +30,6 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            //this.oTenantId =  new Input({ placeholder: this.getModel("I18N").getText("/TENANT_ID") });
             this.oSearchCode = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
             this.oSearchDesc = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
             this.oSearchSpec = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")});
@@ -51,8 +50,7 @@ sap.ui.define([
                     ],
                     serviceUrl: 'srv-api/odata/v2/cm.PurOrgMgtService',
                     entityName: 'Pur_Operation_Org'
-                },
-                required:true
+                }
             });
 
             this.oSearchOrg.oModels.undefined.setSizeLimit(10000);
@@ -89,54 +87,47 @@ sap.ui.define([
             });
 
             return [
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/TENANT_ID"), required:true}),  //테넌트ID
-                //         this.oTenantId
-                //     ],
-                //     layoutData: new GridData({ span: "XL3 L3 M3 S10"})
-                // }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/ORG_CODE"), required:true}),  //조직코드
+                        new Label({ text: this.getModel("I18N").getText("/ORG_CODE")}),  //조직코드
                         this.oSearchOrg
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE")}),            // 자재코드
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE")}),    // 자재코드
                         this.oSearchCode
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/MATERIAL_DESC")}),    // 자재내역
                         this.oSearchDesc
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}),   //자재스펙
                         this.oSearchSpec
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S10", linebreak: true})
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10", linebreak: true})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/HS_CODE") }),  //HS_CODE
                         this.oSearchHSCode
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
                         this.oSearchUIT
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S10"})
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10"})
                 }),
 
             ];
@@ -146,25 +137,24 @@ sap.ui.define([
             return [
                 new Column({
                     width: "15%",
-                    hAlign: "Center",
+                    hAlign: "Left",
                     label: new Label({text: this.getModel("I18N").getText("/ORG_CODE")}),
                     template: new Text({text: "[{org_code}]{org_name}"})
                 }),
                 new Column({
-                    width: "10%",
+                    width: "8%",
                     hAlign: "Center",
                     label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE")}),
                     template: new Text({text: "{material_code}"})
                 }),
                 new Column({
-                    width: "15%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),
+                    width: "30%",
+                    hAlign: "Left",
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Left"}),
                     template: new Text({text: "{material_desc}", textAlign:"Begin"})
                 }),
                 new Column({
-                    width: "25%",
-                    hAlign: "Center",
+                    hAlign: "Left",
                     label: new Label({text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}),
                     template: new Text({text: "{material_spec}"})
                 }),
@@ -175,7 +165,7 @@ sap.ui.define([
                     template: new Text({text: "{base_uom_code}"})
                 }),
                 new Column({
-                    width: "10%",
+                    width: "8%",
                     hAlign: "Center",
                     label: new Label({text: this.getModel("I18N").getText("/PURCHASING") + this.getModel("I18N").getText("/ENABLE") }),   // 구매가능
                     template: new Text({text: "{purchasing_enable_flag}"})
@@ -248,7 +238,7 @@ sap.ui.define([
 
             if(sDesc){
                 sOrgCode=true;
-                aFilters.push(new Filter("tolower(material_spec)", FilterOperator.Contains, "'" + sDesc.toLowerCase().replace("'","''") + "'"));
+                aFilters.push(new Filter("tolower(material_desc)", FilterOperator.Contains, "'" + sDesc.toLowerCase().replace("'","''") + "'"));
             }
             
             if(sSpec){
@@ -256,19 +246,22 @@ sap.ui.define([
                 aFilters.push(new Filter("tolower(material_spec)", FilterOperator.Contains, "'" + sSpec.toLowerCase().replace("'","''") + "'"));
             }
 
-             if(sOrgCode || oParam != "") {
-                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialOrgView", {
-                    filters: aFilters,
-                    success: function(oData){
-                        var aRecords = oData.results;
-                        this.oDialog.setData(aRecords, false);
-                    }.bind(this)
-                });
-            } else {
-                MessageToast.show(this.getModel("I18N").getText("/ORG_CODE") + "는 " + this.getModel("I18N").getText("/ECM01001"));
-                this.oDialog.setBusy(false);
-                return;
-            }
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialOrgView", {
+                filters: aFilters,
+                success: function(oData){
+                    var aRecords = oData.results;
+                    this.oDialog.setData(aRecords, false);
+                }.bind(this)
+            });
+            
+            //  if(sOrgCode || oParam != "") {
+                
+            // } 
+            // else {
+            //     MessageToast.show(this.getModel("I18N").getText("/ORG_CODE") + "는 " + this.getModel("I18N").getText("/ECM01001"));
+            //     this.oDialog.setBusy(false);
+            //     return;
+            // }
         },
         
         beforeOpen: function() {

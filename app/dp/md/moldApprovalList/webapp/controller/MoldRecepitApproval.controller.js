@@ -238,10 +238,9 @@ sap.ui.define([
                 , detailModel = this.getModel("mdRecepit")
                 , oSelected = budgetExecutionTable.getSelectedIndices();
             ;
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    detailModel.removeRecord(idx)
-                    //  detailModel.markRemoved(idx)
+            if(budgetExecutionTable.getSelectedIndices().length > 0){
+                    budgetExecutionTable.getSelectedIndices().reverse().forEach(function (idx) {
+                        detailModel.markRemoved(idx);
                 });
                 budgetExecutionTable.clearSelection();
             } else {

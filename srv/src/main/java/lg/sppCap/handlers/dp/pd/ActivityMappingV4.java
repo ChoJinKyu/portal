@@ -69,7 +69,9 @@ public class ActivityMappingV4 implements EventHandler {
         v_sql_createTable.append("UPDATE_ACTIVITY_CODE NVARCHAR(40), ");
         v_sql_createTable.append("UPDATE_PRODUCT_ACTIVITY_CODE NVARCHAR(40) ");
         v_sql_createTable.append(")");
-        //String v_sql_dropable = "DROP TABLE #LOCAL_TEMP_DP_PD_ACTIVITY_MAPPING_TEMP";
+        
+        String v_sql_dropable = "DROP TABLE #LOCAL_TEMP_DP_PD_ACTIVITY_MAPPING_TEMP";
+
 		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_DP_PD_ACTIVITY_MAPPING_TEMP VALUES (?, ?, ?, ?, ?,   ?, ?, ?, ?, current_date,    ?, ?, ?)";
         String v_sql_callProc = "CALL DP_PD_ACTIVITY_MAPPING_SAVE_PROC(I_TABLE => #LOCAL_TEMP_DP_PD_ACTIVITY_MAPPING_TEMP, O_MSG  => ? )";
         
@@ -135,7 +137,7 @@ public class ActivityMappingV4 implements EventHandler {
             }, paramList);
             
             // Local Temp Table DROP
-            //jdbc.execute(v_sql_dropable);
+            jdbc.execute(v_sql_dropable);
 
             context.setResult(v_result);
             context.setCompleted();

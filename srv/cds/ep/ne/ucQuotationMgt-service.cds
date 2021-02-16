@@ -47,7 +47,7 @@ service UcQuotationMgtService {
          where
              level_number = 1;
 
-    view UcContractDtlView (tenant_id : String, company_code : String, org_code : String, supplier_code : String, large_item_class_code : String, const_start_date : Date) as
+    view UcContractDtlView (tenant_id : String, company_code : String, org_code : String, supplier_code : String, large_item_class_code : String, const_start_date : String) as
     select 
         ep_item_code : String(50)
         , item_desc : String(200)  
@@ -66,8 +66,8 @@ service UcQuotationMgtService {
         , net_price_change_allow_flag : Boolean
         , remark : String(3000) 
         , expiration_flag : Boolean
-        , tenant_id : String(5) 
-        , company_code : String(10) 
+        , key tenant_id : String(5) 
+        , key company_code : String(10) 
         , key net_price_contract_document_no : String(50) 
         , key net_price_contract_degree : Integer64
         , key net_price_contract_item_number : String(50) 
@@ -91,8 +91,8 @@ service UcQuotationMgtService {
             ,dtl.labor_apply_flag                                          
             ,dtl.net_price_change_allow_flag                               
             ,dtl.remark   
-            ,(case when days_between(:const_start_date, coalesce(mst.effective_start_date,mst.net_price_contract_start_date)) > 0 then true 
-                    else (case when days_between(:const_start_date, coalesce(mst.effective_end_date,mst.net_price_contract_end_date)) < 0 then true 
+            ,(case when days_between(to_date(:const_start_date), coalesce(mst.effective_start_date,mst.net_price_contract_start_date)) > 0 then true 
+                    else (case when days_between(to_date(:const_start_date), coalesce(mst.effective_end_date,mst.net_price_contract_end_date)) < 0 then true 
                             else false end) end) as expiration_flag                                                               
             ,dtl.tenant_id
             ,dtl.company_code

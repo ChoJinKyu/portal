@@ -65,7 +65,9 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,NET_PRICE_CONTRACT_DOCUMENT_NO   NVARCHAR(50)
                         ,NET_PRICE_CONTRACT_DEGREE        DECIMAL 
                         ,NET_PRICE_CONTRACT_ITEM_NUMBER   NVARCHAR(50)
-                        ,SUPPLIER_ITEM_CREATE_FLAG        BOOLEAN   
+                        ,SUPPLIER_ITEM_CREATE_FLAG        BOOLEAN  
+                        ,NET_PRICE_CONTRACT_TITLE         NVARCHAR(100)
+                        ,EXTRA_RATE_COUNT                 DECIMAL
                         ,LOCAL_CREATE_DTM SECONDDATE
                         ,LOCAL_UPDATE_DTM SECONDDATE
                         ,CREATE_USER_ID NVARCHAR(255)
@@ -162,6 +164,8 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,NET_PRICE_CONTRACT_DEGREE        DECIMAL 
                         ,NET_PRICE_CONTRACT_ITEM_NUMBER   NVARCHAR(50)
                         ,SUPPLIER_ITEM_CREATE_FLAG        BOOLEAN   
+                        ,NET_PRICE_CONTRACT_TITLE         NVARCHAR(100)
+                        ,EXTRA_RATE_COUNT                 DECIMAL
                         ,LOCAL_CREATE_DTM SECONDDATE
                         ,LOCAL_UPDATE_DTM SECONDDATE
                         ,CREATE_USER_ID NVARCHAR(255)
@@ -633,7 +637,9 @@ BEGIN
                         ,A.NET_PRICE_CONTRACT_DOCUMENT_NO   
                         ,A.NET_PRICE_CONTRACT_DEGREE        
                         ,A.NET_PRICE_CONTRACT_ITEM_NUMBER   
-                        ,A.SUPPLIER_ITEM_CREATE_FLAG        
+                        ,A.SUPPLIER_ITEM_CREATE_FLAG   
+                        ,A.NET_PRICE_CONTRACT_TITLE 
+                        ,A.EXTRA_RATE_COUNT 
                         ,A.LOCAL_CREATE_DTM 
                         ,A.LOCAL_UPDATE_DTM 
                         ,A.CREATE_USER_ID 

@@ -42,9 +42,8 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/CATEGORY_GROUP}: " required="true"></Label>
+                            <Label text="{I18N>/CATEGORY_GROUP}: "></Label>
                             <ComboBox
-                                required="true"
                                 id="searchCategoryCombo"
                                 width="100%"
                                 selectedKey=""

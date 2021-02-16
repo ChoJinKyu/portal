@@ -287,6 +287,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -403,6 +404,7 @@ sap.ui.define([
                 closeWhenApplied:true,
                 items:{
                     filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     ]
                 }
 
@@ -712,8 +714,8 @@ sap.ui.define([
                         
                         //MessageToast.show(eMessageDetail);
                     }
-
-                    sMsg = oBundle.getText(eMessage);
+                    sMsg = oBundle.getText(eMessage, ['']);
+                    // sMsg = oBundle.getText(eMessage);
                     if(errorType === 'E'){
                         // alert(sMsg);                    
                     }else{

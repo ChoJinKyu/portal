@@ -38,9 +38,8 @@
                 <!-- <form:SimpleForm id="pageSearchForm" editable="true" layout="ResponsiveGridLayout"  > -->
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/CATEGORY_GROUP}: " required="true"></Label>
+                            <Label text="{I18N>/CATEGORY_GROUP}: "></Label>
                             <ComboBox
-                                required="true"
                                 id="searchCategoryCombo"
                                 width="100%"
                                 selectedKey=""
@@ -84,45 +83,45 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-            <t:Table id="mainTable"
-            selectionMode="None"
-            rows="{
-                path: 'list>/pdPartCategoryCreationRequestView',
-                sorter: { 
-                    path: 'request_number',
-                    descending: true 
-                }                   
-            }"
-            visibleRowCountMode="Auto"
-            cellClick=".onCellClickPress" >
+            <t:Table 
+                id="mainTable"
+                selectionMode="None"
+                rows="{
+                    path: 'list>/pdPartCategoryCreationRequestView',
+                    sorter: { 
+                        path: 'request_number',
+                        descending: true 
+                    }                   
+                }"
+                visibleRowCountMode="Auto"
+                cellClick=".onCellClickPress" >
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title id="mainTableTitle" text="{I18N>/PART_CATEGORY_CREATION_REQUEST} ({=(${list>/pdPartCategoryCreationRequestView})?${list>/pdPartCategoryCreationRequestView}.length:0})" level="H2"/>
                     <ToolbarSpacer/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
                     <ToolbarSeparator/>
-                    <Button text="임시 추가생성(new)" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
-                    <Button text="임시 추가생성(완료)" id="buttonAddCreate2" press=".onAddCreate2"  type="Transparent"/>
+                    <!-- <Button text="임시 추가생성(new)" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
+                    <Button text="임시 추가생성(완료)" id="buttonAddCreate2" press=".onAddCreate2"  type="Transparent"/> -->
                     <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
-                    
                 </OverflowToolbar>
             </t:extension>
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <t:Column id="category_group_code" hAlign="Center">
+                <t:Column id="category_group_code" hAlign="Center" width="6%">
                     <Label text="{I18N>/TYPE_NAME}" textAlign="Center" />
                     <t:template>
                         <Text text="{list>category_group_code}[{list>category_group_name}]" textAlign="Center"/>
                     </t:template>
                 </t:Column>
-                <t:Column id="progress_status_name" hAlign="Left">
+                <t:Column id="progress_status_name" hAlign="Left" width="6%">
                     <Label text="{I18N>/PROGRESS}{I18N>/STATUS}" textAlign="Center"/>
                     <t:template>
                         <Text text="{list>progress_status_name}" textAlign="Left"/>
                     </t:template>
                 </t:Column>
-                <t:Column id="request_number" hAlign="Center">
+                <t:Column id="request_number" hAlign="Center" width="10%">
                     <Label text="{I18N>/REQUEST_NUMBER}" textAlign="Center"/>
                     <t:template>
                         <Text text="{list>request_number}" textAlign="Center"/>
@@ -134,21 +133,20 @@
                         <Text text="{list>request_title}" textAlign="Left"/>
                     </t:template>
                 </t:Column>  
-                <t:Column id="request_category_name" hAlign="Left">
+                <t:Column id="request_category_name" hAlign="Left" >
                     <Label text="{I18N>/REQUEST_CATEGORY_NAME}" textAlign="Center"/>
                     <t:template>
                         <Text text="{list>request_category_name}" textAlign="Left"/>
                     </t:template>
                 </t:Column>
 
-
-                <t:Column id="requestor" hAlign="Left">
+                <t:Column id="requestor" hAlign="Left" width="5%">
                     <Label text="{I18N>/REQUESTOR}" textAlign="Center"/>
                     <t:template>
                         <Text text="{list>requestor}" textAlign="Left"/>
                     </t:template>
                 </t:Column>
-                <t:Column id="request_date_time" hAlign="Center">
+                <t:Column id="request_date_time" hAlign="Center" width="6%">
                     <Label text="{I18N>/REQUEST_DATE}" textAlign="Center"/>
                     <t:template>
                         <Text text="{path : 'list>request_date_time', formatter: '.dateFormatter.toDateString'}" textAlign="Center" />
@@ -160,13 +158,13 @@
                         <Text text="{list>create_category_name}" textAlign="Left"/>
                     </t:template>
                 </t:Column>
-                <t:Column id="creator_empno" width="10rem" hAlign="Left">
+                <t:Column id="creator_empno" hAlign="Left" width="10%">
                     <Label text="{I18N>/CATEGORY} {I18N>/CREATOR}" textAlign="Center"/>
                     <t:template>
                         <Text text="{list>category_creator}({list>creator_empno})" textAlign="Left" />
                     </t:template>
                 </t:Column>
-                <t:Column id="local_update_dtm" width="10rem" hAlign="Center">
+                <t:Column id="local_update_dtm" hAlign="Center" width="10%">
                     <Label text="{I18N>/LOCAL_UPDATE_DTM}" textAlign="Center"/>
                     <t:template>
                         <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" textAlign="Center" />
@@ -181,11 +179,5 @@
             </t:columns>
             </t:Table>
         </f:content>
-        <!-- DynamicPage Footer -->
-        <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-            </OverflowToolbar>
-        </f:footer>
     </f:DynamicPage>
 </mvc:View>

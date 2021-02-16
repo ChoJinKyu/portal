@@ -353,10 +353,10 @@
                     ]
                 },
                 {
-                    "pattern": "rrcrReport/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
-                    "name": "rrcrReport",
+                    "pattern": "remodelRepairCompletionReport/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
+                    "name": "remodelRepairCompletion",
                     "target": [
-                        "rrcrReport"
+                        "remodelRepairCompletion"
                     ]
                 },
                 {
@@ -416,9 +416,9 @@
                     "viewLevel": 2,
                     "title": "{i18n>viewObjectTitle3}"
                 },
-                "rrcrReport": {
-                    "viewName": "RrcrReport",
-                    "viewId": "rrcrReport",
+                "remodelRepairCompletionReport": {
+                    "viewName": "RemodelRepairCompletionReport",
+                    "viewId": "remodelRepairCompletionReport",
                     "viewLevel": 2,
                     "title": "{i18n>viewObjectTitle3}"
                 },

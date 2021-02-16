@@ -24,6 +24,7 @@ select
     (select cm_get_emp_name_func(mst.tenant_id, sub.buyer_empno) from dummy) as buyer_name,
     sub.publish_date,
     sub.supplier_code,
+    sub.supplier_name,
     mst.local_create_dtm,
     mst.local_update_dtm,
     mst.create_user_id,
@@ -31,19 +32,21 @@ select
     mst.system_create_dtm,
     mst.system_update_dtm	
 from ep_Li_Mst as mst
-left outer join   (select TOP 1  
-    dtl.tenant_id,
-    dtl.company_code,
-    dtl.loi_write_number,
-    pub.buyer_empno,	
-    pub.publish_date,
-    pub.supplier_code	
-    from ep_li_dtl as dtl
-    left outer join ep_li_publish as pub
-    on dtl.tenant_id = pub.tenant_id 
-    and dtl.company_code = pub.company_code
-    and dtl.loi_publish_number = pub.loi_publish_number
-    order by pub.publish_date desc) as sub
+left outer join   (select it.tenant_id, it.company_code, it.loi_write_number, it.loi_item_number, it.loi_publish_number, it.buyer_empno, it.supplier_code, it.publish_date, supm.supplier_local_name as supplier_name
+                    from (
+                        select dtl.tenant_id, dtl.company_code, dtl.loi_write_number, dtl.loi_item_number, pub.loi_publish_number, ifnull(pub.buyer_empno,dtl.buyer_empno) as buyer_empno, pub.supplier_code, pub.publish_date
+                            ,row_number() over (partition by dtl.loi_write_number order by pub.publish_date nulls last, dtl.loi_item_number) as rn
+                        from ep_li_dtl as dtl
+                        left outer join ep_li_publish as pub
+                        on dtl.tenant_id = pub.tenant_id 
+                        and dtl.company_code = pub.company_code
+                        and dtl.loi_publish_number = pub.loi_publish_number
+                        and pub.loi_publish_status_code in ('123040','123050','123060') /* 결재완료 이후 건 */
+                    ) as it
+                    left outer join sp_sm_supplier_mst as supm
+                    on it.tenant_id = supm.tenant_id 
+                    and it.supplier_code = supm.supplier_code 
+                    where it.rn = 1) as sub
 on  mst.tenant_id = sub.tenant_id
 and mst.company_code = sub.company_code
 and mst.loi_write_number = sub.loi_write_number

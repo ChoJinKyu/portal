@@ -147,13 +147,6 @@
                     "target": [
                         "selectionObject"
                     ]
-                },
-                {
-                    "pattern": "publishObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiPublishNumber}/{loiNumber}",
-                    "name": "publishPage",
-                    "target": [
-                        "publishObject"
-                    ]
                 }
             ],
             "targets": {
@@ -165,11 +158,6 @@
                 "selectionObject": {
                     "viewName": "UcQuotationSup",
                     "viewId": "selectionPage",
-                    "viewLevel": 2
-                },
-                "publishObject": {
-                    "viewName": "Publish",
-                    "viewId": "publishPage",
                     "viewLevel": 2
                 },
                 "notFound": {

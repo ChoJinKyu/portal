@@ -84,6 +84,13 @@ sap.ui.define([
                     this.validator.clearValueState(this.byId("searchCompanyCombo"));
                 }
 
+                if(this.byId("searchAUCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchAUCombo")) !== true) {
+                    MessageToast.show("필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchAUCombo"));
+                }
+
                 this._applySearch(aSearchFilters, aSorter);
             }
         },
@@ -208,8 +215,8 @@ sap.ui.define([
                 "active_flag": "true",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
-                "create_user_id": "Test",
-                "update_user_id": "Test",
+                "create_user_id": "17370CHEM@lgchem.com",
+                "update_user_id": "17370CHEM@lgchem.com",
                 "system_create_dtm": new Date(),
                 "system_update_dtm": new Date()
             }, "/ActivityMappingNameView", 0);
@@ -364,7 +371,7 @@ sap.ui.define([
                             product_activity_code: oData.ActivityMappingNameView[i].product_activity_code,
                             activity_dependency_code: oData.ActivityMappingNameView[i].activity_dependency_code,
                             active_flag: oData.ActivityMappingNameView[i].active_flag.toString(),
-                            update_user_id: "Test",
+                            update_user_id: "17370CHEM@lgchem.com",
                             system_update_dtm: now,
                             crud_type_code: oData.ActivityMappingNameView[i]._row_state_,
                             update_activity_code: oData.ActivityMappingNameView[i].activity_code_org,

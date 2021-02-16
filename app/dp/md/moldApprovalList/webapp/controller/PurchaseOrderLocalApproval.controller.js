@@ -117,14 +117,14 @@ sap.ui.define([
                 }
             });
         },
-
+/*
         _editablePayment: function (flag) {
             this.getView().byId("splitPayTypeCode").setEnabled(flag);
             this.getView().byId("advanced").setEnabled(flag);
             this.getView().byId("part").setEnabled(flag);
             this.getView().byId("residual").setEnabled(flag);
         },
-
+*/
         _toEditModeEachApproval: function(){
             // this.getView().byId("advanced").removeStyleClass("readonlyField");
             // this.getView().byId("part").removeStyleClass("readonlyField");
@@ -206,14 +206,6 @@ sap.ui.define([
             if(pModel.getProperty("/currency_code") === ""){
                 pModel.setProperty("/currency_code", data.currency_code);
             }
-        },
-
-        /**
-         * @public 
-         * @see 사용처 Participating Supplier Fragment 취소 이벤트
-         */
-        onExit: function () {
-            this.byId("dialogMolItemSelection").close();
         },
 
         /**
@@ -385,7 +377,7 @@ sap.ui.define([
         },
         
         onSelectPayment: function (oEvent) {
-            this._editablePayment(oEvent.getSource().mProperties.selected);
+            //this._editablePayment(oEvent.getSource().mProperties.selected);
         },
         
         /**

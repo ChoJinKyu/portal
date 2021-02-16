@@ -33,6 +33,8 @@ entity Uc_Quotation_Dtl_View {
         net_price_contract_degree       : Integer64              @title : '차수';
         net_price_contract_item_number  : String(50)             @title : '단가계약품목번호';
         supplier_item_create_flag       : Boolean                @title : '공급업체품목생성여부';
+        net_price_contract_title        : String(100)            @title : '단가계약제목';
+        extra_rate_count                : Decimal                @title : '할증건수';
 
 }
 

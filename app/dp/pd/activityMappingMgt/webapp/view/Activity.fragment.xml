@@ -10,7 +10,7 @@
 		confirm=".handleActivityClose"
 		cancel=".handleActivityClose"
 		items="{
-			path : '/PdSelectActivityTemplate'
+			path : '/PdPartActivityTemplateView'
 		}">
 		<columns>
 			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center" width="50%">

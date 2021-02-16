@@ -278,7 +278,7 @@
                             </t:extension>
                             
                             <t:columns>
-                                <t:Column id="dtlColumnState" hAlign="Center" width="2em" visible="{=!${midObjectViewModel>/isShowMode}}">
+                                <t:Column id="dtlColumnState" hAlign="Center" width="2rem">
                                     <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                                     <t:template>
                                         <ObjectStatus icon="{
@@ -288,16 +288,16 @@
                                         visible="{=!${midObjectViewModel>/isShowMode}}"/>
                                     </t:template>
                                 </t:Column>
-                                <t:Column id="mainItemSequence" width="6rem" hAlign="Center">
-                                <Label text="품목순번" textAlign="Center" width="100%"/>
-                                <t:template>
-                                    <Text text="{viewModel>item_sequence}"/>
-                                </t:template>
+                                <t:Column hAlign="Center" width="5rem" >
+                                    <Label  id="mainItemSequence"  text="품목순번" textAlign="Right" width="100%"/>
+                                    <t:template>
+                                        <Text text="{viewModel>item_sequence}" textAlign="Center" />
+                                    </t:template>
                                 </t:Column>
                                 <t:Column id="mainEpItemCode" width="8rem" hAlign="Center">
                                 <Label text="품목코드" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{viewModel>ep_item_code}"/>
+                                    <Text text="{viewModel>ep_item_code}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainItemDesc" width="20rem"  hAlign="Left">
@@ -315,19 +315,19 @@
                                 <t:Column id="mainUnit" width="4rem" hAlign="Center">
                                 <Label text="단위" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{viewModel>unit}"/>
+                                    <Text text="{viewModel>unit}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 
                                 <t:Column id="mainQuotationQuantity" width="4rem" hAlign="Center">
                                 <Label text="수량" textAlign="Center" width="100%" required="true"/>
                                 <t:template>
-                                    <HBox justifyContent="End">
+                                    <HBox justifyContent="Center">
                                     <Text  text="{
                                                     path: 'viewModel>quotation_quantity',
                                                     formatter: '.numberFormatter.toNumberString'
                                                 }"
-                                                vAlign="Right"
+                                                textAlign="Center" 
                                                 visible="{midObjectViewModel>/isShowMode}"/>
                                     <Input value="{
                                                         path: 'viewModel>quotation_quantity',
@@ -336,7 +336,7 @@
                                                             minimum: '0',
                                                             maximum: '1000000000000'
                                                         }
-                                                    }" textAlign="Right"  required="true"
+                                                    }" textAlign="Center"  required="true"
                                             change=".onQuantityChange"
                                             visible="{=!${midObjectViewModel>/isShowMode}}"/>  
                                     </HBox>
@@ -346,7 +346,7 @@
                                 <Label text="할증" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <!-- <Text text="{viewModel>extra_rate}"/> -->
-                                    <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" />                
+                                    <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" />                
                
                                 </t:template>
                                 </t:Column>
@@ -434,10 +434,17 @@
                                 </t:template>
                                 </t:Column> 
                                 
-                                <t:Column id="mainLoiPublishStatusCode" width="10rem" hAlign="Center">
-                                <Label text="단가계약그룹번호" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
+                                <t:Column id="mainNetPriceContractDocumentNo" width="10rem" hAlign="Center" visible="false">
+                                <Label text="단가계약그룹번호" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{viewModel>net_price_contract_document_no}"/>
+                                    <Text text="{viewModel>net_price_contract_document_no}" textAlign="Center"/>
+                                </t:template>
+                                </t:Column> 
+
+                                <t:Column id="mainNetPriceContractTitle" width="20rem" hAlign="Left">
+                                <Label text="계약명" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{viewModel>net_price_contract_title}"/>
                                 </t:template>
                                 </t:Column> 
                                 

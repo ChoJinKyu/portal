@@ -14,7 +14,8 @@ entity Pd_Activity_Standard_Day_View {
       category_name           : String(240)         @title: '카테고리명' ;
 	  part_project_type_name  : String(240)         @title: '부품PJT유형' ;
       activity_name           : String(240)         @title: '활동명' ;
-      actual_role             : String(240)         @title: '역할명' ;
+      actual_role             : String(240)         @title: '역할코드' ;
+      role_name               : String(240)         @title: '역할명' ;
       s_grade_standard_days   : Decimal             @title: '표준일수 s' ;
       a_grade_standard_days   : Decimal             @title: '표준일수 a' ;
       b_grade_standard_days   : Decimal             @title: '표준일수 b' ;

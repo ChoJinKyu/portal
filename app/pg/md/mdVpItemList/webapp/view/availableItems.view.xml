@@ -22,7 +22,7 @@
                 <OverflowToolbar>
                     <Title text="{I18N>/SPMD_CHARACTER_LIST} ({= ${tblModel>/left}.length})" level="H2"/>
                     <ToolbarSpacer/> 
-                    <SearchField id="tableSearchField" class="onMidTableFilterPress"  width="15rem" search=".onTableFilterPress" />	
+                    <SearchField id="tableSearchField" class="sapUiSizeCompact"  width="15rem" search=".onTableFilterPress" />	
                 </OverflowToolbar>
             </t:extension>
             <t:columns>

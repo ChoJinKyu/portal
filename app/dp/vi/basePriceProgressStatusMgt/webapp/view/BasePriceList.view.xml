@@ -200,25 +200,25 @@
                             <Text text="{listModel>approval_number}" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="18rem">
+                    <t:Column width="6rem">
                         <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%" />
                         <t:template>
-                            <Text text="{listModel>company_name}" />
+                            <Text text="{listModel>company_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="12rem">
+                    <t:Column width="8rem">
                         <Label text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>org_name}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="8rem">
+                    <t:Column hAlign="Center" width="10rem">
                         <Label text="{I18N>/MATERIAL_CODE}" />
                         <t:template>
                             <Text text="{listModel>material_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="16rem">
+                    <t:Column width="20rem">
                         <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>material_desc}" />

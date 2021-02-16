@@ -111,7 +111,7 @@
          
       <f:content>
         <VBox>
-                <!-- selectionMode="{{list>drill_state}==='leaf'? MultiToggle:None}" -->
+                <!-- selectionMode="{= ${list>drill_state}==='leaf'? MultiToggle:None}" -->
             <t:TreeTable 
                 id="treeTable"
                 filter="treetablefilter"
@@ -120,6 +120,7 @@
                 minAutoRowCount="16"
                 fixedColumnCount="3"
                 selectionBehavior="Row"
+                selectionMode="None"
                 onAfterRendering="onAfterRendering"
                 enableColumnReordering="false"
                 columnResize="onColumnResize"
@@ -153,10 +154,17 @@
                 </t:extension>
                 
                 <t:columns>
+                    <!-- <t:Column label="" width="7rem">    
+                        <t:template>
+                            <CheckBox id="tableChkBox" selected="{list>checked}" fieldGroupIds="checkBoxs" select=".setIdSelect" visible="{= ${list>drill_state}==='leaf'? true:false}" />
+                        </t:template>
+                    </t:Column> -->
                     <t:Column label="{I18N>/VENDOR_POOL}" width="15rem">    
                         <t:template>
-                            <!-- <Text text="{list>vendor_pool_local_name}" wrapping="false" /> -->
-                            <Text text="{list>vendor_pool_local_name}" wrapping="false" />
+                            <HBox>
+                                <CheckBox selected="{list>checked}" select=".setIdSelect" visible="{= ${list>drill_state}==='leaf'? true:false}" />
+                                <Text text="{list>vendor_pool_local_name}" wrapping="false" />
+                            </HBox>
                         </t:template>
                     </t:Column>
                     <t:Column label="{I18N>/REPR_DEPARTMENT_NAME}" width="10rem">    

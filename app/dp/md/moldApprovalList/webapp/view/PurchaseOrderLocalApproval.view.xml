@@ -22,11 +22,18 @@
 		editHeaderButtonPress="handleEditBtnPress" >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<!-- <uxap:expandedHeading>
-					<FlexBox fitContainer="true" alignItems="Center">
-                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
-						<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true"/>
-					</FlexBox>
+                <uxap:heading>
+                    <HBox alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true" />
+                    </HBox>
+                </uxap:heading>
+                <uxap:navigationActions>
+					
+                </uxap:navigationActions>
+                <!--
+				<uxap:expandedHeading>
+					<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
@@ -50,13 +57,8 @@
 
                 <!-- <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
-                </uxap:navigationActions> -->
-                <uxap:heading> 
-                    <HBox alignItems="End">
-                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />
-                        <Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true" class="" />
-                    </HBox>
-				</uxap:heading>
+                </uxap:navigationActions>
+                -->
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 

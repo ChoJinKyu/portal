@@ -28,18 +28,6 @@
                         <Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true" class="" />
                     </HBox>
                 </uxap:heading>
-				<!--<uxap:snappedTitleOnMobile>
-					<Title text="{I18N>/MASTER}" />
-				</uxap:snappedTitleOnMobile>
-				 <uxap:expandedHeading>
-					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true"/>
-				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true"/>
-				</uxap:snappedHeading>
-				<uxap:snappedTitleOnMobile>
-					<Title text="{I18N>/MASTER_INFO}" />
-				</uxap:snappedTitleOnMobile> -->
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
@@ -54,7 +42,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER_INFO}">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>

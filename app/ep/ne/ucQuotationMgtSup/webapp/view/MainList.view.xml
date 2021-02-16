@@ -174,7 +174,7 @@
             </t:columns>
             <t:rowActionTemplate>
                 <t:RowAction>
-                    <t:RowActionItem type="Navigation"></t:RowActionItem>
+                    <t:RowActionItem type="Navigation" press="onTableItemPress"></t:RowActionItem>
                 </t:RowAction>
             </t:rowActionTemplate>       
             </t:Table>

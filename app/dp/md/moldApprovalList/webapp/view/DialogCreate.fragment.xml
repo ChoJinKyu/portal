@@ -28,7 +28,7 @@
                         <!-- 팝업 콤보박스 영역 -->
                         <VBox>
                             <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" design="Bold" required="true"/> 
-                            <ComboBox id="searchCompanyF" width="100%" selectedKey="LGESL" change="dialogChangeComp" items="{
+                            <ComboBox id="searchCompanyF" width="100%" selectedKey="" change="dialogChangeComp" items="{
                                 path: 'org>/Company',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
@@ -45,7 +45,7 @@
                         </VBox>
                         <VBox>
                             <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" design="Bold" required="true"/> 
-                            <ComboBox id="searchPlantF" width="100%" selectedKey="A040" items="{
+                            <ComboBox id="searchPlantF" width="100%" selectedKey="" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}

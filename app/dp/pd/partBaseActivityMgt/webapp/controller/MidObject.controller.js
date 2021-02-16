@@ -601,9 +601,9 @@ sap.ui.define([
             var url = "srv-api/odata/v4/dp.partBaseActivityV4Service/PdpartBaseActivitySaveProc";
             
             // console.log(inputData);
-			oTransactionManager.setServiceModel(this.getModel());
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-				title : this.getModel("I18N").getText("/SAVE"),
+            oTransactionManager.setServiceModel(this.getModel());
+            MessageBox.confirm(CUType === "D" ? this.getModel("I18N").getText("/NCM00003") : this.getModel("I18N").getText("/NCM00001"), {
+				title : CUType === "D" ? this.getModel("I18N").getText("/DELETE") : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -876,7 +876,11 @@ sap.ui.define([
 			this.byId("pageEditButton").setEnabled(false);			
             this.byId("pageSaveButton").setEnabled(true);
             this.byId("pageCancelButton").setEnabled(true);
-            this.byId("pageDeleteButton").setEnabled(true);
+            if(this._sActivityCode === "new"){
+                this.byId("pageDeleteButton").setEnabled(false);
+            } else {
+                this.byId("pageDeleteButton").setEnabled(true);
+            }
 			this.byId("lngTableAddButton").setEnabled(true);
             this.byId("lngTableDeleteButton").setEnabled(true);
                       

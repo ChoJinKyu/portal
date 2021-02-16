@@ -166,6 +166,11 @@ sap.ui.define([
                         v_this.viewType = true;
                     }
                     v_this.onSearchAfter(v_this.category_code);
+                    
+                    if(v_this.similar_category_code==null || v_this.similar_category_code =="" || v_this.similar_category_code == undefined){
+                        v_this.similar_category_code = "new";
+                    }
+                    v_this.onSearchPdActivityStdDayView(v_this.similar_category_code);
 
                     if(v_this.viewType){
                         v_this._toShowMode();
@@ -221,6 +226,7 @@ sap.ui.define([
             //test
             // aFilters2.push(new Filter("category_code", FilterOperator.EQ, "PC2012300001"));
 
+            // console.log(aFilters2);
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/pdPartCategoryLng", {
                 filters: aFilters2,
                 success: function (oData) {
@@ -252,11 +258,6 @@ sap.ui.define([
 
                 }.bind(this)
             });
-
-            if(this.similar_category_code==null || this.similar_category_code =="" || this.similar_category_code == undefined){
-                this.similar_category_code = "new";
-            }
-            this.onSearchPdActivityStdDayView(this.similar_category_code);
                 
         },
 
@@ -275,11 +276,13 @@ sap.ui.define([
             // aFilters3.push(new Filter("category_code", FilterOperator.EQ, this.similar_category_code ));
 
 
+            // console.log("aFilters3");
+            // console.log(aFilters3);
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.activityStdDayService/").read("/pdActivityStdDayView", {
                 filters: aFilters3,
                 success: function (oData) {
-                    // console.log("pdActivityStdDayView");
-                    // console.log(oData);
+                    console.log(oData);
+                    console.log("pdActivityStdDayView End");
                     this.getModel("pdActivityStdDayView").setData(oData.results);
             
                     this.toTop();
@@ -330,7 +333,6 @@ sap.ui.define([
             var v_this = this;
             var cntArr = [];
             aItems.forEach(function (oItem) {
-                // aIndices.push(oItem.getBindingContext("pdPartCategoryLng") )  ;
                 cntArr.push( oItem.getBindingContext("pdPartCategoryLng").sPath.split("/")[1] );
 
             });
@@ -361,15 +363,6 @@ sap.ui.define([
             var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
             var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
             var oTableLang = this.byId("midTable2");
-            
-
-            // if (this.category_code =! "new"){
-            //     CUType = "U";
-            //     if(!oPdPartCategory.isChanged() ) {
-            //         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-            //         return;
-            //     }
-            // }
 
             var oData = oPdPartCategory.oData;
             var CUType = "C";
@@ -377,13 +370,22 @@ sap.ui.define([
             // console.log(oData);
             // console.log(this.byId("statusButton").getSelectedKey());
 
+            // console.log("onPageSaveButtonPress 222222222222");
+            // console.log(this.category_group_code);
+            // console.log(this._sRequestNumber);
+            // console.log(this.getView().byId("pGroupCategory").getValue());
+            // console.log(this.getView().byId("sequence").getValue().trim());
+            // console.log(this.getView().byId("statusButton").getSelectedKey());
             //20210209 설계자 요청으로 category_code 에 requestNumber를 마스터 데이터에 넣기로 함
+                    // category_code     : this._sRequestNumber,
+                    // parent_category_code        : oData.parent_category_code,
+                    // sequence     : oData.sequence.trim(), ==> 0 으로 보내기로 함 
             var pdMstVal = {
 					tenant_id       : this.tenant_id,
                     category_group_code   : this.category_group_code,
-                    category_code     : this._sRequestNumber,
-                    parent_category_code        : oData.parent_category_code,
-                    sequence     : oData.sequence.trim(),
+                    category_code     : this.category_code,
+                    parent_category_code        : this.getView().byId("pGroupCategory").getValue(),
+                    sequence     : "0",
 
                     active_flag  : this.getView().byId("statusButton").getSelectedKey(),
                     update_user_id  : this.loginUserId,
@@ -686,7 +688,7 @@ sap.ui.define([
                         return;
                     } else {
                         this.getView().byId(this.setObj).setValue(  row.category_code );
-                        this.onSearchPdActivityStdDayView(row.category_code);
+                        //this.onSearchPdActivityStdDayView(row.category_code);
                     }
                 }else{
                     if(row.drill_state != "leaf"){

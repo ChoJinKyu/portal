@@ -64,10 +64,9 @@
                                 </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo" required="true"></Label>
+                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo"></Label>
                             <!-- 테스트 테넌트번호 L1100, 원세팅테넌트번호 2100, 2600 -->
                             <ComboBox
-                                required="true"
                                 id="searchAUCombo"
                                 width="100%"
                                 selectedKey=""
@@ -216,7 +215,7 @@
                             <Text text="{list>part_project_type_name}" />
                             <Text text="{list>activity_code}" />
                             <Text text="{list>activity_name}" />
-                            <Text text="{= ${list>active_flag} ? 'Y' : 'N'}" />
+                            <Text text="{list>active_flag_val}" />
                             <Text text="{list>s_grade_standard_days}" />
                             <Text text="{list>a_grade_standard_days}" />
                             <Text text="{list>b_grade_standard_days}" />

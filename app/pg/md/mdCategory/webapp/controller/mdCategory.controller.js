@@ -147,7 +147,6 @@ sap.ui.define([
 
 
     onListItemPress: function (oEvent) {
-        var that = this;
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
@@ -158,7 +157,6 @@ sap.ui.define([
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
-                        
                         this.getModel("list").setProperty("/mainMode", "Detail");  
                         this.getRouter().navTo("midPage", {
                             layout: oNextUIState.layout, 
@@ -168,6 +166,7 @@ sap.ui.define([
                             spmd_category_code: oRecord.spmd_category_code,
                             spmd_category_sort_sequence: oRecord.spmd_category_sort_sequence
                         });
+                        this.onSearch();
                     }
                 }.bind(this)
             })

@@ -10,7 +10,7 @@
 
         <form:SimpleForm id="publishForm1Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="* 품의명" required="true" design="Bold" class="sapMLabelNoText"/>
+                <Label text="품의명" required="true" design="Bold" class="sapMLabelNoText"/>
                 <Input value="{
                     path: 'master>/loi_publish_title',
                     type: 'sap.ui.model.type.String',
@@ -24,7 +24,7 @@
         <form:SimpleForm id="publishForm2Edit" editable="true">
 
             <VBox alignContent="Center">
-                <Label text="* 협력사명" design="Bold" class="sapMLabelNoText" />
+                <Label text="협력사명" design="Bold" class="sapMLabelNoText" />
                 <Input id="saveSupplierName" value="{master>/supplier_name}" 
                         required="true" editable="true" width="100%"
                         showValueHelp="true" valueHelpRequest=".openSupplierPopupInTable"/>
@@ -42,7 +42,7 @@
             </VBox>        
 
             <VBox alignContent="Center">
-                <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
+                <Label text="계약서식" design="Bold" class="sapMLabelNoText"/>
                 <Select selectedKey="{master>/contract_format_id}">
                     <items>
                         <core:Item key="K" text="구매의향서(국문)" />
@@ -55,7 +55,7 @@
             </VBox> 
 
             <VBox alignContent="Center">
-                <Label text="* 계약일자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="계약일자" design="Bold" class="sapMLabelNoText"/>
                 <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" value="{master>/contract_date}" placeholder="Date"/>   
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
@@ -63,7 +63,7 @@
             </VBox> 
 
             <VBox alignContent="Center">
-                <Label text="* 서명방식" design="Bold" required="true" class="sapMLabelNoText"/>
+                <Label text="서명방식" design="Bold" required="true" class="sapMLabelNoText"/>
                 <SegmentedButton class="sapUiSmallMarginBottom" selectedKey="{master>/offline_flag}" width="100%">                                            
                     <items>
                         <SegmentedButtonItem text="온라인" key="false" width="5em" />
@@ -79,7 +79,7 @@
 
         <form:SimpleForm id="publishForm3Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="* 부대조건" 
+                <Label  text="부대조건" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
                 <TextArea value="{master>/additional_condition_desc}" rows="8" width="100%" />            
@@ -88,7 +88,7 @@
 
         <form:SimpleForm id="publishForm4Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="* 특기사항" 
+                <Label  text="특기사항" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
                 <richtexteditor:RichTextEditor

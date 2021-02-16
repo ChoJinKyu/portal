@@ -11,7 +11,7 @@ entity Uc_Approval_Dtl_Detail_View {
     key net_price_contract_item_number : String(50) not null;
         item_sequence                  : Decimal;
         ep_item_code                   : String(50);
-        ep_item_name                   : String(100);
+        ep_item_name                   : String(200);
         spec_desc                      : String(1000);
         contract_quantity              : Decimal;
         unit                           : String(3);

@@ -11,7 +11,9 @@
     xmlns:co="sap.suite.ui.commons" 
     xmlns:si="sap.suite.ui.commons.statusindicator" 
     xmlns:u="sap.ui.unified" 
-    xmlns:table="sap.ui.table" >
+    xmlns:table="sap.ui.table" 
+        core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+    >
     <VBox class="sapUiSmallMargin">
         <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
 			<form:content>

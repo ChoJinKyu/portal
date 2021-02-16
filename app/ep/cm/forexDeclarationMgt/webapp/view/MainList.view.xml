@@ -26,9 +26,6 @@
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
-                <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
@@ -164,7 +161,6 @@
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
             columnResize="onColumnResize"
-            rowActionCount="1"
             >
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -308,12 +304,7 @@
                 </t:template>
                 </t:Column> 
                                                                                                                                                          
-            </t:columns>
-            <t:rowActionTemplate>
-                <t:RowAction>
-                    <t:RowActionItem type="Navigation"></t:RowActionItem>
-                </t:RowAction>
-            </t:rowActionTemplate>       
+            </t:columns>   
             </t:Table>
         </f:content>
         <!-- DynamicPage Footer -->

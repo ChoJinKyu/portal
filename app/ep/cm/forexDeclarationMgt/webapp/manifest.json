@@ -142,11 +142,15 @@
       "css": [
         {
           "uri": "css/style.css"
+        },
+        {
+            "uri": "../../../../lib/css/style.css"
         }
       ]
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib"
+      
     },
     "routing": {
       "config": {

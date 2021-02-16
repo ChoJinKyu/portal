@@ -92,7 +92,7 @@
 
                                 <VBox alignContent="Center">
                                     <Label text="대분류(공종)" textAlign="left" design="Bold" class="sapMLabelNoText" />
-                                    <Text text="{viewModel>/ucmaster/supplier_code}" />
+                                    <Text text="{viewModel>/ucmaster/ep_item_name}" />
                                     <layoutData>
                                         <layout:GridData span="XL4 L4 M4 S12" />
                                     </layoutData>    
@@ -276,7 +276,7 @@
                                         <t:Column id="mainExtraRate" width="4rem" hAlign="Center">
                                         <Label text="할증" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" />                
+                                            <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" />                
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainCurrencyName" width="4rem" hAlign="Center">
@@ -346,11 +346,25 @@
                                         </t:Column> 
                                         
                                         <t:Column id="mainLoiPublishStatusCode" width="10rem" hAlign="Center">
-                                        <Label text="단가계약그룹번호" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
+                                        <Label text="단가계약그룹번호" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>net_price_contract_document_no}"/>
                                         </t:template>
                                         </t:Column> 
+
+                                        <t:Column id="mainNetPriceContractTitle" width="20rem" hAlign="Left">
+                                        <Label text="계약명" textAlign="Center" width="100%"/>
+                                        <t:template>
+                                            <Text text="{viewModel>net_price_contract_title}"/>
+                                        </t:template>
+                                        </t:Column> 
+
+                                        <t:Column id="mainNetPriceContractPeriod" width="15rem" hAlign="Center">
+                                        <Label text="계약기간" textAlign="Center" width="100%"/>
+                                        <t:template>
+                                            <Text text="{viewModel>net_price_contract_period}"/>
+                                        </t:template>
+                                        </t:Column>
                                     </t:columns>
                                     </t:Table>          
                                 </VBox>
@@ -385,7 +399,7 @@
     
                                     <form:SimpleForm id="completionForm1Show" editable="false"> 
                                         <VBox alignContent="Center" alignItems="Stretch"> 
-                                            <Label  text="* 준공일자" 
+                                            <Label  text="준공일자" 
                                                         design="Bold" 
                                                         class="sapUiSmallMarginBottom"/>
                                             <HBox>
@@ -406,7 +420,7 @@
                                             </HBox> 
                                         </VBox>
                                         <VBox alignContent="Center" alignItems="Stretch"> 
-                                            <Label  text="* 시설담당자" 
+                                            <Label  text="시설담당자" 
                                                         design="Bold" 
                                                         class="sapUiSmallMarginBottom"/>
                                             <HBox>

@@ -80,13 +80,6 @@ sap.ui.define([
                 } else {
                     this.validator.clearValueState(this.byId("searchCompanyCombo"));
                 }
-
-                if(this.byId("searchAUCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchAUCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
-                    return;
-                } else {
-                    this.validator.clearValueState(this.byId("searchAUCombo"));
-                }
                 
                 this._applySearch(aSearchFilters);
             }

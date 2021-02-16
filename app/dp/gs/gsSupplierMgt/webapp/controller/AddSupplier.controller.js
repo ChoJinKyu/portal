@@ -585,6 +585,7 @@ sap.ui.define([
             });
             oQuarterView.bindItems({
                 path: 'util>/Code',
+                templateShareable: true,
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
                     new Filter("group_code", FilterOperator.EQ, 'DP_GS_DATE_QUARTER')
@@ -668,6 +669,7 @@ sap.ui.define([
             });
             oQuarterEdit.bindItems({
                 path: 'util>/Code',
+                templateShareable: true,
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                        
                     new Filter("group_code", FilterOperator.EQ, 'DP_GS_DATE_QUARTER')

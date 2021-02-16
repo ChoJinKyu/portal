@@ -104,13 +104,7 @@ sap.ui.define([
                         categoryComboModel.setData(reponse.data.results);
                         that.getView().setModel(categoryComboModel, "categoryComboModel");
                     }
-                    if(rData.results.length==1){ 
-                        // visiBox.setVisible(false); 
-                        // visiBox2.setVisible(false); 
-                        // visiBox3.setVisible(false); 
-                        // visiBox.setWidth("0%"); 
-                        // visiBox2.setWidth("0%"); 
-                        // visiBox3.setWidth("0%"); 
+                    if(rData.results.length==1){
                     }
                 }
             });
@@ -169,13 +163,6 @@ sap.ui.define([
                 var aSearchFilters = this._getSearchStates();
                 var aSorter = this._getSorter();
 
-                if(this.byId("searchCategoryCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCategoryCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
-                    return;
-                } else {
-                    this.validator.clearValueState(this.byId("searchCategoryCombo"));
-                }
-                
                 this._applySearch(aSearchFilters, aSorter);
             }
         },
@@ -206,7 +193,6 @@ sap.ui.define([
             aSorter.push(new Sorter("request_number", true));
             return aSorter;
         },
-
 
         _getSearchStates: function () {
             var aSearchFilters = [];

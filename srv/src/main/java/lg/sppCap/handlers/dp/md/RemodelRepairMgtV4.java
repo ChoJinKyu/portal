@@ -103,7 +103,13 @@ public class RemodelRepairMgtV4 implements EventHandler {
                     item.setLocalUpdateDtm(current);
                     CqnUpdate updateData = Update.entity(RepairItem_.CDS_NAME).data(item);
                     Result rst = cdsService.run(updateData);
-            
+                    // mold_mfger_code 
+                    MoldMaster master = MoldMaster.create();
+                    master.setTenantId(itemV4.getTenantId()); 
+                    master.setMoldId(itemV4.getMoldId()); 
+                    master.setMoldMfgerCode(itemV4.getMoldMfgerCode());
+                    CqnUpdate masterUpdate = Update.entity(MoldMaster_.CDS_NAME).data(master);
+                    cdsService.run(masterUpdate);
             }else{ // create 
                     String sql="SELECT DP_MD_REPAIR_REQ_NUM_SEQ.NEXTVAL FROM DUMMY";
                     int seq=jdbc.queryForObject(sql,Integer.class);
@@ -127,7 +133,14 @@ public class RemodelRepairMgtV4 implements EventHandler {
                     item.setLocalUpdateDtm(current);
                     item.setLocalCreateDtm(current);
                     CqnInsert insertData = Insert.into(RepairItem_.CDS_NAME).entry(item);
-                    Result rst = cdsService.run(insertData);
+                    Result rst = cdsService.run(insertData); 
+                 // mold_mfger_code 
+                    MoldMaster master = MoldMaster.create();
+                    master.setTenantId(itemV4.getTenantId()); 
+                    master.setMoldId(itemV4.getMoldId()); 
+                    master.setMoldMfgerCode(itemV4.getMoldMfgerCode());
+                    CqnUpdate masterUpdate = Update.entity(MoldMaster_.CDS_NAME).data(master);
+                    cdsService.run(masterUpdate);
             }
 
         } catch (Exception e) {

@@ -263,6 +263,14 @@ sap.ui.define([
 
             mstData.push(oViewModel.getProperty("/ucmaster"));
             var omstData = oViewModel.getProperty("/ucmaster");
+            var dtlData = oViewModel.getProperty("/ucdetails");
+
+            console.log("omstData.length ---> " , dtlData);
+
+            // if (dtlData.length == 0) {
+            //     MessageToast.show("품목을 1개이상 입력해주세요~");
+            //     return;
+            // }
 
 
             console.log("mstData " , mstData);

@@ -59,6 +59,11 @@ select
     mst.create_user_id,
     mst.update_user_id,
     mst.system_create_dtm,
-    mst.system_update_dtm
+    mst.system_update_dtm,
+    cdtl.color_type_code
 from ep_uc_quotation_mst as mst
+left outer join cm_code_dtl cdtl
+on mst.tenant_id = cdtl.tenant_id
+and mst.quotation_status_code = cdtl.code
+and cdtl.group_code = 'EP_QUOTATION_STATUS' 
 ;

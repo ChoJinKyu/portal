@@ -16,12 +16,14 @@ sap.ui.define([
     "sap/m/ComboBox",
     "ext/lib/model/ManagedListModel",
     "sap/ui/core/Item",
+    "sap/ui/core/ListItem",
+     "sap/ui/model/json/JSONModel",
 ], function (Parent, Renderer, SppUserSessionUtil, ODataModel, ManagedModel, Filter, FilterOperator, Sorter, GridData, VBox, Column
-            , Label, Text, Input, ComboBox, ManagedListModel ,Item) {
+            , Label, Text, Input, ComboBox, ManagedListModel ,Item, ListItem, JSONModel) {
     "use strict";
 
     var oServiceModel = new ODataModel({
-            serviceUrl: "srv-api/odata/v2/sp.supplierViewService/",
+            serviceUrl: "srv-api/odata/v2/sp.supplierMasterMgtService/",
             defaultBindingMode: "OneWay",
             defaultCountMode: "Inline",
             refreshAfterChange: false,
@@ -60,79 +62,59 @@ sap.ui.define([
 
         createSearchFilters: function(){
 
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/SELECT_SUPPLIER"));
+            this.setModel(oDpOrgServiceModel, 'company');
+            this.setModel(oCompanyServiceModel, 'org');
 
-            console.log("searchFilters >> " , this.getProperty("items"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/SELECT_SUPPLIER"));
             var items = this.getProperty("items"); 
+    
+            var tenant_id = "";
             var company_code = "";
+            var company_name = "";
             var org_code = "";
+            var org_name = "";
+
             items.filters.forEach(function(data){
                 if(data.sPath == 'company_code'){
                     company_code = data.oValue1;
+                }else if(data.sPath == 'company_name'){
+                    company_name = data.oValue1;
                 }else if(data.sPath == 'org_code'){
                     org_code = data.oValue1;
+                }else if(data.sPath == 'org_name'){
+                    org_name = data.oValue1;
+                }else if(data.sPath == 'tenant_id'){
+                    tenant_id = data.oValue1;
                 }
             });
 
+            var sTenantId = tenant_id;
+            var cFilters = [ new Filter("tenant_id", FilterOperator.EQ, sTenantId), ];
+/*
+showSecondaryValues: true,
+					items: {
+						path: "/items",
+						template: oItemTemplate
+					}
+*/
             //this.oSearchField = new sap.m.SearchField({ placeholder: "검색"});
-            this.oCompanyCode =    new ComboBox({
-                                        selectedKey: company_code,
-                                        items: {
-                                        path: 'company>/Org_Company',
-                                        filters: [
-                                        ],
-                                        template: new Item({
-                                            key: "{company_code}",
-                                            text: "{= '['+ ${company_code} + '] ' + ${company_name}}"
-                                            })
-                                        },
-                                        editable: false,
-                                        required: true ,
-                                        width : '100%'
-                                    }); 
-            this.oOrgCode =    new ComboBox({
-                                        selectedKey: org_code,
-                                        items: {
-                                        path: 'plant>/Divisions',
-                                        filters: [
-                                        ],
-                                        template: new Item({
-                                            key: "{org_code}",
-                                            text: "{= '['+ ${org_code} + '] ' + ${org_name}}"
-                                        })
-                                        },
-                                        editable: false,
-                                        required: true,
-                                        width : '100%'
-                                    }); 
+            this.oCompanyCode = new Input({value : "["+ company_code + "] " + company_name , editable : false}) 
+            this.oOrgCode = new Input({value : "["+ org_code + "] " + org_name , editable : false})  
             this.oSupplierCode = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
-            //this.oSupplierCode.attachEvent("change", this.loadData.bind(this));
             this.oSupplierName = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
-           // this.oTaxId = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
-            this.oOldSupplierCode = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
-            // this.oStatus = new sap.m.SegmentedButton({
-            //      items : {
-            //         path : "SUPPLIERVIEW>/supplierStatus",
-            //         template: new sap.m.SegmentedButtonItem({
-            //             key :"{SUPPLIERVIEW>code}",
-            //             text :"{SUPPLIERVIEW>code_name}"
-            //         })
-            //     }, 
-            //     selectionChange : this.loadData.bind(this)
-            // });
-
+    
             return [
 
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/COMPANY_CODE")}),
+                        new Label({ text: this.getModel("I18N").getText("/COMPANY_CODE") , required : true}),
                         this.oCompanyCode
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M12 S12"})
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/PLANT_CODE")}),
+                        new Label({ text: this.getModel("I18N").getText("/PLANT_CODE"), required : true}),
                         this.oOrgCode
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M12 S12"})
@@ -150,29 +132,7 @@ sap.ui.define([
                         this.oSupplierName
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M12 S12"})
-                }),
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/TAX_ID")}),
-                //         this.oTaxId
-                //     ],
-                //     layoutData: new GridData({ span: "XL4 L4 M5 S10"})
-                // }),
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE")}),
-                //         this.oOldSupplierCode
-                //     ],
-                //     layoutData: new GridData({ span: "XL4 L4 M5 S10"})
-                // }),
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/STATUS")}),
-                //         this.oStatus
-                //     ],
-                //     layoutData: new GridData({ span: "XL4 L4 M5 S10"})
-                // })
-                   
+                })
                 
             ]
         },
@@ -193,34 +153,7 @@ sap.ui.define([
                     width: "35%",
                     label: new Label({text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME")}),
                     template: new Text({text: "{supplier_english_name}", wrapping:false})
-                }),
-                // new Column({
-                //     hAlign: "Center",
-                //     label: new Label({text: this.getModel("I18N").getText("/TAX_ID")}),
-                //     template: new Text({text: "{tax_id}", wrapping:false})
-                // }),
-                // new Column({
-                //     label: new Label({text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE")}),
-                //     template: new Text({text: "{old_supplier_code}"})
-                // }),
-                // new Column({
-                //     hAlign: "Center",
-                //     label: new Label({text: this.getModel("I18N").getText("/STATUS")}),
-                //     template: new sap.tnt.InfoLabel(
-                //                 {text: "{supplier_status_name}", displayOnly:true}
-                //             ).bindProperty("colorScheme", {
-                //                 parts:[
-                //                     {path: "supplier_status_code" }
-                //                 ],
-                //                 formatter: function(code){
-                //                     //sap.tnt.sample.InfoLabelInTable.Formatter.availableState
-                //                     var oColor = 6;
-                //                     if(code == "S")oColor = 1;
-                //                     else if(code == "O")oColor = 2;
-                //                     return oColor;
-                //                 }
-                //              }),
-                // })
+                })
             ];
         },
 
@@ -250,48 +183,36 @@ sap.ui.define([
         //},
 
         loadData : function(){ 
-         
-            var that = this;
-            var cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, sTenantId)]; 
-            console.log(" cFilters ", cFilters);
-            that.oDialog.setModel(new ManagedListModel(), 'company');
-            that.oDialog.setModel(new ManagedListModel(), 'org');
-            var sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? "L2100" : "L2100";
-            var cFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
+      
+            var items = this.getProperty("items"); 
+    
+            var tenant_id = "";
+            var company_code = "";
+            var org_code = "";
+
+            items.filters.forEach(function(data){
+                if(data.sPath == 'company_code'){
+                    company_code = data.oValue1;
+                }else if(data.sPath == 'org_code'){
+                    org_code = data.oValue1;
+                }else if(data.sPath == 'tenant_id'){
+                    tenant_id = data.oValue1;
+                }
+            });
+
+            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, tenant_id)],
                 aSorters = [new Sorter("supplier_code", true)],
                 sSupplierCode = this.oSupplierCode.getValue(),
-                sSupplierName = this.oSupplierName.getValue()
-               // sTaxId = this.oTaxId.getValue(),
-              //  sOldSupplierCode = this.oOldSupplierCode.getValue()
-                // sStatus = this.oStatus.getSelectedKey()
-                ;
-
-                oCompanyServiceModel.read("/Org_Company", {
-                    filters: cFilters,
-                   // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
-                    sorters: [new Sorter("company_code", true)],
-                    success: function(oData){
-                        var aRecords = oData.results;
-                        that.oDialog.getModel("company").setProperty("/Org_Company", aRecords);
-                    }.bind(this)
-                });
-
-                oDpOrgServiceModel.read("/Divisions", {
-                    filters: cFilters,
-                    sorters: [new Sorter("org_code", true)],
-                    success: function(oData){
-                        var aRecords = oData.results;
-                        that.oDialog.getModel("company").setProperty("/Org_Company", aRecords);
-                    }.bind(this)
-                });
-
-
+                sSupplierName = this.oSupplierName.getValue() ;
+               //  aFilters.push(new Filter("company_code", FilterOperator.EQ, company_code));
+              //  aFilters.push(new Filter("org_code", FilterOperator.EQ, org_code));
 
             if(sSupplierCode){
                 sSupplierCode = sSupplierCode.toUpperCase();
                 this.oSupplierCode.setValue(sSupplierCode);
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, sSupplierCode));
             }
+
             if(sSupplierName){
                 aFilters.push(
                     new Filter({
@@ -303,12 +224,11 @@ sap.ui.define([
                     })
                 )
             }
-         
 
             this.oDialog.setBusy(true);
 
-            oServiceModel.read("/supplierWithoutOrgView", {
-                filters: cFilters,
+            oServiceModel.read("/supplierMaster", {
+                filters: aFilters,
                 sorters: aSorters,
                 success: function(oData){
                     console.log("oData>>>>" , oData);

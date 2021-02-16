@@ -264,7 +264,6 @@ sap.ui.define([
       },
 
     onListItemPress: function (oEvent) {
-        
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
@@ -286,6 +285,7 @@ sap.ui.define([
                             spmd_character_code: oRecord.spmd_character_code,
                             spmd_character_sort_seq: oRecord.spmd_character_sort_seq
                         });
+                        this.onSearch();
                     }
                 }.bind(this)
             })

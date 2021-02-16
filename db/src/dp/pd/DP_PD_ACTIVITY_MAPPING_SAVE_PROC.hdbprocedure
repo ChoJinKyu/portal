@@ -8,18 +8,30 @@ SQL SECURITY INVOKER
 AS
 BEGIN
 
-    DECLARE  var_commit  NVARCHAR(100) := 'COMMIT';
-	DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
-    
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		EXEC (:var_rollback);
+		rollback;
 		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 	END;
 
 /* 임시 Table에 Data추가 */
-        INSERT INTO DP_PD_ACTIVITY_MAPPING_TEMP
-        SELECT * FROM :I_TABLE ;
+    INSERT INTO DP_PD_ACTIVITY_MAPPING_TEMP
+    SELECT cu.TENANT_ID
+                ,cu.COMPANY_CODE
+                ,cu.ORG_TYPE_CODE
+                ,cu.ORG_CODE
+                ,cu.ACTIVITY_CODE
+                ,cu.PRODUCT_ACTIVITY_CODE
+                ,cu.ACTIVITY_DEPENDENCY_CODE
+                ,cu.ACTIVE_FLAG
+                ,cu.UPDATE_USER_ID
+                ,NOW()
+                ,cu.CRUD_TYPE_CODE		
+                ,cu.UPDATE_ACTIVITY_CODE
+                ,cu.UPDATE_PRODUCT_ACTIVITY_CODE
+     FROM :I_TABLE cu
+    ;
+    commit;
 
 /*  CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
     DELETE FROM DP_PD_ACTIVITY_MAPPING AM
@@ -29,7 +41,7 @@ BEGIN
           WHERE CRUD_TYPE_CODE = 'D' )
     ;
 
-/*  CRUD_TYPE_CODE가 'U' 인 Data수정, 'C' 인 Data 추가 */
+/*  CRUD_TYPE_CODE가 'U' 또는 'C' 인 Data수정, 'C' 인 Data 추가 */
     MERGE INTO DP_PD_ACTIVITY_MAPPING AM
         USING ( SELECT * FROM :I_TABLE WHERE :I_TABLE.CRUD_TYPE_CODE IN ('C','U')  ) cu
         ON ( AM.TENANT_ID = cu.TENANT_ID
@@ -81,6 +93,6 @@ BEGIN
                )
     ;
 	
-    EXEC (:var_commit);
+    commit;
     O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
 END;

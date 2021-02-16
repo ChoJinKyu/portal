@@ -9,7 +9,7 @@ from   (
 		select a.tenant_id, a.activity_code, a.active_flag, a.sequence, b.company_code, c.org_code, d.part_project_type_code
 		from   dp_pd_part_base_activity a,
 			   (select tenant_id, company_code from cm_org_company where company_code = 'LGESL') b,
-			   (select tenant_id, org_code from cm_pur_operation_org c where org_type_code = 'BU') c,
+			   (select tenant_id, org_code from cm_pur_operation_org c where org_type_code = 'AU') c,
 			   (select tenant_id, code part_project_type_code from cm_code_dtl where group_code = 'DP_PART_PJT_TYPE') d
 		where  a.tenant_id = 'L2101'
 		and	   b.tenant_id = a.tenant_id

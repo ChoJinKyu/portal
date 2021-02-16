@@ -495,7 +495,7 @@ sap.ui.define([
 
 			oTransactionManager.setServiceModel(this.getModel());
 
-            setTimeout(this.setPageLayout(), 500);
+            setTimeout(this.setPageLayout(), 5000);
             //ScrollTop
             // var oObjectPageLayout = this.getView().byId("page");
             // var oFirstSection = oObjectPageLayout.getSections()[0];
@@ -645,7 +645,6 @@ sap.ui.define([
 			}).setKeyboardMode(sKeyboardMode);
 		},
 
-		_oFragments: {},
 		_showFormFragment : function (sFragmentName) {
             var oPageSubSection = this.byId("pageSubSection1");
             this._loadFragment(sFragmentName, function(oFragment){
@@ -655,18 +654,13 @@ sap.ui.define([
             
         },
         _loadFragment: function (sFragmentName, oHandler) {
-			if(!this._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "pg.md.mdCategory.view." + sFragmentName,
-					controller: this 
-				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this._oFragments[sFragmentName]);
-			}
+            Fragment.load({
+                id: this.getView().getId(),
+                name: "pg.md.mdCategory.view." + sFragmentName,
+                controller: this 
+            }).then(function(oFragment){
+                if(oHandler) oHandler(oFragment);
+            }.bind(this));
         },
     
 		/**

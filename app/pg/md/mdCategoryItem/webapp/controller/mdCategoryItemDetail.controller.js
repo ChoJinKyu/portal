@@ -680,7 +680,6 @@ sap.ui.define([
 			}).setKeyboardMode(sKeyboardMode);
 		},
 
-		_oFragments: {},
 		_showFormFragment : function (sFragmentName) {
             var oPageSubSection = this.byId("pageSubSection1");
             this._loadFragment(sFragmentName, function(oFragment){
@@ -689,18 +688,13 @@ sap.ui.define([
 			})
         },
         _loadFragment: function (sFragmentName, oHandler) {
-			if(!this._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "pg.md.mdCategoryItem.view." + sFragmentName,
-					controller: this 
-				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this._oFragments[sFragmentName]);
-			}
+            Fragment.load({
+                id: this.getView().getId(),
+                name: "pg.md.mdCategoryItem.view." + sFragmentName,
+                controller: this 
+            }).then(function(oFragment){
+                if(oHandler) oHandler(oFragment);
+            }.bind(this));
         },
         
 

@@ -82,6 +82,30 @@ sap.ui.define([
             this._applySearch(aSearchFilters);
         },
 
+        onTableItemPress: function (oEvent) {
+
+            // console.log("oEvent.getSource=", oEvent.getSource());
+
+            var oViewModel = this.getModel('viewModel');
+            var sPath = "";
+
+            var bindingContext = oEvent.getParameters().rowBindingContext;
+            if (bindingContext) {
+                sPath = oEvent.getParameters().rowBindingContext.getPath();
+            } else {
+                sPath = oEvent.getParameters()["row"].getBindingContext("viewModel").getPath()
+            }
+            // console.log("sPath=", sPath);
+            var oRecord = oViewModel.getProperty(sPath);
+            // console.log("oRecord=", oRecord);
+
+            this.getRouter().navTo("selectionPage", {
+                tenantId : oRecord.tenant_id,
+                companyCode: oRecord.company_code,
+                constQuotationNumber: oRecord.const_quotation_number
+            }, true);
+        },
+
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();

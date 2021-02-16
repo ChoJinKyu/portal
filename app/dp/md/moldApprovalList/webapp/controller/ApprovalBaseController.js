@@ -102,12 +102,12 @@ sap.ui.define([
 
         onPageEditButtonPress: function () { // Edit 버튼 
             this._toEditMode();
-            this.setSelectedApproval(0);
+            
         },
 
         onPageCancelEditButtonPress: function () { // 수정 취소 버튼 
             this._toShowMode(); 
-            this.setSelectedApproval(0); 
+
         },
 
         // 입찰대상 협력사 취소품의 이동 
@@ -236,6 +236,7 @@ sap.ui.define([
                 this.getModel("appMaster").setProperty("/user_english_name", "b"); // this.getSessionUserInfo().ENGLISH_EMPLOYEE_NAME
                 this.getModel("appMaster").setProperty("/user_local_name", "**진" );  // this.getSessionUserInfo().EMPLOYEE_NAME
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
+               
             }
 
             this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
@@ -252,6 +253,7 @@ sap.ui.define([
             oUiModel.setProperty("/viewFlag", false);
             this._toButtonStatus();
             this._toEditModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
+            this.setSelectedApproval(0);
         },
 
         _toShowMode: function () {
@@ -261,7 +263,8 @@ sap.ui.define([
             oUiModel.setProperty("/editFlag", false);
             oUiModel.setProperty("/viewFlag", true);
             this._toButtonStatus();
-            this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
+            this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력 
+            this.setSelectedApproval(0);
         },
         _callApproverLineSet : function(){
 
@@ -378,20 +381,22 @@ sap.ui.define([
             this._loadFragment("ApprovalLine", function (oFragment) {
                 oPageApprovalLineSection.addBlock(oFragment);
 
-                var referMulti = this.byId("referMulti");
-                var tokens = [] ;
+                // var referMulti = this.byId("referMulti");
+                // var tokens = [] ;
                
-                var refer = this.getModel("referer");
-                if(refer.getData().Referers != undefined && refer.getData().Referers.length > 0){
-                    refer.getData().Referers.forEach(function(item){ 
-                     //   console.log("item>>> " , item);
-                        var oToken = new Token();
-                        oToken.setKey(item.referer_empno);
-                        oToken.setText(item.referer_name);
-                        tokens.push(oToken);
-                    });
-                    referMulti.setTokens(tokens);
-                }
+                // var refer = this.getModel("referer");
+                // console.log("_loadFragment >>> " , refer.getData());
+
+                // if(refer.getData().Referers !== undefined && refer.getData().Referers.length > 0){
+                //     refer.getData().Referers.forEach(function(item){ 
+                //         console.log("referer >>> " , item);
+                //         var oToken = new Token();
+                //         oToken.setKey(item.referer_empno);
+                //         oToken.setText(item.referer_name);
+                //         tokens.push(oToken);
+                //     });
+                //     referMulti.setTokens(tokens);
+                // }
             }.bind(this));
         },
 
@@ -444,6 +449,7 @@ sap.ui.define([
            
             var oView = this.getView();
             this._bindView("/Referers", "referer", filter, function (oData) {
+                console.log("Referer>>> " , oData);
             //     if (oData.results.length > 0) {
             //       //  var rList = [];
                    
@@ -482,7 +488,8 @@ sap.ui.define([
         },
 
        onMultiInputWithEmployeeValuePress: function(){ 
-          
+            var that = this;
+            var data = this.getModel("referer");
             if(!this.oEmployeeMultiSelectionValueHelp){
                this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
                     title: "Choose Referer",
@@ -493,8 +500,32 @@ sap.ui.define([
                         ]
                     }
                 });
-                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){ 
+                    console.log("refer>>> " , oEvent.getSource().getTokens());
+
+                    // var oSearch = this.byId(oEvent.getSource().sId);
+
+                    //   oSearch.setTokens(jQuery.map(oEvent.mParameters.items, function(oToken){
+                    //         return new Token({
+                    //             key: oToken.vendor_pool_code,
+                    //             text: oToken.vendor_pool_local_name,
+                    //         });
+                    //     }));
+
+
+                    var tokens = oEvent.getSource().getTokens();
+                    var list = [];
+                    if(tokens != undefined && tokens.length > 0){
+                        tokens.forEach(function(item){
+                            list.push({referer_empno: item.getKey() 
+                                     , referer_name : item.getText()  
+                                     , approval_number : that.approval_number
+                                     , tenant_id : that.tenant_id });
+                        });
+                    }
+                     data.setData(list,"/Referers");
+
+                  //  this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
                  
                 }.bind(this));
             }
@@ -803,19 +834,21 @@ sap.ui.define([
         _commonDataSettingAndSubmit: function () {
             var that = this;
              
-            this.setModel(new ManagedListModel(),'referer');
-            var referModel = this.getModel('referer');
-            var multi = this.byId("referMulti").getTokens();
-            if(multi != undefined && multi.length > 0){
-                multi.forEach(function(item){ 
-                   // console.log(item);
-                    referModel.addRecord({
-                        "referer_empno": item.getKey(),
-                        "approval_number": that.approval_number,
-                        "tenant_id": that.tenant_id
-                    }, "/Referers");
-                });
-            }
+            console.log(" >>>> referMulti " ,  this.byId("referMulti").getTokens());
+
+            // this.setModel(new ManagedListModel(),'referer');
+            // var referModel = this.getModel('referer');
+            // var multi = this.byId("referMulti").getTokens();
+            // if(multi != undefined && multi.length > 0){
+            //     multi.forEach(function(item){ 
+            //        // console.log(item);
+            //         referModel.addRecord({
+            //             "referer_empno": item.getKey(),
+            //             "approval_number": that.approval_number,
+            //             "tenant_id": that.tenant_id
+            //         }, "/Referers");
+            //     });
+            // }
 
             var mst = this.getModel("appMaster").getData(),
                 apr = this.getModel("approver").getData(),
@@ -823,7 +856,7 @@ sap.ui.define([
                 org_type_code = this.getModel("plant").getProperty("/org_type_code");
             var data = {};
             
-           // console.log("orgTypeCode >>> " ,org_type_code );
+            console.log("ddddd ", this.getModel("referer"));
 
             var approvalMaster = {
                 tenant_id: this.tenant_id
@@ -862,15 +895,16 @@ sap.ui.define([
                 });
             }
 
-            var refArr = [];
-            if (ref.Referers != undefined && ref.Referers.length > 0) {
-                ref.Referers.forEach(function (item) {
+        var refArr = []; 
+           var getTokens = this.byId("referMulti").getTokens();
+            if (getTokens != undefined && getTokens.length > 0) {
+                getTokens.forEach(function (item) {
                    // console.log("item", item);
                     if (item._row_state_ != "D") {
                         refArr.push({
                             tenant_id: that.tenant_id
                             , approval_number: that.approval_number
-                            , referer_empno: item.referer_empno
+                            , referer_empno: item.getKey() 
                         });
                     }
 

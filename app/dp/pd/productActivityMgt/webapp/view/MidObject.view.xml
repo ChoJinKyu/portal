@@ -230,9 +230,10 @@
                                                         templateShareable:true
                                                     }" editable="{= ${details>_row_state_} === 'C' }" required="true"> 
                                                     <items>
-                                                        <core:Item key="{langDataModel>code}" text="{langDataModel>code}: {langDataModel>code_name}" />
+                                                        <core:ListItem key="{langDataModel>code}" text="{langDataModel>code_name}" additionalText="{langDataModel>code}" />
                                                     </items>
                                                 </ComboBox>
+
                                             </HBox>
                                             <HBox
                                                 direction="Column">
@@ -261,7 +262,7 @@
                 
                 <Button enabled="{= !${midObjectViewModel>/editMode} }" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditeButton" />							
                 <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButton"/>
-                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
+                <Button enabled="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? false : true : false }" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
                 <Button enabled="{midObjectViewModel>/editMode}" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButton" />
 			</OverflowToolbar>
 		</uxap:footer>

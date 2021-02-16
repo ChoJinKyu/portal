@@ -145,7 +145,7 @@
                                     <t:template>
                                         <HBox justifyContent="End">
                                             <Input value="{viewModel>distrb_rate}" visible="{viewSet>/isEditMode}" type="Number" textAlign="Right" width="7em" />
-                                            <Text text="{viewModel>distrb_rate}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" textAlign="Right" />    
+                                            <Text text="{viewModel>distrb_rate}%" visible="{= ${viewSet>/isEditMode} === true ? false : true }" textAlign="Right" />    
                                         </HBox>     
                                     </t:template>
                                 </t:Column>
@@ -210,7 +210,7 @@
                                     <ToolbarSpacer/>
                                     <Button id="dtlTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onDtlTableAddButtonPress" />
                                     <Button id="dtlTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDtlTableDeleteButtonPress" />
-                                    
+                                    <!-- <Button id="dtlItemAddButton" text="신규품목생성" type="Transparent" press=".onDtlItemAddButtonPress" />         -->
                                 </OverflowToolbar>
                             </t:extension>
                             <t:columns>
@@ -234,7 +234,7 @@
                                     <t:template>
                                         <HBox justifyContent="Center">
                                             <Input value="{viewModel>ep_item_code}" 
-                                                placeholder="품목코드"
+                                                placeholder="품목코드" required="true"
                                                 showValueHelp="true" valueHelpRequest=".openItemPopupInTable" width="11em"
                                                 visible="{viewSet>/isEditMode}">
                                             </Input>                                         
@@ -374,7 +374,7 @@
 								</Column>                                                                                               
 							</columns>
 							<items>
-                                <ColumnListItem press=".onMidTableItemPress">
+                                <ColumnListItem>
 									<cells>
                                         <ObjectStatus icon="{
                                             path: 'viewModel>row_state',
@@ -451,7 +451,7 @@
                                     uploadComplete="onUploadComplete"
                                     beforeUploadStarts="onBeforeUploadStarts" />
                                 <!-- File Upload 끝-->
-                                <Label  text="* 특기사항" 
+                                <Label  text="특기사항" 
                                             design="Bold" 
                                             class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
                                 <richtexteditor:RichTextEditor

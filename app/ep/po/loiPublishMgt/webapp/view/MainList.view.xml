@@ -242,8 +242,8 @@
                 <Button text="{I18N>/RFQ_CREATE}" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
                 <Button text="{I18N>/SUPPLIER_SELECTION_APPROVAL}" id="supplierSelectionButton" press=".onSupplierSelectionButtonPress" type="Transparent"/>
                 <Button text="{I18N>/PUBLISH_APPROVAL}" id="publishButton" press=".onPublishButtonPress"   type="Transparent"/>
-                <Button text="{I18N>/ORDER_MAPPING}" id="poMappingButton" press=".onSave('mainTable', 'list')"   type="Transparent"/>
-                <Button text="{I18N>/ORDER_MAPPING_CANCEL}" id="poMappingCansel" press=".onSave('mainTable', 'list')"   type="Transparent"/>
+                <Button text="{I18N>/ORDER_MAPPING}" id="poMappingButton" press=".onPoMapping"   type="Transparent"/>
+                <Button text="{I18N>/ORDER_MAPPING_CANCEL}" id="poMappingCansel" press=".onPoMappingCancel"   type="Transparent"/>
                 <ToolbarSeparator/>
                 <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                     <layoutData>

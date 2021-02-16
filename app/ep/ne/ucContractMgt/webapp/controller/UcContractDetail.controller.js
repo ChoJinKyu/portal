@@ -284,7 +284,7 @@ sap.ui.define([
                 // d["extra_class_number"] = d["extra_class_number"].split(":")[0];
                 // d["extra_name"] = d["extra_number"].split(":")[1];
                 // d["extra_number"] = d["extra_number"].split(":")[0];
-                //d["apply_extra_rate"] = (d["apply_extra_rate"] ? parseInt(d["apply_extra_rate"]) : null);
+                d["apply_extra_rate"] = (d["apply_extra_rate"] ? parseFloat(d["apply_extra_rate"]) : null);
                 d["base_extra_rate"] = (d["base_extra_rate"] ? parseInt(d["base_extra_rate"]) : null);
                 d["net_price_contract_degree"] = (d["net_price_contract_degree"] || !isNaN(d["net_price_contract_degree"]) ? parseInt(d["net_price_contract_degree"]) : null);
                 d["net_price_contract_extra_seq"] = (d["net_price_contract_extra_seq"] || !isNaN(d["net_price_contract_extra_seq"]) ? parseInt(d["net_price_contract_extra_seq"]) : null);
@@ -314,8 +314,8 @@ sap.ui.define([
             // }
 
             if (this.validator.validate(this.byId("editBox")) !== true) return;
-            if (this.validator.validate(this.byId("supplierTable")) !== true) return;
-            if (this.validator.validate(this.byId("dtlTable")) !== true) return;
+            // if (this.validator.validate(this.byId("supplierTable")) !== true) return;
+            // if (this.validator.validate(this.byId("dtlTable")) !== true) return;
             if (this.validator.validate(this.byId("extraTable")) !== true) return;
 
             var url = "ep/ne/ucContractMgt/webapp/srv-api/odata/v4/ep.UcContractMgtV4Service/UcApprovalMstCudProc";
@@ -367,6 +367,20 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function () {
+
+            // var oViewModel = this.getModel("viewModel"),
+
+            // var dtlData = oViewModel.getProperty("/dtl");
+            // var supplierData = oViewModel.getProperty("/supplier");
+            // var extraData = oViewModel.getProperty("/extra");
+
+            // supplierData.map(d => {
+            //     d["distrb_rate"] = (d["distrb_rate"] ? parseInt(d["distrb_rate"]) : null);
+            //     d["net_price_contract_degree"] = (d["net_price_contract_degree"] || !isNaN(d["net_price_contract_degree"]) ? parseInt(d["net_price_contract_degree"]) : null);
+            //     delete d["__metadata"];
+            //     return d;
+            // });
+
             this.validator.clearValueState(this.byId("editBox"));
             if (this.getModel("viewSet").getProperty("/isAddedMode") == true) {
                 this.onPageNavBackButtonPress.call(this);
@@ -434,6 +448,7 @@ sap.ui.define([
             addDtlData["org_type_code"] = "PU";
             addDtlData["org_code"] = "P100";
             addDtlData["item_sequence"] = 10 * (len + 1);
+            addDtlData["currency_code"] = "KRW";
             addDtlData["row_state"] = "C";
             // console.log("dtl_before=", oViewModel.getProperty("/dtl"));
             var oDtlData = oViewModel.getProperty("/dtl");
@@ -470,6 +485,34 @@ sap.ui.define([
             // console.log("oDtlData=", oViewModel.getProperty("/dtl"));
             this.byId("dtlTable").clearSelection();
         },
+
+        // /**
+        //  * @description employee 팝업 닫기 
+        //  */
+        // onExitItemAdd: function () {
+        //     this.byId("dialogContractEnd").close();
+        // },
+
+        // onDtlItemAddButtonPress: function () {
+
+        //     var oView = this.getView();
+        //     if (!this._itemAddDialog) {
+        //         this._itemAddDialog = Fragment.load({
+        //             id: oView.getId(),
+        //             name: "ep.ne.ucContractMgt.view.ItemAdd",
+        //             controller: this
+        //         }).then(function (itemAddDialog) {
+        //             oView.addDependent(itemAddDialog);
+        //             return itemAddDialog;
+        //         }.bind(this));
+        //     }
+
+        //     this._itemAddDialog.then(function (itemAddDialog) {
+        //         itemAddDialog.open();
+
+        //     });
+
+        // },
 
         onExtraTableAddButtonPress: function () {
             var oViewModel = this.getModel("viewModel");
@@ -709,7 +752,7 @@ sap.ui.define([
                 mstModel["tenant_id"] = this._tenantId;
                 mstModel["company_code"] = this._companyCode;
                 mstModel["net_price_contract_degree"] = 0;
-                mstModel["contract_write_date"] = date;
+                mstModel["contract_write_date"] = toDate;
                 mstModel["buyer_empno"] = "100003";
                 mstModel["buyer_name"] = "윤구매2";
                 mstModel["purchasing_department_code"] = "1000001";
@@ -971,7 +1014,7 @@ sap.ui.define([
             this._showFormFragment('UcContractDetail_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
             if (statusCode == "711040") {
-                this.byId("page").setProperty("showFooter", false);
+                this.byId("page").setProperty("showFooter", true);
             } else {
                 this.byId("page").setProperty("showFooter", true);
             }
@@ -1130,6 +1173,10 @@ sap.ui.define([
                 oViewModel.setProperty("/dtl/" + index + "/unit", oEvent.getParameter("item").unit);
                 oViewModel.setProperty("/dtl/" + index + "/material_apply_flag", oEvent.getParameter("item").material_apply_yn);
                 oViewModel.setProperty("/dtl/" + index + "/labor_apply_flag", oEvent.getParameter("item").labor_apply_yn);
+
+                console.log("material_apply_yn==", oEvent.getParameter("item").material_apply_yn);
+                console.log("labor_apply_yn==", oEvent.getParameter("item").labor_apply_yn);
+                console.log("openItemPopupInTable Model==", oViewModel.getProperty("/dtl/" + index));
 
                 if (!oViewModel.getProperty("/dtl/" + index + "/row_state")) {
                     oViewModel.setProperty("/dtl/" + index + "/row_state", "U");

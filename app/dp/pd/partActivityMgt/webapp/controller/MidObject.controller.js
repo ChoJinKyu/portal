@@ -154,6 +154,7 @@ sap.ui.define([
         onDialogActivityPress : function(){
 
             // if(!this.oSearchActivityDialog){
+            //     
             //     this.oSearchActivityDialog = new ActivityCodeDialog({
             //         title: "Select Activity",
             //         multiSelection: false,
@@ -172,6 +173,13 @@ sap.ui.define([
             //         this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
             //         this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
             //         this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
+            //         this.oSearchActivityDialog.destroy();
+            //         delete this.oSearchActivityDialog;
+            //     }.bind(this));
+
+            //     this.oSearchActivityDialog.attachEvent("cancel", function(oEvent){ 
+            //         this.oSearchActivityDialog.destroy();
+            //         delete this.oSearchActivityDialog;
             //     }.bind(this));
             // }
 
@@ -195,7 +203,14 @@ sap.ui.define([
                 this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
                 this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
                 this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
+                this.oSearchActivityDialog.destroy();
+                delete this.oSearchActivityDialog;
             }.bind(this));
+
+            this.oSearchActivityDialog.attachEvent("cancel", function(oEvent){ 
+                this.oSearchActivityDialog.destroy();
+                delete this.oSearchActivityDialog;
+            }.bind(this));            
 
             this.oSearchActivityDialog.open();
 
@@ -246,14 +261,15 @@ sap.ui.define([
 
         onComboChange: function(oEvent){
 
+            this.byId("searchActivityInput").setValue("");
+            this.byId("searchActivityName").setValue("");            
+            this.byId("searchSequence").setValue("");
+
             if(!(this.isValNull(this.byId("searchCompanyCombo").getValue())) && 
             !(this.isValNull(this.byId("searchOrgCombo").getValue())) && 
             !(this.isValNull(this.byId("searchPartProjectCombo").getValue()))){
                 this.byId("searchActivityInput").setEditable(true);
-            } else {
-                this.byId("searchActivityInput").setValue("");
-                this.byId("searchActivityName").setValue("");            
-                this.byId("searchSequence").setValue("");
+            } else {                
                 this.byId("searchActivityInput").setEditable(false);
             }
         },
@@ -374,9 +390,9 @@ sap.ui.define([
             var url = "srv-api/odata/v4/dp.partActivityV4Service/PdpartActivitySaveProc";
             
             // console.log(inputData);
-			oTransactionManager.setServiceModel(this.getModel());
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-				title : this.getModel("I18N").getText("/SAVE"),
+            oTransactionManager.setServiceModel(this.getModel());
+            MessageBox.confirm(CUType === "D" ? this.getModel("I18N").getText("/NCM00003") : this.getModel("I18N").getText("/NCM00001"), {
+				title : CUType === "D" ? this.getModel("I18N").getText("/DELETE") : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -618,7 +634,11 @@ sap.ui.define([
 			this.byId("pageEditButton").setEnabled(false);			
             this.byId("pageSaveButton").setEnabled(true);
             this.byId("pageCancelButton").setEnabled(true);
-            this.byId("pageDeleteButton").setEnabled(true);
+            if(this._sActivityCode === "new"){
+                this.byId("pageDeleteButton").setEnabled(false);
+            } else {
+                this.byId("pageDeleteButton").setEnabled(true);
+            }
 			// this.byId("lngTableAddButton").setEnabled(true);
             // this.byId("lngTableDeleteButton").setEnabled(true);                      
             

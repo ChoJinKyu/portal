@@ -551,7 +551,7 @@ sap.ui.define([
                 loiSelectionNumber: oRecord.loi_selection_number,
                 loiNumber: oRecord.loi_number,
                 quotationNumber: (oRecord.same_quotation_number ? oRecord.same_quotation_number : "new"),
-                quotationItemNumber: (oRecord.same_quotation_item_number ? oRecord.same_quotation_item_number : "new") 
+                quotationItemNumber: (oRecord.same_quotation_item_number ? oRecord.same_quotation_item_number : "new")
                 // existRfq: (oRecord.quotation_number ? true : false)
             }, true);
         },
@@ -679,7 +679,7 @@ sap.ui.define([
 
             if (!sQuotationItemNumber) {
                 sQuotationItemNumber = "new";
-            }            
+            }
 
             console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
             console.log("canSelect=", canSelect);
@@ -712,19 +712,19 @@ sap.ui.define([
                 //         }
                 //     });
                 // } else {
-                    console.log("sTenantId=", sTenantId);
-                    var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-                    this.getRouter().navTo("selectionPage", {
-                        //layout: oNextUIState.layout,
-                        tenantId: sTenantId,
-                        companyCode: sCompanyCode,
-                        loiWriteNumber: sLoiWriteNumber,
-                        loiItemNumber: sLoiItemNumber,
-                        loiSelectionNumber: sLoiSelectionNumber,
-                        loiNumber: sLoiNumber,
-                        quotationNumber: sQuotationNumber,
-                        quotationItemNumber: sQuotationItemNumber
-                    }, true);
+                console.log("sTenantId=", sTenantId);
+                var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+                this.getRouter().navTo("selectionPage", {
+                    //layout: oNextUIState.layout,
+                    tenantId: sTenantId,
+                    companyCode: sCompanyCode,
+                    loiWriteNumber: sLoiWriteNumber,
+                    loiItemNumber: sLoiItemNumber,
+                    loiSelectionNumber: sLoiSelectionNumber,
+                    loiNumber: sLoiNumber,
+                    quotationNumber: sQuotationNumber,
+                    quotationItemNumber: sQuotationItemNumber
+                }, true);
                 // }
 
             }
@@ -843,6 +843,14 @@ sap.ui.define([
                 }, true);
             }
 
+        },
+
+        onPoMapping: function () {
+            MessageToast.show("발주매핑은 추후 개발예정입니다.");
+        },
+
+        onPoMappingCancel: function () {
+            MessageToast.show("발주매핑취소는 추후 개발예정입니다.");
         },
 
         /* =========================================================== */

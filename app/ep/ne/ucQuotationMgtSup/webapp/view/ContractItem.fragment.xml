@@ -164,13 +164,19 @@
                                 <t:Column id="popMaterialNetPrice" width="8rem" hAlign="Right">
                                 <Label text="자재단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{popUcQuotationSup>material_net_price}"/>
+                                    <Text  text="{
+                                                    path: 'popUcQuotationSup>material_net_price',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popLaborNetPrice" width="8rem" hAlign="Right">
                                 <Label text="노무단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{popUcQuotationSup>labor_net_price}"/>
+                                    <Text  text="{
+                                                path: 'popUcQuotationSup>labor_net_price',
+                                                formatter: '.numberFormatter.toNumberString'
+                                            }"/>
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="popNetPriceContractTitle" width="15rem" hAlign="Center">
@@ -183,13 +189,6 @@
                                 <Label text="계약기간" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>net_price_contract_period}"/>
-                                    <!-- <Text text="{
-                                            path: 'popUcQuotationSup>net_price_contract_period',
-                                            type: 'sap.ui.model.type.Date',
-                                            formatOptions: {
-                                                pattern: 'yyyy/MM/dd'
-                                            }                                        
-                                        }" />  -->
                                 </t:template>
                                 </t:Column>
                                 
@@ -263,13 +262,19 @@
                                 <t:Column id="popMaterialNetPrice2" width="8rem" hAlign="Right">
                                 <Label text="자재단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{viewModel>material_net_price}"/>
+                                    <Text  text="{
+                                                path: 'viewModel>material_net_price',
+                                                formatter: '.numberFormatter.toNumberString'
+                                            }"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popLaborNetPrice2" width="8rem" hAlign="Right">
                                 <Label text="노무단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{viewModel>labor_net_price}"/>
+                                    <Text  text="{
+                                                path: 'viewModel>labor_net_price',
+                                                formatter: '.numberFormatter.toNumberString'
+                                            }"/>
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="popNetPriceContractTitle2" width="15rem" hAlign="Center">

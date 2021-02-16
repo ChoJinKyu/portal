@@ -83,7 +83,7 @@
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/> <Text text="{rrMgt>/repair_request_date}"/>  </HBox>
+					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/> </HBox>
                    <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${rrMgt>/repair_request_number} === undefined ?'New':''}{rrMgt>/repair_progress_status_code_nm}"

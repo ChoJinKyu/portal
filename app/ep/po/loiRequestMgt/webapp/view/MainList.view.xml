@@ -225,13 +225,13 @@
                 <t:Column id="mainVendorPoolCode" width="12rem">
                 <Label text="협력사" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{listModel>supplier_code}"/>
+                    <Text text="{listModel>supplier_name}"/>
                 </t:template>
                 </t:Column>                                                                                                                    
             </t:columns>
             <t:rowActionTemplate>
                 <t:RowAction>
-                    <t:RowActionItem type="Navigation"></t:RowActionItem>
+                    <t:RowActionItem type="Navigation" press="onTableItemPress"></t:RowActionItem>
                 </t:RowAction>
             </t:rowActionTemplate>   
             </t:Table>

@@ -111,7 +111,7 @@
                                     <Label text="{I18N>/ORGANIZATION}" required="true"/>
                                     <Text
                                         width="50%"
-                                        text="{master>/org_code}"
+                                        text="{master>/org_name}"
                                         visible="{contModel>/readMode}">
                                     </Text>
                                     <ComboBox
@@ -141,7 +141,7 @@
                                     <Label text="{I18N>/PROJECT_TYPE}" required="true"/>
                                     <Text
                                         width="50%"
-                                        text="{master>/part_project_type_code}"
+                                        text="{master>/part_project_type_name}"
                                         visible="{contModel>/readMode}">
                                     </Text>                                    
                                     <ComboBox
@@ -445,7 +445,8 @@
                             visibleRowCount="15"
                             rows="{category>/PdPartBaseActivityCategoryView}">
                             <table:extension>
-                                <OverflowToolbar visible="{contModel>/editMode}">			
+                                <OverflowToolbar visible="true">
+                                    <Text text="카테고리 및 일괄 등록은 다음 스프린트에 개발 예정입니다."/>			
                                     <ToolbarSpacer/>
                                     <Button
                                         id="cateTableBulkAddButton" 
@@ -461,7 +462,7 @@
                                         id="cateTableDeleteButton" 
                                         type="Transparent" 
                                         text="{I18N>/ROW_DELETE}"
-                                        press=".onCateDelRow"/>			 -->
+                                        press=".onCateDelRow"/> -->
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>

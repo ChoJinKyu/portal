@@ -223,14 +223,16 @@
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
-                            <Label text="{path:'I18N>/2ND_VENDOR', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"></Label>
+                            <Label text="2차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"/>
+                            <!-- <Label text="{path:'I18N>/2ND_VENDOR', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"></Label> -->
                             <Input id="searchSecondVendor" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
-                            <Label text="{path:'I18N>/3RD_VENDOR', formatter:'I18NFormatter'}" labelFor="searchThirdVendor"></Label>
+                            <Label text="3차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"/>
+                            <!-- <Label text="{path:'I18N>/3RD_VENDOR', formatter:'I18NFormatter'}" labelFor="searchThirdVendor"></Label> -->
                             <Input id="searchThirdVendor" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -253,7 +255,7 @@
                         <Title text="List ({= ${list>/Assets}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
-                        <Button id="changeSuppButton"   type="Transparent" text="Change Supp." press=".changeSuppButtonPress"  />
+                        <Button id="changeSuppButton"   type="Transparent" text="{path:'I18N>/CONFIRMED', formatter:'I18NFormatter'}" press=".changeSuppButtonPress"  />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://excel-attachment" press=".onExportPress" />
                         <Button icon="sap-icon://action-settings"  press=".onMoldMstTablePersoButtonPressed" >
@@ -264,6 +266,12 @@
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns>
+                    <table:Column id="assetCompanyColumn" width="4.5em" hAlign="Center">
+                        <Label text="{path:'I18N>/COMPANY', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <table:template>
+                            <Text id="company_code" text="{list>company_code}"/>
+                        </table:template>
+                    </table:Column>
                     <table:Column id="assetDivisionColumn" width="4.5em" hAlign="Center">
                         <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
@@ -299,13 +307,13 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetSecondVendorColumn" width="20em">
-                        <Label text="2nd Vendor" wrapping="true"/>
+                        <Label text="2차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Input id="assetSecondVendor" value="{list>secondary_supplier_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetThirdVendorColumn" width="20em">
-                        <Label text="3rd Vendor" wrapping="true"/>
+                        <Label text="3차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Input id="assetThirdVendor" value="{list>tertiary_supplier_name}"/>
                         </table:template>

@@ -80,7 +80,7 @@
 
         <form:SimpleForm id="midObjectForm1Show" editable="false"> 
         <VBox alignContent="Center" alignItems="Stretch"> 
-            <Label text="* 프로젝트명" design="Bold" class="sapMLabelNoText"/>
+            <Label text="프로젝트명" design="Bold" class="sapMLabelNoText"/>
             <Text text="{master>/project_name}" width="100%"/>
         </VBox>
         </form:SimpleForm>
@@ -90,13 +90,13 @@
                         columnsL="2"
                         columnsXL="2">
 
-            <Label text="* 사업본부" design="Bold" class="sapMLabelNoText" />
+            <Label text="사업본부" design="Bold" class="sapMLabelNoText" />
             <Text text="{master>/bizunit_name}"/>
-            <Label text="* 사업부" design="Bold" class="sapMLabelNoText"/>
+            <Label text="사업부" design="Bold" class="sapMLabelNoText"/>
             <Text text="{master>/bizdivision_name}"/>
-            <Label text="* 플랜트" design="Bold" class="sapMLabelNoText"/>
+            <Label text="플랜트" design="Bold" class="sapMLabelNoText"/>
             <Text text="{master>/plant_name}"/>
-            <Label text="* 구매유형" design="Bold" class="sapMLabelNoText"/>
+            <Label text="구매유형" design="Bold" class="sapMLabelNoText"/>
             <Text text="{master>/ep_purchasing_type_name}"/> 
 
         </form:SimpleForm>

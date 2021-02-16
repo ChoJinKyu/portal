@@ -273,7 +273,7 @@ sap.ui.define([
                         new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber),
                     ],
                     success: function (oData) {                        
-                        if(new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_start_date )) >= sToday || new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_end_date )) < sToday){
+                        if(new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_start_date )) > sToday || new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_end_date )) < sToday){
                             oData.results[0].btnCreate = false;
                         }else{
                             oData.results[0].btnCreate = true;

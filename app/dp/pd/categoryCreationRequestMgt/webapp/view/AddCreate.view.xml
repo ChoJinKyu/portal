@@ -39,10 +39,14 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" visible="true" width="100%">
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <Label text="{I18N>/REQUEST_NUMBER} :"/>
-                        <ObjectStatus text="{master>/request_number}"/>
-                        <Label text="{I18N>/REQUESTOR} :"/>
-                        <ObjectStatus text="{master>/requestor}"/>
+                        <layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+                            <Label text="{I18N>/REQUEST_NUMBER} :"/>
+                            <ObjectStatus text="{master>/request_number}"/>
+                        </layout:HorizontalLayout>
+                        <layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+                            <Label text="{I18N>/REQUESTOR} :"/>
+                            <ObjectStatus text="{master>/requestor}"/>
+                        </layout:HorizontalLayout>
                     </layout:VerticalLayout>
 			</FlexBox>
 		</uxap:headerContent>
@@ -76,7 +80,13 @@
                                 <VBox>
                                     <Label text="{I18N>/PARENT_CATEGORY_CODE}: " labelFor="pGroupCategory"   required="true"></Label>
                                     
-                                    <SearchField id="pGroupCategory" placeholder=" "  search=".onSearchPartCategory(1)"  width="50%"  value="{master>/parent_category_code}" enabled="{viewModel>/editMode}" />
+                                    <!-- <SearchField id="pGroupCategory" placeholder=" "  search=".onSearchPartCategory(1)"   
+                                    required="true" width="50%"  value="{PdPartCategoryModel>/parent_category_code}" enabled="{viewModel>/editMode}" /> -->
+
+                                    <Input id="pGroupCategory"  width="250px"   visible="{viewModel>/editMode}"  required="true"
+                                        showValueHelp="true" valueHelpRequest=".onSearchPartCategory(1)"
+                                        placeholder=" " value="{PdPartCategoryModel>/parent_category_code}"/>
+                                        
 
                                     <!-- <Input id="pGroupCategory"  width="80%"   visible="{viewModel>/editMode}"  required="true"
                                         placeholder="{I18N>/PARENT_CATEGORY_CODE} {I18N>/NAME}" value="{PdPartCategoryModel>/parent_category_code}"/>
@@ -122,8 +132,8 @@
                             inset="false" 
                             items="{pdPartCategoryLng>/}"
                             class="sapFDynamicPageAlignContent"
-                            mode="MultiSelect" 
-                            width="70%">
+                            mode="{= ${viewModel>/editMode} ? 'MultiSelect' : 'None' }"
+                            width="100%">
 							<headerToolbar>
 								<OverflowToolbar>
 									<ToolbarSpacer/>
@@ -162,7 +172,8 @@
                                                     filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                                     {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                                    ]
+                                                    ],
+                                                    templateShareable:true
                                                 }"
                                             >
                                             <core:ListItem 
@@ -198,7 +209,7 @@
                             selectionMode="None"
                             ariaLabelledBy="title"
                             rows="{pdActivityStdDayView>/}"
-                            visibleRowCount="5"
+                            visibleRowCount="17"
                             enableColumnFreeze="true"
                             showColumnVisibilityMenu="true">
                             <!-- 
@@ -213,7 +224,12 @@
                                         labelFor="input"
                                         required="true"/>
                                     <VBox>
-                                        <SearchField id="searchField" search=".onSearchPartCategory(2)" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" />
+                                        <!-- <SearchField id="searchField" search=".onSearchPartCategory(2)" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" /> -->
+                                            
+                                        <Input id="searchField"  width="100%"   visible="{viewModel>/editMode}"  required="true"
+                                            showValueHelp="true" valueHelpRequest=".onSearchPartCategory(2)"
+                                            placeholder=" " value="{master>/similar_category_code}"/>
+
                                         <!-- <Text id="textCateCode"  text="{master>similar_category_code}" visible="{viewModel>/showMode}" width="100%"  /> -->
                                             
                                     </VBox>
@@ -230,7 +246,7 @@
                                     </t:template>
                                 </t:Column>
                                 <t:Column
-                                    width="10rem"
+                                    width="30rem"
                                     sortProperty="prodActivityName"
                                     filterProperty="prodActivityName">
                                     <Label text="{I18N>/PROD_ACTIVITY_NAME}" textAlign="Center" width="100%"/>
@@ -244,7 +260,7 @@
                                     filterProperty="roleName">
                                     <Label text="{I18N>/ROLE_NAME}" textAlign="Center" width="100%"/>
                                     <t:template>
-                                        <Text text="{pdActivityStdDayView>actual_role}"/>
+                                        <Text text="{pdActivityStdDayView>role_name}"/>
                                     </t:template>
                                 </t:Column>
                                 <t:Column

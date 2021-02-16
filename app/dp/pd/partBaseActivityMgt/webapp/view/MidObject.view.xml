@@ -228,6 +228,7 @@
                                                     selectedKey="{languages>language_cd}"
                                                     items="{
                                                         path: 'util>/Code',
+                                                        templateShareable:true,
                                                         filters: [
                                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
                                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}

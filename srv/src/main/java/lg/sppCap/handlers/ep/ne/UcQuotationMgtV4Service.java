@@ -116,7 +116,9 @@ public class UcQuotationMgtV4Service implements EventHandler {
                                     .append("NET_PRICE_CONTRACT_DOCUMENT_NO   NVARCHAR(50), ")
                                     .append("NET_PRICE_CONTRACT_DEGREE        DECIMAL     , ")
                                     .append("NET_PRICE_CONTRACT_ITEM_NUMBER   NVARCHAR(50), ")
-                                    .append("SUPPLIER_ITEM_CREATE_FLAG        BOOLEAN     , ")                    
+                                    .append("SUPPLIER_ITEM_CREATE_FLAG        BOOLEAN     , ")    
+                                    .append("NET_PRICE_CONTRACT_TITLE         NVARCHAR(100), ")
+                                    .append("EXTRA_RATE_COUNT   DECIMAL, ")                
                                     .append("LOCAL_CREATE_DTM SECONDDATE, ")
                                     .append("LOCAL_UPDATE_DTM SECONDDATE, ")
                                     .append("CREATE_USER_ID NVARCHAR(255), ")
@@ -158,7 +160,7 @@ public class UcQuotationMgtV4Service implements EventHandler {
         String v_sql_dropableR = "DROP TABLE #LOCAL_TEMP_R_UC";
 
         String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableR = "INSERT INTO #LOCAL_TEMP_R_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String v_sql_callProc = "CALL EP_UC_QUOTATION_HD_SAVE_PROC(I_M_TABLE => #LOCAL_TEMP_H_UC, I_D_TABLE => #LOCAL_TEMP_D_UC, I_R_TABLE => #LOCAL_TEMP_R_UC, O_M_TABLE => ?, O_D_TABLE => ?, O_R_TABLE => ?)";
@@ -307,6 +309,8 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 log.info("net_price_contract_degree="+v_inRow.get("net_price_contract_degree"));
                 log.info("net_price_contract_item_number="+v_inRow.get("net_price_contract_item_number"));
                 log.info("supplier_item_create_flag="+v_inRow.get("supplier_item_create_flag"));
+                log.info("net_price_contract_title="+v_inRow.get("net_price_contract_title"));
+                log.info("extra_rate_count="+v_inRow.get("extra_rate_count"));
                 log.info("local_create_dtm="+v_inRow.get("local_create_dtm"));
                 log.info("local_update_dtm="+v_inRow.get("local_update_dtm"));
                 log.info("create_user_id="+v_inRow.get("create_user_id"));
@@ -344,6 +348,8 @@ public class UcQuotationMgtV4Service implements EventHandler {
                     v_inRow.get("net_price_contract_degree"),
                     v_inRow.get("net_price_contract_item_number"),
                     v_inRow.get("supplier_item_create_flag"),
+                    v_inRow.get("net_price_contract_title"),
+                    v_inRow.get("extra_rate_count"),
                     v_inRow.get("local_create_dtm"),               
                     v_inRow.get("local_update_dtm"),               
                     v_inRow.get("create_user_id"),                 
@@ -499,6 +505,8 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 v_row.setNetPriceContractDegree(v_rs.getLong("net_price_contract_degree"));
                 v_row.setNetPriceContractItemNumber(v_rs.getString("net_price_contract_item_number"));
                 v_row.setSupplierItemCreateFlag(v_rs.getBoolean("supplier_item_create_flag"));
+                v_row.setNetPriceContractTitle(v_rs.getString("net_price_contract_title"));
+                v_row.setExtraRateCount(v_rs.getBigDecimal("extra_rate_count"));
                 v_row.setLocalCreateDtm(null);
                 v_row.setLocalUpdateDtm(null);
                 v_row.setCreateUserId(v_rs.getString("create_user_id"));

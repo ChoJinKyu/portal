@@ -186,10 +186,10 @@ sap.ui.define([
 
             if( this.tenantId === "L2100" ) {
                 aColumnsControl.push(new Column({
-                    width: "12%",
+                    width: "8%",
                     hAlign: "Begin",
                     label: new Label({text: oI18NModel.getText("/COMPANY"), textAlign:"Center", width: "100%"}),
-                    template: new Text({text: "{company_name}", tooltip: "{company_name}"})
+                    template: new Text({text: "{company_code}", tooltip: "{company_code}", textAlign:"Center", width: "100%"})
                 }));
             }
             
@@ -206,13 +206,13 @@ sap.ui.define([
                     template: new Text({text: "{material_code}", tooltip: "{material_code}"})
                 }));
             aColumnsControl.push(new Column({
-                    width: "23%",
+                    width: "25%",
                     hAlign: "Begin",
                     label: new Label({text: oI18NModel.getText("/MATERIAL_DESC"), textAlign:"Center", width: "100%"}),
                     template: new Text({text: "{material_desc}", tooltip: "{material_desc}"})
                 }));
             aColumnsControl.push(new Column({
-                    width: "21%",
+                    width: "23%",
                     hAlign: "Begin",
                     label: new Label({text: oI18NModel.getText("/MATERIAL") + oI18NModel.getText("/SPECIFICATION"), textAlign:"Center", width: "100%"}),
                     template: new Text({text: "{material_spec}", tooltip: "{material_spec}"})

@@ -48,7 +48,6 @@
         </content>
         <ToolbarSpacer/>
         <HBox justifyContent="End">
-            <Button text="Select" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".selectPartCategoryValue"/>
             <Button text="Cancel" type="Transparent" press=".partCategoryPopupClose"/>
         </HBox>
     </Dialog>

@@ -161,10 +161,10 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <t:Column id="mainUcConstQuotationNumber" width="8rem">
+                <t:Column id="mainUcConstQuotationNumber" width="8rem"  hAlign="Center">
                 <Label text="견적서번호" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{viewModel>const_quotation_number}"/>
+                    <Text text="{viewModel>const_quotation_number}" textAlign="Center"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainUcOrgCode" width="8rem">
@@ -230,7 +230,7 @@
             </t:columns>
             <t:rowActionTemplate>
                 <t:RowAction>
-                    <t:RowActionItem type="Navigation"></t:RowActionItem>
+                    <t:RowActionItem type="Navigation" press="onTableItemPress"></t:RowActionItem>
                 </t:RowAction>
             </t:rowActionTemplate>   
             </t:Table>

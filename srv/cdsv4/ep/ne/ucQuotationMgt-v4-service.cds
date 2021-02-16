@@ -78,6 +78,8 @@ service UcQuotationMgtV4Service {
         net_price_contract_degree       : Integer64;              
         net_price_contract_item_number  : String;        
         supplier_item_create_flag       : Boolean; 
+        net_price_contract_title        : String;
+        extra_rate_count                : Decimal;
         local_create_dtm                : DateTime;
         local_update_dtm                : DateTime;
         create_user_id                  : String;

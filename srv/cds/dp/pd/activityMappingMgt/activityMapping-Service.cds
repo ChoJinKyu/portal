@@ -2,6 +2,7 @@ using {dp as activityMapping} from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_M
 using { dp as pdOperationOrg } from '../../../../../db/cds/dp/pd/DP_PD_OPERATION_ORG_VIEW-model';
 using { dp as prodActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PRODUCT_ACTIVITY_TEMPLATE-model';
 using { dp as partActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE-model';
+using { dp as partActivityTemplateView } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE_VIEW-model';
 using { dp as getCmCodeCombo } from '../../../../../db/cds/dp/pd/DP_PD_GET_CM_CODE_COMBO_VIEW-model';
 using {dp as activityMappingName} from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_MAPPING_NAME_VIEW-model';
 
@@ -18,6 +19,7 @@ service ActivityMappingService {
     entity PdProdActivityTemplate as projection on prodActivityTemplate.Pd_Product_Activity_Template;
     entity PdProdActivityTemplateView as projection on prodActivityTemplate.Pd_Product_Activity_Template_View;
     entity PdPartActivityTemplate as projection on partActivityTemplate.Pd_Part_Activity_Template;
+    entity PdPartActivityTemplateView as projection on partActivityTemplateView.Pd_Part_Activity_Template_View;
     entity PdSelectActivityTemplate as projection on partActivityTemplate.Pd_Select_An_Activity_View;
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
     entity ActivityMappingNameView as projection on activityMapping.Pd_Activity_Mapping_Name_View;

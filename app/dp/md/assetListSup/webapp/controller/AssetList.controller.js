@@ -370,7 +370,7 @@ sap.ui.define([
                 aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
             }
             if (description) {
-                aTableSearchState.push(new Filter("tolower(class_desc)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
+                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
             }
             if (assetNumber) {
                 aTableSearchState.push(new Filter("tolower(asset_number)", FilterOperator.Contains, "'" + assetNumber.toLowerCase() + "'"));
@@ -395,7 +395,15 @@ sap.ui.define([
             var complete_url;
             
             // rrMgtDetail/{mold_id}/{request_number}
-            var targetPath = "/dp/md/remodelRepairMgtSup/webapp/#/rrMgtDetail/"+oRecord.mold_id+"/New";
+            var targetPath;
+            // 개발서버일때 경로
+            if(pull_url.indexOf("biztech-partners") > -1){
+                targetPath = "/sppportal/dp/md/remodelRepairMgtSup/webapp/index.html#/rrMgtDetail/"+oRecord.mold_id+"/New";
+            // 로컬일때 경로
+            }else if(pull_url.indexOf("workspaces") > -1){
+                targetPath = "/dp/md/remodelRepairMgtSup/webapp/#/rrMgtDetail/"+oRecord.mold_id+"/New";
+            }
+            console.log(targetPath);
             complete_url=pull_url.split(pull_url.substring(pull_url.indexOf("/dp"),pull_url.length));
             complete_url[0] = complete_url[0]+targetPath;
             window.location.href=complete_url[0];
@@ -417,7 +425,7 @@ sap.ui.define([
             if (oSelected != "") {
                 console.log("oSelected >>>>" , oSelected);
                 isOk = true;
-                msg ="Change Supplier? ";
+                msg ="Change Supplier?";
             }else{
                 isOk = false;
                 msg ="선택된 항목이 없습니다."

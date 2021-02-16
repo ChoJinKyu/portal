@@ -23,14 +23,14 @@
         </t:extension>
         <t:columns>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
-            <t:Column width="12rem">
+            <t:Column width="6rem">
                 <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%" />
                 <t:template>
-                    <Text text="{detailModel>company_name}" tooltip="{detailModel>company_name}" />
+                    <Text text="{detailModel>company_code}" tooltip="{detailModel>company_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
-            <t:Column width="12rem">
+            <t:Column width="8rem">
                 <Label  text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                 <t:template>
                     <Text text="{detailModel>org_name}" tooltip="{detailModel>org_name}" />
@@ -50,7 +50,7 @@
                     </VBox>
                 </t:template>
             </t:Column>
-            <t:Column width="14rem">
+            <t:Column width="20rem">
                 <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%" />
                 <t:template>
                     <Text text="{detailModel>material_desc}" />

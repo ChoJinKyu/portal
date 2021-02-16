@@ -64,7 +64,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Part No"/>
+                            <Label text = "{I18N>/MOLD_NUMBER}"/>
                              <Input id="moldItemPopPartNo" width="100%"/> 
                              <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
@@ -96,7 +96,9 @@
                                 <Text text="{I18N>/MODEL}" />
                             </Column>
                             <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" >
-                                <Text text="Model Part No" />
+                                <HBox>
+                                    <Text text="{=${I18N>/MODEL}+' '+${I18N>/MOLD_NUMBER}}" />
+                                </HBox>
                             </Column>
                             <Column id="modelItem_seq" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Seq" />

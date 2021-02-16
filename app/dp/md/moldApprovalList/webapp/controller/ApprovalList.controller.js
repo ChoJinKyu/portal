@@ -138,14 +138,7 @@ sap.ui.define([
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
             this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
             this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
-            
-            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
-            // this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
-            // this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
-            // this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['I']);
-
+            //request_date 90일 간격으로 설정            
             this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
@@ -172,7 +165,6 @@ sap.ui.define([
                 })
             };
             
-            console.log( bindItemInfo)    ;
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
@@ -376,7 +368,6 @@ sap.ui.define([
 
                 selectedKeys.push(item.getKey());
             });
-            console.log("selectedKeys >>>>", selectedKeys);
             this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
         },
@@ -655,8 +646,69 @@ sap.ui.define([
             });
         },
 
+        /**
+        * @public
+        * @see 사용처 DialogCreate Fragment Open 이벤트
+        */
+        onDialogCreate: function () {
+            var oView = this.getView();
+            var that = this;   
+            if (!this.pDialog) {
+                this.pDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.md.moldApprovalList.view.DialogCreate",
+                    controller: this
+                }).then(function (oDialog) {
+                    // connect dialog to the root view of this component (models, lifecycle)
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }
+            this.pDialog.then(function (oDialog) {
+                oDialog.open();
+                that.onToggleHandleInit();
+            });
+
+        },
+
+        /**
+        * @public
+        * @see 사용처 create 팝업 로딩시 입력값 초기화 작업
+        */
+        onToggleHandleInit: function () {
+            this.getView().byId("searchCompanyF").setSelectedKey("LGESL");
+            var sTenant_id='L2101';
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
+                                    new Filter("company_code", FilterOperator.EQ, this.getView().byId("searchCompanyF").getSelectedKey())
+                                ],
+                                and: true
+                        });
+
+            var bindItemInfo = {
+                    path: 'dpMdUtil>/Divisions',
+                    filters: filter,
+                    template: new Item({
+                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
+                })
+            };
+            
+            this.getView().byId("searchPlantF").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantF").setSelectedKey("A040");
+
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            for (var i = 0; i < groupId.length; i++) {
+                groupId[i].setPressed(false);
+            }
+
+        },
+
+        /**
+        * @public
+        * @see 사용처 생성팝업에서 company 변경시 plant값 초기화 및 바인딩
+        */
         dialogChangeComp: function (oEvent) {
-            this.copySelected(oEvent);
             var source = oEvent.getSource();
             var sTenant_id='L2101';
             var filter = new Filter({
@@ -674,62 +726,16 @@ sap.ui.define([
                         key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
                     })
                 };
-            
-            console.log( bindItemInfo)    ;
+            this.getView().byId("searchPlantF").setSelectedKey("");
             this.getView().byId("searchPlantF").bindItems(bindItemInfo);
         },
 
 
-        copySelected: function (oEvent) {
-            var source = oEvent.getSource();
-            var selectedKey = source.getSelectedKey();
-            //this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
-        },
-
-
-        /**
-        * @public
-        * @see 사용처 DialogCreate Fragment Open 이벤트
-        */
-        onDialogCreate: function () {
-            var oView = this.getView();
-            
-
-
-            if (!this.pDialog) {
-                this.pDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.DialogCreate",
-                    controller: this
-                }).then(function (oDialog) {
-                    // connect dialog to the root view of this component (models, lifecycle)
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                });
-            }
-            this.pDialog.then(function (oDialog) {
-                oDialog.open();
-                
-            });
-            this.onToggleHandleInit();
-
-        },
-
-        /**
-        * @public
-        * @see 사용처 create 팝업 로딩시 입력값 초기화 작업
-        */
-        onToggleHandleInit: function () {
-            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
-            if(!(this.byId("searchCompanyF") == undefined) || !(this.byId("searchPlantF") == undefined)){
-                this.byId("searchCompanyF").setSelectedKey("LGESL");
-                this.byId("searchPlantF").setSelectedKey("A040");
-            }
-            for (var i = 0; i < groupId.length; i++) {
-                groupId[i].setPressed(false);
-            }
-
-        },
+        // copySelected: function (oEvent) {
+        //     var source = oEvent.getSource();
+        //     var selectedKey = source.getSelectedKey();
+        //     //this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
+        // },
         /**
         * @public
         * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
@@ -781,7 +787,7 @@ sap.ui.define([
             }else if(id.indexOf("export") > -1){
                 appTypeCode ="X"  
             }else if(id.indexOf("repModCompletion") > -1){ // 7. 개조 & 수리 완료 보고
-                approvalTarget ="rrcrReport"
+                approvalTarget ="remodelRepairCompletionReport"
                 appTypeCode ="C"
             }
             
@@ -889,7 +895,7 @@ sap.ui.define([
             console.log("delApprData >>>>", delApprData);
 
             if (oSelected.length > 0) {
-                MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                MessageBox.confirm((oSelected.length+"건의 품의서를 삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
@@ -1153,7 +1159,7 @@ sap.ui.define([
 		 */
         
         _applySearch: function (aSearchFilters) {
-            console.log("aSearchFilters :::", aSearchFilters);
+            console.log("searchFilters :::", aSearchFilters);
             //aSearchFilters.push(n)
             // var aSorter = [];
             // aSorter.push(new Sorter("approval_number", true));

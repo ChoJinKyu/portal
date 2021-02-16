@@ -36,7 +36,7 @@ sap.ui.define([
                 this.setModel((new Multilingual()).getModel(), "I18N");
 
                 //로그인 세션 작업완료시 수정
-                this.loginUserId = "TestUser";
+                this.loginUserId = "17370CHEM@lgchem.com";
                 this.tenantId = "L2101";
                 this.categoryGroupCode = "CO";
                 this.language_cd = "KO";
@@ -54,13 +54,7 @@ sap.ui.define([
 
             onSearch: function (event) {
                 var predicates = [];
-                if(this.byId("searchCategoryCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCategoryCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
-                    return;
-                } else {
-                    this.validator.clearValueState(this.byId("searchCategoryCombo"));
-                }
-
+                
                 if (!!this.byId("searchCategoryCombo").getSelectedKey()) {
                     predicates.push(new Filter("category_group_code", FilterOperator.EQ, this.byId("searchCategoryCombo").getSelectedKey()));
                 }

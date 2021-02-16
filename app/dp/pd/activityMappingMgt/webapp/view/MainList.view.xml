@@ -64,12 +64,12 @@
                                 </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo" required="true"></Label>
+                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo" required="true"/>
                             <ComboBox
                                 required="true"
                                 id="searchAUCombo"
                                 width="100%"
-                                selectedKey=""
+                                selectedKey="L260010001"
                                 showSecondaryValues= "true"
                                 items="{
                                     path: '/OrgView'
@@ -138,7 +138,8 @@
                 <columns>
                     <Column id="mainColumnstat" minScreenWidth="Tablet" hAlign="Left" width="1.5rem" />
                     <Column id="mainColumnBizUnit" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="{I18N>/BUSINESS_UNIT}" />
+                        <Text text="{I18N>/ORGANIZATION}" />
+                        <!-- {I18N>/BUSINESS_UNIT} -->
                     </Column>
                     <Column id="mainColumnPAC" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="{I18N>/PRODUCT_ACTIVITY_CODE}" />

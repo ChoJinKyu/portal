@@ -779,8 +779,8 @@ sap.ui.define([
 
                             //MessageToast.show(eMessageDetail);
                         }
-
-                        sMsg = oBundle.getText(eMessage);
+                        sMsg = oBundle.getText(eMessage, ['']);
+                        // sMsg = oBundle.getText(eMessage);
                         if (errorType === 'E') {
                             // alert(sMsg);
                         } else {

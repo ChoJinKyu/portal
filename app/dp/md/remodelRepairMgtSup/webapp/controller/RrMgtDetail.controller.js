@@ -65,6 +65,8 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
           //  this.setModel(new ManagedListModel(), "schedule");
             this.setModel(new ManagedModel(), "rrMgt");
+            this.setModel(new ManagedModel(), "company");
+            this.setModel(new ManagedModel(), "plant");
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
 
@@ -75,9 +77,37 @@ sap.ui.define([
         },
         _onObjectMatched : function(oEvent){ 
             var oArgs = oEvent.getParameter("arguments");
-            console.log("param>>>>> " , oArgs); 
+          //  console.log("param>>>>> " , oArgs); 
             this._srchDetail(oArgs);
-        } ,
+        } , 
+        _searchDivision : function (oArgs){
+          //  console.log("oArgs>> " , oArgs);
+            var oModel = this.getModel("plant");
+            oModel.setTransactionModel(this.getModel("dpMdUtil"));
+
+            oModel.read("/Divisions(tenant_id='" + oArgs.tenant_id
+                + "',company_code='" + oArgs.company_code
+                + "',org_code='" + oArgs.org_code + "')", {
+                filters: [],
+                success: function (oData) {
+                      console.log("orgName ", oData);
+                }
+            });
+
+        },
+        _searchCompany : function (oArgs){
+            var oModel = this.getModel("company");
+            oModel.setTransactionModel(this.getModel("org"));
+
+           oModel.read("/Company(tenant_id='" 
+           + oArgs.tenant_id + "',company_code='" + oArgs.company_code + "')", {
+                filters: [],
+                success: function (oData) {
+
+                }
+            });
+
+        },
         // 상세 조회 
         _srchDetail : function(oArgs){
             var oModel = this.getModel("rrMgt")
@@ -98,7 +128,9 @@ sap.ui.define([
                         oModel.setProperty("/repair_request_date", d.substring(0, 4) + "-" +d.substring(4, 6)+"-"+d.substring(6, 8));
                         oUiModel.setProperty("/editFlag", false);    
                         oUiModel.setProperty("/viewFlag", true);    
-                        that._setBtnStatus();
+                        that._setBtnStatus(); 
+                        that._searchCompany(oData);
+                        that._searchDivision(oData);
                     }
                 });
             }else{ // NEW 일 경우 MOLD 정보만 조회한다. 
@@ -120,7 +152,8 @@ sap.ui.define([
                             oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
                             oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
                             oModel.setProperty("/repair_request_date", today.substring(0, 4) + "-" +today.substring(4, 6)+"-"+today.substring(6, 8));
-            
+                            that._searchCompany(oData);
+                            that._searchDivision(oData);
                            
                     }
                 });
@@ -223,27 +256,38 @@ sap.ui.define([
         },
         // MOLD_SUPPLIER 팝업창 띄우기 
         onMoldSupplierValuePress : function(){ 
-            var mst = this.getModel("rrMgt").getData(); 
+
+            var mst = this.getModel("rrMgt").getData(),
+               plant = this.getModel("plant").getData(),
+                company = this.getModel("company").getData();
+                var setMst = this.getModel("rrMgt");
              if (!this.oCodeSelectionValueHelp) {
                     this.oCodeSelectionValueHelp = new SupplierDialog({
                         multiSelection: false 
                       , items: {
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, "L2100") 
+                                new Filter("tenant_id", FilterOperator.EQ, "L2101") 
                                 ,  new Filter("company_code", FilterOperator.EQ, mst.company_code) 
                                 ,  new Filter("org_code", FilterOperator.EQ, mst.org_code) 
+                                ,  new Filter("company_name", FilterOperator.EQ, company.company_name ) 
+                                ,  new Filter("org_name", FilterOperator.EQ, plant.org_name) 
                             ]
                         }
                     });
 
-                    this.oCodeSelectionValueHelp.attachEvent("apply", function (oEvent) {
-                        this.byId("input_supplier_code").setValue(oEvent.getParameter("item").supplier_code);
+                    this.oCodeSelectionValueHelp.attachEvent("apply", function (oEvent) { 
+                        setMst.setProperty("/mold_mfger_code_nm", oEvent.getParameter("item").supplier_local_name);
+                        setMst.setProperty("/mold_mfger_code", oEvent.getParameter("item").supplier_code);
+                       // this.byId("input_supplier_code").setValue(oEvent.getParameter("item").supplier_code);
                     }.bind(this));
                 }
                 this.oCodeSelectionValueHelp.open();
         } ,
+
         onPageDraftButtonPress: function () {
             var mst = this.getModel("rrMgt").getData(); 
+           console.log("onPageDraftButtonPress >>>>>> " , mst);
+
             var data = {
                 inputData: {
                     repairItem: {
@@ -252,6 +296,7 @@ sap.ui.define([
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
                         , repair_reason: mst.repair_reason 
+                        , mold_mfger_code: mst.mold_mfger_code 
                         , repair_request_date : this._getToday()
                         , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
                         , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)
@@ -283,7 +328,8 @@ sap.ui.define([
             }
 
             var mst = this.getModel("rrMgt").getData();
-            
+            console.log("onPageRequestButtonPress >>>>>> " , mst);
+
             var data = {
                 inputData: {
                     repairItem: {
@@ -292,6 +338,7 @@ sap.ui.define([
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
                         , repair_reason: mst.repair_reason 
+                        , mold_mfger_code: mst.mold_mfger_code 
                         , repair_request_date : this._getToday()
                         , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
                         , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)

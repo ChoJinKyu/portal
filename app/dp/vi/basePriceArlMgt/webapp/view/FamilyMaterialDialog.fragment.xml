@@ -87,13 +87,13 @@
                     </OverflowToolbar>
                 </table:extension>
                 <table:columns>
-                    <table:Column width="12rem">
+                    <table:Column width="6rem">
                         <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%" />
                         <table:template>
-                            <Text text="{dialogModel>company_name}" tooltip="{dialogModel>company_name}" />
+                            <Text text="{dialogModel>company_code}" tooltip="{dialogModel>company_code}" textAlign="Center" width="100%" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="12rem">
+                    <table:Column width="8rem">
                         <Label text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                         <table:template>
                             <Text text="{dialogModel>org_name}" tooltip="{dialogModel>org_name}" />
