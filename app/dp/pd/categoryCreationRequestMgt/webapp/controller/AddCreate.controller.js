@@ -378,12 +378,13 @@ sap.ui.define([
             // console.log(this.getView().byId("statusButton").getSelectedKey());
             //20210209 설계자 요청으로 category_code 에 requestNumber를 마스터 데이터에 넣기로 함
                     // category_code     : this._sRequestNumber,
+                    // category_code     : this.category_code,
                     // parent_category_code        : oData.parent_category_code,
                     // sequence     : oData.sequence.trim(), ==> 0 으로 보내기로 함 
             var pdMstVal = {
 					tenant_id       : this.tenant_id,
                     category_group_code   : this.category_group_code,
-                    category_code     : this.category_code,
+                    category_code     : this._sRequestNumber,
                     parent_category_code        : this.getView().byId("pGroupCategory").getValue(),
                     sequence     : "0",
 
