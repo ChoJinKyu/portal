@@ -543,7 +543,7 @@
                                                 visible="{
                                                     path: 'OPUI>/ACCOUNT-ACCOUNT_CODE',
                                                     formatter: '.uiControlSet.toColumnVisible'
-                                                    }">>
+                                                    }">
                                     <Label text="{I18N>/ACCOUNT_CODE}"/>
                                     <table:template>
                                         <Text text="{ parts: [
