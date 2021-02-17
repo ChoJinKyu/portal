@@ -15,9 +15,10 @@
                         <m:OverflowToolbarLayoutData priority="NeverOverflow" />
                     </m:layoutData>
                 </m:Button>
+                <m:Title text="[QA]"/>
                 <m:Image 
                     ariaDetails="detailsActiveImage" 
-                    src="./portal/image/logo_procurement.svg"
+                    src="./lib/image/logo_procurement.svg"
                     class="sapUiSmallMarginEnd"/>
                 <m:IconTabHeader
                     id="toolPageTabHeader"
