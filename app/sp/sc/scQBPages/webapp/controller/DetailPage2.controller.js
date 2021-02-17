@@ -424,7 +424,7 @@ sap.ui.define([
                 // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._docNum + "'";
                 var headerExpandString = "nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
                 var itemsExpandString = "Items($expand=Suppliers,operation_org,material,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
-                var itemsNonPriceExpandString = "ItemsNonPrice($expand=ItemsNonPriceDtl)";
+                var itemsNonPriceExpandString = "ItemsNonPrice($expand=ItemsNonPriceDtl,nonpr_supeval_attr_type,nonpr_supeval_value_type,nonpr_score_comput_method)";
                 var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+ "," + itemsNonPriceExpandString + "&$filter=nego_document_number eq '" + this._docNum + "'";
 
                 console.log( "0000 >>> " + url);
@@ -442,7 +442,9 @@ sap.ui.define([
                         
                         // number_of_award_supplier, total, bid_conference_date 추가 2021.02.10 kbg
                         oView.getModel("NegoHeaders").setProperty("/number_of_award_supplier" , parseInt(data.value[0].number_of_award_supplier));
-                        oView.getModel("NegoHeaders").setProperty("/bid_conference_date" , new Date(data.value[0].bid_conference_date));
+                        if(data.value[0].bid_conference_date !== null){
+                            oView.getModel("NegoHeaders").setProperty("/bid_conference_date" , new Date(data.value[0].bid_conference_date));
+                        }
                         
                         this._SupplierTotalScore = data.value[0].order_rate_01;     //임시
                         if(parseInt(data.value[0].order_rate_02) > 0){
@@ -484,6 +486,10 @@ sap.ui.define([
                         itemNonPrices.forEach(element => {
                             element.note_content = this.getDecodeString(element.note_content);//decodeURIComponent(escape(window.atob(element.note_content)));
                             
+                            element.ItemsNonPriceDtl.forEach(elementDtl => {
+                                elementDtl.supeval_from_date = new Date(elementDtl.supeval_from_date);
+                                elementDtl.supeval_to_date = new Date(elementDtl.supeval_to_date);
+                            });
                         });
                         
                         // editable="{=${propInfo>/isEditMode}}" 
@@ -719,7 +725,7 @@ sap.ui.define([
                         nego_supplier_register_type_code: element.nego_supplier_register_type_code,
                         nego_target_include_reason_desc : element.nego_target_include_reason_desc,
                         note_content                    : element.note_content,
-                        only_maker_flat                 : element.only_maker_flat,
+                        // maker_only_flag                 : element.maker_only_flag,   // 02.16 table 에 저장은 안함. 
                         operation_org_code              : element.operation_org_code,
                         operation_unit_code             : null,//element.operation_unit_code,
                         supplier_code                   : element.supplier_code,
@@ -752,7 +758,7 @@ sap.ui.define([
                             objTemp.Suppliers = [];
 
                             for( var i = 0 ; i < pToken.length ; i++ ) {
-
+                                var oObj = {};
                                 if( pToken[i].business_partner_code != "" ) {
 
                                     // business_partner_code: "VN01970300"
@@ -780,20 +786,20 @@ sap.ui.define([
         
                                     // objTemp.item_supplier_sequence = "0000";
         
-                                    objTemp.supplier_code = pToken[i].business_partner_code;
-                                    objTemp.supplier_name = pToken[i].business_partner_local_name;
-                                    objTemp.supplier_type_code = pToken[i].type_code;
-                                    objTemp.supplier_type_name = pToken[i].type_name;
-                                    objTemp.supplier_register_status_code = pToken[i].business_partner_register_status_code;
-                                    objTemp.supplier_register_status_name = pToken[i].business_partner_register_status_name;
+                                    oObj.supplier_code = pToken[i].business_partner_code;
+                                    oObj.supplier_name = pToken[i].business_partner_local_name;
+                                    oObj.supplier_type_code = pToken[i].type_code;
+                                    oObj.supplier_type_name = pToken[i].type_name;
+                                    oObj.supplier_register_status_code = pToken[i].business_partner_register_status_code;
+                                    oObj.supplier_register_status_name = pToken[i].business_partner_register_status_name;
 
-                                    objTemp.operation_org_code = pToken[i].org_code;
+                                    oObj.operation_org_code = pToken[i].org_code;
 
                                     console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
 
-                                    objTemp.maker_only_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
+                                    oObj.maker_only_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
         
-                                    var supplierItem_S = this.getSupplierItem(objTemp);
+                                    var supplierItem_S = this.getSupplierItem(oObj);
         
                                     // NegoItemPrices>/Suppliers
                                     // var oModel = this.getView().getModel("NegoItemPrices");//,
@@ -823,6 +829,7 @@ sap.ui.define([
                         objTemp.Suppliers = [];
 
                         for( var i = 0 ; i < pToken.length ; i++ ) {
+                            var oObj = {};
                             if( pToken[i].business_partner_code != "" ) {
 
                                 // business_partner_code: "VN01970300"
@@ -850,20 +857,21 @@ sap.ui.define([
     
                                 // objTemp.item_supplier_sequence = "0000";
     
-                                objTemp.supplier_code = pToken[i].business_partner_code;
-                                objTemp.supplier_name = pToken[i].business_partner_local_name;
-                                objTemp.supplier_type_code = pToken[i].type_code;
-                                objTemp.supplier_type_name = pToken[i].type_name;
-                                objTemp.supplier_register_status_code = pToken[i].business_partner_register_status_code;
-                                objTemp.supplier_register_status_name = pToken[i].business_partner_register_status_name;
+                                oObj.supplier_code = pToken[i].business_partner_code;
+                                oObj.supplier_name = pToken[i].business_partner_local_name;
+                                oObj.supplier_type_code = pToken[i].type_code;
+                                oObj.supplier_type_name = pToken[i].type_name;
+                                oObj.supplier_register_status_code = pToken[i].business_partner_register_status_code;
+                                oObj.supplier_register_status_name = pToken[i].business_partner_register_status_name;
 
-                                objTemp.operation_org_code = pToken[i].org_code;
+                                oObj.operation_org_code = pToken[i].org_code;
                                 // objTemp.operation_org_type_code = pToken[i].type_code;
+
                                 console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
 
-                                objTemp.maker_only_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
+                                oObj.maker_only_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
     
-                                var supplierItem_S = this.getSupplierItem(objTemp);
+                                var supplierItem_S = this.getSupplierItem(oObj);
     
                                 // NegoItemPrices>/Suppliers
                                 var oModel = this.getView().getModel("NegoItemPrices");//,
@@ -1253,7 +1261,24 @@ sap.ui.define([
                     // this.getView().addDependent(this._NonPriceInfPopup);
                     
                 };
-                this._selectedNPItem = null;
+                var oNegoHeaders = this.getView().getModel("NegoHeaders").getData();
+                this._selectedNPItem = {
+                    ItemsNonPriceDtl: [],
+                    tenant_id                      : oNegoHeaders.tenant_id,
+                    nego_header_id                 : oNegoHeaders.nego_header_id,
+                    nonpr_item_number              : null,
+
+                    nonpr_score_comput_method_code : "Automatic",
+                    nonpr_supeval_attr_type_code   : "Commercial",
+                    nonpr_supeval_attr_val_type_cd : "Date",
+                    nonpr_requirements_text        : "",
+                    note_content                   : "",
+                    target_score                   : "",
+                    file_group_code                : ""
+
+                };
+
+                this.getView().getModel("NegoItemNonPrice").setData(this._selectedNPItem);
                 this._NonPriceInf.showNonPriceInfo();
                 // if (!this._NPFirstLineItem) {
                 //     this._NPFirstLineItem = this._NPFirstLine();
@@ -1483,7 +1508,16 @@ sap.ui.define([
 
                 if (!this.oPurOperationOrgMultiSelectionValueHelp) {
                     this.oPurOperationOrgMultiSelectionValueHelp = new PurOperationOrgDialog({
-                        multiSelection: false
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+                                new Filter("process_type_code", FilterOperator.EQ, "OP01")
+                            ],
+                            sorters: [
+                                new Sorter("org_name", true)
+                            ]
+                        }
                     });
 
                     this.oPurOperationOrgMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
@@ -1653,7 +1687,7 @@ sap.ui.define([
                     // supplier_participation_flag     : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Intention of Supplier Participation  	
                     // partial_allow_flag              : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Partial Quotation	
                     bid_conference                  : this.getCheckObject(oModel,"bid_conference",""),//	Bid Conference	
-                    bid_conference_date             : this.getCheckObject(oModel,"bid_conference_date",new Date()),//	Bid Conference Date	
+                    bid_conference_date             : this.getCheckObject(oModel,"bid_conference_date",null),//	Bid Conference Date	
                     bid_conference_place            : this.getCheckObject(oModel,"bid_conference_place",""),//	Bid Conference Place	
                     contact_point_empno             : this.getCheckObject(oModel,"contact_point_empno",""),//	Contact Point	
                     phone_no                        : this.getCheckObject(oModel,"phone_no","")//	Phone No
@@ -1700,7 +1734,7 @@ sap.ui.define([
                         location                     : this.getCheckObject(element,"location",""),
                         purpose                      : this.getCheckObject(element,"purpose",""),
                         reason                       : this.getCheckObject(element,"reason,",""),
-                        request_date                 : this.getCheckObject(element,"request_date",new Date()),
+                        request_date                 : this.getCheckObject(element,"request_date",null),
                         attch_code                   : this.getCheckObject(element,"attch_code",""),
                         supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
                         incoterms_code               : this.getCheckObject(element,"incoterms_code",""),                        
@@ -1715,7 +1749,7 @@ sap.ui.define([
                         currency_code                : this.getCheckObject(element,"currency_code",""),
                         response_currency_code       : this.getCheckObject(element,"response_currency_code",""),
                         exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
-                        exrate_date                  : this.getCheckObject(element,"exrate_date",new Date()),
+                        exrate_date                  : this.getCheckObject(element,"exrate_date",null),
                         bidding_start_net_price      : this.getCheckObject(element,"bidding_start_net_price",0),
                         bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", "N"),
                         bidding_target_net_price     : this.getCheckObject(element,"bidding_target_net_price",0),
@@ -1761,7 +1795,7 @@ sap.ui.define([
                                 excl_reason_desc                 : this.getCheckObject(element2,"excl_reason_desc",""),
                                 include_flag                     : this.getCheckObject(element2,"include_flag",""),
                                 nego_target_include_reason_desc  : this.getCheckObject(element2,"nego_target_include_reason_desc",""),
-                                only_maker_flat                  : this.getCheckObject(element2,"only_maker_flat",""),
+                                // maker_only_flag                  : this.getCheckObject(element2,"maker_only_flag",""),
                                 contact                          : this.getCheckObject(element2,"contact",""),
                                 note_content                     : this.getCheckObject(element2,"note_content","")
                             };
@@ -1773,7 +1807,10 @@ sap.ui.define([
                 // supplier 재 세팅 후 delete 리스트 추가
                 if( this._supplierDeleteList.length > 0 ) {
                     this._supplierDeleteList.forEach(element => {
-                        negosuppliers.push(element);                        
+                        // sequence 가 생성되어 있는 경우만 삭제
+                        if( element.item_supplier_sequence.length > 0){
+                            negosuppliers.push(element);                        
+                        }
                     });
                 }
                 
@@ -1984,9 +2021,20 @@ sap.ui.define([
                 this.createConfirmBox();
             },
             onPressBiddingFlag: function (e) {
-                e.getSource().setProperty("text", e.getSource().getPressed() ? "YES":"NO");
+                var pressed = e.getSource().getPressed();
+                var oContext = e.getSource().getParent().getParent().getBindingContext("NegoHeaders");
+                var sPath = oContext.getPath();
+
+                var oBinding = oContext.getModel().getProperty(sPath);
+
+                e.getSource().setProperty("text", pressed ? "YES":"NO");
+
+                oBinding.bidding_start_net_price_flag = pressed ? "Y":"N";
+
+                // e.getSource().getParent().getParent().getBindingContext("NegoHeaders").getModel().getProperty(e.getSource().getParent().getParent().getBindingContext("NegoHeaders").getPath())
+
                 // console.log( " >> onPressBiddingFlag" );
-                // console.log( e );
+                // console.log( e );;
             },
 
             inputAwardSupChange: function(e){

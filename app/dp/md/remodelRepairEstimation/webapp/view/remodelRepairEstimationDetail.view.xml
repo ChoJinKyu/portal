@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.md.remodelRepairEstimation.controller.remodelRepairEstimationDetail" 
+<mvc:View controllerName="dp.md.util.controller.RemodelRepairEstimation" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

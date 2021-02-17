@@ -3,6 +3,8 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/TreeListModel",
     "ext/lib/formatter/DateFormatter",
+    "sap/m/TablePersoController",
+    "./MainListPersoService",
     "ext/lib/util/Validator",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -17,9 +19,10 @@ sap.ui.define([
 	"sap/m/DialogType",
 	"sap/m/Button",
     "sap/m/ButtonType",
-    "sap/m/Text"
-], function (BaseController, JSONModel, TreeListModel, DateFormatter, Validator, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast,
-     LayoutType, Multilingual, ValueState, Dialog, DialogType, Button, ButtonType, Text) {
+    "sap/m/Text",
+    "ext/lib/util/ExcelUtil"
+], function (BaseController, JSONModel, TreeListModel, DateFormatter, TablePersoController, MainListPersoService, Validator, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast,
+     LayoutType, Multilingual, ValueState, Dialog, DialogType, Button, ButtonType, Text, ExcelUtil) {
         "use strict";
 
         return BaseController.extend("dp.pd.partCategoryMgt.controller.MainList", {
@@ -32,8 +35,16 @@ sap.ui.define([
              * @public
              */
 
-            onInit: function () {                
-                this.setModel((new Multilingual()).getModel(), "I18N");
+            onInit: function () {       
+                var oView,oMultilingual, oComponent, oViewModel;   
+                oView = this.getView();
+                oComponent = this.getOwnerComponent();
+                oMultilingual = new Multilingual();
+                oViewModel = oComponent.getModel("viewModel");
+
+                oView.setModel(oMultilingual.getModel(), "I18N");
+                
+                
 
                 //로그인 세션 작업완료시 수정
                 this.loginUserId = "17370CHEM@lgchem.com";
@@ -41,6 +52,7 @@ sap.ui.define([
                 this.categoryGroupCode = "CO";
                 this.language_cd = "KO";
 
+                //this._doInitTablePerso();
                 this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
             },
 
@@ -77,20 +89,12 @@ sap.ui.define([
                     // 성공시
                     .then((function (jNodes) {
                         
-                        for(var i=0; i<jNodes[1].results.length; i++) {
-                            var local_update_dtm = jNodes[1].results[i].local_update_dtm;
-                            jNodes[1].results[i].local_update_dtm = this.dateFormatter.toDateTimeString(local_update_dtm);
-                        }
-
                         this.getView().setModel(new JSONModel({
                             "pdPartCategoryView": {
                                 "nodes": jNodes[0],
                                 "list": jNodes[1]
                             }
                         }), "tree");
-
-                        this.getModel("tree").getData()
-                        
 
                     }).bind(this))
                     // 실패시
@@ -175,6 +179,41 @@ sap.ui.define([
             //     }, true);
                 
             // }
+
+            onExportPress: function (_oEvent) {
+                var oTable = this.byId("treeTable");
+                var aTreeData;
+                var sFileName = "Part Category List";
+                
+                var oData = this.getModel("tree").getProperty("/pdPartCategoryView"); //binded Data
+                aTreeData = oData.list.results;
+
+                ExcelUtil.fnExportExcel({
+                    fileName: sFileName,
+                    table   : oTable,
+                    data    : aTreeData
+                });
+            },
+
+            onMainTablePersoButtonPressed: function (event) {
+                this._oTPC.openDialog();
+            },
+
+            onMainTablePersoRefresh: function () {
+                MainListPersoService.resetPersData();
+                this._oTPC.refresh();
+            },
+
+            _doInitTablePerso: function(){
+                this._oTPC = new TablePersoController({
+                    table: this.byId("treeTable"),
+                    componentName: "partCategoryMgt",
+                    persoService: MainListPersoService,
+                    hasGrouping: true
+                }).activate();
+            }
+
+
         });
     }
 );

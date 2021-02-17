@@ -38,6 +38,7 @@ service NpApprovalDetailV4Service {
         tenant_id                       : String(5)     ; // L1100
         company_code                    : String(10)    ; // 회사코드
         approval_number                 : String(50)    ; // 품의번호
+        approve_status_code             : String(30)    ; // 품의상태코드
 
         approval_title                  : String(300)   ; // 품의제목
         approval_contents               : LargeString   ; // 품의 내용
@@ -46,7 +47,6 @@ service NpApprovalDetailV4Service {
         net_price_document_type_code    : String(30)    ; // 단가문서유형코드 
         net_price_source_code           : String(30)    ; // 단가출처코드
         buyer_empno                     : String(30)    ; // 구매담당자사번
-        tentprc_flag                    : Boolean       ; // 가단가여부
         outcome_code                    : String(30)    ; // OutCome코드
         //approval_excl_flag              : Boolean       ; // 승인제외여부
     }

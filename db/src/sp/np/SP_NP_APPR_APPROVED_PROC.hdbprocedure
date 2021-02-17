@@ -19,6 +19,7 @@ PROCEDURE SP_NP_APPR_APPROVED_PROC (
     ,IN   I_USER_ID                        NVARCHAR(255)
     ,OUT  O_RETURN_CODE                    NVARCHAR(5)
     ,OUT  O_RETURN_MSG                     NVARCHAR(1000)
+    ,OUT  O_DB_ERROR_MSG                   NVARCHAR(1000)
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
@@ -122,14 +123,16 @@ BEGIN
     /* 사용자 정의 Exception시, 종료 처리 : 이전 Exception Catch 부분에서 결과 메시지 등록 됨. */
     DECLARE EXIT HANDLER FOR V_USER_EXCEPTION
     BEGIN
-        -- 아무것도 하지 않습니다.
+        O_RETURN_CODE = 'NG';
+        O_DB_ERROR_MSG = ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE;
     END;
 
     /* 사용자 정의 이외 Exception 발생시 처리 : 발생될 가능성 낮음. */
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        O_RETURN_CODE = 'NG999';
-        O_RETURN_MSG  = '정의되지 않은 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+        O_RETURN_CODE = 'NG';
+        O_RETURN_MSG  = '정의되지 않은 오류';
+        O_DB_ERROR_MSG = ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE;
     END;
     
 
@@ -150,8 +153,7 @@ BEGIN
                 BEGIN
                     DECLARE EXIT HANDLER FOR SQLEXCEPTION
                     BEGIN
-                        O_RETURN_CODE = 'NG010';
-                        O_RETURN_MSG  = '단가 마스터 포함건수 조회시 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+                        O_RETURN_MSG  = '단가 마스터 포함건수 조회시 오류';
                         SIGNAL V_USER_EXCEPTION;
                     END;
                     
@@ -178,13 +180,11 @@ BEGIN
 
                 -- 1. 해당 기간에 포함되는 건이 2건 이상이면, Exception 발생
     			IF V_COUNT_INCLUDE_PERIOD > 1 THEN 
-		            O_RETURN_CODE = 'NG010';
 		            O_RETURN_MSG  = '신규 등록하려는 건의 시작일자에 포함되는 건이 여러 건 입니다.';
 		            SIGNAL V_USER_EXCEPTION;
 
                     
     			ELSEIF V_COUNT_OVER_START_DT > 1 THEN 
-		            O_RETURN_CODE = 'NG010';
 		            O_RETURN_MSG  = '신규 등록하려는 건의 시작일자보다 이후 인 건이 존재합니다.(시작일자가 이후 인건)';
 		            SIGNAL V_USER_EXCEPTION;
 
@@ -259,12 +259,10 @@ BEGIN
     			    ;
     			    
     			    IF ::ROWCOUNT = 0 THEN
-			            O_RETURN_CODE = 'NG010';
 			            O_RETURN_MSG  = '단가마스터에 수정된 건이 없습니다.';
 			            SIGNAL V_USER_EXCEPTION;
 			            
     			    ELSEIF ::ROWCOUNT > 1 THEN
-			            O_RETURN_CODE = 'NG010';
 			            O_RETURN_MSG  = '단가마스터에 1건 이상 수정 되었습니다.';
 			            SIGNAL V_USER_EXCEPTION;
     			    
@@ -302,12 +300,10 @@ BEGIN
     			        ;
     			        
     			        IF ::ROWCOUNT = 0 THEN
-			                O_RETURN_CODE = 'NG010';
 			                O_RETURN_MSG  = '단가마스터에 수정된 건이 없습니다.';
 			                SIGNAL V_USER_EXCEPTION;
 			                
     			        ELSEIF ::ROWCOUNT > 1 THEN
-			                O_RETURN_CODE = 'NG010';
 			                O_RETURN_MSG  = '단가마스터에 1건 이상 수정 되었습니다.';
 			                SIGNAL V_USER_EXCEPTION;
     			        
@@ -453,14 +449,12 @@ BEGIN
                     );
                     
     			    IF ::ROWCOUNT = 0 THEN
-			            O_RETURN_CODE = 'NG010';
 			            O_RETURN_MSG  = '단가마스터에 등록된 건이 없습니다.';
 			            SIGNAL V_USER_EXCEPTION;
 			            
     			    END IF;
     			
     			ELSE
-		            O_RETURN_CODE = 'NG099';
 		            O_RETURN_MSG  = '예상치 못한 데이터 입니다. 확인이 필요 합니다. 시스템 담당자에게 문의 하여주십시오.';
 		            SIGNAL V_USER_EXCEPTION;
     			
@@ -617,6 +611,11 @@ BEGIN
                      , NOW()
                      , NOW()
                 );
+
+            ELSE
+		        O_RETURN_MSG  = '예상치 못한 데이터 입니다.(NET_PRICE_DOCUMENT_TYPE_CODE) 확인이 필요 합니다. 시스템 담당자에게 문의 하여주십시오.';
+		        SIGNAL V_USER_EXCEPTION;
+
             END IF;
             
         END FOR;

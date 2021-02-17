@@ -51,7 +51,7 @@ sap.ui.define([
                     model.addRecord({ name: "Repair\nentry" }, "/process");
                     model.addRecord({ name: "On\nApproval" }, "/process");
                     model.addRecord({ name: "Requesting\nestimation" }, "/process");
-                    model.addRecord({ name: "LGE Review\nreq." }, "/process");
+                    model.addRecord({ name: "LG Review\nreq." }, "/process");
                     model.addRecord({ name: "Supplier\nAgree req." }, "/process");
                     model.addRecord({ name: "Repair\nComplate" }, "/process");
                 } 

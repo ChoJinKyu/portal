@@ -33,6 +33,7 @@ namespace sp;
 service NpApprovalDetailPriceV4Service {
 
     type inputTableType : {
+        rowval                          : type of SP_NP_NET_PRICE_APPROVAL_DTL : item_sequence                                                   ; 
         tenant_id                       : type of SP_NP_NET_PRICE_APPROVAL_DTL : tenant_id          ; // 'L1100'
         company_code                    : type of SP_NP_NET_PRICE_APPROVAL_DTL : company_code       ; // '회사코드'
         org_type_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : org_type_code      ; // '구매운영조직유형'
@@ -42,12 +43,14 @@ service NpApprovalDetailPriceV4Service {
         supplier_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : supplier_code      ; 
         material_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : material_code      ; 
         market_code                     : type of SP_NP_NET_PRICE_APPROVAL_DTL : market_code        ; 
+        net_price                       : type of SP_NP_NET_PRICE_APPROVAL_DTL : net_price          ; 
         currency_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : currency_code      ; 
     }
     /*   _row_state_                     : String(1) @Text:'UI:Row State' @Description:'UI Table Status("D":Delete, ""|"U":Update, "C":Create)'; */
 
     /*  */
     type outTableType : {
+        rowval                          : type of SP_NP_NET_PRICE_APPROVAL_DTL : item_sequence                                                               ; 
         tenant_id                       : type of SP_NP_NET_PRICE_APPROVAL_DTL : tenant_id                       ; // 'L1100'
         company_code                    : type of SP_NP_NET_PRICE_APPROVAL_DTL : company_code                    ; // '회사코드'
         org_type_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : org_type_code                   ; // '구매운영조직유형'
@@ -55,7 +58,8 @@ service NpApprovalDetailPriceV4Service {
         approval_number                 : type of SP_NP_NET_PRICE_APPROVAL_DTL : approval_number                 ; 
         item_sequence                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : item_sequence                   ;   
         supplier_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : supplier_code                   ; 
-        supplier_name                   : type of SP_SM_SUPPLIER_MST : supplier_local_name                       ; 
+        supplier_local_name             : type of SP_SM_SUPPLIER_MST : supplier_local_name                       ; 
+        supplier_english_name           : type of SP_SM_SUPPLIER_MST : supplier_english_name                      ; 
         material_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : material_code                   ; 
         market_code                     : type of SP_NP_NET_PRICE_APPROVAL_DTL : market_code                     ; 
         currency_code                   : type of SP_NP_NET_PRICE_APPROVAL_DTL : currency_code                   ; 

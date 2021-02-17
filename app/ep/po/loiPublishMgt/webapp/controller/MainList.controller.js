@@ -86,6 +86,22 @@ sap.ui.define([
             // this.getView().byId("searchPurchasingDepartment").setValue("(50008948) 첨단소재.구매2.공사구매팀(청주P)");
         },
 
+        onStatusColor: function (statusColor) {
+            if (!statusColor) return 1;
+            return parseInt(statusColor);
+        },
+
+        onCellClick: function (oEvent) {
+            // console.log("1111111");
+            // var bindingContext = oEvent.getParameters();
+            var columnIndex = oEvent.getParameters().columnIndex;
+            if(columnIndex == "10") {
+                this.onTableSupplierSelectionPress(oEvent);
+            }else if(columnIndex == "11") {
+                this.onTablePublishPress(oEvent);
+            }
+        },
+
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
         },
@@ -539,21 +555,25 @@ sap.ui.define([
         },
 
         onTableSupplierSelectionPress: function (oEvent) {
-            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            // var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            var sPath = oEvent.getParameters().rowBindingContext.getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            this.getRouter().navTo("selectionPage", {
-                //layout: oNextUIState.layout,
-                tenantId: oRecord.tenant_id,
-                companyCode: oRecord.company_code,
-                loiWriteNumber: oRecord.loi_write_number,
-                loiItemNumber: oRecord.same_selection_item_number,
-                loiSelectionNumber: oRecord.loi_selection_number,
-                loiNumber: oRecord.loi_number,
-                quotationNumber: (oRecord.same_quotation_number ? oRecord.same_quotation_number : "new"),
-                quotationItemNumber: (oRecord.same_quotation_item_number ? oRecord.same_quotation_item_number : "new")
-                // existRfq: (oRecord.quotation_number ? true : false)
-            }, true);
+            if(oRecord.loi_selection_number) {
+                this.getRouter().navTo("selectionPage", {
+                    //layout: oNextUIState.layout,
+                    tenantId: oRecord.tenant_id,
+                    companyCode: oRecord.company_code,
+                    loiWriteNumber: oRecord.loi_write_number,
+                    loiItemNumber: oRecord.same_selection_item_number,
+                    loiSelectionNumber: oRecord.loi_selection_number,
+                    loiNumber: oRecord.loi_number,
+                    quotationNumber: (oRecord.same_quotation_number ? oRecord.same_quotation_number : "new"),
+                    quotationItemNumber: (oRecord.same_quotation_item_number ? oRecord.same_quotation_item_number : "new")
+                    // existRfq: (oRecord.quotation_number ? true : false)
+                }, true);
+            }
+
         },
 
 		/**
@@ -658,8 +678,6 @@ sap.ui.define([
                 MessageToast.show("한개이상 선택해주세요.");
             }
 
-            existRfqCnt
-
             // if(!existRfq) {
             //     if(confirm(this.getModel("I18N").getText("/NEP00004"))) {
             //         canSelect = true;
@@ -732,18 +750,22 @@ sap.ui.define([
         },
 
         onTablePublishPress: function (oEvent) {
-            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            // var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            var sPath = oEvent.getParameters().rowBindingContext.getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
 
-            this.getRouter().navTo("publishPage", {
-                //layout: oNextUIState.layout,
-                tenantId: oRecord.tenant_id,
-                companyCode: oRecord.company_code,
-                loiWriteNumber: oRecord.loi_write_number,
-                loiItemNumber: oRecord.same_publish_item_number,
-                loiPublishNumber: oRecord.loi_publish_number,
-                loiNumber: oRecord.loi_number
-            }, true);
+            if(oRecord.loi_publish_number) {
+                this.getRouter().navTo("publishPage", {
+                    //layout: oNextUIState.layout,
+                    tenantId: oRecord.tenant_id,
+                    companyCode: oRecord.company_code,
+                    loiWriteNumber: oRecord.loi_write_number,
+                    loiItemNumber: oRecord.same_publish_item_number,
+                    loiPublishNumber: oRecord.loi_publish_number,
+                    loiNumber: oRecord.loi_number
+                }, true);                
+            }
+
         },
 
 		/**

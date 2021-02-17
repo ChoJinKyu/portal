@@ -82,24 +82,25 @@ sap.ui.define([
             */
             _onRoutedThisPage: function (oEvent) {
                 this.fnLoadData(oEvent.getParameter("arguments"));
-                
             },
             /*========================================= Init : End ===============================*/
 
             fnBtnCtrlFnc: function (approveStatus) {
                 //console.log("approveStatus:" + approveStatus);
+                var oDetailViewModel = this.getModel("detailViewModel");
                 that.byId("draftBtn").setVisible(false);
                 that.byId("deleteBtn").setVisible(false);
                 that.byId("requestBtn").setVisible(false);
                 that.byId("approveBtn").setVisible(false);
                 that.byId("rejectBtn").setVisible(false);
                 //that.byId("cancelBtn").setVisible(false);
-                
+
                 switch (approveStatus) {
                     case "DR":
                         that.byId("draftBtn").setVisible(true);
                         that.byId("deleteBtn").setVisible(true);
                         that.byId("requestBtn").setVisible(true);
+                        oDetailViewModel.setProperty("/viewMode", true);
                         break;
                     case "AR":
                         //that.byId("cancelBtn").setVisible(true);
@@ -121,9 +122,9 @@ sap.ui.define([
                         break;
                 }
             },
-            
+
             /*========================================= oData : Start ===============================*/
-            fnLoadData: function(args) {
+            fnLoadData: function (args) {
                 var oView = this.getView();
                 this.pAppNum = args.pAppNum;
                 this.generalInfoTbl = this.byId("generalInfoTbl");
@@ -137,6 +138,8 @@ sap.ui.define([
                 generalInfoModel.setProperty("/GeneralView", null);
                 this.basePriceInfoModel.setProperty("/entityName", "GeneralView");
                 this.basePriceInfoModel.setProperty("/GeneralView", null);
+
+                //this.onRichTextEditorRendering();
 
                 // Approval Line 초기화 시작
                 oApproverModel.setProperty("/entityName", "Approvers");
@@ -153,7 +156,7 @@ sap.ui.define([
 
                 if (args.pMode === "R") {
                     oDetailModel.setData({});
-                    //oDetailViewModel.setProperty("/viewMode", false);
+                    oDetailViewModel.setProperty("/viewMode", false);
 
                     var aMasterFilters = [];
                     aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
@@ -181,11 +184,10 @@ sap.ui.define([
                                 "net_price_type_code": result.net_price_type_code
                             };
                             oDetailModel.setData(oNewBasePriceData);
-                            
+
                             that._readData("detail", "/GeneralView", aMasterFilters, {}, function (data) {
                                 console.log("GeneralView::", data);
                                 generalInfoModel.setProperty("/GeneralView", data.results);
-                                //this.basePriceInfoModel.setProperty("/GeneralView", data.results);
                                 that.fnBtnCtrlFnc(result.approve_status_code);
                             }.bind(this));
 
@@ -193,9 +195,6 @@ sap.ui.define([
                         } else {
                             oView.setBusy(false);
                         }
-
-                        // Process에 표시될 상태 및 아이콘 데이터 세팅
-                        //this.onSetProcessFlowStateAndIcon(oDetailViewModel, oMaster.approve_status_code);
                     }.bind(this));
                 } else {// Create 버튼으로 넘어오는 경우
 
@@ -205,7 +204,6 @@ sap.ui.define([
                         "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
                         "approval_number": "N/A",
                         "approval_title": "",
-                        //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
                         "approval_status_code": "DR",    // DR: Draft
                         "approval_status_name": oRootModel.getProperty("/processList/0/code_name"),
                         "requestor_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
@@ -218,12 +216,9 @@ sap.ui.define([
                     // 저장된 Approver가 없는 경우 Line 추가
                     this.onApproverAdd(0);
                     that.fnBtnCtrlFnc("CR");
-
-                    // Process에 표시될 상태 및 아이콘 데이터 세팅
-                    // this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
                 }
             },
-                
+
             /**
              * OData 호출
              */
@@ -279,29 +274,59 @@ sap.ui.define([
             },
 
             vhMaterialOrgCode: function (oEvent) {
-                //console.log("spath:::" + oEvent.getSource().getParent().getRowBindingContext().sPath);
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                var oPurOrgModel = this.getModel("purOrg");
                 var oRootModel = this.getModel("rootModel");
-                var generalInfoModel = this.getModel("generalInfoList");
+                
+                var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)];
+                oPurOrgModel.read("/Pur_Operation_Org", {
+                    filters: aPurOrgFilter,
+                    success: function (data) {
+                        if (data && data.results) {
+                            var aResults = data.results;
+                            var aCompoany = [];
+                            var oPurOrg = {};
 
-                if (!this.oSearchMultiMaterialMasterDialog) {
-                    this.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({
-                        title: "Choose Material Code",
-                        multiSelection: false,
-                        companyCode: SppUserSessionUtil.getUserInfo().COMPANY_CODE,
-                        purOrg: oRootModel.getProperty("/purOrg"),
-                        tenantId: SppUserSessionUtil.getUserInfo().TENANT_ID
-                    });
-                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
-                        console.log("apply event!!!");
-                        //oViewModel.refresh();
-                        generalInfoModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
-                        generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
-                        generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
-                        generalInfoModel.setProperty(that.sPath + "/uom", oEvent.mParameters.item.base_uom_code);
-                    }.bind(that));
-                }
-                this.oSearchMultiMaterialMasterDialog.open();
+                            for (var i = 0; i < aResults.length; i++) {
+                                var oResult = aResults[i];
+                                if (-1 === aCompoany.indexOf(oResult.company_code)) {
+                                    aCompoany.push(oResult.company_code);
+                                    oPurOrg[oResult.company_code] = [];
+                                }
+
+                                oPurOrg[oResult.company_code].push({ org_code: oResult.org_code, org_name: oResult.org_name });
+                            }
+
+                            oRootModel.setProperty("/purOrg", oPurOrg);
+                            
+                            
+                            var generalInfoModel = that.getModel("generalInfoList");
+
+                            if (!that.oSearchMultiMaterialMasterDialog) {
+                                that.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({
+                                    title: "Choose Material Code",
+                                    multiSelection: false,
+                                    companyCode: SppUserSessionUtil.getUserInfo().COMPANY_CODE,
+                                    purOrg: oRootModel.getProperty("/purOrg"),
+                                    tenantId: SppUserSessionUtil.getUserInfo().TENANT_ID
+                                });
+                                that.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
+                                    console.log("apply event!!!");
+                                    //oViewModel.refresh();
+                                    generalInfoModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
+                                    generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
+                                    generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
+                                    generalInfoModel.setProperty(that.sPath + "/uom", oEvent.mParameters.item.base_uom_code);
+                                }.bind(that));
+                            }
+                            that.oSearchMultiMaterialMasterDialog.open();
+
+                        }
+                    },
+                    error: function (data) {
+                        console.log("error", data);
+                    }
+                });
             },
 
             vhMaterialCode: function (oEvent) {
@@ -410,13 +435,44 @@ sap.ui.define([
             //     return sReturnValue;
             // },
 
-            fnChkEndDate: function(oEvent) {
+            fnChkEndDate: function (oEvent) {
                 var generalInfoModel = this.getModel("generalInfoList");
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
                 if (new Date(generalInfoModel.getProperty(that.sPath + "/effective_start_date")) > new Date(generalInfoModel.getProperty(that.sPath + "/effective_end_date"))) {
                     generalInfoModel.setProperty(that.sPath + "/effective_end_date", null);
                     MessageToast.show("유효 종료일자가 적합하지 않습니다.");
                 }
+            },
+
+            onRichTextEditorRendering: function () {
+                var that = this;
+                var sId = that.getView().getId();
+                var oEditor = sap.ui.getCore().byId(sId + "myRTE");
+
+                if (oEditor) {
+                    oEditor.destroy();
+                }
+
+                setTimeout(function () {
+                    sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                        function (RTE, EditorType) {
+                            var oRichTextEditor = new RTE(sId + "myRTE", {
+                                editorType: EditorType.TinyMCE4,
+                                width: "100%",
+                                height: "300px",
+                                visible: "{detailViewModel>/viewMode}",
+                                customToolbar: true,
+                                showGroupFont: true,
+                                showGroupLink: true,
+                                showGroupInsert: true,
+                                value: "{detailModel>/approval_contents}",
+                                ready: function () {
+                                    this.addButtonGroup("styleselect").addButtonGroup("table");
+                                }
+                            });
+                            that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+                        });
+                }, 1500);
             },
 
             /**
@@ -598,6 +654,12 @@ sap.ui.define([
             },
 
             /*========================================= Button Action ===============================*/
+
+            generalInfoChange: function(oEvent) {
+                that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                this.getModel("generalInfoList").setProperty(that.sPath + oEvent.getSource().getBinding("value").sPath, oEvent.getParameter("value"));
+            },
+
             fnAddPrice: function () {
                 var chkFlag = true;
                 var procObj = {};
@@ -615,23 +677,27 @@ sap.ui.define([
                 console.log("generalInfoList : " + this.generalInfoList);
                 $(this.generalInfoList).each(function (idx, item) {
                     //console.log("item:" + item);
-                    if (!!item.tenant_id && !!item.company_code && !!item.org_type_code && !!item.org_code
-                        && !!item.supplier_code && !!item.material_code && !!item.market_code && !!item.currency_code) {
+                    if (!!item.org_code && !!item.supplier_code && !!item.material_code && !!item.market_code && !!item.currency_code) {
                         var inDetailObj = {};
+                        inDetailObj.rowval = Number(idx + 1);
                         inDetailObj.tenant_id = SppUserSessionUtil.getUserInfo().TENANT_ID;
-                        inDetailObj.company_code = item.company_code;
-                        inDetailObj.org_type_code = item.org_type_code;
+                        inDetailObj.company_code = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
+                        //inDetailObj.org_type_code = item.org_type_code;
                         inDetailObj.org_code = item.org_code;
                         inDetailObj.approval_number = item.approval_number;
                         inDetailObj.item_sequence = (item.item_sequence === "") ? null : Number(item.item_sequence);
                         inDetailObj.supplier_code = item.supplier_code;
                         inDetailObj.material_code = item.material_code;
                         inDetailObj.market_code = item.market_code;
+                        inDetailObj.net_price = parseFloat(item.net_price);
                         inDetailObj.currency_code = item.currency_code;
+
                         procObj.param.inDetails.push(inDetailObj);
+
                     } else {
                         MessageToast.show("필수값이 부족합니다.");
                         chkFlag = false;
+                        return false;
                     }
                 });
 
@@ -650,7 +716,6 @@ sap.ui.define([
                                     success: function (data) {
                                         console.log('data:', data);
                                         that.basePriceInfoModel.setProperty("/GeneralView", data.outDetails);
-                                        //console.log('data:', data.value[0]);
                                     },
                                     error: function (e) {
                                         var eMessage = "callProcError",
@@ -665,7 +730,6 @@ sap.ui.define([
                                             eMessageDetail = e.responseJSON.error.message.substring(9);
                                             errorType = e.responseJSON.error.message.substring(0, 1);
                                             console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
-
                                         }
 
                                         MessageToast.show(eMessageDetail);
@@ -694,11 +758,15 @@ sap.ui.define([
                     return null;
                 }
             },
+
+            numberFormat: function (val) {
+                if (val !== null) {
+                    return parseFloat(val).toFixed(5);
+                }
+            },
             /*========================================= Footer Button Action ===============================*/
 
-            onDraft: function () {
-
-                
+            fnSave: function (msg, mode) {
                 var procObj = {};
                 var generalList = [];
                 procObj = {
@@ -712,33 +780,17 @@ sap.ui.define([
                             "attch_group_number": "temp00",
                             "net_price_document_type_code": that.byId("net_price_document_type_code").getSelectedKey(),
                             "net_price_source_code": that.byId("net_price_source_code").getSelectedKey(),
-                            "buyer_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
-                            "tentprc_flag": true
+                            "buyer_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER
                         },
-                        "general": [
-                            // {
-                            //     "item_sequence"                    : 1             /* (_row_state_ 값에 따라) [C] 불필요, [U,D] 는 필수 */
-                            //     ,"line_type_code"                  : "lineType"
-                            //     ,"material_code"                   : "material" 
-                            //     ,"payterms_code"                   : "payterms"
-                            //     ,"supplier_code"                   : "supplier"
-                            //     ,"effective_start_date"            : null
-                            //     ,"effective_end_date"              : null
-                            //     ,"surrogate_type_code"             : "surrogate"
-                            //     ,"currency_code"                   : "KRW"
-                            //     ,"net_price"                       : 100
-                            //     ,"vendor_pool_code"                : "VPCODE"
-                            //     ,"market_code"                     : "market"
-                            //     ,"net_price_approval_reason_code"  : "reason"
-                            //     ,"maker_code"                      : "maker"
-                            //     ,"incoterms"                       : "ico"
-                            //     ,"_row_state_"                     : "C"		     /* C, U, D */
-                            // }
-                        ]
+                        "general": []
                     }
                 }
 
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                if (mode === "AR") {
+                    procObj.param.master.approve_status_code = mode;
+                }
+
+                MessageBox.confirm(msg, {
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
@@ -786,27 +838,25 @@ sap.ui.define([
                                     that.fnLoadData(paramObj);
                                 },
                                 error: function (e) {
-                                    var eMessage = "callProcError",
-                                        errorType,
-                                        eMessageDetail;
+                                    var eMessage = "callProcError";
 
                                     if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
                                         eMessage = "callProcError";
-                                        eMessageDetail = "callProcError";
                                     } else {
-                                        eMessage = e.responseJSON.error.message.substring(0, 8);
-                                        eMessageDetail = e.responseJSON.error.message.substring(9);
-                                        errorType = e.responseJSON.error.message.substring(0, 1);
-                                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                                        eMessage = e.responseJSON.error.message;
                                     }
 
-                                    MessageToast.show(eMessageDetail);
-                                    console.log(eMessageDetail);
+                                    MessageToast.show(eMessage);
+                                    console.log(eMessage);
                                 }
                             });
                         }
                     }
                 });
+            },
+
+            onDraft: function () {
+                this.fnSave(this.getModel("I18N").getText("/NCM00001"));
             },
 
             /**
@@ -832,27 +882,21 @@ sap.ui.define([
                                 contentType: "application/json",
                                 success: function (data) {
                                     //console.log('data:', data);
-                                    MessageToast.show(this.getModel("I18N").getText("/NCM00003"));
+                                    MessageToast.show(that.getModel("I18N").getText("/NCM00003"));
                                     that.getRouter().navTo("NetPriceMgtList");
                                 },
                                 error: function (e) {
-                                    var eMessage = "callProcError",
-                                        errorType,
-                                        eMessageDetail;
+                                    var eMessage = "callProcError";
 
                                     if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
                                         eMessage = "callProcError";
-                                        eMessageDetail = "callProcError";
                                     } else {
-                                        eMessage = e.responseJSON.error.message.substring(0, 8);
-                                        eMessageDetail = e.responseJSON.error.message.substring(9);
-                                        errorType = e.responseJSON.error.message.substring(0, 1);
-                                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                                       eMessage = e.responseJSON.error.message;
 
                                     }
 
-                                    MessageToast.show(eMessageDetail);
-                                    console.log(eMessageDetail);
+                                    MessageToast.show(eMessage);
+                                    console.log(eMessage);
                                 }
                             });
                         }
@@ -884,7 +928,7 @@ sap.ui.define([
                                     MessageToast.show(that.getModel("I18N").getText("/NOP00038"));
                                     var paramObj = {};
                                     paramObj.pMode = "R";
-                                    paramObj.pAppNum = data.approval_number;
+                                    paramObj.pAppNum = that.pAppNum;
                                     that.fnLoadData(paramObj);
                                 },
                                 error: function (e) {
@@ -896,14 +940,10 @@ sap.ui.define([
                                         eMessage = "callProcError";
                                         eMessageDetail = "callProcError";
                                     } else {
-                                        eMessage = e.responseJSON.error.message.substring(0, 8);
-                                        eMessageDetail = e.responseJSON.error.message.substring(9);
-                                        errorType = e.responseJSON.error.message.substring(0, 1);
-                                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
-
+                                        eMessage = e.responseJSON.error.message;
                                     }
 
-                                    MessageToast.show(eMessageDetail);
+                                    MessageToast.show(eMessage);
                                     console.log(eMessageDetail);
                                 }
                             });
@@ -916,7 +956,8 @@ sap.ui.define([
              * 승인요청
              */
             onRequest: function () {
-                this.onChangeStatus("AR", this.getModel("I18N").getText("/NSP00104"));
+                //this.onChangeStatus("AR", this.getModel("I18N").getText("/NSP00104"));
+                this.fnSave(this.getModel("I18N").getText("/NSP00104"), "AR");
             },
 
             /*승인 버튼 */

@@ -223,16 +223,14 @@
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
-                            <Label text="2차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"/>
-                            <!-- <Label text="{path:'I18N>/2ND_VENDOR', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"></Label> -->
+                            <Label text="{path:'I18N>/SECONDARY_SUPPLIER_NAME', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"/>
                             <Input id="searchSecondVendor" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
-                            <Label text="3차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"/>
-                            <!-- <Label text="{path:'I18N>/3RD_VENDOR', formatter:'I18NFormatter'}" labelFor="searchThirdVendor"></Label> -->
+                            <Label text="{path:'I18N>/TERTIARY_SUPPLIER_NAME', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"/>
                             <Input id="searchThirdVendor" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -252,7 +250,7 @@
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="List ({= ${list>/Assets}.length || 0})" level="H2"/>
+                        <Title text="{path:'I18N>/LIST', formatter:'I18NFormatter'}({= ${list>/Assets}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
                         <Button id="changeSuppButton"   type="Transparent" text="{path:'I18N>/CONFIRMED', formatter:'I18NFormatter'}" press=".changeSuppButtonPress"  />
@@ -307,31 +305,25 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetSecondVendorColumn" width="20em">
-                        <Label text="2차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/SECONDARY_SUPPLIER_NAME', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Input id="assetSecondVendor" value="{list>secondary_supplier_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetThirdVendorColumn" width="20em">
-                        <Label text="3차 {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/TERTIARY_SUPPLIER_NAME', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Input id="assetThirdVendor" value="{list>tertiary_supplier_name}"/>
                         </table:template>
                     </table:Column>
-                    <!-- <table:Column id="assetProdVendorColumn" width="10em">
-                        <Label text="Prod Vendor" wrapping="true"/>
-                        <table:template>
-                            <Text id="prod_vendor" text="{list>supplier_code}"/>
-                        </table:template>
-                    </table:Column> -->
                     <table:Column id="assetProdVendorNameColumn" width="20em">
-                        <Label text="Prod Vendor Name" wrapping="true"/>
+                        <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="prod_vendor_name" text="{list>prod_vendor_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetOrderVendorNameColumn" width="20em">
-                        <Label text="Order Vendor Name" wrapping="true"/>
+                        <Label text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="order_vendor_name" text="{list>order_vendor_name}"/>
                         </table:template>
@@ -367,13 +359,13 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetToolTypeColumn" width="7em" hAlign="Center">
-                        <Label text="Tool {path:'I18N>/TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/ITEM', formatter:'I18NFormatter'} {path:'I18N>/TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="tool_type" text="{list>mold_item_type_code_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetCavProcessColumn" width="7em" hAlign="Center">
-                        <Label text="Cav'/Process" wrapping="true"/>
+                        <Label text="{path:'I18N>/CAVITY', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="cav_process" text="{list>cavity_process_qty}"/>
                         </table:template>
@@ -391,14 +383,15 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAcquisitionDateColumn" width="10em" hAlign="Center">
-                        <Label text="{path:'I18N>/ACQISITION', formatter:'I18NFormatter'} {path:'I18N>/DATE', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/ACQUISITION', formatter:'I18NFormatter'} {path:'I18N>/DATE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
+                            <!-- <Text id="acq_date" text="{path: 'list>acq_date', formatter: '.dateFormatter.toDateString'}"/> -->
                             <DatePicker value="{list>acq_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                         </table:template>
                     </table:Column>
                     <!-- 아직 서비스 적용안됨 -->
                     <table:Column id="assetShotColumn" width="10em">
-                        <Label text="{path:'I18N>/SHOT', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/SHOT_COUNT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="shot" text=""/>
                         </table:template>
@@ -416,7 +409,7 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetRepairStatusColumn" width="10em">
-                        <Label text="{path:'I18N>/REPAIR_STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/REPAIR', formatter:'I18NFormatter'} {path:'I18N>/STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="repair_status" text=""/>
                         </table:template>

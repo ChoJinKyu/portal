@@ -1,0 +1,5 @@
+LOCALE,TENANT_ID,NEGO_PARENT_TYPE_CODE,NEGOTIATION_STYLE_CODE,NEGOTIATION_STYLE_NAME
+"ko","L2100","QP","010","Sealed (Purchaser: X, Supplier :X)"
+"ko","L2100","QP","020","Blind (Purchaser: O, Supplier :X)"
+"en","L2100","BP","110","Round Bidding(Sealed)"
+"en","L2100","BP","120","Reserve Auction(Open)"

@@ -104,6 +104,7 @@ using {cm.Pur_Operation_Org} from '../../cm/CM_PUR_OPERATION_ORG-model';
 // } where process_type_code = 'SP03' and use_flag = TRUE;
 
 @cds.autoexpose  // Sc_Pur_Operation_Org = Pur_Org_Type_View[process_type_code='SP03:견적입찰'] + Pur_Operation_Org + Code_Lng[group_code='CM_ORG_TYPE_CODE']
+@title:'협상구매조직'
 entity Sc_Pur_Operation_Org as
     select from Pur_Org_Type_Mapping as POTM
     inner join Pur_Operation_Org as POO
@@ -121,16 +122,26 @@ entity Sc_Pur_Operation_Org as
                        on (    org_type.tenant_id = $projection.tenant_id
                            and org_type.code = $projection.operation_org_type_code )
                        and org_type.group_code = 'CM_ORG_TYPE_CODE'
-                       and lower( org_type.language_cd ) = substring( $user.locale, 1, 2 )
+                       and org_type.language_cd = substring(upper($user.locale), 1, 2 )           //에러발생:unmanaged association
+                    //    and lower( org_type.language_cd ) = substring( $user.locale, 1, 2 )     //에러없음:unmanaged association
+                       ;
+        process_type : Association to Code_Lng
+                       on (    process_type.tenant_id = $projection.tenant_id
+                           and process_type.code = $projection.nego_process_type_code )
+                       and process_type.group_code = 'CM_PROCESS_TYPE_CODE'
+                       and process_type.language_cd = substring(upper($user.locale), 1, 2 )       //에러없음:unmanaged association
+                    //    and lower( process_type.language_cd ) = substring( $user.locale, 1, 2 ) //에러발생:unmanaged association
                        ;
     }
     into {
         key POO.tenant_id,
         key POO.company_code,
-        key POO.org_code as operation_org_code,
-            POO.org_name as operation_org_name,
-            POO.org_type_code as operation_org_type_code,
-            org_type,
+        key POO.org_code           as operation_org_code,
+            POO.org_name           as operation_org_name,
+            POO.org_type_code      as operation_org_type_code,
+            org_type.code_name     as operation_org_type_name,   //에러발생:"org_type" in path "org_type.language_cd" must not be an unmanaged association
+            POTM.process_type_code as nego_process_type_code,
+            process_type.code_name as nego_process_type_name,    //에러발생:"process_type" in path "process_type.language_cd" must not be an unmanaged association
             POO.purchase_org_code,
             POO.plant_code,
             POO.affiliate_code,
@@ -138,7 +149,9 @@ entity Sc_Pur_Operation_Org as
             POO.bizunit_code,
             POO.au_code,
             POO.hq_au_code,
-            POO.use_flag
+            POO.use_flag,
+            org_type,
+            process_type
     };
 
 /***********************************************************************************/
@@ -351,8 +364,27 @@ entity Sc_Sm_Supplier_Org as select from Sm_Supplier_Org
                              on supplier_type.tenant_id           = $projection.tenant_id
                              and supplier_type.supplier_type_code = $projection.supplier_type_code
                              ;
+        supplier_register_status : Association to Code_Lng
+                       on (    supplier_register_status.tenant_id = $projection.tenant_id
+                           and supplier_register_status.code = $projection.supplier_register_status_code )
+                       and supplier_register_status.group_code = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
+                       and supplier_register_status.language_cd = substring(upper($user.locale), 1, 2 )     //에러없음:unmanaged association
+                    //    and lower( org_type.language_cd ) = substring( $user.locale, 1, 2 )               //에러발생:unmanaged association
+                       ;
+        supplier_register_progress : Association to Code_Lng
+                       on (    supplier_register_progress.tenant_id = $projection.tenant_id
+                           and supplier_register_progress.code = $projection.supplier_register_progress_code )
+                       and supplier_register_progress.group_code = 'SP_SM_SUPPLIE_REG_PROG_CODE'
+                       and supplier_register_progress.language_cd = substring(upper($user.locale), 1, 2 )     //에러없음:unmanaged association
+                    //    and lower( org_type.language_cd ) = substring( $user.locale, 1, 2 )               //에러발생:unmanaged association
+                       ;
     } into { *
+           , supplier_type.supplier_type_name
+           , supplier_register_status.code_name as supplier_register_status_name
+           , supplier_register_progress.code_name as supplier_register_progress_name
            , supplier_type
+           , supplier_register_status
+           , supplier_register_progress
     }
     excluding {
         local_create_dtm,
@@ -364,7 +396,17 @@ entity Sc_Sm_Supplier_Org as select from Sm_Supplier_Org
     };
 
 @cds.autoexpose  
-entity Sc_Sm_Supplier_Org_View as projection on Vp_Supplier_Mst_View {
+entity Sc_Sm_Supplier_Org_View as select from Vp_Supplier_Mst_View
+    mixin {
+        supplier_register_status : Association to Code_Lng
+                       on (    supplier_register_status.tenant_id = $projection.tenant_id
+                           and supplier_register_status.code = $projection.supplier_register_status_code )
+                       and supplier_register_status.group_code = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
+                       and supplier_register_status.language_cd = substring(upper($user.locale), 1, 2 )     //에러없음:unmanaged association
+                    //    and lower( org_type.language_cd ) = substring( $user.locale, 1, 2 )               //에러발생:unmanaged association
+                       ;
+    } into 
+ {
     key tenant_id,
     key company_code,
     company_name,
@@ -381,7 +423,8 @@ entity Sc_Sm_Supplier_Org_View as projection on Vp_Supplier_Mst_View {
     inactive_status_code,
     inactive_status_name,
     supplier_register_status_code,
-    supplier_register_status_name,
+    // supplier_register_status_name,
+    supplier_register_status.code_name as supplier_register_status_name,     //@title:'공급업체 진행상태 코드'
     supplier_flag,
     maker_flag,
     map(supplier_flag||maker_flag, 'NY', 'Y', 'N') as maker_only_flag : String(1),
@@ -413,7 +456,7 @@ entity Sc_Mm_Material_Mst      as
     localized: association to Mm_Material_Desc_Lng 
                        on (    localized.tenant_id = $projection.tenant_id
                            and localized.material_code = $projection.material_code )
-                       and lower( localized.language_code ) = substring( $user.locale, 1, 2 )
+                       and localized.language_code = upper(substring( $user.locale, 1, 2 ))
                        ;
     }
     into {

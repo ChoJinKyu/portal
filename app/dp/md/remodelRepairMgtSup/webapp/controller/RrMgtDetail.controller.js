@@ -242,8 +242,41 @@ sap.ui.define([
             return year + "" + month + "" + date;
         },
 
+        
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
+            /*
+            var oModel = this.getModel("rrMgt"),
+                reqNum = oModel.getProperty("/repair_request_number");
+            var pull_url = window.location.href;
+            var complete_url;
+            var targetPath;
+            console.log("reqNum >>>>", reqNum);
+            var isDevServer = false;
+            // 개발서버, 로컬 분기
+            if(pull_url.indexOf("biztech-partners") > -1){
+                isDevServer = true;
+            }else if(pull_url.indexOf("workspaces") > -1){
+                isDevServer = false;
+            }
+            
+            if(isDevServer){
+                this.getRouter().navTo("rrMgtList", {}, true); 
+            }else{
+                // request_number가 채번된 상태에선 개조수리 리스트로
+                if(reqNum !=""){
+                    targetPath = "/dp/md/remodelRepairMgtSup/webapp/";
+                }
+                // New일때는 금형자산관리 리스트로
+                else{
+                    targetPath = "/dp/md/assetListSup/webapp/";
+                }
+                console.log("targetPath >>>", targetPath);
+                complete_url=pull_url.split(pull_url.substring(pull_url.indexOf("/dp"),pull_url.length));
+                complete_url[0] = complete_url[0]+targetPath;
+                window.location.href=complete_url[0]; 
+                
+            }*/
         },
 
         getStrDate : function(date){

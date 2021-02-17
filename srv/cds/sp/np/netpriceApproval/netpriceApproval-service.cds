@@ -50,9 +50,9 @@ service NpApprovalService {
     view NpApprovalListView as
         SELECT
                    ssi.LANGUAGE_CODE as language_code
-             , key cam.tenant_id
+             , key pam.tenant_id
              ,     cam.company_code
-             , key cam.approval_number
+             , key pam.approval_number
 
              , cam.approval_title                   /* title */
              , cam.approve_status_code              /* status */
@@ -100,11 +100,22 @@ service NpApprovalService {
                  where pad.tenant_id       = pam.tenant_id
                    and pad.approval_number = pam.approval_number
                ) as org_codes : String
-            /* , pam.detailes  */
+
+             ,pam.detailes  
 
           FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
+        /*
          INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON ssi.TENANT_ID         = pam.tenant_id
+        */
+         INNER JOIN (SELECT a.tenant_id   AS TENANT_ID 
+					       ,a.code        AS LANGUAGE_CODE
+                           ,'YYYY-MM-DD'  AS DATE_FORMAT_TYPE
+                       FROM CM_CODE_DTL a
+                      WHERE a.group_code = 'CM_LANG_CODE'
+                        AND a.code       = 'KO'
+                     ) ssi  /* 공통코드 언어코드(EN,KO) */
+			ON ssi.TENANT_ID         = pam.tenant_id
 
          INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id

@@ -23,7 +23,7 @@
                     <items>
                         <ColumnListItem >
                             <cells>
-                                <Text text="사양/규격"/>
+                                <Text text="{I18N>/SPECIFICATION_NAME}"/>
                                 <ComboBox id="comboBoxSpecification" items="{
                                         path: '/Sc_Spec_Code_View', 
                                         templateShareable:true, 
@@ -40,13 +40,13 @@
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
-                                <Text text="Quantity"/>
+                                <Text text="{I18N>/QUANTITY}"/>
                                 <Input id="inputQuantity" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
-                                <Text text="통화"/>
+                                <Text text="{I18N>/CURRENCY}"/>
                                 <ComboBox id="comboBoxCurrency" items="{
                                         path: 'common>/Currency', 
                                         templateShareable:true, 
@@ -63,26 +63,26 @@
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
-                                <Text text="Start Price"/>
+                                <Text text="{I18N>/BIDDING_START_NET_PRICE}"/>
                                 <Input id="inputStartPrice" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
-                                <Text text="Target Price"/>
+                                <Text text="{I18N>/BIDDING_TARGET_NET_PRICE}"/>
                                 <Input id="inputTargetPrice" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
-                                <Text text="Display to Supplier"/>
+                                <Text text="{I18N>/BIDDING_START_NET_PRICE_FLAG}"/>
                                 <ToggleButton id="toggleBtnDisplay" text="NO" pressed="false"  press="onPress_toggleDisplay"/>
                             </cells>
                         </ColumnListItem>
                         <!-- <ColumnListItem visible="{= ${propInfo>/outCome} === 'view' }"> -->
                         <ColumnListItem visible="false">
                             <cells>
-                                <Text text="납기 요청일"/>
+                                <Text text="{I18N>/MATURITY_DATE}"/>
                                 <DatePicker id="datePickerMaturitydate"
                                     valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
                                      />
@@ -90,7 +90,7 @@
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
-                                <Text text="Current Price"/>
+                                <Text text="{I18N>/CURRENT_PRICE}"/>
                                 <Input id="inputCurrentPrice" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>

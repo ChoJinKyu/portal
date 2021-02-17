@@ -1,5 +1,6 @@
 TYPE "SP_NP_NET_PRICE_APPROVAL_PRICEINFO_TYPE" AS TABLE(
-	                                        		TENANT_ID	                    	NVARCHAR(5)
+                                                    ROWVAL	                    	    BIGINT
+	                                        	,	TENANT_ID	                    	NVARCHAR(5)
 	                                        	,	COMPANY_CODE                     	NVARCHAR(10)
 	                                        	,	ORG_TYPE_CODE						NVARCHAR(2)
                                                 ,	ORG_CODE							NVARCHAR(10)
@@ -8,5 +9,6 @@ TYPE "SP_NP_NET_PRICE_APPROVAL_PRICEINFO_TYPE" AS TABLE(
 	                                            ,	SUPPLIER_CODE                       NVARCHAR(10)
 	                                            ,	MATERIAL_CODE                       NVARCHAR(40)
                                                 ,	MARKET_CODE							NVARCHAR(30)
+                                                ,	NET_PRICE							DECIMAL(34,10)
                                                 ,	CURRENCY_CODE						NVARCHAR(3)
                                                 )

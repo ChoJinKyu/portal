@@ -119,50 +119,56 @@
                             <!-- <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/> -->
                             <!-- <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/> -->
                             <ToolbarSeparator/>
-                            <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                            <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                            <!-- <ToolbarSeparator/> -->
+                            <Button id="mainTableButtonAllClose" icon="sap-icon://collapse-all" tooltip="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
+                            <Button id="mainTableButtonAllOpen" icon="sap-icon://expand-all" tooltip="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
+                            
+                            <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment"  enabled="{=${sm>/screen} === 'M' ? true : false}"/>
+                            <Button id="mainTablePersoButton" icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"  enabled="{=${sm>/screen} === 'M' ? true : false}">
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>
                         </OverflowToolbar>
                     </t:extension>
                     
                     <t:columns>
-                        <t:Column label="{I18N>/PART} {I18N>/CATEGORY}" hAlign="Left">    
+                        <t:Column id="mainCategoryCodeColumn" label="{I18N>/PART} {I18N>/CATEGORY}" hAlign="Left">    
                             <t:template>
                                 <Text text="{tree>category_code}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/SORT}" width="5%" hAlign="Right">    
+                        <t:Column id="mainSequenceColumn" label="{I18N>/SORT}" width="5%" hAlign="Right">    
                             <t:template>
                                 <Text text="{tree>sequence}" wrapping="false" />
                             </t:template>
                         </t:Column>
                         
-                        <t:Column label="{I18N>/CATEGORY_NAME}" hAlign="Left">    
+                        <t:Column id="mainCategoryNameColumn" label="{I18N>/CATEGORY_NAME}" hAlign="Left">    
                             <t:template>
                                 <Text text="{tree>category_name}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/CATEGORY_GROUP}" width="10%" hAlign="Center">    
+                        <t:Column id="mainCategoryGroupColumn" label="{I18N>/CATEGORY_GROUP}" width="10%" hAlign="Center">    
                             <t:template>
                                 <Text text="{tree>category_group_code}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/CATEGORY} {I18N>/GROUP_NAME}" hAlign="Left" width="11%">    
+                        <t:Column id="mainCategoryGroupNameColumn" label="{I18N>/CATEGORY} {I18N>/GROUP_NAME}" hAlign="Left" width="11%">    
                             <t:template>
                                 <Text text="{tree>category_group_name}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/STATUS}" hAlign="Center"  width="8%">    
+                        <t:Column id="mainActiveFlagColumn" label="{I18N>/STATUS}" hAlign="Center"  width="8%">    
                             <t:template>
                                 <Text text="{= ${tree>active_flag} === true ? 'Active' : 'Inactive'}"/>
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/UPDATE_USER_ID}" hAlign="Center"  width="9%">    
+                        <t:Column id="mainUpdateUserIdColumn" label="{I18N>/UPDATE_USER_ID}" hAlign="Center"  width="9%">    
                             <t:template>
                                 <Text text="{tree>update_user_id}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Center">    
+                        <t:Column id="mainLocalUpdateDtmColumn" label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Center">    
                             <t:template>
                                 <Text text="{path : 'tree>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"  wrapping="false" />
                             </t:template>

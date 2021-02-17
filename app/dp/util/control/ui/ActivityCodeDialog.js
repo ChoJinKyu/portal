@@ -90,11 +90,14 @@ sap.ui.define([
 
         loadData: function(){
             var sActivityName = this.oActivityName.getValue(),
-                aFilters = this.getProperty("items").filters || []
-                
-                // aFilters = [
-                //     new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                // ];
+                // aFilters = this.getProperty("items").filters || [];
+                aFilters = [];
+
+                if(this.getProperty("items").filters.length > 0){
+                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                        aFilters.push(this.getProperty("items").filters[i]);
+                    }
+                }
 
                 if(sActivityName){
                     aFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'" + sActivityName.toLowerCase().replace("'","''") + "'"));

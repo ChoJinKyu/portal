@@ -244,9 +244,13 @@ service SourcingV4Service {
         tenant_id                        : type of Sc_Nego_Item_Non_Price:tenant_id;
         nego_header_id                   : type of Sc_Nego_Item_Non_Price:nego_header_id;
         nonpr_item_number                : type of Sc_Nego_Item_Non_Price:nonpr_item_number;
-        nonpr_score_comput_method_code   : type of Sc_Nego_Item_Non_Price:nonpr_score_comput_method_code;
+        //속성이름변경-폐기예정-시작
         nonpr_supeval_attr_type_code     : type of Sc_Nego_Item_Non_Price:nonpr_supeval_attr_type_code;
         nonpr_supeval_attr_val_type_cd   : type of Sc_Nego_Item_Non_Price:nonpr_supeval_attr_val_type_cd;
+        //속성이름변경-폐기예정-종료
+        nonpr_supeval_attr_type_cd       : type of Sc_Nego_Item_Non_Price:nonpr_supeval_attr_type_cd;
+        nonpr_supeval_value_type_code    : type of Sc_Nego_Item_Non_Price:nonpr_supeval_value_type_code;
+        nonpr_score_comput_method_code   : type of Sc_Nego_Item_Non_Price:nonpr_score_comput_method_code;
         nonpr_requirements_text          : type of Sc_Nego_Item_Non_Price:nonpr_requirements_text;
         note_content                     : type of Sc_Nego_Item_Non_Price:note_content;
         target_score                     : type of Sc_Nego_Item_Non_Price:target_score;
@@ -380,16 +384,16 @@ service SourcingV4Service {
     };
     annotate NegoWorkbenchView3 @(Common.SemanticKey: [nego_item_number]);
 
-    annotate NegoWorkbenchView with @( 
+    annotate NegoWorkbenchView3 with @( 
             title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly,
             UI: {
                 LineItem: [ 
-                    {$Type: 'UI.DataField', Value: nego_document_number, "@UI.Importance":#High},
-                    {$Type: 'UI.DataField', Value: nego_document_round, "@UI.Importance": #High},
-                    {$Type: 'UI.DataField', Value: nego_progress_status_code, "@UI.Importance": #High},
-                    {$Type: 'UI.DataField', Value: award_progress_status_code, "@UI.Importance": #Medium},			
-                    {$Type: 'UI.DataField', Value: reply_times, "@UI.Importance": #High},
-                    {$Type: 'UI.DataField', Value: supplier_count, "@UI.Importance": #Medium},			
+                    {$Type: 'UI.DataField', Value: nego_document_number},
+                    {$Type: 'UI.DataField', Value: nego_document_round},
+                    {$Type: 'UI.DataField', Value: nego_progress_status_code},
+                    {$Type: 'UI.DataField', Value: award_progress_status_code},			
+                    {$Type: 'UI.DataField', Value: reply_times},
+                    {$Type: 'UI.DataField', Value: supplier_count},			
                 ],
                 PresentationVariant: {
                     SortOrder: [ {$Type: 'Common.SortOrderType', Property: nego_document_number, Descending: true}, {$Type: 'Common.SortOrderType', Property: nego_document_round, Descending: true} ]

@@ -1,6 +1,9 @@
 namespace sp;
 
-/*********************************** Reference Model ************************************/
+/////////////////////////////////// How to use ///////////////////////////////////
+// using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
+
+/////////////////////////////////// Reference Model ///////////////////////////////////
 /* Transaction Association */
 using util from '../../cm/util/util-model';
 using {sp.Sc_Nego_Headers} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
@@ -35,8 +38,6 @@ using {
     sp.QuantityT
 } from '../../sp/sc/SP_SC_NEGO_0TYPE_POOLS-model';
 
-/////////////////////////////////// How to use ///////////////////////////////////
-// using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 
 /////////////////////////////////// Main Logic Summary ///////////////////////////////////
 /* 
@@ -145,17 +146,17 @@ entity Sc_Nego_Item_Prices {
                                            and material.material_code = $self.material_code;
         material_desc                : String(240)                                @title : '자재내역'  @description : 'UI:Description(Part No)'; //기본값은 마스터로 부터
         //    material_spec : String(1000)   @title: '자재규격' ;
-        specification                : Sc_Spec_Code_View : specification_code              @title : '사양'  @description : 'UI:Specification';
+        specification                : Sc_Spec_Code_View : specification_code     @title : '사양'  @description : 'UI:Specification';
         specification_fk             : Association to Sc_Spec_Code_View
                                            on specification_fk.tenant_id = $self.tenant_id
                                            and specification_fk.specification_code = $self.specification;
-        bpa_price                    : PriceAmountT                             @title : 'BPA Price'  @description : 'UI:BPA Price (금액)';
-        detail_net_price             : PriceAmountT                             @title : '상세단가'  @description : 'UI:상세 단가 (금액)';
-        recommend_info               : String(200)                                 @title : '추천정보'  @description : 'UI:추천정보';
+        bpa_price                    : PriceAmountT                               @title : 'BPA Price'  @description : 'UI:BPA Price (금액)';
+        detail_net_price             : PriceAmountT                               @title : '상세단가'  @description : 'UI:상세 단가 (금액)';
+        recommend_info               : String(200)                                @title : '추천정보'  @description : 'UI:추천정보';
         group_id                     : String(30)                                 @title : 'Group Id'  @description : 'UI:Group Id';
         // sparts_supply_type           : String(30)                                 @title : 'S/Parts Supply Type-폐기예정'  @description  : 'UI:S/Parts Supply Type-폐기예정';
         location                     : String(30)                                 @title : 'Location'  @description : 'UI:Location';
-        purpose                      : String(200)                                 @title : '목적'  @description : 'UI:목적';
+        purpose                      : String(200)                                @title : '목적'  @description : 'UI:목적';
         reason                       : String(200)                                @title : '사유'  @description : 'UI:사유';
         request_date                 : DateTime                                   @title : '요청일'  @description : 'UI:요청 날짜';
         attch_code                   : String(30)                                 @title : '첨부파일코드'  @description : 'UI:첨부파일';

@@ -16,7 +16,7 @@ sap.ui.define([
 
     var that;
 
-    var NonPriceInf = EventProvider.extend("sp.sc.scQBPages.NonPriceInf", {
+    var NonPriceInf = EventProvider.extend("sp.sc.scQBPages.NonPriceInf_ori", {
 
 
 
@@ -72,24 +72,27 @@ sap.ui.define([
                 var h1;
                 var h4;
                 var h5;
-                if (oNPHeader.nonpr_supeval_attr_type_code == "Commercial") {
-                    h1 = "1";
-                } else if (oNPHeader.nonpr_supeval_attr_type_code == "Technical") {
-                    h1 = "2";
-                }
-                if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Date") {
-                    h4 = "1";
-                } else if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Number") {
-                    h4 = "2";
-                } else if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Text") {
-                    h4 = "3";
-                }
+                // if (oNPHeader.nonpr_supeval_attr_type_code == "Commercial") {
+                //     h1 = "1";
+                // } else if (oNPHeader.nonpr_supeval_attr_type_code == "Technical") {
+                //     h1 = "2";
+                // }
+                // if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Date") {
+                //     h4 = "DATE";
+                // } else if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Number") {
+                //     h4 = "NUMBER";
+                // } else if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Text") {
+                //     h4 = "TEXT";
+                // }
+                h1 = (oNPHeader.nonpr_supeval_attr_type_code).toUpperCase();
+                h4 = (oNPHeader.nonpr_supeval_attr_val_type_cd).toUpperCase();
+                h5 = (oNPHeader.nonpr_score_comput_method_code).toUpperCase();
                 // console.log()
-                if (oNPHeader.nonpr_score_comput_method_code == "Automatic") {
-                    h5 = "1";
-                } else {  //None
-                    h5 = "2";
-                }
+                // if (oNPHeader.nonpr_score_comput_method_code == "Automatic") {
+                //     h5 = "1";
+                // } else {  //None
+                //     h5 = "2";
+                // }
 
                 //oNPHeader.item
                 for (var i = 0; i < oNPHeader.ItemsNonPriceDtl.length; i++) {
@@ -147,12 +150,12 @@ sap.ui.define([
             } else {      //신규 생성용
 
                 var NPHeaderStr = new JSONModel({
-                    h1: "1", h2: "", h3: "",
-                    h4: "1", h5: "1", h6: ""
+                    h1: "COMMERCIAL", h2: "", h3: "",
+                    h4: "DATE", h5: "AUTOMATIC", h6: ""
                 });
 
                 var aa = that.getView().getModel("NPInfPopupUtil");
-                aa.setData({ type: "1" });
+                aa.setData({ type: "DATE" });
 
                 var newLine = this._NPFirstLine();
                 // tab.addItem(newLine);
@@ -334,8 +337,8 @@ sap.ui.define([
                 var Iflag = true;
                 var oErrorRow = [];
 
-                var checkTemp1 = oPopupType === "1" ? "supeval_from_date" : oPopupType === "2" ? "supeval_from_value" : "supeval_text_value";
-                var checkTemp2 = oPopupType === "1" ? "supeval_to_date" : oPopupType === "2" ? "supeval_to_value" : "supeval_score";
+                var checkTemp1 = oPopupType === "DATE" ? "supeval_from_date" : oPopupType === "NUMBER" ? "supeval_from_value" : "supeval_text_value";
+                var checkTemp2 = oPopupType === "DATE" ? "supeval_to_date" : oPopupType === "NUMBER" ? "supeval_to_value" : "supeval_score";
                 var checkTemp3 = "supeval_score";
 
                 if (oItems[i][checkTemp1] === null || oItems[i][checkTemp1].length < 1) {
@@ -490,7 +493,7 @@ sap.ui.define([
             for (var i = 0; i < oItems.length; i++) {
                 var oItem = oItems[i];
                 var oCell = oItem.getCells()[6];
-                if (IntType == "1") {
+                if (IntType == "DATE") {
                     // oCell = oItem.getCells()[3];
 
                     // Date 값 validation check
@@ -531,7 +534,7 @@ sap.ui.define([
                 //     oCell = oItem.getCells()[6];
                 // } else if (IntType == "3") {
                 //     oCell = oItem.getCells()[8];
-                }else if( IntType == "2") {
+                }else if( IntType == "NUMBER") {
                     if( Number(oItem.getCells()[3].getValue()) > Number(oItem.getCells()[4].getValue()) ){//&& oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
                         oItem.getCells()[3].setValueState("Error");
                         oItem.getCells()[3].setValueStateText("'Response Value From' must be less than 'Response Value To'");
@@ -562,14 +565,29 @@ sap.ui.define([
         _getNPPopupData: function (e) {
             var PVbox = e.oSource.getParent().getContent()[0].getItems()[0];
 
-            var oNPHeaderData = {};
-            oNPHeaderData._row_state_                       = that._selectedNPItem === null ? "C" : "";//"C";
-            oNPHeaderData.nonpr_supeval_attr_type_code      = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
-            oNPHeaderData.nonpr_requirements_text           = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
-            oNPHeaderData.note_content                      = PVbox.getItems()[1].getItems()[0].getItems()[1].getValue();
-            oNPHeaderData.nonpr_supeval_attr_val_type_cd    = PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getText();
-            oNPHeaderData.nonpr_score_comput_method_code    = PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getText();
-            oNPHeaderData.target_score                      = PVbox.getItems()[2].getItems()[2].getItems()[1].getValue();
+            var oNPHeaderData = {
+                _row_state_                         : that._selectedNPItem === null ? "C" : "",
+                nonpr_supeval_attr_type_code        : PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getKey(),
+                nonpr_supeval_attr_type             : {nonpr_supeval_attr_type_nm      : PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText() },
+                nonpr_requirements_text             : PVbox.getItems()[0].getItems()[1].getItems()[1].getValue(),
+                note_content                        : PVbox.getItems()[1].getItems()[0].getItems()[1].getValue(),
+                nonpr_supeval_attr_val_type_cd      : PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getKey(),
+                nonpr_supeval_value_type            : { nonpr_supeval_attr_type_name    : PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getText() },
+                nonpr_score_comput_method_code      : PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getKey(),
+                nonpr_score_comput_method           : { nonpr_score_comput_method_name  : PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getText() },
+                target_score                        : PVbox.getItems()[2].getItems()[2].getItems()[1].getValue()
+
+            };
+            // oNPHeaderData._row_state_                       = that._selectedNPItem === null ? "C" : "";//"C";
+            // oNPHeaderData.nonpr_supeval_attr_type_code      = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getKey();//.toUpperCase();
+            // oNPHeaderData.nonpr_supeval_attr_type.nonpr_supeval_attr_type_nm= PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
+            // oNPHeaderData.nonpr_requirements_text           = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
+            // oNPHeaderData.note_content                      = PVbox.getItems()[1].getItems()[0].getItems()[1].getValue();
+            // oNPHeaderData.nonpr_supeval_attr_val_type_cd    = PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getKey();//.toUpperCase();
+            // oNPHeaderData.nonpr_supeval_value_type.nonpr_supeval_attr_type_name= PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getText();
+            // oNPHeaderData.nonpr_score_comput_method_code    = PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getKey();//.toUpperCase();
+            // oNPHeaderData.nonpr_score_comput_method.nonpr_score_comput_method_name= PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getText();
+            // oNPHeaderData.target_score                      = PVbox.getItems()[2].getItems()[2].getItems()[1].getValue();
 
             // oNPHeaderData.h1 = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
             // oNPHeaderData.h2 = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
@@ -633,11 +651,11 @@ sap.ui.define([
             // var oNPHeaderData = { h1: "", h2 : "", h3 : "", h4 : "", h5 : "", h6 : ""};
 
             // PVbox.getItems()[0].getItems()[0].getItems()[1].setSele
-            PVbox.getItems()[0].getItems()[0].getItems()[1].setSelectedKey("1")
+            PVbox.getItems()[0].getItems()[0].getItems()[1].setSelectedKey("COMMERCIAL");
             PVbox.getItems()[0].getItems()[1].getItems()[1].setValue("");
             PVbox.getItems()[1].getItems()[0].getItems()[1].setValue("");
-            PVbox.getItems()[2].getItems()[0].getItems()[1].setSelectedKey("1");
-            PVbox.getItems()[2].getItems()[1].getItems()[1].setSelectedKey("1");
+            PVbox.getItems()[2].getItems()[0].getItems()[1].setSelectedKey("DATE");
+            PVbox.getItems()[2].getItems()[1].getItems()[1].setSelectedKey("AUTOMATIC");
             PVbox.getItems()[2].getItems()[2].getItems()[1].setValue("");
 
             // Item 부분 clear
@@ -659,6 +677,15 @@ sap.ui.define([
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
             oDatePicker.setPlaceholder("YYYY/MM/DD");
             oDatePicker.setEditable(this._isEditMode);
+
+            // <ObjectStatus icon="{
+            //     path: 'NegoHeaders>_row_state_',
+            //     formatter: '.formatter.toModelStateColumnIcon'
+            // }" />
+            // newLine.addCell(new sap.m.ObjectStatus({icon: {
+            //     path: 'NegoHeaders>_row_state_',
+            //     formatter: '.formatter.toModelStateColumnIcon'
+            // }}));
 
             newLine.addCell(new sap.m.Text({ text: "1" }));
 
@@ -704,6 +731,11 @@ sap.ui.define([
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
             oDatePicker.setPlaceholder("YYYY/MM/DD");
             oDatePicker.setEditable(this._isEditMode);
+
+            // newLine.addCell(new sap.m.ObjectStatus({icon: {
+            //     path: 'NegoHeaders>_row_state_',
+            //     formatter: '.formatter.toModelStateColumnIcon'
+            // }}));
 
             newLine.addCell(new sap.m.Text({ text: String(oIndex) }));
 

@@ -248,7 +248,12 @@
                 <t:Column id="mainEffectiveStatusName" width="7rem" hAlign="Center">
                 <Label text="계약유효상태" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{viewModel>effective_status_name}"/>
+                    <tnt:InfoLabel 
+                        text="{viewModel>effective_status_name}" 
+                        colorScheme="{
+                                path: 'viewModel>effective_status_color',
+                                formatter: '.onStatusColor'
+                            }" />                    
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainDayCount" width="8rem" hAlign="Right">

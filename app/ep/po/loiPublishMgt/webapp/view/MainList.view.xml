@@ -8,6 +8,7 @@
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
     xmlns:u="sap.ui.unified"
+    xmlns:tnt="sap.tnt"
     height="100%">
 
     <f:DynamicPage id="page2"
@@ -334,14 +335,28 @@
                 <t:Column id="mainLoiSelectionStatusCode" width="9rem" hAlign="Center">
                 <Label text="{I18N>/SUPPLIER_SELECTION_STATUS}" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
                 <t:template>
-			        <Link text="{list>loi_selection_status_name}" press="onTableSupplierSelectionPress" enabled="{= ${list>loi_selection_status_code} !== '122020' ? true : false }" />                
+                    <tnt:InfoLabel 
+                        text="{list>loi_selection_status_name}" 
+                        visible="{= ${list>loi_selection_status_code} === '' ? false : true }"
+                        colorScheme="{
+                                path: 'list>loi_selection_status_color',
+                                formatter: '.onStatusColor'
+                            }" />                    
+			        <!-- <Link text="{list>loi_selection_status_name}" press="onTableSupplierSelectionPress" enabled="{= ${list>loi_selection_status_code} !== '122020' ? true : false }" />                 -->
                 <!-- <Text text="{list>loi_selection_status_name}" visible="{= ${list>loi_selection_status_code} === '122020' ? true : false }" /> -->
                 </t:template>
                 </t:Column>
                 <t:Column id="mainLoiPublishStatusCode" width="7rem" hAlign="Center">
                 <Label text="{I18N>/LOI}{I18N>/PUBLISH_STATUS}" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
                 <t:template>
-                    <Link text="{list>loi_publish_status_name}" press="onTablePublishPress" />
+                    <tnt:InfoLabel 
+                        text="{list>loi_publish_status_name}" 
+                        visible="{= ${list>loi_publish_status_code} === '' ? false : true }"
+                        colorScheme="{
+                                path: 'list>loi_publish_status_color',
+                                formatter: '.onStatusColor'
+                            }" />                          
+                    <!-- <Link text="{list>loi_publish_status_name}" press="onTablePublishPress" /> -->
                     <!-- <Text text="{list>loi_publish_status_name}"/> -->
                 </t:template>
                 </t:Column> 

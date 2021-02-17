@@ -26,6 +26,13 @@
           "odataVersion": "2.0"
         }
       },
+      "rrEstService": {
+        "uri": "srv-api/odata/v2/dp.util.RemodelRepairEstimationService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -101,6 +108,16 @@
       },
       "dse": {
         "dataSource": "dseService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+        "rrEst": {
+        "dataSource": "rrEstService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

@@ -45,6 +45,9 @@ using { pg.Vp_Vendor_Pool_Mst        as PG_VP_VENDOR_POOL_MST        } from '../
 /* Material 마스터 */
 using { dp.Mm_Material_Mst           as DP_MM_MATERIAL_MST           } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
 
+/* Material 마스터 */
+using { cm.Approver                  as CM_APPROVER                  } from '../../../../../db/cds/cm/CM_APPROVER-model';
+using { cm.Referer                   as CM_REFERER                   } from '../../../../../db/cds/cm/CM_REFERER-model';
 
 
 
@@ -109,13 +112,14 @@ service NpApprovalDetailService {
 
             ,   cam.approval_contents
 
+            /*
             ,   MAP(pam.tentprc_flag,false,'N',true,'T') as net_price_type_code : String
             ,   CM_GET_CODE_NAME_FUNC(   cam.tenant_id
                                         ,'SP_NET_PRICE_TYPE'
                                         ,MAP(pam.tentprc_flag,false,'N',true,'T')
                                         ,'KO'
                                     ) as net_price_type_name : String
-
+            */
             ,   pam.effective_start_date
             ,   pam.effective_end_date
 
@@ -138,10 +142,13 @@ service NpApprovalDetailService {
     /* @(title : '단가품의 상세 General 조회 View ') */
     view GeneralView as
         SELECT
+
+     
                 key pad.tenant_id		                /*	테넌트ID	*/
             ,	key pad.approval_number		            /*	품의번호	*/
             ,	key pad.item_sequence		            /*	품목순번	*/
 
+            
             ,	pad.company_code		                /*	회사코드	*/
             ,	pad.org_type_code		                /*	구매운영조직유형	*/
             ,	pad.org_code		                    /*	Operation Org   구매운영조직코드	*/
@@ -155,7 +162,8 @@ service NpApprovalDetailService {
 			    ) as org_name : String                  /*	구매운영조직코드 명	*/
 
             ,   pad.material_code	                    /*	Material Code	자재코드    */
-            ,   pad.material_desc	                    /*	Description	    자재내역    */
+            ,   
+                pad.material_desc	                    /*	Description	    자재내역    */
 
             /*	
             ,   (SELECT mmm.material_desc
@@ -233,8 +241,24 @@ service NpApprovalDetailService {
                                         ,'KO'
                 ) as surrogate_type_name : String       /*	Surrogate	*/
 
-            ,   pad.maker_code	                    /*	Maker code	*/
-            ,   null as maker_name : String         //pad.maker_name	                    /*	Maker	*/
+            ,   pad.maker_code	                        /*	Maker code   Maker	,   null as maker_name : String  SP_NP_GET_MAKER_NAME_FUNC('L2100','VN02090500','KO')	*/
+            
+            ,   SP_NP_GET_MAKER_NAME_FUNC(pad.tenant_id ,pad.maker_code ,'KO')
+                as maker_name : String 
+/*
+            ,   (SELECT mcv.maker_local_name
+                    FROM SP_SM_MAKER_CAL_VIEW mcv
+                    WHERE mcv.tenant_id = pad.tenant_id
+                    AND mcv.maker_code = pad.maker_code
+                ) as maker_name : String          
+
+            ,   (SELECT smv.maker_local_name
+                    FROM SP_SM_MAKER_VIEW smv
+                    WHERE smv.tenant_id = pad.tenant_id
+                    AND smv.maker_code = pad.maker_code
+                ) as maker_name : String   
+
+*/
 
             ,   pad.payterms_code	                /*	Payment Term Code	*/
             ,   CM_GET_CODE_NAME_FUNC(   pad.tenant_id
@@ -300,6 +324,7 @@ service NpApprovalDetailService {
                AND pad.org_code         = vpm.org_code
                AND pad.vendor_pool_code = vpm.vendor_pool_code
         */
+        ORDER BY pad.tenant_id,pad.approval_number,pad.item_sequence
     ;
 
 
@@ -375,6 +400,8 @@ service NpApprovalDetailService {
         LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON pad.tenant_id        = sm.tenant_id
                AND pad.supplier_code    = sm.supplier_code
+
+        ORDER BY pad.tenant_id,pad.approval_number,pad.item_sequence
     ;
 
 
@@ -430,50 +457,46 @@ service NpApprovalDetailService {
 
 
 /*---------------------------------------------------------------------------------------------------------------------*/
-    /* 파라미터 테스트  */
-    view NegoHistoryInfoTestView (Language_code: String) as
+    /* 결재자 목록  */
+    view ApproverInfoView as
         SELECT
-                key pad.tenant_id		        /*	테넌트ID	*/
-            ,	key pad.company_code		    /*	회사코드	*/
-            ,	key pad.org_type_code		    /*	구매운영조직유형	*/
-            ,	key pad.org_code		        /*	구매운영조직코드	*/
-            ,	key pad.approval_number		    /*	품의번호	*/
-            ,	key pad.item_sequence		    /*	품목순번	*/
+                    key ca.tenant_id
+                ,   key ca.approval_number
+                ,   key ca.approve_sequence
+                ,   key ca.approver_empno
+                ,   CM_GET_EMP_NAME_FUNC(ca.tenant_id
+				                        ,ca.approver_empno
+			        ) as approver_empnm  : String
+                ,   ca.approver_type_code
+                ,   CM_GET_CODE_NAME_FUNC(   ca.tenant_id
+                                        ,'CM_APPROVER_TYPE'
+                                        ,ca.approver_type_code
+                                        ,'KO'
+                    ) as approver_type_name : String
+                ,   ca.approve_status_code
+                ,   CM_GET_CODE_NAME_FUNC(   ca.tenant_id
+                                        ,'CM_APPROVE_STATUS'
+                                        ,ca.approve_status_code
+                                        ,'KO'
+                ) as approve_status_name : String
+                ,   ca.approve_comment
+                ,   ca.approve_date_time
 
-            , (SELECT org.org_name
-                  FROM CM_PUR_OPERATION_ORG  org
-                 WHERE org.tenant_id     = pad.tenant_id
-                   AND org.company_code  = pad.company_code
-                   AND org.org_type_code = pad.org_type_code
-                   AND org.org_code      = pad.org_code
-			   ) AS org_name : String           /*	구매운영조직코드 명	*/
-
-            ,	pad.material_code		        /*	자재코드	*/
-            ,	pad.material_desc		        /*	자재내역	*/
-
-            ,	pad.supplier_code		        /*	공급업체코드	*/
-            ,   sm.supplier_local_name
-            ,   sm.supplier_english_name        /*  공급업체명 확인필요 */
-
-            ,	pad.vendor_pool_code		    /*	협력사풀코드	*/
-            ,   vpm.vendor_pool_local_name 
-            ,   vpm.vendor_pool_english_name    /*  협력사풀 명 확인필요 */
+        FROM CM_APPROVER ca
             
-            ,	pad.net_price_approval_reason_code		/*	단가품의사유코드	*/
-            
-        FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
-
-        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
-                ON sm.tenant_id     = pad.tenant_id
-               AND sm.supplier_code  = pad.supplier_code
-
-        LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
-                ON vpm.tenant_id        = pad.tenant_id
-               AND vpm.company_code     = pad.company_code
-               AND vpm.org_type_code    = pad.org_type_code
-               AND vpm.org_code         = pad.org_code
-               AND vpm.vendor_pool_code = pad.vendor_pool_code
     ;
 
+/*---------------------------------------------------------------------------------------------------------------------*/
+    /* 참조자 목록  */
+    view RefererInfoView as
+        SELECT
+                    key cr.tenant_id
+                ,   key cr.approval_number
+                ,   cr.referer_empno
+                ,   CM_GET_EMP_NAME_FUNC(cr.tenant_id
+				                        ,cr.referer_empno
+			        ) as referer_empnm  : String
+        FROM CM_REFERER cr
+    ;
 
 }

@@ -5,14 +5,16 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_PRICEINFO_PROC (
     ,OUT    O_RETURN_CODE                   NVARCHAR(5)
     ,OUT    O_RETURN_MSG                    NVARCHAR(4000)
 	,OUT    O_DETAILS                       TABLE (
-	                                        		TENANT_ID	                    	NVARCHAR(5)
+                                                    ROWVAL	                    	    BIGINT
+	                                        	,	TENANT_ID	                    	NVARCHAR(5)
 	                                        	,	COMPANY_CODE                     	NVARCHAR(10)
 	                                        	,	ORG_TYPE_CODE						NVARCHAR(2)
                                                 ,	ORG_CODE							NVARCHAR(10)
                                                 ,	APPROVAL_NUMBER						NVARCHAR(50)
                                                 ,	ITEM_SEQUENCE						BIGINT
                                                 ,	SUPPLIER_CODE                       NVARCHAR(10)  
-                                                ,	SUPPLIER_NAME                       NVARCHAR(240)         
+                                                ,	SUPPLIER_LOCAL_NAME                 NVARCHAR(240)   
+                                                ,	SUPPLIER_ENGLISH_NAME               NVARCHAR(240)   
 	                                            ,	MATERIAL_CODE                       NVARCHAR(40)
                                                 ,	MARKET_CODE							NVARCHAR(30)
                                                 ,	CURRENCY_CODE						NVARCHAR(3)
@@ -85,20 +87,49 @@ BEGIN
             SIGNAL V_USER_EXCEPTION;
         END;
 
+        /* 최초생성시 company_code ,org_type_code는 없다.*/
+        I_DETAILS = select
+						it.rowval   
+                    ,	it.tenant_id
+                    ,	CASE WHEN IFNULL(it.company_code,'')='' THEN (SELECT MAX(COMPANY_CODE)
+                        												FROM CM_PUR_OPERATION_ORG T
+                        											   WHERE T.TENANT_ID  = it.tenant_id
+                        												 AND T.ORG_CODE   = it.org_code)
+                    	ELSE it.company_code
+                    	END AS company_code
+                    ,	CASE WHEN IFNULL(it.org_type_code,'')='' THEN (SELECT MAX(ORG_TYPE_CODE)
+                        												 FROM CM_PUR_ORG_TYPE_MAPPING T
+                        												WHERE T.TENANT_ID         = it.tenant_id
+                        												  AND T.PROCESS_TYPE_CODE = 'SP02'  /* 단가 품의 */
+                        												  AND T.USE_FLAG          = true)
+                    	ELSE it.org_type_code
+                    	END AS org_type_code
+                    ,	it.org_code
+                    ,	it.approval_number
+                    ,	it.item_sequence   
+                    ,	it.supplier_code
+                    ,	it.material_code
+                    ,	it.market_code
+                    ,   it.net_price
+                    ,   it.currency_code
+                    From :I_DETAILS it;
+                    
         O_DETAILS =
-            SELECT		it.tenant_id 
+            SELECT	    it.rowval   
+                    ,	it.tenant_id 
                     ,	it.company_code
                     ,	it.org_type_code
                     ,	it.org_code
                     ,	it.approval_number
                     ,	it.item_sequence   
                     ,	it.supplier_code
-                    ,   sm.supplier_local_name as supplier_name
+                    ,   sm.supplier_local_name
+                    ,   sm.supplier_english_name
                     ,	it.material_code
                     ,	it.market_code
 
                     ,   it.currency_code
-                    ,   pad.net_price
+                    ,   it.net_price
 
                     ,   pad.base_price_type_code
                     ,   pad.pyear_dec_base_currency_code
@@ -116,7 +147,7 @@ BEGIN
                     ,   bpm.apply_end_yyyymm as base_apply_end_yyyymm
 
             FROM    :I_DETAILS as it 
-        
+
             LEFT JOIN SP_NP_NET_PRICE_APPROVAL_DTL pad      /*  단가품의 상세 */
                    ON it.tenant_id              = pad.tenant_id
                    /*

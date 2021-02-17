@@ -6,26 +6,7 @@
     xmlns:core="sap.ui.core"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:u="sap.ui.unified"
-    
     >
-     <!-- <m:VBox class="sapUiSmallMargin">
-        <m:VBox>
-            <m:SearchField/>
-            <m:layoutData>
-                <m:layout:GridData span="XL12 L12 M6 S12" />
-            </m:layoutData>
-        </m:VBox>
-    </m:VBox> -->
-    <!-- <v:ValueHelpDialog
-        id="valueHelpDialogSupplier"
-        title="Supplier"
-        ok="onNonPriceInfOkPress"
-        cancel=".onNonPriceInfCancelPress"
-        afterClose=".onValueHelpSuppAfterClose"
-        supportMultiselect="false"
-        key="supplier_code"
-        descriptionKey="supplier_local_name"
-    > -->
     <Dialog
         beforeOpen="NonPricePopupBeforeOpen" 
         beforeClose="NonPricePopupBeforeClose" 
@@ -40,14 +21,11 @@
                                 required="true"
                                 class="sapMLabelNoText"/>
                         <Select width="100%" selectedKey="{NPHeaderModel>/h1}" 
+                            
                             enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
-                            <core:Item key="1" text="Commercial" />
-                            <core:Item key="2" text="Technical" />
+                            <core:Item key="COMMERCIAL" text="Commercial" />
+                            <core:Item key="TECHNICAL" text="Technical" />
                         </Select >
-
-                        <!-- <Input  class="sapMLabelNoText"
-                                value="{NPHeader>/h1}"/> -->
-                        
                     </VBox>
                     
                     <VBox width="85%" class="marginLargeL">
@@ -72,9 +50,9 @@
                                 class="sapMLabelNoText"/>
                         <Select width="100%" change="selectNPTypeChange" selectedKey="{NPHeaderModel>/h4}"
                             enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
-                            <core:Item key="1" text="Date" />
-                            <core:Item key="2" text="Number" />
-                            <core:Item key="3" text="Text" />
+                            <core:Item key="DATE" text="Date" />
+                            <core:Item key="NUMBER" text="Number" />
+                            <core:Item key="TEXT" text="Text" />
                         </Select >
                     </VBox>
                     <VBox width="15%" class="sapUiLargeMarginBeginEnd">
@@ -82,15 +60,15 @@
                                 required="true"
                                 class="sapMLabelNoText"/>
                         <Select width="100%" selectedKey="{NPHeaderModel>/h5}" editable="{=${propInfo>/isEditMode}}">
-                            <core:Item key="1" text="Automatic" />
-                            <core:Item key="2" text="None" />
+                            <core:Item key="AUTOMATIC" text="Automatic" />
+                            <core:Item key="NONE" text="None" />
                         </Select >
                     </VBox>
                     <VBox width="15%" class="sapUiLargeMarginBeginEnd">
                         <Label  text="Target Score" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="{NPHeaderModel>/h6}" width="100%" type="Number" validateFieldGroup="vfgHeader"
+                        <Input   value="{NPHeaderModel>/h6}" width="100%" type="Number" validateFieldGroup="vfgHeader"
                                 editable="{=${propInfo>/isEditMode}}"/>
                     </VBox>
                 </HBox>
@@ -145,6 +123,9 @@
             <VBox>
                 <ScrollContainer vertical="false" focusable="true" >
                     <Table mode="{=${propInfo>/isEditMode} ? 'MultiSelect' : 'None' }"
+                        items="{
+                            path : 'NegoItemNonPrice>/ItemsNonPriceDtl'
+                        }"
                         inset="false">
                         <headerToolbar>
                             <OverflowToolbar class="NonPricePopHeader" visible="{=${propInfo>/isEditMode}}">
@@ -157,58 +138,43 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column 
-                                width="10%">
+                            <Column width="40px">
                                 <Text text="" />
                             </Column>
-                            <Column width="30%"
-                                visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
+                            <!-- <Column 
+                                width="10%">
+                                <Text text="" />
+                            </Column> -->
+                            <Column width="35%"
+                                visible="{= ${NPInfPopupUtil>/type} === 'DATE' ? true : false}"
                                 hAlign="Center"
                                 minScreenWidth="Tablet"
                                 demandPopin="true">
                                 <Label text="Response Value From" required="true" />
                             </Column>
-                            <Column width="30%"
-                                visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
+                            <Column width="35%"
+                                visible="{= ${NPInfPopupUtil>/type} === 'DATE' ? true : false}"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center">
                                 <Label text="Response Value To" required="true" />
                             </Column>
-                            <!-- <Column width="30%"
-                                visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                                minScreenWidth="Desktop"
-                                demandPopin="true"
-                                hAlign="Center">
-                                <Label text="점수" required="true" />
-                            </Column> -->
-
-
-                            <Column width="30%"
-                                visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
+                            <Column width="35%"
+                                visible="{= ${NPInfPopupUtil>/type} === 'NUMBER' ? true : false}"
                                 hAlign="Center"
                                 minScreenWidth="Tablet"
                                 demandPopin="true">
                                 <Label text="Response Value From" required="true" />
                             </Column>
-                            <Column width="30%"
-                                visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
+                            <Column width="35%"
+                                visible="{= ${NPInfPopupUtil>/type} === 'NUMBER' ? true : false}"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center">
                                 <Label text="Response Value To" required="true" />
                             </Column>
-                            <!-- <Column width="30%"
-                                visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
-                                minScreenWidth="Desktop"
-                                demandPopin="true"
-                                hAlign="Center">
-                                <Label text="점수" required="true" />
-                            </Column> -->
-
-
-                            <Column width="60%"
-                                visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}"
+                            <Column width="70%"
+                                visible="{= ${NPInfPopupUtil>/type} === 'TEXT' ? true : false}"
                                 hAlign="Center"
                                 minScreenWidth="Tablet"
                                 demandPopin="true">
@@ -224,130 +190,43 @@
                             </Column>
                         </columns>
                         <items>
-                            <!-- <ColumnListItem>
-                                <cells>
-                                    <Label text="1" />
+                            <ColumnListItem>
+                                <!-- <cells>
+                                    <ObjectStatus icon="{
+                                        path: 'NegoItemNonPrice>_row_state_',
+                                        formatter: '.formatter.toModelStateColumnIcon'
+                                    }" />
 
-                                    <DatePicker editable="{=${propInfo>/isEditMode}}"
-                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                                        value="{NegoItemNonPrice>}"
-                                        valueFormat="yyyy-MM-dd"
-                                        displayFormat="long"/>
-                                    <DatePicker editable="{=${propInfo>/isEditMode}}"
-                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                                        value="2015-11-23"
-                                        valueFormat="yyyy-MM-dd"
-                                        displayFormat="long"/>
 
-                                    <Input value="1" editable="{=${propInfo>/isEditMode}}"
-                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
-                                    <Input value="1.2" editable="{=${propInfo>/isEditMode}}"
-                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
 
-                                    <Input value="" editable="{=${propInfo>/isEditMode}}"
-                                        visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
+                                    <DatePicker editable="{=${propInfo>/isEditMode}}" 
+                                        valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
+                                        value="{path: 'NegoItemNonPrice>supeval_from_date', type: 'sap.ui.model.odata.type.Date', 
+                                                formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
+                                    <DatePicker editable="{=${propInfo>/isEditMode}}" 
+                                        valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
+                                        value="{path: 'NegoItemNonPrice>supeval_to_date', type: 'sap.ui.model.odata.type.Date', 
+                                                formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
 
-                                    <Input value="" editable="{=${propInfo>/isEditMode}}"/> 
-                                </cells>
-                            </ColumnListItem> -->
+                                    <Input value="{NegoItemNonPrice>supeval_from_value}" editable="{=${propInfo>/isEditMode}}" />
+                                    <Input value="{NegoItemNonPrice>supeval_to_value}" editable="{=${propInfo>/isEditMode}}" />
+
+                                    <Input value="{NegoItemNonPrice>supeval_text_value}" editable="{=${propInfo>/isEditMode}}" />
+
+                                    <Input value="{NegoItemNonPrice>supeval_score}" editable="{=${propInfo>/isEditMode}}"/> 
+                                </cells> -->
+                            </ColumnListItem>
                         </items>
                     </Table>
                 </ScrollContainer>
             </VBox>
-
-            <!-- Item 입력 start -->
-
-
-
-
-        
         </VBox>
-    <!-- <filterBar>
-            <fb:FilterBar advancedMode="true" 
-                        search=".onFilterBarSuppSearch" 
-                        isRunningInValueHelpDialog="true" 
-                        showFilterConfiguration="false"
-                        useToolbar="false" >
-                <fb:filterGroupItems>
-                <fb:FilterGroupItem
-                        groupName="__$INTERNAL$"
-                        name="company"
-                        label="Company"
-                        visibleInFilterBar="true"
-                    >
-                        <fb:control>
-                            <m:MultiComboBox id="supplierCompany" editable="false" forceSelection="false" width="100%" selectedKey="" change="handleChangeImpComp" items="{
-                                path: 'cmOrgModel>/Org_Company',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                ],
-                                sorter: { path: 'company_code'}
-                            }">
-                                <m:items>
-                                    <core:Item key="{cmOrgModel>company_code}" text="[{cmOrgModel>company_code}] {cmOrgModel>company_name}" />
-                                </m:items>
-                            </m:MultiComboBox>
-                        </fb:control>
-                    </fb:FilterGroupItem>
 
-                    <fb:FilterGroupItem
-                        groupName="__$INTERNAL$"
-                        name="plant"
-                        label="Plant"
-                        visibleInFilterBar="true"
-                    >
-                        <fb:control>
-                            <m:MultiComboBox id="supplierPlant" editable="false" forceSelection="false" width="100%" selectedKey="" selectionFinish="" items="{
-                                path: 'dseModel>/Divisions',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                    
-                                    
-                                ],
-                                sorter: { path: 'org_code'}
-                            }">
-                                <m:items>
-                                    <core:Item key="{dseModel>org_code}" text="[{dseModel>org_code}] {dseModel>org_name}" />
-                                </m:items>
-                            </m:MultiComboBox>
-                        </fb:control>
-                    </fb:FilterGroupItem>
-                
-
-                    <fb:FilterGroupItem
-                        groupName="__$INTERNAL$"
-                        name="supplier_code"
-                        label="Supplier Code"
-                        visibleInFilterBar="true"
-                    >
-                        <fb:control>
-                            <m:Input name="supplier_code" />
-                        </fb:control>
-                    </fb:FilterGroupItem>
-                    <fb:FilterGroupItem
-                        groupName="__$INTERNAL$"
-                        name="supplier_local_name"
-                        label="Supplier Local Name"
-                        visibleInFilterBar="true"
-                    >
-                        <fb:control>
-                            <m:Input name="supplier_local_name" />
-                        </fb:control>
-                    </fb:FilterGroupItem>
-
-                    <fb:FilterGroupItem
-                        groupName="__$INTERNAL$"
-                        name="supplier_english_name"
-                        label="Supplier English Name"
-                        visibleInFilterBar="true"
-                    >
-                        <fb:control>
-                            <m:Input name="supplier_english_name" />
-                        </fb:control>
-                    </fb:FilterGroupItem>
-                </fb:filterGroupItems>
-            </fb:FilterBar>
-        </filterBar> -->
-    <!-- </ValueHelpDialog> -->
+        <beginButton>
+			<Button text="{I18N>/CANCEL}" press=".onPressNonPriceDialogClose"/>
+	    </beginButton>
+        <endButton>
+            <Button text="{I18N>/APPLY}" visible="{=${propInfo>/isEditMode}}" type="Emphasized" press=".onPressNonPriceDialogApply" />
+        </endButton>
     </Dialog>
 </core:FragmentDefinition>

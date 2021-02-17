@@ -21,15 +21,18 @@ using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 /** 
 // # 공통 코드
 // ## 견적 헤더
-  Sc_Award_Prog_Status_Code_View - [임시생성-삭제예정][공통코드=SP_SC_AWARD_PROG_STATUS_CODE] 낙찰진행상태 - 타스크럼 제공 예정
-  Sc_Nego_Prog_Status_Code_View  - [공통코드=SP_SC_NEGO_PROG_STATUS_CODE][SP_SC] 협상진행상태
-  Sc_Award_Type_Code_View        - [공통코드=SP_SC_AWARD_TYPE_CODE][SP_SC] 낙찰유형
-  Sc_Award_Method_Code_View      - [공통코드=SP_SC_AWARD_METHOD_CODE][SP_SC] 낙찰방법
-  
+  Sc_Award_Prog_Status_Code_View   - [임시생성-삭제예정][공통코드=SP_SC_AWARD_PROG_STATUS_CODE] 낙찰진행상태 - 타스크럼 제공 예정
+  Sc_Nego_Prog_Status_Code_View    - [공통코드=SP_SC_NEGO_PROG_STATUS_CODE][SP_SC] 협상진행상태
+  Sc_Award_Type_Code_View          - [공통코드=SP_SC_AWARD_TYPE_CODE][SP_SC] 낙찰유형
+  Sc_Award_Method_Code_View        - [공통코드=SP_SC_AWARD_METHOD_CODE][SP_SC] 낙찰방법
+  Sc_Nonpr_Supeval_Attr_Type_View  - [공통코드=SP_SC_NONPR_SUPEVAL_ATTR_TYPE][SP_SC] 비가격공급업체평가속성유형코드
+  Sc_Nonpr_Supeval_Value_Type_View - [공통코드=SP_SC_NONPR_SUPEVAL_VALUE_TYPE][SP_SC] 비가격공급업체평가값유형코드
+  Sc_Nonpr_Score_Comput_Mtd_View   - [공통코드=SP_SC_NONPR_SCORE_COMPUT_MTD][SP_SC] 비가격점수산출방법코드
+
 // ## 견적 아이템
-  Sc_Market_Code_View            - [공통코드=DP_VI_MARKET_CODE] 마켓코드
-  Sc_Payment_Terms_View          - [공통코드=PAYMENT_TERMS] 페이먼트텀즈
-  Sc_Incoterms_View              - [공통코드=OP_INCOTERMS] 인커텀즈법
+  Sc_Market_Code_View              - [공통코드=DP_VI_MARKET_CODE] 마켓코드
+  Sc_Payment_Terms_View            - [공통코드=PAYMENT_TERMS] 페이먼트텀즈
+  Sc_Incoterms_View                - [공통코드=OP_INCOTERMS] 인커텀즈법
 
 --# 공통코드 DB 조회
 SELECT TOP 500 
@@ -45,6 +48,9 @@ AND ( 1=0
     OR upper(group_code) like upper('%SP_SC_NEGO_PROG_STATUS_CODE%')
     OR upper(group_code) like upper('%SP_SC_AWARD_TYPE_CODE%')
     OR upper(group_code) like upper('%SP_SC_AWARD_METHOD_CODE%')
+    OR upper(group_code) like upper('%SP_SC_NONPR_SUPEVAL_ATTR_TYPE%')
+    OR upper(group_code) like upper('%SP_SC_NONPR_SUPEVAL_VALUE_TYPE%')
+    OR upper(group_code) like upper('%SP_SC_NONPR_SCORE_COMPUT_MTD%')
 );
 ***************************************************************************************
 // # 양산(전략) 구매 - 소싱 코드
@@ -176,10 +182,44 @@ define view Sc_Bp_Status_View as
         key code      as bp_status_code,
             sort_no,
             children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
-                      as bp_status_CODE_name
+                      as bp_status_code_name
     } 
     where group_code = 'SP_SM_BP_STATUS_CODE';
 
+@cds.autoexpose  // SP_SC_NONPR_SUPEVAL_ATTR_TYPE : 비가격공급업체평가속성유형코드[예:Commercial,Technical]
+define view Sc_Nonpr_Supeval_Attr_Type_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as nonpr_supeval_attr_type_cd,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as nonpr_supeval_attr_type_nm
+    } 
+    where group_code = 'SP_SC_NONPR_SUPEVAL_ATTR_TYPE';
+
+
+@cds.autoexpose  // SP_SC_NONPR_SUPEVAL_VALUE_TYPE : 비가격공급업체평가값유형코드[예:Commercial,Technical]
+define view Sc_Nonpr_Supeval_Value_Type_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as nonpr_supeval_value_type_code,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as nonpr_supeval_attr_type_name
+    } 
+    where group_code = 'SP_SC_NONPR_SUPEVAL_VALUE_TYPE';
+
+
+@cds.autoexpose  // SP_SC_NONPR_SCORE_COMPUT_MTD : 비가격점수산출방법코드[예:Commercial,Technical]
+define view Sc_Nonpr_Score_Comput_Mtd_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as nonpr_score_comput_method_code,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as nonpr_score_comput_method_name
+    } 
+    where group_code = 'SP_SC_NONPR_SCORE_COMPUT_MTD';
 
 //////////////////////////////////////////////////////////////////////
 // Test - Begin

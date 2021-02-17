@@ -163,7 +163,7 @@ sap.ui.define([
             if (bindingContext) {
                 sPath = oEvent.getParameters().rowBindingContext.getPath();
             } else {
-                sPath = oEvent.getParameters()["row"].getBindingContext("viewModel").getPath()
+                sPath = oEvent.getParameters()["row"].getBindingContext("viewModel").getPath();
             }
             // console.log("sPath=", sPath);
             var oRecord = oViewModel.getProperty(sPath);

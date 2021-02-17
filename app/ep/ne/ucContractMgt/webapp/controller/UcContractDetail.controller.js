@@ -266,6 +266,7 @@ sap.ui.define([
                 d["material_apply_flag"] = (d["material_apply_flag"] == "Y" ? true : false);
                 d["labor_apply_flag"] = (d["labor_apply_flag"] == "Y" ? true : false);
                 d["material_net_price"] = (d["material_net_price"] ? parseInt(d["material_net_price"]) : null);
+                d["contract_quantity"] = (d["contract_quantity"] ? parseInt(d["contract_quantity"]) : null);
                 d["labor_net_price"] = (d["labor_net_price"] ? parseInt(d["labor_net_price"]) : null);
                 d["net_price_contract_degree"] = (d["net_price_contract_degree"] || !isNaN(d["net_price_contract_degree"]) ? parseInt(d["net_price_contract_degree"]) : null);
                 delete d["__metadata"];
@@ -1014,7 +1015,7 @@ sap.ui.define([
             this._showFormFragment('UcContractDetail_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
             if (statusCode == "711040") {
-                this.byId("page").setProperty("showFooter", true);
+                this.byId("page").setProperty("showFooter", false);
             } else {
                 this.byId("page").setProperty("showFooter", true);
             }

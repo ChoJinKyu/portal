@@ -25,7 +25,8 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "55em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "category_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "category_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "category_name" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
@@ -125,12 +126,17 @@ sap.ui.define([
 
         loadData: function(oThis){
 
-               var that = this,
-                sCateGroupCode = this.oCateGroupCode._lastValue,                
+                var that = this,
+                
+                    sCateGroupCode = this.oCateGroupCode._lastValue,  
+                
+                    aFilters = [];
 
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                ];
+                if(this.getProperty("items").filters.length > 0){
+                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                        aFilters.push(this.getProperty("items").filters[i]);
+                    }
+                }                
 
                 if(sCateGroupCode){
                     aFilters.push(new Filter("tolower(category_group_code)", FilterOperator.Contains, "'" + sCateGroupCode.toLowerCase().replace("'","''") + "'"));

@@ -535,9 +535,11 @@ END;
 			  tenant_id
 			, nego_header_id
 			, nonpr_item_number
-			, nonpr_score_comput_method_code
 			, nonpr_supeval_attr_type_code
 			, nonpr_supeval_attr_val_type_cd
+			, nonpr_supeval_attr_type_cd
+			, nonpr_supeval_value_type_code
+			, nonpr_score_comput_method_code
 			, nonpr_requirements_text
 			, note_content
 			, target_score
@@ -552,9 +554,13 @@ END;
               IFNULL(V_NINPM.tenant_id        , NINP.tenant_id       )   AS tenant_id
             , IFNULL(V_NINPM.nego_header_id   , NINP.nego_header_id  )   AS nego_header_id
             , IFNULL(V_NINPM.nonpr_item_number, NINP.nonpr_item_number) AS nonpr_item_number
+            --//속성이름변경-폐기예정-시작
+            , ifnull(nullif(NINP.nonpr_supeval_attr_type_code,''),NINP.nonpr_supeval_attr_type_cd) as nonpr_supeval_attr_type_code
+            , ifnull(nullif(NINP.nonpr_supeval_attr_val_type_cd,''),NINP.nonpr_supeval_value_type_code) as nonpr_supeval_attr_val_type_cd
+            --/속성이름변경-폐기예정-종료
+            , ifnull(nullif(NINP.nonpr_supeval_attr_type_cd,''),NINP.nonpr_supeval_attr_type_code) as nonpr_supeval_attr_type_cd
+            , ifnull(nullif(NINP.nonpr_supeval_value_type_code,''),NINP.nonpr_supeval_attr_val_type_cd) as nonpr_supeval_value_type_code
             , NINP.nonpr_score_comput_method_code
-            , NINP.nonpr_supeval_attr_type_code
-            , NINP.nonpr_supeval_attr_val_type_cd
             , NINP.nonpr_requirements_text
             , NINP.note_content
             , NINP.target_score

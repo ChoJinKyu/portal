@@ -54,7 +54,7 @@ sap.ui.define([
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
-            console.log(" session >>> " , 'L2101');
+            console.log(" session >>> " , this.getSessionUserInfo());
             // Model used to manipulate control states
             oViewModel = new JSONModel({
                 //assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
@@ -85,7 +85,6 @@ sap.ui.define([
             }).setTable(this.byId("assetListTable"));
             
             this.getRouter().getRoute("assetList").attachPatternMatched(this._onRoutedThisPage, this);
-            console.log(this.getSessionUserInfo());
         },
 
         onMainTablePersoButtonPressed: function (event) {

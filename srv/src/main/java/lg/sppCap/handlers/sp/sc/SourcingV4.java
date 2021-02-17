@@ -205,16 +205,16 @@ public class SourcingV4 implements EventHandler {
                 .append("    , evaluation_type_code                                         ")  //#08-폐기예정
                 .append("    , nego_supeval_type_code                                       ")  //#09-폐기예정
                 .append("    , supplier_register_status_code                                ")  //#08
-                .append("    , supplier_code                                                ")  //#10
-                .append("    , supplier_name                                                ")  //#11
-                .append("    , supplier_type_code                                           ")  //#12
-                .append("    , excl_flag                                                    ")  //#13
-                .append("    , excl_reason_DESC                                             ")  //#14
-                .append("    , include_flag                                                 ")  //#15
-                .append("    , nego_target_include_reason_DESC                              ")  //#16
-                .append("    , only_maker_flat                                              ")  //#17
-                .append("    , contact                                                      ")  //#18
-                .append("    , note_content                                                 ")  //#19
+                .append("    , supplier_code                                                ")  //#09
+                .append("    , supplier_name                                                ")  //#10
+                .append("    , supplier_type_code                                           ")  //#11
+                .append("    , excl_flag                                                    ")  //#12
+                .append("    , excl_reason_DESC                                             ")  //#13
+                .append("    , include_flag                                                 ")  //#14
+                .append("    , nego_target_include_reason_DESC                              ")  //#15
+                .append("    , only_maker_flat                                              ")  //#16
+                .append("    , contact                                                      ")  //#17
+                .append("    , note_content                                                 ")  //#18
                 .append("    , cast('' as nvarchar(1)) as _row_state_                       ")  //#99 NVARCHAR(1), @UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
                 .append("    FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )                          ");
 
@@ -226,9 +226,13 @@ public class SourcingV4 implements EventHandler {
                 .append("       tenant_id                               ")  //#01 NVARCHAR(5) NOT NULL,
                 .append("     , nego_header_id                          ")  //#02 BIGINT NOT NULL,
                 .append("     , nonpr_item_number                       ")  //#03 NVARCHAR(10) NOT NULL,
-                .append("     , nonpr_score_comput_method_code          ")  //#04 NVARCHAR(30),
-                .append("     , nonpr_supeval_attr_type_code            ")  //#05 NVARCHAR(30),
-                .append("     , nonpr_supeval_attr_val_type_cd          ")  //#06 NVARCHAR(10),
+                //속성이름변경-폐기예정-시작
+                .append("     , nonpr_supeval_attr_type_code            ")  //#04 NVARCHAR(30),
+                .append("     , nonpr_supeval_attr_val_type_cd          ")  //#05 NVARCHAR(30),
+                //속성이름변경-폐기예정-종료
+                .append("     , nonpr_supeval_attr_type_cd              ")  //#04 NVARCHAR(30),
+                .append("     , nonpr_supeval_value_type_code           ")  //#05 NVARCHAR(30),
+                .append("     , nonpr_score_comput_method_code          ")  //#06 NVARCHAR(30),
                 .append("     , nonpr_requirements_text                 ")  //#07 NVARCHAR(1000),
                 .append("     , note_content                            ")  //#08 BLOB,
                 .append("     , target_score                            ")  //#09 DECIMAL(28,3),
@@ -283,7 +287,7 @@ public class SourcingV4 implements EventHandler {
         StringBuffer v_sql_insertTable_negoitemnonprices= new StringBuffer();
 		v_sql_insertTable_negoitemnonprices.append("insert into #local_temp_negoitemnonprices values ")
         // v_sql_insertTable_negoitemnonprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            .append("(?,?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: negoitemnonpricedtls
         StringBuffer v_sql_insertTable_negoitemnonpricedtls= new StringBuffer();
@@ -551,9 +555,13 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("tenant_id"                              ),
                     v_inRow.get("nego_header_id"                         ),
                     v_inRow.get("nonpr_item_number"                      ),
-                    v_inRow.get("nonpr_score_comput_method_code"         ),
+                    //속성이름변경-폐기예정-시작
                     v_inRow.get("nonpr_supeval_attr_type_code"           ),
                     v_inRow.get("nonpr_supeval_attr_val_type_cd"         ),
+                    //속성이름변경-폐기예정-종료
+                    v_inRow.get("nonpr_supeval_attr_type_cd"             ),
+                    v_inRow.get("nonpr_supeval_value_type_code"          ),
+                    v_inRow.get("nonpr_score_comput_method_code"         ),
                     v_inRow.get("nonpr_requirements_text"                ),
                     v_inRow.get("note_content"                           ),
                     v_inRow.get("target_score"                           ),

@@ -267,107 +267,6 @@
 					<uxap:ObjectPageSubSection >
                         <uxap:blocks>
 
-                            <!-- <table:Table id="laborCostTable"
-                                selectionMode="None"
-                                fixedColumnCount="7"
-                                visibleRowCountMode="Auto"
-                                rows="{dse>/MoldMasterSpec}"
-                                cellClick=".onCellClick"
-                                rowSelectionChange=".onCheck">
-                                <table:columns>
-                                    <table:Column width="5rem" hAlign="Center">
-                                        <table:multiLabels>
-                                            <Label visible="false" />
-                                            <Label text="{path:'I18N>/NO', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>company_code}"/> 
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="15rem" hAlign="Center">
-                                        <table:multiLabels>
-                                            <Label visible="false" />
-                                            <Label text="{path:'I18N>/PROCESS_NAME', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>org_code}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="7rem"  hAlign="Center">
-                                        <table:multiLabels>
-                                            <Label visible="false" />
-                                            <Label text="{path:'I18N>/PREFERENCE', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template >
-                                            <Text text="{dse>model}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="7rem" hAlign="Center">
-                                        <table:multiLabels>
-                                            <Label visible="false" />
-                                            <Label text="{path:'I18N>/SIZE', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>mold_number}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="10rem" hAlign="Center">
-                                        <table:multiLabels>
-                                            <Label visible="false" />
-                                            <Label text="{path:'I18N>/PRICE', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>mold_sequence}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="10rem" hAlign="Center">
-                                        <table:multiLabels>
-                                            <Label visible="false" />
-                                            <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>spec_name}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
-                                        <table:multiLabels>
-                                            <Label text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'}"/>
-                                            <Label text="{path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>mold_progress_status_name}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="10rem" hAlign="Center" headerSpan="2" >
-                                        <table:multiLabels>
-                                            <Label text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'}"/>
-                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>mold_progress_status_name}"/>
-                                        </table:template>
-                                    </table:Column>
-
-                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
-                                        <table:multiLabels>
-                                            <Label text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'}"/>
-                                            <Label text="{path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>mold_progress_status_name}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
-                                        <table:multiLabels>
-                                            <Label text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'}"/>
-                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
-                                        </table:multiLabels>
-                                        <table:template>
-                                            <Text text="{dse>mold_progress_status_name}"/>
-                                        </table:template>
-                                    </table:Column>
-                                </table:columns>
-                            </table:Table> -->
 
 
                             <Table 
@@ -375,10 +274,19 @@
                                 class="sapFDynamicPageAlignContent" 
                                 mode="None"
                                 growing="true"
-                                growingThreshold="10"
+                                growingThreshold="100"
                                 itemPress="onItemPress"
                                 updateFinished=".onMainTableUpdateFinished"
-                                items="{/MoldMasterSpec}"
+                                items="{
+                                    path : 'rrEst>/RepairCostConfig',
+                                    filters : [
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                        {path : 'company_code', operator : 'EQ', value1 : 'LGESL'},
+                                        {path : 'org_code', operator : 'EQ', value1 : 'A040'},
+                                        {path : 'item_type', operator : 'EQ', value1 : 'P'},
+                                        {path : 'item_size', operator : 'EQ', value1 : 'S'}
+                                    ]
+                                }"
                                 width="auto">
                                 <columns>
                                     <Column >
@@ -411,7 +319,7 @@
                                     <Column  >
                                         <Text text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'} {path:'I18N>/AMOUNT', formatter:'I18NFormatter'}" />
                                         <footer>
-                                            <Text text="12,000,000" />
+                                            <Text text="0" />
                                         </footer>
                                     </Column>
                                     <Column >
@@ -420,24 +328,23 @@
                                     <Column >
                                         <Text text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'} {path:'I18N>/AMOUNT', formatter:'I18NFormatter'}" />
                                         <footer>
-                                            <Text text="11,000,000" />
+                                            <Text text="0" />
                                         </footer>
                                     </Column>
                                 </columns>
                                 <items>
                                     <ColumnListItem >
                                         <cells>
-                                            <ObjectIdentifier text="{company_name}" />
-                                            <ObjectIdentifier text="{org_name}" />
-                                            <ObjectIdentifier text="{model}" />
-                                            <ObjectIdentifier text="{mold_number}" />
-                                            <ObjectIdentifier text="{mold_sequence}" />
-                                            <ObjectIdentifier text="{spec_name}" />
-                                            <ObjectIdentifier text="{mold_spec_status_name}" />
-                                            <ObjectIdentifier text="{mold_item_type_name}" />
-                                            <!-- <ObjectIdentifier text="{dse>create_user}" /> -->
-                                            <Input value="1" />
-                                            <ObjectIdentifier text="{create_user}" />
+                                            <ObjectIdentifier text="{rrEst>item_sequence}" />
+                                            <ObjectIdentifier text="{rrEst>item_name}" />
+                                            <ObjectIdentifier text="{rrEst>item_code}" />
+                                            <ObjectIdentifier text="{rrEst>item_size}" />
+                                            <ObjectIdentifier text="{rrEst>net_price}" />
+                                            <ObjectIdentifier text="KRW" />
+                                            <Input value="0" />
+                                            <ObjectIdentifier text="0" />
+                                            <Input value="0" />
+                                            <ObjectIdentifier text="0" />
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -456,7 +363,7 @@
                                 selectionMode="None"
                                 fixedColumnCount="7"
                                 visibleRowCountMode="Auto"
-                                rows="{dse>/MoldMasterSpec}"
+                                rows=""
                                 cellClick=".onCellClick"
                                 rowSelectionChange=".onCheck">
                                 <table:columns>
@@ -525,14 +432,6 @@
                                         </table:template>
                                     </table:Column>
                                 </table:columns>
-                                <table:footer>
-                                    <HBox>
-                                        <Text width="10rem" text="Total ( ② )"/>
-                                        <Text width="10rem" text="Currency: KRW" />
-                                        <Text width="20rem" text="Estimation amount: 12,000,000"  />
-                                        <Text width="20rem" text="Agreement amount: 11,000,000" />
-                                    </HBox>
-                                </table:footer>
                             </table:Table>
                         </uxap:blocks>
                     </uxap:ObjectPageSubSection >
@@ -547,7 +446,7 @@
                                 selectionMode="None"
                                 fixedColumnCount="7"
                                 visibleRowCountMode="Auto"
-                                rows="{list>/MoldMasterSpec}"
+                                rows=""
                                 cellClick=".onCellClick"
                                 rowSelectionChange=".onCheck">
                                 <table:columns>
@@ -609,7 +508,7 @@
                                 selectionMode="None"
                                 fixedColumnCount="7"
                                 visibleRowCountMode="Auto"
-                                rows="{dse>/MoldMasterSpec}"
+                                rows=""
                                 cellClick=".onCellClick"
                                 rowSelectionChange=".onCheck">
                                 <table:columns>
@@ -728,14 +627,14 @@
 
 		</uxap:sections>
 		
-		<!-- <uxap:footer>
+		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-                <Button type="Emphasized" text="{path:'I18N>/EDIT', formatter:'I18NFormatter'}" press=".onPageEditButtonPress" />
-				<Button type="Transparent" text="{path:'I18N>/CANCEL', formatter:'I18NFormatter'}" press=".onPageCancelEditButtonPress"/>
+                <Button type="Emphasized" id="buttentest" text="{path:'I18N>/EDIT', formatter:'I18NFormatter'}" press=".onPageEditButtonPress" />
+				<!-- <Button type="Transparent" text="{path:'I18N>/CANCEL', formatter:'I18NFormatter'}" press=".onPageCancelEditButtonPress"/>
                 <Button type="Transparent" text="{path:'I18N>/TEMP_SAVE', formatter:'I18NFormatter'}" press=".onPageSaveButtonPress" visible="{= !(${spec>/mold_spec_status_code} === 'C') }" />
-				<Button type="Emphasized" text="{path:'I18N>/CONFIRMED', formatter:'I18NFormatter'}" press=".onPageConfirmButtonPress" />
+				<Button type="Emphasized" text="{path:'I18N>/CONFIRMED', formatter:'I18NFormatter'}" press=".onPageConfirmButtonPress" /> -->
 			</OverflowToolbar>
-		</uxap:footer> -->
+		</uxap:footer>
 	</uxap:ObjectPageLayout>
 </core:FragmentDefinition>

@@ -163,7 +163,7 @@ BEGIN
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            IF ::SQL_ERROR_CODE = 349 THEN
+            IF ::SQL_ERROR_CODE = 301 THEN
                 :O_MSG.INSERT(('NG', 'The person in charge was duplicated.'), 1);
             ELSE
                 :O_MSG.INSERT(('NG', 'Manager Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
@@ -241,7 +241,7 @@ BEGIN
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            IF ::SQL_ERROR_CODE = 349 THEN
+            IF ::SQL_ERROR_CODE = 301 THEN
                 :O_MSG.INSERT(('NG', 'Quantitative item code was duplicated'), 1);
             ELSE
                 :O_MSG.INSERT(('NG', 'Quantitative Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);

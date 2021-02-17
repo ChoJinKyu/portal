@@ -31,13 +31,13 @@
 		editHeaderButtonPress="handleEditBtnPress" >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-                <uxap:expandedHeading>
-					<Title text="Remodel/Repair Management" wrapping="true" />
+                <!-- <uxap:expandedHeading>
+					<Title text="Repair Management" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="Remodel/Repair Management" wrapping="true"/>
+						<Title text="Repair Management" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -51,18 +51,18 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-				 <!-- <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${rrMgt>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/> --> 
+				<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${rrMgt>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/> 
 				</uxap:actions>
 
                 <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
-                </uxap:navigationActions>
-                <!-- <uxap:heading> 
+                </uxap:navigationActions> -->
+                <uxap:heading> 
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />
-                        <Title text="Participating Supplier Selection Cancel Approval" wrapping="true" class="" />
+                        <Title text="Repair Management" wrapping="true" class="" />
                     </HBox>
-				</uxap:heading> -->
+				</uxap:heading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -121,7 +121,7 @@
                             </HBox>
                             <VBox>
                                 <Label
-                                    text="{path:'I18N>/REMARK', formatter:'I18NFormatter'}"
+                                    text="{path:'I18N>/CONTENTS', formatter:'I18NFormatter'}"
                                     class="sapUiTinyMarginEnd"
                                     textAlign="Left"
                                     labelFor="input" 
@@ -390,7 +390,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Recipt Line">
+			<uxap:ObjectPageSection titleUppercase="false" title="Recipients Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageApprovalLineSection" >
                         <VBox class="sapUiSmallMargin">

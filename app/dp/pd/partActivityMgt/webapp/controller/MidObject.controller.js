@@ -313,8 +313,7 @@ sap.ui.define([
             var attachmentMandatoryFlag = "false";
             var approveMandatoryFlag = "false";
             var activeFlg = "false";           
-
-            console.log(oMasterData.attachment_mandatory_flag);
+            
             if (oMasterData.attachment_mandatory_flag === "true") {
                 attachmentMandatoryFlag = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }
@@ -351,9 +350,6 @@ sap.ui.define([
                     update_user_id  : this.loginUserId,
                     crud_type_code  : CUType
             };
-            
-            console.log(pdMstVal);
-            
 
             // var input = {
             //     inputData : {
@@ -369,6 +365,8 @@ sap.ui.define([
                     pdMst : pdMstVal
                 }
             };
+
+            console.log(input);
 
             // var pdDtlVal = [];
             
@@ -415,14 +413,9 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                        // 저장 후 재조회
-                                        v_this.getModel("contModel").setProperty("/createMode", false);                
-                                        v_this._bindView("/pdPartactivityTemplateView(tenant_id='" + v_this._sTenantId + "',company_code='" + v_this._sCompanyCode
-                                        + "',org_type_code='" + v_this._sOrgTypeCode + "',org_code='" + v_this._sOrgCode + "',part_project_type_code='" + v_this._sPartProjectTypeCode 
-                                        + "',activity_code='" + v_this._sActivityCode + "')");
-
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        v_this._onRoutedThisPage("U");
                                     }
                                     // sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     // v_this._toShowMode();                                
@@ -519,16 +512,20 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(oEvent){
-			var oArgs = oEvent.getParameter("arguments"),
-				oView = this.getView();
-			this._sTenantId = oArgs.tenantId;
-            this._sCompanyCode = oArgs.companyCode;
-            this._sOrgTypeCode = oArgs.orgTypeCode;
-            this._sOrgCode = oArgs.orgCode;
-            this._sPartProjectTypeCode = oArgs.partProjectTypeCode;
-            this._sActivityCode = oArgs.activityCode;
-            // this._sCategoryGroupCode = oArgs.categoryGroupCode;
-            this._slayout = oArgs.layout;
+            var oView = this.getView();
+
+            if(oEvent !== "U"){
+                var oArgs = oEvent.getParameter("arguments");
+                this._sTenantId = oArgs.tenantId;
+                this._sCompanyCode = oArgs.companyCode;
+                this._sOrgTypeCode = oArgs.orgTypeCode;
+                this._sOrgCode = oArgs.orgCode;
+                this._sPartProjectTypeCode = oArgs.partProjectTypeCode;
+                this._sActivityCode = oArgs.activityCode;
+                // this._sCategoryGroupCode = oArgs.categoryGroupCode;
+                this._slayout = oArgs.layout;               
+            }
+			
             
             this._fnInitControlModel();
 
@@ -569,14 +566,42 @@ sap.ui.define([
                 
 				this._toEditMode();
 			}else{
-				this.getModel("contModel").setProperty("/createMode", false);
+                this.getModel("contModel").setProperty("/createMode", false);
+                
+                var sObjectPath = "/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
+                + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                + "',activity_code='" + this._sActivityCode + "')";
+
+                var oMasterModel = this.getModel("master");
+
+                oMasterModel.setTransactionModel(this.getModel());
+				oMasterModel.read(sObjectPath, {
+					success: function (rData, reponse) {
+                                if(rData.attachment_mandatory_flag === true){
+                                    rData.attachment_mandatory_flag = "true";
+                                }else{
+                                    rData.attachment_mandatory_flag = "false";
+                                }
+                                if(rData.approve_mandatory_flag === true){
+                                    rData.approve_mandatory_flag = "true";
+                                }else{
+                                    rData.approve_mandatory_flag = "false";
+                                }
+                                if(rData.active_flag === true){
+                                    rData.active_flag = "true";
+                                }else{
+                                    rData.active_flag = "false";
+                                }
+                            oMasterModel.setData(rData, reponse);                            
+                    }
+                });
 
                 // this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
                 // + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
                 // + "',activity_code='" + this._sActivityCode + "',category_group_code='" + this._sCategoryGroupCode + "')");
-                this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
-                + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
-                + "',activity_code='" + this._sActivityCode + "')");
+                // this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
+                // + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                // + "',activity_code='" + this._sActivityCode + "')");
                 
 				// oView.setBusy(true);
 				// var oLanguagesModel = this.getModel("languages");

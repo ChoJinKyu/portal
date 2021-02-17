@@ -1,82 +1,90 @@
-view EP_LI_PUBLISH_ITEM_VIEW as
-select 
-    dtl.tenant_id,
-    dtl.company_code,
-    dtl.loi_write_number,
-    dtl.loi_item_number,    
-    mst.loi_number,
-    dtl.item_sequence,
-    mst.requestor_empno,
-    -- mst.requestor_empno as requestor_name,
-    (select cm_get_emp_name_func(dtl.tenant_id, mst.requestor_empno) from dummy) as requestor_name,
-    mst.request_department_code,
-    -- mst.request_department_code as request_department_name,
-    (select cm_get_dept_name_func(dtl.tenant_id, mst.request_department_code) from dummy) as request_department_name,
-    coalesce(dtl.buyer_empno, '') as buyer_empno,
-    -- coalesce(dtl.buyer_empno, '') as buyer_name,
-    (select cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) from dummy) as buyer_name, 
-    coalesce(dtl.purchasing_department_code, '') as purchasing_department_code,
-    -- coalesce(dtl.purchasing_department_code, '') as purchasing_department_name,
-    (select cm_get_dept_name_func(dtl.tenant_id, dtl.purchasing_department_code) from dummy) as purchasing_department_name,
-    mst.loi_request_title,
-    dtl.item_desc,
-    coalesce(dtl.quotation_number, 0) as quotation_number,
-    coalesce(dtl.quotation_item_number, 0) as quotation_item_number,
-    '' as supplier_name,
-    coalesce(pub.publish_date, '') as publish_date,
-    dtl.delivery_request_date,
-    dtl.request_quantity,
-    dtl.unit,
-    dtl.request_amount,
-    coalesce(dtl.currency_code, '') as currency_code,
-    dtl.loi_selection_number,
-    (case
-        when coalesce(dtl.loi_selection_number, '') = '' and dtl.quotation_number is not null
-        then '122020'
-        else coalesce(sel.loi_selection_status_code, '')
-    end) as loi_selection_status_code,
-    (case
-        when coalesce(dtl.loi_selection_number, '') = '' and dtl.quotation_number is not null
-        then 'RFQ완료'
-        else (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_SELECTION_STATUS', sel.loi_selection_status_code, 'KO') from dummy)
-    end) as loi_selection_status_name,    
-    dtl.loi_publish_number,
-    coalesce(pub.loi_publish_status_code, '') as loi_publish_status_code,
-    (select cm_get_code_name_func(dtl.tenant_id, 'EP_LOI_PUBLISH_STATUS', pub.loi_publish_status_code, 'KO') from dummy) as loi_publish_status_name,
-    -- '' as loi_publish_status_name,
-    '' as po_status_code,
-    mst.request_date,
-    sel.supplier_selection_date,
-    coalesce(dtl.supplier_opinion, '') as supplier_opinion,
-    coalesce(dtl.remark, '') as remark,
-    coalesce(dtl.plant_code, '') as plant_code,
-    coalesce(pl.plant_name, '') as plant_name,
-    coalesce(dtl.spec_desc, '') as spec_desc,
-    (select ep_gep_loi_selection_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, sel.loi_selection_number, 'Q') from dummy) as same_quotation_number,
-    (select ep_gep_loi_selection_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, sel.loi_selection_number, 'QT') from dummy) as same_quotation_item_number,
-    (select ep_gep_loi_selection_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, sel.loi_selection_number, 'S') from dummy) as same_selection_item_number,
-    (select ep_gep_loi_publish_group(dtl.tenant_id, dtl.company_code, dtl.loi_write_number, pub.loi_publish_number) from dummy) as same_publish_item_number,   
-    dtl.local_create_dtm,
-    dtl.local_update_dtm,
-    dtl.create_user_id,
-    dtl.update_user_id,
-    dtl.system_create_dtm,
-    dtl.system_update_dtm
-    from ep_li_dtl as dtl
-    left outer join ep_li_mst as mst 
-    on dtl.tenant_id = mst.tenant_id 
-    and dtl.company_code = mst.company_code
-    and dtl.loi_write_number = mst.loi_write_number
-    left outer join ep_li_publish as pub
-    on dtl.tenant_id = pub.tenant_id 
-    and dtl.company_code = pub.company_code
-    and dtl.loi_publish_number = pub.loi_publish_number
-    left outer join ep_li_supplier_selection as sel
-    on dtl.tenant_id = sel.tenant_id 
-    and dtl.company_code = sel.company_code
-    and dtl.loi_selection_number = sel.loi_selection_number
-    left outer join cm_org_plant as pl
-    on dtl.tenant_id = pl.tenant_id 
-    -- and dtl.company_code = pl.company_code 
-    and dtl.plant_code = pl.plant_code
-    where mst.loi_request_status_code = '121040';
+VIEW EP_LI_PUBLISH_ITEM_VIEW AS
+SELECT 
+D.* 
+, SEL_STATUS.CODE_DESCRIPTION AS LOI_SELECTION_STATUS_NAME
+, SEL_STATUS.COLOR_TYPE_CODE AS LOI_SELECTION_STATUS_COLOR
+, PUB_STATUS.CODE_DESCRIPTION AS LOI_PUBLISH_STATUS_NAME
+, PUB_STATUS.COLOR_TYPE_CODE AS LOI_PUBLISH_STATUS_COLOR
+FROM (
+    SELECT 
+    DTL.TENANT_ID,
+    DTL.COMPANY_CODE,
+    DTL.LOI_WRITE_NUMBER,
+    DTL.LOI_ITEM_NUMBER,    
+    MST.LOI_NUMBER,
+    DTL.ITEM_SEQUENCE,
+    MST.REQUESTOR_EMPNO,
+    (SELECT CM_GET_EMP_NAME_FUNC(DTL.TENANT_ID, MST.REQUESTOR_EMPNO) FROM DUMMY) AS REQUESTOR_NAME,
+    MST.REQUEST_DEPARTMENT_CODE,
+    (SELECT CM_GET_DEPT_NAME_FUNC(DTL.TENANT_ID, MST.REQUEST_DEPARTMENT_CODE) FROM DUMMY) AS REQUEST_DEPARTMENT_NAME,
+    COALESCE(DTL.BUYER_EMPNO, '') AS BUYER_EMPNO,
+    (SELECT CM_GET_EMP_NAME_FUNC(DTL.TENANT_ID, DTL.BUYER_EMPNO) FROM DUMMY) AS BUYER_NAME, 
+    COALESCE(DTL.PURCHASING_DEPARTMENT_CODE, '') AS PURCHASING_DEPARTMENT_CODE,
+    (SELECT CM_GET_DEPT_NAME_FUNC(DTL.TENANT_ID, DTL.PURCHASING_DEPARTMENT_CODE) FROM DUMMY) AS PURCHASING_DEPARTMENT_NAME,
+    MST.LOI_REQUEST_TITLE,
+    DTL.ITEM_DESC,
+    COALESCE(DTL.QUOTATION_NUMBER, 0) AS QUOTATION_NUMBER,
+    COALESCE(DTL.QUOTATION_ITEM_NUMBER, 0) AS QUOTATION_ITEM_NUMBER,
+    '' AS SUPPLIER_NAME,
+    COALESCE(PUB.PUBLISH_DATE, '') AS PUBLISH_DATE,
+    DTL.DELIVERY_REQUEST_DATE,
+    DTL.REQUEST_QUANTITY,
+    DTL.UNIT,
+    DTL.REQUEST_AMOUNT,
+    COALESCE(DTL.CURRENCY_CODE, '') AS CURRENCY_CODE,
+    DTL.LOI_SELECTION_NUMBER,
+    (CASE
+        WHEN COALESCE(DTL.LOI_SELECTION_NUMBER, '') = '' AND DTL.QUOTATION_NUMBER IS NOT NULL
+        THEN '122020'
+        ELSE COALESCE(SEL.LOI_SELECTION_STATUS_CODE, '')
+    END) AS LOI_SELECTION_STATUS_CODE,
+    DTL.LOI_PUBLISH_NUMBER,
+    COALESCE(PUB.LOI_PUBLISH_STATUS_CODE, '') AS LOI_PUBLISH_STATUS_CODE,
+    -- (SELECT CM_GET_CODE_NAME_FUNC(DTL.TENANT_ID, 'EP_LOI_PUBLISH_STATUS', PUB.LOI_PUBLISH_STATUS_CODE, 'KO') FROM DUMMY) AS LOI_PUBLISH_STATUS_NAME,
+    -- '' AS LOI_PUBLISH_STATUS_NAME,
+    '' AS PO_STATUS_CODE,
+    MST.REQUEST_DATE,
+    SEL.SUPPLIER_SELECTION_DATE,
+    COALESCE(DTL.SUPPLIER_OPINION, '') AS SUPPLIER_OPINION,
+    COALESCE(DTL.REMARK, '') AS REMARK,
+    COALESCE(DTL.PLANT_CODE, '') AS PLANT_CODE,
+    COALESCE(PL.PLANT_NAME, '') AS PLANT_NAME,
+    COALESCE(DTL.SPEC_DESC, '') AS SPEC_DESC,
+    (SELECT EP_GEP_LOI_SELECTION_GROUP(DTL.TENANT_ID, DTL.COMPANY_CODE, DTL.LOI_WRITE_NUMBER, SEL.LOI_SELECTION_NUMBER, 'Q') FROM DUMMY) AS SAME_QUOTATION_NUMBER,
+    (SELECT EP_GEP_LOI_SELECTION_GROUP(DTL.TENANT_ID, DTL.COMPANY_CODE, DTL.LOI_WRITE_NUMBER, SEL.LOI_SELECTION_NUMBER, 'QT') FROM DUMMY) AS SAME_QUOTATION_ITEM_NUMBER,
+    (SELECT EP_GEP_LOI_SELECTION_GROUP(DTL.TENANT_ID, DTL.COMPANY_CODE, DTL.LOI_WRITE_NUMBER, SEL.LOI_SELECTION_NUMBER, 'S') FROM DUMMY) AS SAME_SELECTION_ITEM_NUMBER,
+    (SELECT EP_GEP_LOI_PUBLISH_GROUP(DTL.TENANT_ID, DTL.COMPANY_CODE, DTL.LOI_WRITE_NUMBER, PUB.LOI_PUBLISH_NUMBER) FROM DUMMY) AS SAME_PUBLISH_ITEM_NUMBER,   
+    DTL.LOCAL_CREATE_DTM,
+    DTL.LOCAL_UPDATE_DTM,
+    DTL.CREATE_USER_ID,
+    DTL.UPDATE_USER_ID,
+    DTL.SYSTEM_CREATE_DTM,
+    DTL.SYSTEM_UPDATE_DTM
+    FROM EP_LI_DTL AS DTL
+    LEFT OUTER JOIN EP_LI_MST AS MST 
+    ON DTL.TENANT_ID = MST.TENANT_ID 
+    AND DTL.COMPANY_CODE = MST.COMPANY_CODE
+    AND DTL.LOI_WRITE_NUMBER = MST.LOI_WRITE_NUMBER
+    LEFT OUTER JOIN EP_LI_PUBLISH AS PUB
+    ON DTL.TENANT_ID = PUB.TENANT_ID 
+    AND DTL.COMPANY_CODE = PUB.COMPANY_CODE
+    AND DTL.LOI_PUBLISH_NUMBER = PUB.LOI_PUBLISH_NUMBER
+    LEFT OUTER JOIN EP_LI_SUPPLIER_SELECTION AS SEL
+    ON DTL.TENANT_ID = SEL.TENANT_ID 
+    AND DTL.COMPANY_CODE = SEL.COMPANY_CODE
+    AND DTL.LOI_SELECTION_NUMBER = SEL.LOI_SELECTION_NUMBER
+    LEFT OUTER JOIN CM_ORG_PLANT AS PL
+    ON DTL.TENANT_ID = PL.TENANT_ID 
+    -- AND DTL.COMPANY_CODE = PL.COMPANY_CODE 
+    AND DTL.PLANT_CODE = PL.PLANT_CODE
+    WHERE MST.LOI_REQUEST_STATUS_CODE = '121040'
+    ) D
+LEFT OUTER JOIN CM_CODE_DTL SEL_STATUS
+ON D.TENANT_ID = SEL_STATUS.TENANT_ID
+AND SEL_STATUS.GROUP_CODE = 'EP_LOI_SELECTION_STATUS'
+AND D.LOI_SELECTION_STATUS_CODE = SEL_STATUS.CODE 
+LEFT OUTER JOIN CM_CODE_DTL PUB_STATUS
+ON D.TENANT_ID = PUB_STATUS.TENANT_ID
+AND PUB_STATUS.GROUP_CODE = 'EP_LOI_PUBLISH_STATUS'
+AND D.LOI_PUBLISH_STATUS_CODE = PUB_STATUS.CODE  
+    ;
