@@ -8,6 +8,7 @@ sap.ui.define([
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
     "sap/m/TablePersoController",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -47,6 +48,7 @@ sap.ui.define([
         ManagedModel,
         ManagedListModel,
         DateFormatter,
+        NumberFormatter,
         TablePersoController,
         Filter,
         FilterOperator,
@@ -76,7 +78,8 @@ sap.ui.define([
         "use strict";
         var that;
         return BaseController.extend("sp.np.npMst.controller.MainList", {
-            //dateFormatter: DateFormatter,
+            dateFormatter: DateFormatter,
+            numberFormatter: NumberFormatter,
             validator: new Validator(),
 
             onInit: function () {
@@ -404,7 +407,7 @@ sap.ui.define([
                 }
 
                 sValue = sValue.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-                return parseFloat(sValue).toFixed(2);
+                return parseFloat(sValue).toFixed(5);
             },
 
             comma: function (str) {

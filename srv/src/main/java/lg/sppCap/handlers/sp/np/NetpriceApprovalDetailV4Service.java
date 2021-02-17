@@ -1,12 +1,10 @@
 package lg.sppCap.handlers.sp.np;
 
-import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
@@ -33,8 +31,6 @@ import cds.gen.sp.npapprovaldetailv4service.StatusChangeResultType;
 @Component
 @ServiceName(NpApprovalDetailV4Service_.CDS_NAME)
 public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements EventHandler {
-
-
 
     /**
      * 저장 Procedure의 Parameter [Detail] 관련 Local Temporary Table Layout
@@ -96,14 +92,14 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
                 .append(IN , "I_NET_PRICE_DOCUMENT_TYPE_CODE"  , Types.VARCHAR, "net_price_document_type_code")
                 .append(IN , "I_NET_PRICE_SOURCE_CODE"         , Types.VARCHAR, "net_price_source_code"       )
                 .append(IN , "I_BUYER_EMPNO"                   , Types.VARCHAR, "buyer_empno"                 )
-                .append(IN , "I_TENTPRC_FLAG"                  , Types.BOOLEAN, "tentprc_flag"                )
                 .append(IN , "I_OUTCOME_CODE"                  , Types.VARCHAR, "outcome_code"                )
                 .append(IN , "I_DETAILS"                       , TABLE_TYPE   , "details_temp_table"          )
                 .append(IN , "I_APPROVERS"                     , TABLE_TYPE   , "approvers_temp_table"        )
                 .append(IN , "I_REFERERS"                      , TABLE_TYPE   , "referers_temp_table"         )
                 .append(IN , "I_USER_ID"                       , Types.VARCHAR, "user_id"                     )
                 .append(OUT, "O_RETURN_CODE"                   , Types.VARCHAR, "return_code"                 )
-                .append(OUT, "O_RETURN_MSG"                    , Types.VARCHAR, "return_msg"                  );
+                .append(OUT, "O_RETURN_MSG"                    , Types.VARCHAR, "return_msg"                  )
+                .append(OUT, "O_DB_ERROR_MSG"                  , Types.VARCHAR, "db_error_msg"                );
 
     /**
      * 단가 품의 저장 
@@ -145,16 +141,38 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
             
             String resultCode = (String)resultMap.get("return_code");
             String resultMsg  = (String)resultMap.get("return_msg");
+            String errorMsg   = (String)resultMap.get("db_error_msg");
 
             if(!"OK".equals( resultCode )){
-                log.error("SP_NP_NET_PRICE_APPROVAL_SAVE_PROC 호출시 오류 발생 함 Code:{}, Message:{} ", resultCode, resultMsg);
-                resultMsg = this.getMessage( resultCode, userSession.getLanguageCode() ); // Error 코드에 대한 다국어 적용된 Message로 변환.
-                throw new ServiceException(ErrorStatuses.SERVER_ERROR, resultMsg );
+                log.error("SP_NP_NET_PRICE_APPROVAL_SAVE_PROC 호출시 오류 발생 함 Code:{}, Message:{}, DB Error Message:{}", resultCode, resultMsg, errorMsg);
+                throw new ServiceException(ErrorCode.USER_MESSAGE_SERVER_ERROR, resultMsg );
             }
 
             vResult.setReturnCode( resultCode );
             vResult.setReturnMsg( "Success" );
             vResult.setApprovalNumber( resultMsg );
+
+
+            // 승인 요청이면, 상태 변경 처리
+            if("AR".equals( master.getApproveStatusCode() )){
+                Map<String,Object> param2 = new HashMap<String,Object>();
+                param2.put("tenant_id"              , master.getTenantId());
+                param2.put("approval_number"        , master.getApprovalNumber());
+                param2.put("approve_status_code"    , master.getApproveStatusCode());
+                param2.put("user_id"                , userSession.getUserId());
+    
+                // Procedure Call
+                Map<String, Object> resultMap2 = super.executeProcedure(APPROVAL_STATUS_CHANGE_PROCEDURE_LAYOUT, param2);
+                
+                String resultCode2 = (String)resultMap2.get("return_code");
+                String resultMsg2  = (String)resultMap2.get("return_msg");
+                String errorMsg2  = (String)resultMap2.get("db_error_msg");
+    
+                if(!"OK".equals( resultCode2 )){
+                    log.error("SP_NP_NET_PRICE_APPROVAL_STATUS_CHANGE_PROC 호출시 오류 발생 함 Code:{}, Message:{}, DB Error Message:{}", resultCode2, resultMsg2, errorMsg2);
+                    throw new ServiceException(ErrorCode.USER_MESSAGE_SERVER_ERROR, resultMsg2 );
+                }
+            }
 
         }finally{
             try{ this.dropTemporaryTable( detailTableName ); }catch(Exception e){}
@@ -180,8 +198,8 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
                 .append(IN , "I_APPROVE_STATUS_CODE"           , Types.VARCHAR, "approve_status_code"         )
                 .append(IN , "I_USER_ID"                       , Types.VARCHAR, "user_id"                     )
                 .append(OUT, "O_RETURN_CODE"                   , Types.VARCHAR, "return_code"                 )
-                .append(OUT, "O_RETURN_MSG"                    , Types.VARCHAR, "return_msg"                  );
-
+                .append(OUT, "O_RETURN_MSG"                    , Types.VARCHAR, "return_msg"                  )
+                .append(OUT, "O_DB_ERROR_MSG"                  , Types.VARCHAR, "db_error_msg"                );
 
 
     /**
@@ -201,35 +219,6 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
         StatusChangeResultType vResult = StatusChangeResultType.create();
         
         try{
-            /*
-            // Procedure Call
-            StringBuffer sqlCallProc = new StringBuffer();
-            sqlCallProc.append("CALL SP_NP_NET_PRICE_APPROVAL_STATUS_CHANGE_PROC(")       
-                        .append(" I_TENANT_ID => ?")
-                        .append(",I_APPROVAL_NUMBER => ?")
-                        .append(",I_APPROVE_STATUS_CODE => ?")
-                        .append(",I_USER_ID => ?")
-                        .append(",O_RETURN_CODE => ?")
-                        .append(",O_RETURN_MSG => ?")
-                        .append(")");
-
-            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-            paramList.add(new SqlParameter("I_TENANT_ID"                    , Types.VARCHAR));       
-            paramList.add(new SqlParameter("I_APPROVAL_NUMBER"              , Types.VARCHAR));
-            paramList.add(new SqlParameter("I_APPROVE_STATUS_CODE"          , Types.VARCHAR));
-            paramList.add(new SqlParameter("I_USER_ID"                      , Types.VARCHAR));
-            paramList.add(new SqlOutParameter("O_RETURN_CODE"               , Types.VARCHAR));
-            paramList.add(new SqlOutParameter("O_RETURN_MSG"                , Types.VARCHAR));
-
-            Map<String, Object> resultMap = jdbc.call((Connection connection) -> {
-                CallableStatement callableStatement = connection.prepareCall(sqlCallProc.toString());
-                callableStatement.setString("I_TENANT_ID"                    , vParam.getTenantId() );
-                callableStatement.setString("I_APPROVAL_NUMBER"              , vParam.getApprovalNumber() );
-                callableStatement.setString("I_APPROVE_STATUS_CODE"          , vParam.getApproveStatusCode() );
-                callableStatement.setString("I_USER_ID"                      , userSession.getUserId() );
-                return callableStatement;
-            }, paramList);
-            */
 
             Map<String,Object> param = new HashMap<String,Object>();
             param.putAll( vParam );
@@ -240,11 +229,11 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
             
             String resultCode = (String)resultMap.get("return_code");
             String resultMsg  = (String)resultMap.get("return_msg");
+            String errorMsg   = (String)resultMap.get("db_error_msg");
 
             if(!"OK".equals( resultCode )){
-                log.error("SP_NP_NET_PRICE_APPROVAL_STATUS_CHANGE_PROC 호출시 오류 발생 함 Code:{}, Message:{} ", resultCode, resultMsg);
-                resultMsg = this.getMessage( resultCode, "KO"); // Error 코드에 대한 다국어 적용된 Message로 변환.
-                throw new ServiceException(ErrorStatuses.SERVER_ERROR, resultMsg );
+                log.error("SP_NP_NET_PRICE_APPROVAL_STATUS_CHANGE_PROC 호출시 오류 발생 함 Code:{}, Message:{}, DB Error Message:{}", resultCode, resultMsg, errorMsg);
+                throw new ServiceException(ErrorCode.USER_MESSAGE_SERVER_ERROR, resultMsg );
             }
 
             vResult.setReturnCode( resultCode );
@@ -266,7 +255,8 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
                 .append(IN , "I_APPROVAL_NUMBER"   , Types.VARCHAR, "approval_number"     )
                 .append(IN , "I_USER_ID"           , Types.VARCHAR, "user_id"             )
                 .append(OUT, "O_RETURN_CODE"       , Types.VARCHAR, "return_code"         )
-                .append(OUT, "O_RETURN_MSG"        , Types.VARCHAR, "return_msg"          );
+                .append(OUT, "O_RETURN_MSG"        , Types.VARCHAR, "return_msg"          )
+                .append(OUT, "O_DB_ERROR_MSG"      , Types.VARCHAR, "db_error_msg"        );
                 /*
                 .append(OUT, "O_MSG"               , TABLE_TYPE   , "results"
                     ,(ResultSet v_rs, int rowNum) -> {
@@ -309,11 +299,11 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
             
             String resultCode = (String)resultMap.get("return_code");
             String resultMsg  = (String)resultMap.get("return_msg");
+            String errorMsg   = (String)resultMap.get("db_error_msg");
 
             if(!"OK".equals( resultCode )){
-                log.error("SP_NP_NET_PRICE_APPROVAL_DELETE_PROC 호출시 오류 발생 함 Code:{}, Message:{} ", resultCode, resultMsg);
-                resultMsg = this.getMessage( resultCode, "KO"); // Error 코드에 대한 다국어 적용된 Message로 변환.
-                throw new ServiceException(ErrorStatuses.SERVER_ERROR, resultMsg );
+                log.error("SP_NP_NET_PRICE_APPROVAL_DELETE_PROC 호출시 오류 발생 함 Code:{}, Message:{}, DB Error Message:{}", resultCode, resultMsg, errorMsg);
+                throw new ServiceException(ErrorCode.USER_MESSAGE_SERVER_ERROR, resultMsg );
             }
 
             vResult.setReturnCode( resultCode );
@@ -326,30 +316,6 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
 
         context.setResult( vResult );
         context.setCompleted(); 
-    }
-
-    
-
-     
-    /**
-     * 다국어 적용된 Message를 반환
-     * 
-     * @param messageCode
-     * @param languageCode
-     * @return
-     */
-    private String getMessage(String messageCode, String languageCode){
-        
-        if( "NG001".equals( messageCode ) ){
-            return "공통 [결재 마스터] 등록 오류.";
-
-        }else if( "NG002".equals( messageCode ) ){
-            return "[단가품의 마스터] 등록 오류.";
-
-        }else if( "NG003".equals( messageCode ) ){
-            return "[단가품의 상세] 등록 오류.";
-        }
-        return "정의 되지 않은 오류 입니다.";
     }
 
 }

@@ -156,13 +156,17 @@
                                     <HBox>
                                         <VBox>
                                             <Label text="{I18N>/DESCRIPTION}"/>
-                                            <rte:RichTextEditor id="approval_contents" width="100%" height="400px" value="{detailModel>/approval_contents}" 
+                                            <rte:RichTextEditor id="approval_contents" 
+                                                width="100%" 
+                                                height="400px" 
+                                                value="{detailModel>/approval_contents}" 
                                                 customToolbar="true" 
                                                 showGroupFont="true" 
                                                 showGroupLink="true" 
                                                 showGroupInsert="true"
                                                 editable="{detailViewModel>/viewMode}" />
                                             <!-- Text Editor 끝 -->
+                                            <!-- <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%" /> -->
                                         </VBox>
                                         <layoutData>
                                             <layout:GridData span="XL12 L12 M12 S12" />
@@ -202,6 +206,12 @@
                                             <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                                             <t:template>
                                                 <ObjectStatus icon="{path: 'generalInfoList>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="3rem">
+                                            <Label text="{I18N>/SEQUENCE}" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{generalInfoList>item_sequence}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -369,7 +379,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/UOM}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>uom'}"  />
+                                                <Text text="{path: 'generalInfoList>uom_code'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -381,7 +391,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(현재)Price" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>curr_net_price'}"  />
+                                                <Text text="{path: 'generalInfoList>curr_net_price', formatter: '.numberFormat'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem"><!-- 콤보작업 -->
@@ -404,7 +414,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(New)Price" textAlign="Center" width="100%"/>
                                             <t:template>
-                                                <Input type="Number" value="{generalInfoList>net_price}" editable="{detailViewModel>/viewMode}" textAlign="Right" />
+                                                <Input type="Number" value="{path : 'generalInfoList>net_price'}" editable="{detailViewModel>/viewMode}" textAlign="Right" change=".generalInfoChange" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -426,7 +436,7 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
-                                            <Label text="Maker code" textAlign="Center" editable="{detailViewModel>/viewMode}" />
+                                            <Label text="Maker code" textAlign="Center" />
                                             <t:template>
                                                 <Input type="Text" showValueHelp="true" valueHelpRequest=".vhMakerCode" value="{generalInfoList>maker_code}" editable="{detailViewModel>/viewMode}" />
                                             </t:template>
@@ -437,7 +447,7 @@
                                                 <Text text="{path: 'generalInfoList>maker_name'}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
+                                        <t:Column width="10rem">
                                             <Label text="Payment Term Code" textAlign="Center" />
                                             <t:template>
                                                 <ComboBox
@@ -451,7 +461,7 @@
                                                         }" selectedKey="{generalInfoList>payterms_code}"
                                                         editable="{detailViewModel>/viewMode}">
                                                     <items>
-                                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                                        <core:Item key="{util>code}" text="[{util>code}]{util>code_name}" />
                                                     </items>
                                                 </ComboBox>
                                             </t:template>
@@ -516,13 +526,19 @@
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
-                                            <Button text="Add Price" type="Emphasized" press=".fnAddPrice" />
+                                            <Button text="Add Price" type="Emphasized" press=".fnAddPrice" visible="{detailViewModel>/viewMode}" />
                                             <!-- <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" /> -->
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
+                                        <t:Column hAlign="Center" width="3rem">
+                                            <Label text="{I18N>/SEQUENCE}" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{basePriceInfoList>rowval}"  />
+                                            </t:template>
+                                        </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
                                             <t:template>
@@ -544,7 +560,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'basePriceInfoList>supplier_name'}"  />
+                                                <Text text="{path: 'basePriceInfoList>supplier_local_name'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">

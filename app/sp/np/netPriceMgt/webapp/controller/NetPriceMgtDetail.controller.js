@@ -274,59 +274,29 @@ sap.ui.define([
             },
 
             vhMaterialOrgCode: function (oEvent) {
+                //console.log("spath:::" + oEvent.getSource().getParent().getRowBindingContext().sPath);
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                var oPurOrgModel = this.getModel("purOrg");
                 var oRootModel = this.getModel("rootModel");
-                
-                var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)];
-                oPurOrgModel.read("/Pur_Operation_Org", {
-                    filters: aPurOrgFilter,
-                    success: function (data) {
-                        if (data && data.results) {
-                            var aResults = data.results;
-                            var aCompoany = [];
-                            var oPurOrg = {};
+                var generalInfoModel = this.getModel("generalInfoList");
 
-                            for (var i = 0; i < aResults.length; i++) {
-                                var oResult = aResults[i];
-                                if (-1 === aCompoany.indexOf(oResult.company_code)) {
-                                    aCompoany.push(oResult.company_code);
-                                    oPurOrg[oResult.company_code] = [];
-                                }
-
-                                oPurOrg[oResult.company_code].push({ org_code: oResult.org_code, org_name: oResult.org_name });
-                            }
-
-                            oRootModel.setProperty("/purOrg", oPurOrg);
-                            
-                            
-                            var generalInfoModel = that.getModel("generalInfoList");
-
-                            if (!that.oSearchMultiMaterialMasterDialog) {
-                                that.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({
-                                    title: "Choose Material Code",
-                                    multiSelection: false,
-                                    companyCode: SppUserSessionUtil.getUserInfo().COMPANY_CODE,
-                                    purOrg: oRootModel.getProperty("/purOrg"),
-                                    tenantId: SppUserSessionUtil.getUserInfo().TENANT_ID
-                                });
-                                that.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
-                                    console.log("apply event!!!");
-                                    //oViewModel.refresh();
-                                    generalInfoModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
-                                    generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
-                                    generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
-                                    generalInfoModel.setProperty(that.sPath + "/uom", oEvent.mParameters.item.base_uom_code);
-                                }.bind(that));
-                            }
-                            that.oSearchMultiMaterialMasterDialog.open();
-
-                        }
-                    },
-                    error: function (data) {
-                        console.log("error", data);
-                    }
-                });
+                if (!this.oSearchMultiMaterialMasterDialog) {
+                    this.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({
+                        title: "Choose Material Code",
+                        multiSelection: false,
+                        companyCode: SppUserSessionUtil.getUserInfo().COMPANY_CODE,
+                        purOrg: oRootModel.getProperty("/purOrg"),
+                        tenantId: SppUserSessionUtil.getUserInfo().TENANT_ID
+                    });
+                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
+                        console.log("apply event!!!");
+                        //oViewModel.refresh();
+                        generalInfoModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
+                        generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
+                        generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
+                        generalInfoModel.setProperty(that.sPath + "/uom", oEvent.mParameters.item.base_uom_code);
+                    }.bind(that));
+                }
+                this.oSearchMultiMaterialMasterDialog.open();
             },
 
             vhMaterialCode: function (oEvent) {
@@ -882,7 +852,7 @@ sap.ui.define([
                                 contentType: "application/json",
                                 success: function (data) {
                                     //console.log('data:', data);
-                                    MessageToast.show(that.getModel("I18N").getText("/NCM00003"));
+                                    MessageToast.show(this.getModel("I18N").getText("/NCM00003"));
                                     that.getRouter().navTo("NetPriceMgtList");
                                 },
                                 error: function (e) {

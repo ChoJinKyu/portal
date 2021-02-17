@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sap.cds.CdsData;
+import com.sap.cds.services.ErrorStatus;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,6 @@ public class SpNpBaseService {
 
     @Autowired
     protected SppUserSession userSession;
-
 
 
     /**
@@ -439,6 +439,52 @@ public class SpNpBaseService {
             }
         }
 
+    }
+
+
+
+
+    protected enum ErrorCode implements ErrorStatus {
+
+        USER_MESSAGE_SERVER_ERROR(599, "Internal server error", 599);
+
+        private final int code;
+        private final String description;
+        private final int httpStatus;
+
+        private ErrorCode(int code, String description, int httpStatus) {
+            this.code = code;
+            this.description = description;
+            this.httpStatus = httpStatus;
+        }
+
+        @Override
+        public int getCode() {
+            return code;
+        }
+
+        @Override
+        public String getDescription() {
+            return description;
+        }
+
+        @Override
+        public int getHttpStatus() {
+            return httpStatus;
+        }
+
+        /**
+         * @param code the code
+         * @return the ErrorStatus from this enum, associated with the given code or {@code null}
+         */
+        public static ErrorCode getByCode(int code) {
+            for(ErrorCode errorStatus : ErrorCode.values()) {
+                if(errorStatus.getHttpStatus() == code) {
+                    return errorStatus;
+                }
+            }
+            return null;
+        }
     }
 
 }

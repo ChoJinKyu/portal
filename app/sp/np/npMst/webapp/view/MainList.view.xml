@@ -283,9 +283,10 @@
                                 <Text text="{list>uom_code}" wrapping="false" />
                             </table:template>
                         </table:Column>
-                        <table:Column label="Qty" width="5rem" filterProperty="purchasing_quantity" hAlign="Center">
+                        <table:Column width="5rem">
+                            <Label text="QTY" width="100%" textAlign="Center"/>
                             <table:template>
-                                <Text text="{path : 'list>purchasing_quantity', formatter: '.numberUnit'}" wrapping="false" />
+                                <Text text="{path: 'list>purchasing_quantity', type: 'sap.ui.model.type.Integer'}" width="100%" textAlign="Right"/>
                             </table:template>
                         </table:Column>
                         <table:Column label="Currency" width="5rem" filterProperty="currency_code" hAlign="Center">
@@ -293,14 +294,15 @@
                                 <Text text="{list>currency_code}" wrapping="false" />
                             </table:template>
                         </table:Column>
-                        <table:Column label="Net Price" width="5rem" filterProperty="net_price" hAlign="Center">
+                        <table:Column label="Net Price" width="7rem" filterProperty="net_price" hAlign="Center">
                             <table:template>
-                                <Text text="{path: 'list>net_price', formatter: '.numberUnit'}" wrapping="false" />
+                                <Text text="{path: 'list>net_price', formatter: '.numberFormatter.toNumberString'}" wrapping="false" />
                             </table:template>
                         </table:Column>
-                        <table:Column label="Price Unit" width="5rem" filterProperty="material_price_unit" hAlign="Center">
+                        <table:Column width="5rem" filterProperty="material_price_unit">
+                            <Label text="Price Unit" width="100%" textAlign="Center"/>
                             <table:template>
-                                <Text text="{path: 'list>net_price', formatter: '.numberUnit'}" wrapping="false" />
+                                <Text text="{path: 'list>material_price_unit', type: 'sap.ui.model.type.Integer'}" wrapping="false"  width="100%" textAlign="Right"/>
                             </table:template>
                         </table:Column>
                         <table:Column label="Conversion Price" width="5rem" filterProperty="conversion_net_price" hAlign="Center">
@@ -310,7 +312,7 @@
                         </table:Column>
                         <table:Column label="Amount" width="5rem" filterProperty="purchasing_amount" hAlign="Center">
                             <table:template>
-                                <Text text="{path: 'list>purchasing_amount', formatter: '.numberUnit'}" wrapping="false" />
+                                <Text text="{path: 'list>purchasing_amount', formatter: '.numberFormatter.toNumberString'}" wrapping="false" />
                             </table:template>
                         </table:Column>
                         <table:Column label="Line Type" width="5rem" filterProperty="line_type_code" hAlign="Center">
@@ -381,7 +383,7 @@
                         </table:Column>
                         <table:Column label="Creation Date" width="10rem" filterProperty="system_create_dtm" hAlign="Center">
                             <table:template>
-                                <Text text="{list>system_create_dtm}" wrapping="false" />
+                                <Text text="{path: 'list>system_create_dtm', formatter: '.dateFormatter.toDateTimeString'}" wrapping="false" />
                             </table:template>
                         </table:Column>
                     </table:columns>

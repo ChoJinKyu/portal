@@ -81,6 +81,9 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
 
                     OutTableType v_row = OutTableType.create();
                     try{
+                        
+                        v_row.setRowval             (v_rs.getLong("rowval"));
+                        v_row.setTenantId           (v_rs.getString("tenant_id"));
                         v_row.setTenantId           (v_rs.getString("tenant_id"));
                         v_row.setCompanyCode        (v_rs.getString("company_code"));
                         v_row.setOrgTypeCode        (v_rs.getString("org_type_code"));
@@ -88,7 +91,8 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                         v_row.setApprovalNumber     (v_rs.getString("approval_number"));
                         v_row.setItemSequence       (v_rs.getLong("item_sequence"));
                         v_row.setSupplierCode       (v_rs.getString("supplier_code"));
-                        v_row.setSupplierName       (v_rs.getString("supplier_name"));
+                        v_row.setSupplierLocalName  (v_rs.getString("supplier_local_name"));
+                        v_row.setSupplierEnglishName(v_rs.getString("supplier_english_name"));
                         v_row.setMaterialCode       (v_rs.getString("material_code"));
                         v_row.setMarketCode         (v_rs.getString("market_code"));
                         v_row.setCurrencyCode       (v_rs.getString("currency_code"));
@@ -128,7 +132,7 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                 v_row.setTenantId(v_rs.getString("tenant_id"));
                 v_row.setCompanyCode(v_rs.getString("company_code"));
                 v_row.setOrgTypeCode(v_rs.getString("org_type_code"));
-                v_row.setOrgCode(v_rs.getString("org_code"));
+                v_row.setOrgCode(v_rs.getString("org_code"));       
                 v_row.setSupplierCode(v_rs.getString("supplier_code"));
                 v_row.setSupplierName(v_rs.getString("supplier_name"));
                 v_row.setMaterialCode(v_rs.getString("material_code"));
@@ -205,7 +209,8 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
 
         jdbc.execute(new StringBuffer()
                     .append("CREATE local TEMPORARY column TABLE ").append(tableName).append(" (")
-                    .append(" TENANT_ID                   NVARCHAR(5)")
+                    .append(" ROWVAL                      BIGINT")
+                    .append(",TENANT_ID                   NVARCHAR(5)")
                     .append(",COMPANY_CODE                NVARCHAR(10)")
                     .append(",ORG_TYPE_CODE               NVARCHAR(2)")
                     .append(",ORG_CODE                    NVARCHAR(10)")
@@ -214,19 +219,21 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                     .append(",SUPPLIER_CODE               NVARCHAR(10)")
                     .append(",MATERIAL_CODE               NVARCHAR(40)")
                     .append(",MARKET_CODE                 NVARCHAR(30)")
+                    .append(",NET_PRICE                   DECIMAL(34,10)")
                     .append(",CURRENCY_CODE               NVARCHAR(3)")
                     .append(")")
                     .toString()
                     );
 
-        String insertSql = "INSERT INTO " + tableName + " VALUES (?,?,?,?,? ,?,?,?,?,?)";
+        String insertSql = "INSERT INTO " + tableName + " VALUES (?, ?,?,?,?,? ,?,?,?,?,?,?)";
 
         //Local Temp Table에 insert                        
         List<Object[]> batchDtl = new ArrayList<Object[]>();
         if(inputTable != null && !inputTable.isEmpty() ){
             for(InputTableType vRow : inputTable){
                 batchDtl.add( new Object[] {                        
-                     vRow.get("tenant_id")                  
+                     vRow.get("rowval")  
+                    ,vRow.get("tenant_id")                  
                     ,vRow.get("company_code")                 
                     ,vRow.get("org_type_code")
                     ,vRow.get("org_code")
@@ -235,6 +242,7 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                     ,vRow.get("supplier_code")                  
                     ,vRow.get("material_code")           
                     ,vRow.get("market_code")                     	
+                    ,vRow.get("net_price")    
                     ,vRow.get("currency_code") 
                 });
             }
