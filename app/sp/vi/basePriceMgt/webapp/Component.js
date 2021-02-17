@@ -44,6 +44,15 @@ sap.ui.define([
             var aOrgDivFilter = [];
                 aOrgDivFilter.push(new Filter("tenant_id", FilterOperator.Contains, oUserModel.getProperty("/tenantId")));
                 aOrgDivFilter.push(new Filter("group_code", FilterOperator.Contains, 'SP_VI_NET_PRICE_TYPE_CODE'));
+            var aFilter = [];
+                aFilter.push(new Filter("code", FilterOperator.NotContains, 'NPT06' ));
+                aFilter.push(new Filter("code", FilterOperator.NotContains, 'NPT07' ));
+                
+            aOrgDivFilter.push(new Filter({
+                    filters: aFilter,
+                    and: true
+                }));
+
             oCodeModel.read("/CodeLanguages", {
                 filters : aOrgDivFilter,
                 success : function(data){
@@ -127,6 +136,7 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+            
             //자재 조회
             var oBasePriceArlModel = this.getModel("basePriceArl");
             oBasePriceArlModel.setSizeLimit(3000);

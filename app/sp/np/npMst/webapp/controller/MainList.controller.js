@@ -105,7 +105,7 @@ sap.ui.define([
                 }, true);
 
                 this.setModel(new ManagedListModel(), "list");
-                this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+                this.getRouter().getRoute("MainList").attachPatternMatched(this._onRoutedThisPage, this);
                 that = this;
 
                 //this.fnSearch();
@@ -451,7 +451,7 @@ sap.ui.define([
                         //console.log(item.getKey());
                         plantFilters.push(new Filter({
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID),
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100"),
                                 new Filter("company_code", FilterOperator.EQ, item.getKey())
                             ],
                             and: true
@@ -459,7 +459,7 @@ sap.ui.define([
                     });
                 } else {
                     plantFilters.push(
-                        new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     );
                 }
 

@@ -159,7 +159,7 @@ sap.ui.define([
                     oDetailViewModel.setProperty("/viewMode", false);
 
                     var aMasterFilters = [];
-                    aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
+                    aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
                     aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, that.pAppNum));
 
                     oView.setBusy(true);
@@ -171,7 +171,7 @@ sap.ui.define([
                             var result = data.results[0];
 
                             var oNewBasePriceData = {
-                                "tenant_d": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                "tenant_d": "L2100",
                                 "approval_number": result.approval_number,
                                 "approval_title": result.approval_title,
                                 "approval_contents": result.approval_contents,
@@ -201,7 +201,7 @@ sap.ui.define([
                     // 기준단가 기본 데이터 세팅
                     var oToday = new Date();
                     var oNewBasePriceData = {
-                        "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                        "tenant_id": "L2100",
                         "approval_number": "N/A",
                         "approval_title": "",
                         "approval_status_code": "DR",    // DR: Draft
@@ -278,7 +278,7 @@ sap.ui.define([
                 var oPurOrgModel = this.getModel("purOrg");
                 var oRootModel = this.getModel("rootModel");
                 
-                var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)];
+                var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
                 oPurOrgModel.read("/Pur_Operation_Org", {
                     filters: aPurOrgFilter,
                     success: function (data) {
@@ -308,7 +308,7 @@ sap.ui.define([
                                     multiSelection: false,
                                     companyCode: SppUserSessionUtil.getUserInfo().COMPANY_CODE,
                                     purOrg: oRootModel.getProperty("/purOrg"),
-                                    tenantId: SppUserSessionUtil.getUserInfo().TENANT_ID
+                                    tenantId: "L2100"
                                 });
                                 that.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
                                     console.log("apply event!!!");
@@ -339,7 +339,7 @@ sap.ui.define([
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
+                                new Filter("tenant_id", "EQ", "L2100")
                             ]
                         }
                     });
@@ -353,7 +353,7 @@ sap.ui.define([
 
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
-                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                sSearchObj.tanentId = "L2100";
                 this.gMatrialDialog.open(sSearchObj);
             },
 
@@ -367,7 +367,7 @@ sap.ui.define([
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
+                                new Filter("tenant_id", "EQ", "L2100")
                             ]
                         }
                     });
@@ -383,7 +383,7 @@ sap.ui.define([
 
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
-                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                sSearchObj.tanentId = "L2100";
                 this.gSupplierDialog.open(sSearchObj);
             },
 
@@ -393,11 +393,11 @@ sap.ui.define([
                 var generalInfoModel = this.getModel("generalInfoList");
                 if (!this.gVendorPoolDialog) {
                     this.gVendorPoolDialog = new VendorPoolDialog({
-                        title: "Choose Supplier",
+                        title: "Choose VendorPool",
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
+                                new Filter("tenant_id", "EQ", "L2100")
                             ]
                         }
                     });
@@ -412,7 +412,7 @@ sap.ui.define([
 
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
-                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                sSearchObj.tanentId = "L2100";
                 this.gVendorPoolDialog.open(sSearchObj);
             },
 
@@ -487,7 +487,7 @@ sap.ui.define([
                 //console.log("//// onApproverAdd", oParam);
                 var approver = this.getView().getModel("approver");
                 approver.addRecord({
-                    "tenant_id": this.tenant_id,
+                    "tenant_id": "L2100",
                     "approval_number": this.approval_number,
                     "approve_sequence": "",
                     "approver_type_code": "",
@@ -599,7 +599,7 @@ sap.ui.define([
                 var generalInfoModel = this.getModel("generalInfoList");
                 generalInfoModel.addRecord({
                     "_row_state_": "C",
-                    "tenant_id": this.tenant_id,
+                    "tenant_id": "L2100",
                     "selRow": true,
                 }, "/GeneralView", 0); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
 
@@ -667,7 +667,7 @@ sap.ui.define([
 
                 procObj = {
                     "param": {
-                        "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                        "tenant_id": "L2100",
                         "language_code": SppUserSessionUtil.getUserInfo().LANGUAGE_CODE,
                         "inDetails": []
                     }
@@ -680,7 +680,7 @@ sap.ui.define([
                     if (!!item.org_code && !!item.supplier_code && !!item.material_code && !!item.market_code && !!item.currency_code) {
                         var inDetailObj = {};
                         inDetailObj.rowval = Number(idx + 1);
-                        inDetailObj.tenant_id = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                        inDetailObj.tenant_id = "L2100";
                         inDetailObj.company_code = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
                         //inDetailObj.org_type_code = item.org_type_code;
                         inDetailObj.org_code = item.org_code;
@@ -772,7 +772,7 @@ sap.ui.define([
                 procObj = {
                     "param": {
                         "master": {
-                            "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                            "tenant_id": "L2100",
                             "company_code": SppUserSessionUtil.getUserInfo().COMPANY_CODE,
                             "approval_number": (that.byId("approval_number").getText() === "N/A") ? null : String(that.byId("approval_number").getText()),				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
                             "approval_title": that.byId("approval_title").getValue(),
@@ -870,7 +870,7 @@ sap.ui.define([
                         if (sButton === MessageBox.Action.OK) {
                             var procObj = {
                                 "param": {
-                                    "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                    "tenant_id": "L2100",
                                     "approval_number": that.pAppNum
                                 }
                             };
@@ -912,7 +912,7 @@ sap.ui.define([
                         if (sButton === MessageBox.Action.OK) {
                             var procObj = {
                                 "param": {
-                                    "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                    "tenant_id": "L2100",
                                     "approval_number": that.pAppNum,
                                     "approve_status_code": status
                                 }

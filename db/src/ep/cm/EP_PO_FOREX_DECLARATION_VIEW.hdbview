@@ -28,7 +28,8 @@ SELECT PFD.TENANT_ID AS TENANT_ID /* 테넌트ID */
     , POD.PURCHASING_DEPARTMENT_CODE AS PURCHASING_DEPARTMENT_CODE /* 구매담당부서코드 */	
     , POD.PURCHASING_DEPARTMENT_NAME AS PURCHASING_DEPARTMENT_NAME /* 구매담당부서 */	    
     , POD.BUYER_EMPNO AS BUYER_EMPNO /* 구매담당자사번 */		
-    , POD.BUYER_NAME AS BUYER_NAME /* 구매담당자 */		
+    , POD.BUYER_NAME AS BUYER_NAME /* 구매담당자 */	
+    ,cdtl.color_type_code	
  FROM EP_PO_FOREX_DECLARATION PFD
 INNER JOIN (
     SELECT 
@@ -73,4 +74,8 @@ INNER JOIN (
 	AND PFD.COMPANY_CODE = POD.COMPANY_CODE 
 	AND PFD.PO_NUMBER = POD.PO_NUMBER 	
    )  
+   left outer join cm_code_dtl cdtl
+on PFD.tenant_id = cdtl.tenant_id
+and PFD.FOREX_DECLARE_STATUS_CODE = cdtl.code
+and cdtl.group_code = 'EP_DECLARE_STATUS' 
 ;

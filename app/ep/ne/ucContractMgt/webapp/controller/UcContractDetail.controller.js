@@ -839,13 +839,16 @@ sap.ui.define([
 
                     var contractStartDate = mstData.results[0]["net_price_contract_start_date"];
                     var contractEndDate = mstData.results[0]["net_price_contract_end_date"];
+                    var contractWriteDate = mstData.results[0]["contract_write_date"];
                     // console.log("contractStartDate====", contractStartDate);
                     // console.log("contractEndDate====", contractEndDate);
                     var convertContractStartDate = that.convertDateToString(contractStartDate);
                     var convertContractEndDate = that.convertDateToString(contractEndDate);
+                    var convertContractWriteDate = that.convertDateToString(contractWriteDate);
 
                     mstData.results[0]["net_price_contract_start_date"] = convertContractStartDate;
                     mstData.results[0]["net_price_contract_end_date"] = convertContractEndDate;
+                    mstData.results[0]["contract_write_date"] = convertContractWriteDate;
                     mstData.results[0]["row_state"] = "U";
 
                     console.log("mstData====", mstData.results[0]);

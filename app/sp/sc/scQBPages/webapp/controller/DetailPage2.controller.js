@@ -423,7 +423,7 @@ sap.ui.define([
                 
                 // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._docNum + "'";
                 var headerExpandString = "nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
-                var itemsExpandString = "Items($expand=Suppliers,operation_org,material,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
+                var itemsExpandString = "Items($expand=Suppliers,operation_org,material,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department;$orderby=nego_item_number desc)";
                 var itemsNonPriceExpandString = "ItemsNonPrice($expand=ItemsNonPriceDtl,nonpr_supeval_attr_type,nonpr_supeval_value_type,nonpr_score_comput_method)";
                 var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+ "," + itemsNonPriceExpandString + "&$filter=nego_document_number eq '" + this._docNum + "'";
 
@@ -827,6 +827,7 @@ sap.ui.define([
                         var objTemp = this._selectedLineItem;
                         this.setSupplierDeleteList( objTemp.Suppliers );
                         objTemp.Suppliers = [];
+                        var oItemPriceModel = this.getView().getModel("NegoItemPrices");//,
 
                         for( var i = 0 ; i < pToken.length ; i++ ) {
                             var oObj = {};
@@ -874,18 +875,19 @@ sap.ui.define([
                                 var supplierItem_S = this.getSupplierItem(oObj);
     
                                 // NegoItemPrices>/Suppliers
-                                var oModel = this.getView().getModel("NegoItemPrices");//,
+                                
                                     // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
-                                oModel.oData.Suppliers.push(supplierItem_S);
-                                oModel.refresh();
+                                oItemPriceModel.oData.Suppliers.push(supplierItem_S);
+                                oItemPriceModel.refresh();
                             }
                         }
    
+                        objTemp.specific_supplier_count = oItemPriceModel.oData.Suppliers.length;
                         this.getView().getModel("NegoHeaders").refresh();
-
-                        var bLength = this.getView().byId("table_Specific").getItems().length;
-                        this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[13].getAggregation("items")[0].setValue(bLength );
-                        console.log( " bLength :: " + bLength);
+    
+                        // var bLength = this.getView().byId("table_Specific").getItems().length;
+                        // this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[13].getAggregation("items")[0].setValue(bLength );
+                        // console.log( " bLength :: " + bLength);
     
                         // this.supplierSelection.onValueHelpSuppAfterClose();
     
@@ -1038,9 +1040,9 @@ sap.ui.define([
                 this._addSupplierType = "sigle";
                 this._oIndex = e.getSource().getParent().getIndex();
 
-                var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+                this._selectedLinePath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
 
-               this._selectedLineItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+                this._selectedLineItem = this.getView().getModel("NegoHeaders").getProperty(this._selectedLinePath);
                 console.log(this._selectedLineItem);
                 
                 var that = this;

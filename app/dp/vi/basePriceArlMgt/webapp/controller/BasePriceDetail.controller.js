@@ -1156,7 +1156,7 @@ sap.ui.define([
                     if( sTypeFlag === "Change" ) {
                         this._oDetail.supplier_code = oSelectedDialogItem.supplier_code;
                         this._oDetail.supplier_local_name = oSelectedDialogItem.supplier_local_name;
-                        this._oDetail.base_date = this._changeDateString(oSelectedDialogItem["nn_start_date_1"], "-");
+                        this._oDetail.base_date = "2020-12-31";
                         this._oDetail.prices = this._oDetail.prices ? this._oDetail.prices : [{}, {}, {}];
 
                         var oMarketCodeConfig = this.getModel("rootModel").getProperty("/config");

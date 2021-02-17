@@ -74,6 +74,8 @@ sap.ui.define([
             this.getView().byId("searchConstDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 160));
             this.getView().byId("searchConstDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
+            this.getView().byId("searchStatus").setSelectedKey("221020");
+
         },
 
         /**

@@ -539,8 +539,8 @@
                                     </table:template>
                                 </table:Column>
                               
-                                <table:Column  hAlign="Center"  width="20em" 
-                                                visible="{
+                                <table:Column  hAlign="Center"  width="20em"
+                                               visible="{
                                                     path: 'OPUI>/ACCOUNT-ACCOUNT_CODE',
                                                     formatter: '.uiControlSet.toColumnVisible'
                                                     }">

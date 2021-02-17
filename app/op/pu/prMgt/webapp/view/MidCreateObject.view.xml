@@ -169,9 +169,11 @@
                                     <table:template>
                                         <Input 
                                             value="{path: 'viewModel>pr_quantity', 
-                                                    type : 'sap.ui.model.type.Float'}" 
+                                                    type : 'sap.ui.model.type.Float'
+                                                    }" 
+                                            liveChange=".onInputLiveChangePrecisionCheck"
                                             textAlign="End"
-                                            maxLength="30"
+                                            maxLength="34"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                     
@@ -227,8 +229,9 @@
                                         <Input 
                                             value="{path: 'viewModel>estimated_price', 
                                                     type : 'sap.ui.model.type.Float'}" 
+                                            liveChange=".onInputLiveChangePrecisionCheck"
                                             textAlign="End"
-                                            maxLength="30"
+                                            maxLength="34"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
@@ -248,8 +251,9 @@
                                         <Input 
                                             value="{path: 'viewModel>price_unit', 
                                                     type : 'sap.ui.model.type.Float'}" 
+                                            liveChange=".onInputLiveChangePrecisionCheck"
                                             textAlign="End"
-                                            maxLength="5"
+                                            maxLength="6"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column> 

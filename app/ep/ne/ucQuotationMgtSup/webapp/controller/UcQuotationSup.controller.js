@@ -416,6 +416,7 @@ sap.ui.define([
 
 
                 console.log(" seq_input ::: ", seq_input);
+                console.log(" e.net_price_contract_degree ::: ", e.net_price_contract_degree);
 
                 return { 
 
@@ -446,7 +447,7 @@ sap.ui.define([
                     sum_amount: (!e.sum_amount ? null : parseFloat(e.sum_amount)),
                     remark: e.remark,
                     net_price_contract_document_no: e.net_price_contract_document_no,
-                    net_price_contract_degree: (!e.net_price_contract_degree ? null : parseFloat(e.net_price_contract_degree)),
+                    net_price_contract_degree: parseFloat(e.net_price_contract_degree),
                     net_price_contract_item_number: e.net_price_contract_item_number,
                     supplier_item_create_flag: (!e.supplier_item_create_flag ? false : Boolean(e.supplier_item_create_flag)),
                     row_state: (!e.const_quotation_item_number ? 'C' : e.row_state),
@@ -1163,7 +1164,7 @@ sap.ui.define([
                 return d;
             });
 
-            
+            console.log("$$$$$$$ input========", input);
 
             oViewModel.setProperty("/ucdetails", input);
 
@@ -1492,7 +1493,7 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             return promise;
         },
 
-        onTableExtraRatePress: function (oEvent) {
+        onTableExtraRatePress: function (oEvent,falg_) {
 
             console.log(" empl abc----------------->", oEvent); 
 
@@ -1503,6 +1504,11 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             var mstData = oViewModel.getProperty("/ucmaster");
             var dtlData = oViewModel.getProperty("/ucdetails");
             var rateData = oViewModel.getProperty("/ucRate");
+
+
+            oViewModel.setProperty('/ucmaster/completion_flag_',falg_);
+
+                        console.log("completion_flag  ------> " , oViewModel.getProperty("/ucmaster/completion_flag_"));
             
 
             console.log("dtlData  ------> " , dtlData);
@@ -1604,6 +1610,11 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
                         var net_price_contract_degree_ = "";
                         var net_price_contract_extra_seq_ = "";
                         var popExtraRate = oView.getModel("popExtraRate");
+
+                        
+
+
+                        //this.byId("pageExtraRateButton").setVisible(falg_);
                         
                         var test_index = 0;
 
@@ -1676,9 +1687,9 @@ console.log(" check document_no----------------->" ,dtl_net_price_contract_docum
 
                         //oView.byId("searchNetPriceContractTitle").setText(beforeRateData[0]["net_price_contract_title"]);
 
-                        console.log(" beforeRateData- net_price_contract_title---------------->", oData.results[0]["net_price_contract_title"]);   
+                        console.log(" beforeRateData- net_price_contract_title---------------->", dtlData[beforeIndex]["net_price_contract_title"]);   
 
-                        oView.byId("searchNetPriceContractTitle").setText(oData.results[0]["net_price_contract_title"]);
+                        oView.byId("searchNetPriceContractTitle").setText(dtlData[beforeIndex]["net_price_contract_title"]);
             
             
 

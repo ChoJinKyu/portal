@@ -175,7 +175,7 @@
                                 <ObjectIdentifier text="{list>project_name}"/>
                                 <ObjectIdentifier text="{list>plant_name}"/>
                                 <ObjectIdentifier text="{list>ep_purchasing_type_name}"/>
-                                <ObjectIdentifier text="{list>create_user_id}"/>
+                                <ObjectIdentifier text="{list>create_user_name}"/>
                                 <ObjectIdentifier text="{
                                         path: 'list>system_create_dtm',
                                         formatter: '.dateFormatter.toDateString'

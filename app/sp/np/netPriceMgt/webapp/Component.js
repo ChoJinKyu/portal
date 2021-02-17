@@ -20,7 +20,7 @@ sap.ui.define([
             UIComponent.prototype.init.apply(this, arguments);
 
             var oBasePriceArlMgtRootData = {
-                tenantId: SppUserSessionUtil.getUserInfo().TENANT_ID,
+                tenantId: "L2100",
                 number: { symbol: "", currency: "KRW" }
             };
 
@@ -33,7 +33,7 @@ sap.ui.define([
 
             var aFilters = [];
             aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
 
             this.getModel("util").read("/Code", {
                 filters: aFilters,
@@ -56,7 +56,7 @@ sap.ui.define([
             var oCurrencyModel = this.getModel("currency");
             oCurrencyModel.setSizeLimit(200);
             oCurrencyModel.read("/Currency", {
-                filters: [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)],
+                filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                 success: function (data) {
                     if (data && data.results) {
                         oCurrencyModel.setProperty("/currency", data.results);

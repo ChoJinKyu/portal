@@ -4,14 +4,5 @@
 	xmlns="sap.m"
 	xmlns:f="sap.f"
 	xmlns:mvc="sap.ui.core.mvc">
-	<App id="app">
-		<f:FlexibleColumnLayout
-			id="fcl"
-			autoFocus="false"
-			restoreFocusOnBackNavigation="true"
-			columnResize="onColumnResize"
-			stateChange="onStateChanged"
-			layout="{fcl>/layout}"
-			backgroundDesign="Translucent"/>
-	</App>
+	<App id="app"/>
 </mvc:View>

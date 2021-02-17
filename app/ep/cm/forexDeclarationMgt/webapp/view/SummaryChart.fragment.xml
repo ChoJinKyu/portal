@@ -90,14 +90,14 @@
                              <ColumnListItem>
                                 <cells>
                                     <Text text="{popup>group_type}" />
-                                    <Text text="{popup>sum_count}" />
                                     <Text text="{popup>todo_count}" />
+                                    <Text text="{popup>standby_count}" />
                                     <Text text="{popup>ongoing_count}" />
                                     <Text text="{popup>complete_count}" />
                                     
                                     <microchart:StackedBarMicroChart size="Responsive" press="press">
                                         <microchart:bars>
-                                            <microchart:StackedBarMicroChartBar value="{popup>todo_count}" />
+                                            <microchart:StackedBarMicroChartBar value="{popup>standby_count}" />
                                             <microchart:StackedBarMicroChartBar value="{popup>ongoing_count}" />
                                             <microchart:StackedBarMicroChartBar value="{popup>complete_count}" />
                                         </microchart:bars>

@@ -435,7 +435,7 @@
                         <form:SimpleForm >                    
                             <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
                                 <!-- File Upload 시작-->
-                                <UploadCollection
+                                <!-- <UploadCollection
                                     id="UploadCollection"
                                     maximumFilenameLength="55"
                                     maximumFileSize="10"
@@ -449,7 +449,7 @@
                                     fileSizeExceed="onFileSizeExceed"
                                     typeMissmatch="onTypeMissmatch"
                                     uploadComplete="onUploadComplete"
-                                    beforeUploadStarts="onBeforeUploadStarts" />
+                                    beforeUploadStarts="onBeforeUploadStarts" /> -->
                                 <!-- File Upload 끝-->
                                 <Label  text="특기사항" 
                                             design="Bold" 

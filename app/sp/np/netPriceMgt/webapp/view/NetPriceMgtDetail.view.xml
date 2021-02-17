@@ -217,7 +217,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/OPERATION_ORG}" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" value="{path: 'generalInfoList>org_code'}" editable="{detailViewModel>/viewMode}"/>    
+                                                <Text text="{path: 'generalInfoList>org_code'}" />    
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -457,7 +457,8 @@
                                                             filters: [
                                                                 {path: 'group_code', operator: 'EQ', value1: 'PAYMENT_TERMS'},
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                            ]
+                                                            ], 
+                                                            templateShareable:false
                                                         }" selectedKey="{generalInfoList>payterms_code}"
                                                         editable="{detailViewModel>/viewMode}">
                                                     <items>

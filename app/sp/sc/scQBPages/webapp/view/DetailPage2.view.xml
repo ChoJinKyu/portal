@@ -990,7 +990,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <Input showValueHelp="true" value="{NegoHeaders>vendor_pool_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
-                                                                        valueHelpRequest=".createConfirmBox"/>
+                                                                        valueHelpRequest=".createConfirmBox" valueHelpOnly="true"/>
                                                                     <Text text="{NegoHeaders>vendor_pool_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1000,7 +1000,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <MultiInput id="multiinput_bp_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        value="{NegoHeaders>specific_supplier_count}"
+                                                                        value="{NegoHeaders>specific_supplier_count}" valueHelpOnly="true"
                                                                         showValueHelp="true" valueHelpRequest=".onSupplierPress" textAlign="Center">
                                                                         <!-- <tokens>
                                                                             <Token key="{key}" text="{text}" />
@@ -1076,7 +1076,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <Input showValueHelp="true" value="{NegoHeaders>response_currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
-                                                                        valueHelpRequest=".createConfirmBox"/>
+                                                                        valueHelpRequest=".createConfirmBox" valueHelpOnly="true"/>
                                                                     <Text text="{NegoHeaders>response_currency_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>

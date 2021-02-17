@@ -285,6 +285,11 @@ sap.ui.define([
                 oView.addDependent(_chartDialog);
                 
                 //console.log("_chartDialog :::: " , oView);
+                 console.log("_chartDialog :::: " , _chartDialog);
+                 var today = new Date();
+                this.getView().byId("searchChartPoDate").setDateValue(new Date(today.getFullYear(), today.getMonth() - 12, today.getDate()));
+                this.getView().byId("searchChartPoDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+
                 return _chartDialog;
             }.bind(this));
 
@@ -295,9 +300,8 @@ sap.ui.define([
             //alert(oView.byId("searchChartPoDate").getDateValue()); 
 
 
-             //console.log("_chartDialog :::: " , this._chartDialog);
-
-            //   var today = new Date();
+            
+            
 
             // oView.byId("searchChartPoDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             // oView.byId("searchChartPoDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -334,15 +338,15 @@ sap.ui.define([
                         console.log("#########oData Success#####", oData.value);
                         console.log("#########oData #####", oData.value.length);
                         console.log("#########oData #####", oData.value[0].todo_count);
-                        var sum_count = oData.value[0].todo_count + oData.value[0].ongoing_count + oData.value[0].complete_count;
+                        //var sum_count = oData.value[0].todo_count + oData.value[0].ongoing_count + oData.value[0].complete_count;
 
-                        console.log("#########sum_count #####", sum_count);
+                        //console.log("#########sum_count #####", sum_count);
 
-                        oData.value.forEach(function (item, idx) {
-                            //_tempFilters.push(new Filter("net_price_contract_document_no", FilterOperator.EQ, item));
+                        // oData.value.forEach(function (item, idx) {
+                        //     //_tempFilters.push(new Filter("net_price_contract_document_no", FilterOperator.EQ, item));
 
-                           oData.value[idx].sum_count = oData.value[idx].todo_count +  oData.value[idx].ongoing_count + oData.value[idx].complete_count;
-                        });
+                        //    oData.value[idx].sum_count = oData.value[idx].todo_count +  oData.value[idx].ongoing_count + oData.value[idx].complete_count;
+                        // });
 
                         console.log("#########result #####", oData.value);
 
@@ -368,15 +372,15 @@ sap.ui.define([
                         console.log("#########oData Success#####", oData.value);
                         console.log("#########oData #####", oData.value.length);
                         console.log("#########oData #####", oData.value[0].todo_count);
-                        var sum_count = oData.value[0].todo_count + oData.value[0].ongoing_count + oData.value[0].complete_count;
+                        //var sum_count = oData.value[0].todo_count + oData.value[0].ongoing_count + oData.value[0].complete_count;
 
-                        console.log("#########sum_count #####", sum_count);
+                        //console.log("#########sum_count #####", sum_count);
 
-                        oData.value.forEach(function (item, idx) {
-                            //_tempFilters.push(new Filter("net_price_contract_document_no", FilterOperator.EQ, item));
+                        // oData.value.forEach(function (item, idx) {
+                        //     //_tempFilters.push(new Filter("net_price_contract_document_no", FilterOperator.EQ, item));
 
-                           oData.value[idx].sum_count = oData.value[idx].todo_count +  oData.value[idx].ongoing_count + oData.value[idx].complete_count;
-                        });
+                        //    oData.value[idx].sum_count = oData.value[idx].todo_count +  oData.value[idx].ongoing_count + oData.value[idx].complete_count;
+                        // });
 
                         console.log("#########result #####", oData.value);
 

@@ -176,6 +176,7 @@
             closeWhenApplied="true"
             items="{
                 filters: [
+                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                 ]
             }"
             apply=".onEmployeeDialogApplyPress"

@@ -57,6 +57,42 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
+                        <form:SimpleForm id="midObjectForm1Edit" editable="true">
+                            
+                            <!-- <core:Title text="Normal" /> -->	
+                            <Label text="{I18N>/BIZUNIT_CODE}" />
+                            <Text text="{master>/org_code}"/>
+                                
+                            <Label text="{I18N>/BIZUNIT_NAME}" />
+                            <Text text="{master>/org_infos/bizunit_name}"/>	
+
+                            <Label text="{I18N>/SPMD_CHARACTER_CODE}"/>
+                            <Text text="{master>/spmd_character_code}"/>
+
+                            <Label id="labelCharCodeName" text="{I18N>/SPMD_CHARACTER_CODE_NAME}"/>
+                            <VBox>
+                                <Text id="retrieveCharCodeName" text="{master>/spmd_character_code_name}"/>
+                                <Input id="editCharCodeName" value="{
+                                    path: 'master>/spmd_character_code_name',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 50
+                                    }
+                                }" />      
+                            </VBox>
+
+                            <Label text="{I18N>/SPMD_CHARACTER_DESC}"/>
+                            <VBox>
+                                <Text id="retrieveCharDesc" text="{master>/spmd_character_desc}"/>
+                                <Input id="editCharDesc" value="{
+                                        path: 'master>/spmd_character_desc',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 50
+                                        }
+                                    }" />
+                            </VBox>
+                        </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

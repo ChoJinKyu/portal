@@ -23,7 +23,8 @@ entity Li_Publish_Item_View {
         item_desc                  : String(200)         @title : '품명';
         quotation_number           : Decimal             @title : '견적번호';
         quotation_item_number      : Decimal             @title : '견적품목번호';
-        supplier_name              : String(50)          @title : '협력사명';
+        supplier_code              : String(10)          @title : '협력사코드';
+        supplier_name              : String(240)         @title : '협력사명';
         publish_date               : Date                @title : '발행일자';
         delivery_request_date      : Date                @title : '납기일자';
         request_quantity           : Decimal             @title : '요청수량';
@@ -52,6 +53,7 @@ entity Li_Publish_Item_View {
         same_quotation_item_number : String(1000)        @title : '동일한 업체선정품의 견적품목번호';
         same_selection_item_number : String(1000)        @title : '동일한 업체선정품의 항목';
         same_publish_item_number   : String(1000)        @title : '동일한 발행품의 항목';
+        offline_quotation_amount   : Decimal             @title : '오프라인 견적금액';
 
 }
 

@@ -175,11 +175,11 @@
                 </uxap:ObjectPageSection>
 
                 <!-- 첨부파일 시작 -->
-                <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+                <!-- <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
                     <uxap:subSections>
                         <uxap:ObjectPageSubSection>
                             <uxap:blocks>
-                                <!-- File Upload 시작-->
+
                                 <UploadCollection
                                     id="UploadCollection"
                                     maximumFilenameLength="55"
@@ -195,12 +195,26 @@
                                     typeMissmatch="onTypeMissmatch"
                                     uploadComplete="onUploadComplete"
                                     beforeUploadStarts="onBeforeUploadStarts" />
-                                <!-- File Upload 끝-->
+
+                            </uxap:blocks>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection> -->
+                <!-- 첨부파일 끝 -->
+
+                <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+                    <uxap:subSections>
+                        <uxap:ObjectPageSubSection>
+                            <uxap:blocks>
+                                <!-- Approval & Reference 시작 -->
+                                <HBox>
+            
+                                </HBox>
+                                <!-- Approval & Reference 끝 -->
                             </uxap:blocks>
                         </uxap:ObjectPageSubSection>
                     </uxap:subSections>
                 </uxap:ObjectPageSection>
-                <!-- 첨부파일 끝 -->
                     
                 <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="품목정보">
 				    <uxap:subSections>
@@ -359,12 +373,12 @@
                                         </t:template>
                                         </t:Column> 
 
-                                        <t:Column id="mainNetPriceContractPeriod" width="15rem" hAlign="Center">
+                                        <!-- <t:Column id="mainNetPriceContractPeriod" width="15rem" hAlign="Center">
                                         <Label text="계약기간" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>net_price_contract_period}"/>
                                         </t:template>
-                                        </t:Column>
+                                        </t:Column> -->
                                     </t:columns>
                                     </t:Table>          
                                 </VBox>
@@ -449,7 +463,7 @@
                                         </VBox>
                                     </form:SimpleForm>   
 
-                                    <form:SimpleForm id="completionForm2Show" editable="false"> 
+                                    <form:SimpleForm id="completionForm2Show" editable="false"  visible="false"> 
                                         <UploadCollection
                                             id="UploadCollection2"
                                             maximumFilenameLength="55"
@@ -464,7 +478,8 @@
                                             fileSizeExceed="onFileSizeExceed"
                                             typeMissmatch="onTypeMissmatch"
                                             uploadComplete="onUploadComplete"
-                                            beforeUploadStarts="onBeforeUploadStarts" />
+                                            beforeUploadStarts="onBeforeUploadStarts" 
+                                           />
                                     </form:SimpleForm>   
 
                                 </VBox>      

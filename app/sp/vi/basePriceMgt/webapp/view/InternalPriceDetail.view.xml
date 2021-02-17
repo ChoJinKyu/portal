@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.vi.basePriceMgt.controller.BasePriceDetail" 
+<mvc:View controllerName="sp.vi.basePriceMgt.controller.InternalPriceDetail" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns="sap.m"
@@ -29,7 +29,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/GENERAL_MATERIAL})" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/INTERNAL_TRADING})" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
@@ -37,7 +37,7 @@
                 <uxap:snappedHeading>
 					<HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/GENERAL_MATERIAL})" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/INTERNAL_TRADING})" wrapping="true"/>
                     </HBox>
 				</uxap:snappedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -129,15 +129,16 @@
                                  fixedColumnCount="3" visibleRowCount="5" rows="{detailModel>/results}" >
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
-                                            <Title text="{I18N>/BASE_PRICE_LIST} ({= ${detailModel>/resultsLength} || 0}) " level="H2"/>
-                                            <ToolbarSpacer />
-                                            <Button text="{I18N>/ADDITION}({I18N>/MANAGEMENT})" type="Emphasized" press=".onRowSelectadd('MANAGEMENT')" visible="{= ${detailViewModel>/viewMode}}"/>
-                                            <Button text="{I18N>/ADDITION}({I18N>/MARKET_PRICE})" type="Emphasized" press=".onRowSelectadd('MARKET_PRICE')" visible="{= ${detailViewModel>/viewMode}}"/>
-                                            <Button text="{I18N>/DELETE}" type="Emphasized" press=".onListRowDelete" visible="{= ${detailViewModel>/viewMode}}"/>
+                                            <Title text="{I18N>/BASE_PRICE_LIST}({= ${detailModel>/resultsLength} || 0}) " level="H2"/>
+                                        <ToolbarSpacer />
+                                        <Button text="{I18N>/ADDITION}({I18N>/MANAGEMENT})" type="Emphasized" press=".onRowSelectadd('MANAGEMENT')" visible="{= ${detailViewModel>/viewMode}}"/>
+                                        <Button text="{I18N>/ADDITION}({I18N>/MARKET_PRICE})" type="Emphasized" press=".onRowSelectadd('MARKET_PRICE')" visible="{= ${detailViewModel>/viewMode}}"/>
+                                        <Button text="{I18N>/DELETE}" type="Emphasized" press=".onListRowDelete" visible="{= ${detailViewModel>/viewMode}}"/>
 
-                                            <u:FileUploader id="FileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
-                                                buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="{I18N>/UPLOAD}" enabled="false" visible="{= ${detailViewModel>/viewMode}}" />
-                                            <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="{I18N>/TEMPLATE}" visible="{= ${detailViewModel>/viewMode}}" />  
+                                        <u:FileUploader id="FileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
+                                            buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="{I18N>/UPLOAD}" enabled="false" visible="{= ${detailViewModel>/viewMode}}" />
+                                        <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="{I18N>/TEMPLATE}" visible="{= ${detailViewModel>/viewMode}}" />  
+
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
@@ -230,10 +231,7 @@
                                                 <VBox>
                                                     <ComboBox width="100%" editable="true" visible="{= ${detailViewModel>/viewMode}}"
                                                         selectedKey="{detailModel>plant_code}" 
-                                                        items="{
-                                                                path: 'detailModel>org_Plant'
-                                                                }"
-                                                        >
+                                                        items="{ path: 'detailModel>org_Plant' }" change=".onEqPlantCheck" >
                                                         <items>
                                                             <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
                                                         </items>
@@ -242,22 +240,18 @@
                                                 </VBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="8rem">
-                                            <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" required="true"/>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/SUPPLY_PLANT}" textAlign="Center" width="100%" required="true"/>
                                             <t:template>
                                                 <VBox>
-                                                    <MultiInput editable="true" visible="{= ${detailViewModel>/viewMode}}"
-                                                            valueHelpRequest=".onInputSupplierWithOrgValuePress" value="{detailModel>supplier_code}"/>
-                                                    <Text text="{detailModel>supplier_code}" visible="{= !${detailViewModel>/viewMode}}" />
-                                                </VBox>
-                                            </t:template>
-                                        </t:Column>
-                                        <t:Column hAlign="Center" width="8rem">
-                                            <Label  text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
-                                            <t:template>
-                                                <VBox>
-                                                    <Input editable="FALSE" value="{detailModel>supplier_local_name}" visible="{= ${detailViewModel>/viewMode}}" />
-                                                    <Text text="{detailModel>supplier_local_name}" visible="{= !${detailViewModel>/viewMode}}" />
+                                                    <ComboBox width="100%" editable="true" visible="{= ${detailViewModel>/viewMode}}"
+                                                        selectedKey="{detailModel>supply_plant_code}" 
+                                                        items="{ path: 'detailModel>org_Plant' }" change=".onEqSupplyPlantCheck">
+                                                        <items>
+                                                            <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
+                                                        </items>
+                                                    </ComboBox>
+                                                    <Text text="{detailModel>supply_plant_code}[{detailModel>supply_plant_name}]" visible="{= !${detailViewModel>/viewMode}}" />
                                                 </VBox>
                                             </t:template>
                                         </t:Column>

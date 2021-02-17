@@ -80,42 +80,43 @@
         </f:DynamicPageHeader>
       </f:header>
       <f:content>
+          <!-- SingleSelectLeft -->
         <VBox>
-        <Table id="mainTable"
+        <lib-m:Table id="mainTable"
                 sticky="HeaderToolbar,ColumnHeaders" 
                 inset="false" 
-                growing="true"
                 growingThreshold="15"
-                mode="{= ${list>/mainMode}==='Main'?'SingleSelectLeft':'None'}" 
+                mode="{= ${list>/mainMode}==='Main'?'MultiSelect':'None'}" 
+                enableSelectAll="false"
+                growing="true"
                 selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{
                     path: 'list>/MdCategory'
-
                 }"
 				class="sapFDynamicPageAlignContent"
                 width="auto">
-            <headerToolbar>
+            <lib-m:headerToolbar>
             <OverflowToolbar>
               <Title text="{I18N>/LIST} ({= ${list>/MdCategory}.length})" level="H2" />
               <Button icon="sap-icon://move" enabled="false" />
               <ToolbarSpacer/>
-              <Button icon="sap-icon://navigation-up-arrow" tooltip="Move up" press="moveUp"/>
-              <Button icon="sap-icon://navigation-down-arrow" tooltip="Move down" press="moveDown"/>
               <Button text="{I18N>/NEW}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
-              <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent"/>
+              <Button id="moveUp" icon="sap-icon://navigation-up-arrow" tooltip="Move up" press="moveUp" visible="{= ${list>/mainMode}==='Main'?true:false}"/>
+              <Button id="moveDown" icon="sap-icon://navigation-down-arrow" tooltip="Move down" press="moveDown" visible="{= ${list>/mainMode}==='Main'?true:false}"/>
+              <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onCancel"  type="Transparent" visible="{= ${list>/mainMode}==='Main'?true:false}"/>
               <!-- <Button text="{I18N>/ROW_DELETE}" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" /> -->
-              <Button text="{I18N>/SAVE}" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
-              <ToolbarSeparator/>
-              <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+              <Button text="{I18N>/SAVE}" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')" type="Emphasized" visible="{= ${list>/mainMode}==='Main'?true:false}"/>
+              <!-- <ToolbarSeparator/>
+              <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" > 
                 <layoutData>
                   <OverflowToolbarLayoutData priority="NeverOverflow"/>
                 </layoutData>
-              </Button>
+              </Button>-->
             </OverflowToolbar>
-            </headerToolbar>
+            </lib-m:headerToolbar>
 
-            <columns>
+            <lib-m:columns>
                 <Column hAlign="Center" width="3em">
                     <Text text="" />
                 </Column>
@@ -149,12 +150,12 @@
                 <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false" >
                     <Text text="{I18N>/LOCAL_CHANGE_DTM}" />
                 </Column>
-            </columns>
+            </lib-m:columns>
 
-            <items>
+            <lib-m:items>
                 <ColumnListItem type="Navigation" press="onListItemPress">
                     <cells>
-                        <HBox align="Center">
+                        <HBox>
                             <ObjectStatus icon="{
                                 path: 'list>_row_state_',
                                 formatter: '.formatter.toModelStateColumnIcon'
@@ -192,9 +193,9 @@
                         </HBox>
                     </cells>
                 </ColumnListItem>
-            </items>
+            </lib-m:items>
             
-        </Table>
+        </lib-m:Table>
         </VBox>
       </f:content>
     </f:DynamicPage>

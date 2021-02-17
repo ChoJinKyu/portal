@@ -187,29 +187,24 @@
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
+                "async": true,
                 "viewPath": "sp.np.npMst.view",
-                "controlId": "fcl",
-                "transition": "slide",
-                "bypassed": {
-                    "target": [
-                        "notFound"
-                    ]
-                },
-                "async": true
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false,
+                "transition": "slip"
             },
             "routes": [
                 {
-                    "pattern": ":layout:",
-                    "name": "mainPage",
-                    "target": [
-                        "mainObject"
-                    ]
+                    "pattern": "",
+                    "name": "MainList",
+                    "target": "MainList"
                 }
             ],
             "targets": {
-                "mainObject": {
-                    "viewName": "MainList",
-                    "controlAggregation": "beginColumnPages"
+                "MainList": {
+                    "viewId": "MainList",
+                    "viewName": "MainList"
                 }
             }
         }

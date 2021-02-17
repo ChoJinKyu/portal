@@ -7,6 +7,7 @@
 	xmlns:core="sap.ui.core"
 	xmlns:form="sap.ui.layout.form"
 	xmlns:mvc="sap.ui.core.mvc"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
     <uxap:ObjectPageLayout id="page"
@@ -45,6 +46,36 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
+                        <form:SimpleForm id="midObjectForm1Edit" editable="true">
+                            
+                            <!-- <core:Title text="Normal" /> -->	
+                            <Label text="{I18N>/BIZUNIT_CODE}" />
+                            <Text text="{master>/org_code}"/>
+
+                            <Label text="{I18N>/BIZUNIT_NAME}" />
+                            <Text text="{master>/org_infos/bizunit_name}"/>
+                            
+                            <Label text="{I18N>/SPMD_CATEGORY_CODE}" />
+                            <Text text="{master>/spmd_category_code}"/>
+
+                            <Label id="labelCtrgCodeName" text="{I18N>/SPMD_CATEGORY_CODE_NAME}"/>
+                            <VBox><Text id="retrieveCtgrCodeName" text="{master>/spmd_category_code_name}"/>
+                            <Input id="editCtgrCodeName"
+                                value="{
+                                    path: 'master>/spmd_category_code_name',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 50
+                                    }
+                                }"/>  
+                            </VBox>
+
+                            <Label text="{I18N>/FONT_RGB_CODE}"/>
+                            <HBox renderType="Bare">
+                                <lib-m:ColoredText id="fontColor" text="{master>/rgb_font_color_code}" color="{master>/rgb_font_color_code}"/>
+                                <Button text="" id="fontColorChange" press="onFontColor" width="2rem" icon="sap-icon://text-color" visible="false"/>	  
+                            </HBox>
+                        </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

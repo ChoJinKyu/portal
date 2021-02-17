@@ -136,7 +136,7 @@
 
                             <Label  text="업체선정결과" 
                                     design="Bold" 
-                                    class="sapUiSmallMarginTop"/>
+                                    class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
                             <t:Table id="mainTable"
                             selectionMode="None"
                             rows="{
@@ -315,78 +315,9 @@
                             </t:columns>
                             </t:Table>
 
-                            <!-- <Table id="tableAttachments" 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-                                inset="false" 
-                                visible="{midObjectViewModel>/existRfq}"
-                                class="sapFDynamicPageAlignContent" 
-                                items="{
-                                    path: 'list>/LOIPublishItemView' 
-                                }"                                  
-                                mode="None"
-                                width="98%">
-                                <columns>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Line No." />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="플랜트" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="품명" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="단위" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="수량" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="통화" />
-                                    </Column>  
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="요청금액" />
-                                    </Column> 
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="선정업체" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="환산견적금액" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="요청납기일자" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-                                        <Text text="견적납기일자" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="견적비고" />
-                                    </Column>  
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Inactive" visible="{midObjectViewModel>/existRfq}">
-                                        <cells>
-                                            <Text text="{details/item_sequence}"/>
-                                            <Text text="{details/plant_name}"/>
-                                            <Text text="{details/item_desc}"/>
-                                            <Text text="{details/spec_desc}"/>
-                                            <Text text="{details/unit}"/>
-                                            <Text text="{details/request_quantity}"/>
-                                            <Text text="{details/currency_code}"/>
-                                            <Text text="{details/request_amount}"/>
-                                            <Text text="{details/offline_selection_supplier_code}"/>
-                                            <Text text="{details/offline_quotation_amount}"/>
-                                            <Text text="{details/delivery_request_date}"/>
-                                            <Text text="{details/offline_quotation_due_date}"/>
-                                            <Text text="{details/offline_quotation_remark}"/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>                                
-                            </Table> -->
-
                             <Label  text="특기사항" 
                                         design="Bold" 
-                                        class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
+                                        class="sapUiMediumMarginTop sapUiTinyMarginBottom"/>
                             <richtexteditor:RichTextEditor
                                 editorType="TinyMCE4"
                                 width="98%"
@@ -409,8 +340,9 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
+                            <Text text=""/>
                             <!-- File Upload 시작-->
-                            <UploadCollection
+                            <!-- <UploadCollection
                                 id="UploadCollection"
                                 maximumFilenameLength="55"
                                 maximumFileSize="10"
@@ -424,7 +356,7 @@
                                 fileSizeExceed="onFileSizeExceed"
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
+                                beforeUploadStarts="onBeforeUploadStarts" /> -->
                             <!-- File Upload 끝-->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>

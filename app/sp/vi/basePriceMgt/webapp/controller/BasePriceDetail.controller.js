@@ -113,6 +113,7 @@ sap.ui.define([
                         oDetailModel.setProperty("/results",[]); 
                         for (i = 0; i<data.results.length; i++){
                             oDetailModel.getProperty("/results").push(data.results[i]);
+                            oDetailModel.setProperty("/resultsLength", data.results.length);
                         }
                         oDetailModel.refresh();                      
                     }.bind(this),
@@ -142,7 +143,7 @@ sap.ui.define([
                     success : function(data){
                         oView.setBusy(false);
                         oRefererModel.setData(data);
-                        // debugger;
+                        // 
                         // oRefererModel.getProperty("/results").push({ApprEmpNo : data.results[0].referer_empno});
                         // oRefererModel.refrsh();
                     }.bind(this),
@@ -318,7 +319,7 @@ sap.ui.define([
          * 시세의 경우 적용시작월 선택시 적종종료월이 적용시작월로 픽스(수정불가)
          */
         , onChangeStartData : function(oEvent) {
-            debugger;
+            
 
             var oDetailModel = this.getModel("detailModel");
             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
@@ -330,11 +331,24 @@ sap.ui.define([
             }else if(oDetailData.management_mprice_name == "시세"){
                 management_mprice_code = "MPRICE"
 
-                //oDetailData.apply_end_data = oDetailData.apply_start_date;
+                var nAfterBase_year = Number(oDetailData.base_year) + 1;
+                var StartData = this.getFormatDateYYYYMM(oDetailData.apply_start_yyyymm);
+                if( StartData < oDetailData.base_year+"01"){
+                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                    oDetailData.apply_start_yyyymm = "";
+                    oDetailData.apply_end_yyyymm = "";
+                    return;
+
+                }else if( StartData >= String(nAfterBase_year)+"01"){
+                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                    oDetailData.apply_start_yyyymm = "";
+                    oDetailData.apply_end_yyyymm = "";
+                    return;
+                }
+
                 oDetailModel.setProperty(sSelectedPath+"/apply_end_yyyymm", oDetailData.apply_start_yyyymm);
                 oDetailModel.refresh();
-            }
-            debugger;         
+            }      
             var nAfterBase_year = Number(oDetailData.base_year) + 1;
             var StartData = this.getFormatDateYYYYMM(oDetailData.apply_start_yyyymm);
             if( StartData < oDetailData.base_year+"01"){
@@ -531,7 +545,7 @@ sap.ui.define([
 
                 var apply_start_yyyymm = this.onChangeDateFormatYYYYMM(oDetailModel.getProperty(rowData+"/apply_start_yyyymm"));
                 var apply_end_yyyymm = this.onChangeDateFormatYYYYMM(oDetailModel.getProperty(rowData+"/apply_end_yyyymm"));
-                 debugger;   
+                    
                 //apply_start/end_yyyymm 세팅
                 oDetailModel.setProperty(rowData+"/apply_start_yyyymm",apply_start_yyyymm);   
                 oDetailModel.setProperty(rowData+"/apply_end_yyyymm",apply_end_yyyymm);
@@ -638,6 +652,14 @@ sap.ui.define([
             var today = new Date();
             date = this.getFormatDate(date);
             var type_code = "NPT01";
+
+            //데이터 수정시 세션값(사업본부)를 사용하지않고 등록된 사업본부를 그대로 사용
+            var nbizunit_code = "";
+            if(!oData.results[0].bizunit_code){
+                nbizunit_code = sBizunitCode;
+            } else {
+                nbizunit_code = oData.results[0].bizunit_code
+            }
 
             /**
              * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_MST_TYPE
@@ -754,8 +776,32 @@ sap.ui.define([
             if(aPriceData.length === 0){
                 MessageBox.show("기준단가 목록이 필요합니다. ");
                 return;
-            }
+            }            
             
+            for (var i =0; i<=aPriceData.length-1; i++){
+                var ItemDuplicateCheckA = [];
+                ItemDuplicateCheckA.push(String(aPriceData[i].base_year)) //기준년도
+                ItemDuplicateCheckA.push(aPriceData[i].plant_code) //플랜트
+                ItemDuplicateCheckA.push(aPriceData[i].supplier_code) //공급업체코드
+                ItemDuplicateCheckA.push(aPriceData[i].material_code) //자재코드
+                ItemDuplicateCheckA.push(aPriceData[i].currency_code) //통화
+                for(var j=i+1; j<=aPriceData.length-1; j++){
+                    var ItemDuplicateCheckB = [];
+
+                    ItemDuplicateCheckB.push(String(aPriceData[j].base_year)) //기준년도
+                    ItemDuplicateCheckB.push(aPriceData[j].plant_code) //플랜트
+                    ItemDuplicateCheckB.push(aPriceData[j].supplier_code) //공급업체코드
+                    ItemDuplicateCheckB.push(aPriceData[j].material_code) //자재코드
+                    ItemDuplicateCheckB.push(aPriceData[j].currency_code) //통화
+
+                    var arryCheck = this.ArryCompare(ItemDuplicateCheckA, ItemDuplicateCheckB);
+                    if(arryCheck != false) {
+                        MessageBox.error("기준단가 목록 \n"+ (i+1)+"번줄과"+(j+1)+"번줄의 중복 자재가 있습니다.", {at : "Center center"});
+                        return 
+                    }
+                }
+            }
+                
             aPriceData.forEach(function(oPrice, idx) {
                 if( aPriceData[idx].apply_start_yyyymm.indexOf("-") == -1){
                     var strArray = aPriceData[idx].apply_start_yyyymm.replace(" ","");
@@ -774,7 +820,6 @@ sap.ui.define([
                     apply_end_yyyymm = aPriceData[idx].apply_end_yyyymm.replace("-","");
                 }
                 
-
                 var management_mprice_code = "";
                 if(aPriceData[idx].management_mprice_name == "관리"){
                     management_mprice_code = "MNGT"
@@ -787,7 +832,7 @@ sap.ui.define([
                     oNewPriceObj['approval_number'] = oData.approval_number;      
                     oNewPriceObj['item_sequence'] = Number(aPriceData[idx].item_sequence);
                     oNewPriceObj['company_code'] = aPriceData[idx].company_code;
-                    oNewPriceObj['bizunit_code'] = sBizunitCode;             //세션 본부 코드 
+                    oNewPriceObj['bizunit_code'] = nbizunit_code;             
                     oNewPriceObj['management_mprice_code'] = management_mprice_code;
                     oNewPriceObj['base_year'] = String(aPriceData[idx].base_year);
                     oNewPriceObj['apply_start_yyyymm'] = String(apply_start_yyyymm);
@@ -807,8 +852,8 @@ sap.ui.define([
                     oNewPriceObj['metal_net_price'] = null;
                     oNewPriceObj['coating_mat_net_price'] = null;
                     oNewPriceObj['fabric_net_price'] = null;
-                    oNewPriceObj['local_create_dtm'] = oData.local_create_dtm;               //핸들러에서 부여
-                    oNewPriceObj['local_update_dtm'] = oData.local_update_dtm;               //핸들러에서 부여
+                    oNewPriceObj['local_create_dtm'] = oData.local_create_dtm;               
+                    oNewPriceObj['local_update_dtm'] = oData.local_update_dtm;               
                     oNewPriceObj['create_user_id'] = oData.create_user_id;
                     oNewPriceObj['update_user_id'] = oData.create_user_id;                    
                 aPriceResult.push(oNewPriceObj);
@@ -877,12 +922,10 @@ sap.ui.define([
                         return;
                     }
                 } 
-                
                 if (!aPriceResult[i].buyer_empno){
                     MessageBox.show("구매담당자는 필수입니다. ");
                     return;
                 }
-                
             }
 
             /**
@@ -917,7 +960,7 @@ sap.ui.define([
                     type_code                 :  "NPT01"
                 }
             };
-            debugger;
+            
             console.log("SendData");
             console.log(oSendData);
             if (!oData.approval_number) {
@@ -929,9 +972,6 @@ sap.ui.define([
         }
 
         , _DeleteSendDataModel : function(){   
-
-            debugger;
-            
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
 
@@ -1219,8 +1259,11 @@ sap.ui.define([
          */
        , onBack: function () {
             var oRootModel = this.getModel("rootModel");
-            //oRootModel.setProperty("/selectedData", null);
-            //var oApprover = this.getModel("")
+
+            //접속시 항상 상단에 위치
+            var oObjectPageLayout = this.getView().byId("ObjectPageLayout");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
 
             item_sequence = 1;
             appr_sequence = 1;
@@ -1246,13 +1289,41 @@ sap.ui.define([
          */
 
          , dataTypeChange : function (val){
-             debugger;
+             
             var sYY = val.substring(0,4);
             var sMM = val.substring(4,6);
 
             var d = new Date(sYY, sMM);
             
              return d;
+         }
+
+         /**
+          * 배열 비교
+          */
+         , ArryCompare : function(arr1, arr2){
+             // 결과값
+            var rst = false;
+        
+            // 길이가 다르면 다른 배열이라고 판단
+            if (arr1.length != arr2.length) {
+                return rst;
+            }
+        
+            // arr1 배열의 크기만큼 반복
+            arr1.forEach(function (item) {        
+                // arr1 배열 아이템이, arr2 배열에 있는지 확인
+                // 있으면, arr2에 item이 존재하는 index 리턴
+                // 없으면, -1 리턴
+                var i = arr2.indexOf(item);
+        
+                // 존재하면, splice함수를 이용해서 arr2 배열에서 item 삭제
+                if (i > -1) arr2.splice(i, 1);
+            });
+            // compare2의 길이가 0이면 동일하다고 판단.
+            rst = arr2.length == 0;
+
+            return rst;
          }
   });
 });

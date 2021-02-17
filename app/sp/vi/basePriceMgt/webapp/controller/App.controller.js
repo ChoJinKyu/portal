@@ -48,13 +48,23 @@ sap.ui.define([
      * 소수점 뒤에 0 제거 
      */
     , onChangeNumber: function (sNumberPararm) {
+        
         var tmp = sNumberPararm + "";
         sNumberPararm = Number(sNumberPararm);
 
 		if(tmp.indexOf(".") != -1){
 			sNumberPararm = sNumberPararm.toFixed(4);
-			sNumberPararm = sNumberPararm.replace(/(0+$)/, "");
+            sNumberPararm = sNumberPararm.replace(/(0+$)/ , "");            
         }
+        
+        var t = sNumberPararm + "";
+        if(t.indexOf('.') != -1){
+            var t_length = t.substring(t.indexOf('.') + 1);
+            if(t_length.length == 0){
+                sNumberPararm = sNumberPararm.replace("." , "");
+            }
+        }
+
         return sNumberPararm;
     }
     

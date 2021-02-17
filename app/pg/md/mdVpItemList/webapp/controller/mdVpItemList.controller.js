@@ -121,10 +121,27 @@ sap.ui.define([
                 // @ts-ignore 
                 template: new sap.m.MenuItem({ 
                     key: "{category>spmd_category_code}", 
-                    text: "{category>spmd_category_code}: {category>spmd_category_code_name}"
+                    text: "{category>spmd_category_code_name} [{category>spmd_category_code}]"
                 }) 
             }); 
         }, 
+
+
+        /**
+         * 상태 InforLabel colorScheme 설정
+         * @param {stirng} statusCode
+         */
+        formatStatusColor: function(_code) {
+            if(_code === "100") {
+                return 1;
+            } else if(_code === "200") {
+                return 3;
+            } else if(_code === "300") {
+                return 6;
+            } else {
+                return 0;
+            }
+        },
 
         onMenuAction: function (oEvent){ 
             var oTenantId = this.getView().byId("searchTenantCombo").getSelectedKey();

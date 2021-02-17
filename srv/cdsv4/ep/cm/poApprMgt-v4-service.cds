@@ -32,7 +32,7 @@ service PoApprMgtV4Service {
     action SavePoForexDeclarationProc (forexItems : array of SavedForexItems) returns array of ResultForexItems;
 
     view ForexDeclarationSummaryView (tenant_id : String, company_code : String, purchasing_department_code : String, buyer_empno : String, po_start_date : Date, po_end_date : Date) as
-    select key '회사' as group_type : String(50)
+    select key '전체' as group_type : String(50)
         , ifnull(sum(todo_count),0) as todo_count : Integer64
         , ifnull(sum(standby_count),0) as standby_count : Integer64     
         , ifnull(sum(ongoing_count),0) as ongoing_count : Integer64

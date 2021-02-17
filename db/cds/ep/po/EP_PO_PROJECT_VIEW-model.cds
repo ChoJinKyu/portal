@@ -20,6 +20,7 @@ entity Po_Project_View {
         remark                  : String(3000)        @title : '비고';
         org_type_code           : String(2)           @title : '조직유형코드';
         org_code                : String(10)          @title : '조직코드';
+        create_user_name        : String(30)          @title : '작성자명';
 
 
 }

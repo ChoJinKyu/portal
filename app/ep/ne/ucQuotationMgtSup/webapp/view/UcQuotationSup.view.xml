@@ -214,11 +214,11 @@
 
 
             <!-- 첨부파일 시작 -->
-            <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+            <!-- <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
                 <uxap:subSections>
                     <uxap:ObjectPageSubSection>
                         <uxap:blocks>
-                            <!-- File Upload 시작-->
+
                             <UploadCollection
                                 id="UploadCollection"
                                 maximumFilenameLength="55"
@@ -234,12 +234,26 @@
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
                                 beforeUploadStarts="onBeforeUploadStarts" />
-                            <!-- File Upload 끝-->
+
                         </uxap:blocks>
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>
-            </uxap:ObjectPageSection>
+            </uxap:ObjectPageSection> -->
             <!-- 첨부파일 끝 -->
+
+            <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- Approval & Reference 시작 -->
+                            <HBox>
+        
+                            </HBox>
+                            <!-- Approval & Reference 끝 -->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
                     
             <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="품목정보">
 				<uxap:subSections>
@@ -346,8 +360,10 @@
                                 <Label text="할증" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <!-- <Text text="{viewModel>extra_rate}"/> -->
-                                    <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" />                
-               
+                                    <HBox justifyContent="Center">
+                                        <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event,true)" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" visible="{=!${midObjectViewModel>/isShowMode}}"/>                
+                                        <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event,false)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" visible="{midObjectViewModel>/isShowMode}"/>               
+                                    </HBox>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainMaterialNetPrice" width="8rem" hAlign="Right">
@@ -547,8 +563,7 @@
                                         typeMissmatch="onTypeMissmatch"
                                         uploadComplete="onUploadComplete"
                                         beforeUploadStarts="onBeforeUploadStarts" 
-                                        editable="{viewModel>/ucmaster/completion_flag}"
-                                        visible="{viewModel>/ucmaster/completion_flag}">
+                                        visible="false">
                                         <layoutData>
                                             <layout:GridData span="XL12 L12 M12 S12" />
                                         </layoutData> 

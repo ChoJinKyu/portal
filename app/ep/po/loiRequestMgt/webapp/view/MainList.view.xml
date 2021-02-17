@@ -8,6 +8,7 @@
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
     xmlns:u="sap.ui.unified"
+    xmlns:tnt="sap.tnt"
     height="100%">
 
     <f:DynamicPage id="page2"
@@ -201,10 +202,17 @@
                     <Text text="{listModel>loi_request_title}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainLoiRequestStatusCode" width="10rem">
+                <t:Column id="mainLoiRequestStatusCode" width="10rem"  hAlign="Center">
                 <Label text="진행상태" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>loi_request_status_name}"/>
+                        <tnt:InfoLabel 
+                            text="{listModel>loi_request_status_name}" 
+                            colorScheme="{
+                                path: 'listModel>color_type_code',
+                                formatter: '.onStatusColor'
+                            }" 
+                            />
                 </t:template>
                 </t:Column>
                 <t:Column id="mainBuyerEmpno" width="6rem">

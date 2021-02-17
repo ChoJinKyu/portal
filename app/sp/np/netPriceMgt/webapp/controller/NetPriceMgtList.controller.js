@@ -191,7 +191,7 @@ sap.ui.define([
                         //console.log(item.getKey());
                         plantFilters.push(new Filter({
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID),
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100"),
                                 new Filter("company_code", FilterOperator.EQ, item.getKey())
                             ],
                             and: true
@@ -199,7 +199,7 @@ sap.ui.define([
                     });
                 } else {
                     plantFilters.push(
-                        new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
                     );
                 }
 
@@ -258,7 +258,7 @@ sap.ui.define([
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
                             ]
                         }
                     });
@@ -282,7 +282,7 @@ sap.ui.define([
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
+                                new Filter("tenant_id", "EQ", "L2100")
                             ]
                         }
                     });
@@ -296,7 +296,7 @@ sap.ui.define([
 
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
-                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                sSearchObj.tanentId = "L2100";
                 //sSearchObj.vendorPoolCode = oSearch.getValue();
                 sSearchObj.supplierCode = oSearch.getValue();
                 this.oSearchSupplierDialog.open(sSearchObj);

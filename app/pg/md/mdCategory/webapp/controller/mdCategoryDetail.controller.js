@@ -349,59 +349,72 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-                         
-            MessageBox.confirm(this.getModel("I18N").getText("/NPG10009"), {
-                title: this.getModel("I18N").getText("/EDIT_CANCEL"),
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: (function (sButton) {
-                    var oView = this.getView();
-                    var sSpmd_category_code = this._sSpmd_category_code;
-                    if (sSpmd_category_code === "new"){
-                        this.onPageNavBackButtonPress();
-                    }else if (sSpmd_category_code !== "new"){   
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                oDetailsModel = this.getModel("details");
 
-                        var sObjectPath = "/MdCategory(tenant_id='"      + "L2100" 
-                                                + "',company_code='"      + this._sCompany_code  
-                                                + "',org_type_code='"      + this._sOrg_type_code 
-                                                + "',org_code='"           + this._sOrg_code 
-                                                + "',spmd_category_code='" + this._sSpmd_category_code
-                                                + "')";
-                        var oMasterModel = this.getModel("master");
-                        oView.setBusy(true);
-                        oMasterModel.setTransactionModel(this.getModel());
-                        oMasterModel.read(sObjectPath, {
-                            urlParameters: {
-                                "$expand": "org_infos"
-                            },
-                            success: function(oData){
-                                oView.setBusy(false);
-                            }
-                        });
+            if ( !oMasterModel.isChanged() && !oDetailsModel.isChanged() ) {//변경 건 없을 경우 :바로 이동   
+                this.onPageCancelEdit();          
+            }else{
+                MessageBox.confirm(this.getModel("I18N").getText("/NPG10009"), {
+                    title: this.getModel("I18N").getText("/EDIT_CANCEL"),
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: (function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
 
-                        oView.setBusy(true);
-                        var oDetailsModel = this.getModel("details");
-                        oDetailsModel.setTransactionModel(this.getModel());
-
-                        oDetailsModel.read("/MdCategoryLng", {
-                            filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                                new Filter("company_code", FilterOperator.EQ, this._sCompany_code),
-                                new Filter("org_type_code", FilterOperator.EQ, this._sOrg_type_code),
-                                new Filter("org_code", FilterOperator.EQ, this._sOrg_code),
-                                new Filter("spmd_category_code", FilterOperator.EQ, this._sSpmd_category_code)                        
-                            ],
-                            success: function(oData){
-                                oView.setBusy(false);
-                            }
-                        });
-                        this._toShowMode();                
-                    }
-                    this.validator.clearValueState(this.byId("midObjectForm1Edit"));
-                    this.validator.clearValueState(this.byId("midTable"));
-
-                }).bind(this)
-            })    
+                            this.onPageCancelEdit(); 
+                        }
+                    }).bind(this)
+                })    
+            }
             
+        },
+
+        onPageCancelEdit: function() {
+            var oView = this.getView();
+            var sSpmd_category_code = this._sSpmd_category_code;
+            if (sSpmd_category_code === "new"){
+                this.onPageNavBackButtonPress();
+            }else if (sSpmd_category_code !== "new"){   
+
+                var sObjectPath = "/MdCategory(tenant_id='"      + "L2100" 
+                                        + "',company_code='"      + this._sCompany_code  
+                                        + "',org_type_code='"      + this._sOrg_type_code 
+                                        + "',org_code='"           + this._sOrg_code 
+                                        + "',spmd_category_code='" + this._sSpmd_category_code
+                                        + "')";
+                var oMasterModel = this.getModel("master");
+                oView.setBusy(true);
+                oMasterModel.setTransactionModel(this.getModel());
+                oMasterModel.read(sObjectPath, {
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
+
+                oView.setBusy(true);
+                var oDetailsModel = this.getModel("details");
+                oDetailsModel.setTransactionModel(this.getModel());
+
+                oDetailsModel.read("/MdCategoryLng", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("company_code", FilterOperator.EQ, this._sCompany_code),
+                        new Filter("org_type_code", FilterOperator.EQ, this._sOrg_type_code),
+                        new Filter("org_code", FilterOperator.EQ, this._sOrg_code),
+                        new Filter("spmd_category_code", FilterOperator.EQ, this._sSpmd_category_code)                        
+                    ],
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
+                this._toShowMode();                
+            }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
         },
 
 
@@ -495,21 +508,19 @@ sap.ui.define([
 
 			oTransactionManager.setServiceModel(this.getModel());
 
-            setTimeout(this.setPageLayout(), 5000);
+            // setTimeout(this.setPageLayout(), 5000);
+
             //ScrollTop
-            // var oObjectPageLayout = this.getView().byId("page");
-            // var oFirstSection = oObjectPageLayout.getSections()[0];
-            // oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
-
-            // var oFirstSection = this.getView().byId("pageSectionMain");
-            // oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
-		},
-
-        setPageLayout : function(){ //fragment 없애야함
             var oObjectPageLayout = this.getView().byId("page");
             var oFirstSection = oObjectPageLayout.getSections()[0];
-            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);          
-        },
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+		},
+
+        // setPageLayout : function(){ //fragment 없애야함
+        //     var oObjectPageLayout = this.getView().byId("page");
+        //     var oFirstSection = oObjectPageLayout.getSections()[0];
+        //     oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);          
+        // },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -538,9 +549,13 @@ sap.ui.define([
 
 		_toEditMode: function(){
 			var FALSE = false;
-            this._showFormFragment('detailEditMode');
-			this.byId("page").setSelectedSection("pageSectionMain");
+            // this._showFormFragment('detailEditMode');
+			// this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", !FALSE);
+            this.getView().byId("labelCtrgCodeName").setRequired(!FALSE);
+            this.byId("retrieveCtgrCodeName").setVisible(FALSE);
+            this.byId("editCtgrCodeName").setVisible(!FALSE);
+            this.byId("fontColorChange").setVisible(!FALSE);
             
             this.byId("pageCancelButton").setVisible(!FALSE);
             this.byId("pageEditButton").setVisible(FALSE);
@@ -561,9 +576,13 @@ sap.ui.define([
 
 		_toShowMode: function(){
 			var TRUE = true;
-            this._showFormFragment('detailShowMode');
-			this.byId("page").setSelectedSection("pageSectionMain");
+            // this._showFormFragment('detailShowMode');
+			// this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", TRUE);
+            this.getView().byId("labelCtrgCodeName").setRequired(!TRUE);
+            this.byId("retrieveCtgrCodeName").setVisible(TRUE);
+            this.byId("editCtgrCodeName").setVisible(!TRUE);
+            this.byId("fontColorChange").setVisible(!TRUE);
             
             this.byId("pageCancelButton").setVisible(!TRUE);
             this.byId("pageEditButton").setVisible(TRUE);
@@ -645,23 +664,23 @@ sap.ui.define([
 			}).setKeyboardMode(sKeyboardMode);
 		},
 
-		_showFormFragment : function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function(oFragment){
-				oPageSubSection.removeAllBlocks();
-				oPageSubSection.addBlock(oFragment);
-            })
+		// _showFormFragment : function (sFragmentName) {
+        //     var oPageSubSection = this.byId("pageSubSection1");
+        //     this._loadFragment(sFragmentName, function(oFragment){
+		// 		oPageSubSection.removeAllBlocks();
+		// 		oPageSubSection.addBlock(oFragment);
+        //     })
             
-        },
-        _loadFragment: function (sFragmentName, oHandler) {
-            Fragment.load({
-                id: this.getView().getId(),
-                name: "pg.md.mdCategory.view." + sFragmentName,
-                controller: this 
-            }).then(function(oFragment){
-                if(oHandler) oHandler(oFragment);
-            }.bind(this));
-        },
+        // },
+        // _loadFragment: function (sFragmentName, oHandler) {
+        //     Fragment.load({
+        //         id: this.getView().getId(),
+        //         name: "pg.md.mdCategory.view." + sFragmentName,
+        //         controller: this 
+        //     }).then(function(oFragment){
+        //         if(oHandler) oHandler(oFragment);
+        //     }.bind(this));
+        // },
     
 		/**
 		 * Opens a fully featured <code>ColorPalette</code> in a <code>sap.m.ResponsivePopover</code>
@@ -686,12 +705,6 @@ sap.ui.define([
 				oInput = oView.byId("fontColor");
 
 			oInput.setText(oEvent.getParameter("hex"));
-        },
-
-		onExit: function () {
-			if (this.oColorPickerPopover) {
-				this.oColorPickerPopover.destroy();
-			}
-		}
+        }
 	});
 });

@@ -281,13 +281,13 @@
                     <Text text="{list>loi_request_title}" />
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainItemDesc" width="6rem">
+                <t:Column id="mainItemDesc" width="18rem">
                 <Label text="{I18N>/ITEM_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>item_desc}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainSupplierName" width="4rem">
+                <t:Column id="mainSupplierName" width="12rem">
                 <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>supplier_name}"/>
@@ -303,7 +303,7 @@
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainDeliveryRequestDate" width="6rem" hAlign="Center">
-                <Label text="{I18N>/DUE_DATE}" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/DELIVERY_DUE_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>delivery_request_date',
@@ -400,7 +400,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainSystemCreateDtm" width="9rem" hAlign="Center">
-                <Label text="업체선정작성일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/SUPPLIER_SELECTION_APPROVAL_DT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>supplier_selection_date',

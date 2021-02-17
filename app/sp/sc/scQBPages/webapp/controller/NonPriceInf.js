@@ -575,7 +575,11 @@ sap.ui.define([
                 nonpr_supeval_value_type            : { nonpr_supeval_attr_type_name    : PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getText() },
                 nonpr_score_comput_method_code      : PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getKey(),
                 nonpr_score_comput_method           : { nonpr_score_comput_method_name  : PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getText() },
-                target_score                        : PVbox.getItems()[2].getItems()[2].getItems()[1].getValue()
+                target_score                        : PVbox.getItems()[2].getItems()[2].getItems()[1].getValue(),
+
+                nonpr_item_number                   : that._selectedNPItem.nonpr_item_number,
+                nego_header_id                      : that._selectedNPItem.nego_header_id,
+                tenant_id                           : that._selectedNPItem.tenant_id
 
             };
             // oNPHeaderData._row_state_                       = that._selectedNPItem === null ? "C" : "";//"C";
@@ -614,6 +618,10 @@ sap.ui.define([
                 sItem.supeval_to_value      = oItem.getCells()[4].getValue();
                 sItem.supeval_text_value    = oItem.getCells()[5].getValue();
                 sItem.supeval_score         = oItem.getCells()[6].getValue();
+
+                sItem.nonpr_item_number     = oNPHeaderData.nonpr_item_number;
+                sItem.nego_header_id        = oNPHeaderData.nego_header_id;
+                sItem.tenant_id             = oNPHeaderData.tenant_id;
                     
                 //  if (typeFlag == "1") {
                 //     sItem.v1 = oItem.getCells()[1].getValue();

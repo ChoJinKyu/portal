@@ -252,7 +252,7 @@
         },
         "internalPriceDetail": {
           "viewId": "internalPriceDetail",
-          "viewName": "internalPriceDetail"
+          "viewName": "InternalPriceDetail"
         }
       }
     }

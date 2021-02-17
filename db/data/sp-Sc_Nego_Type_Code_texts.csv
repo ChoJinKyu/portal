@@ -1,9 +1,0 @@
-LOCALE;TENANT_ID;NEGO_TYPE_CODE;NEGO_TYPE_NAME
-ko;L2100;RFQ;RFQ (견적 계획)
-ko;L2100;RFP;RFP (견적 계획)
-ko;L2100;CPB;Competitive Bidding (입찰 계획)
-ko;L2100;TSB;2-Step Bidding (입찰 계획)
-en;L2100;RFQ;RFQ (Quotation plan)
-en;L2100;RFP;RFP (Quotation plan)
-en;L2100;CPB;Competitive Bidding (Bidding plan)
-en;L2100;TSB;2-Step Bidding (Bidding plan)

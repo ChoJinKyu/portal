@@ -81,7 +81,7 @@
             <VBox alignContent="Center" alignItems="Stretch"> 
                 <Label  text="부대조건" 
                             design="Bold" 
-                            class="sapUiSmallMarginBottom"/>
+                            class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
                 <TextArea value="{master>/additional_condition_desc}" rows="8" width="100%" />            
             </VBox>
         </form:SimpleForm>
@@ -90,7 +90,7 @@
             <VBox alignContent="Center" alignItems="Stretch"> 
                 <Label  text="특기사항" 
                             design="Bold" 
-                            class="sapUiSmallMarginBottom"/>
+                            class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
                 <richtexteditor:RichTextEditor
                     editorType="TinyMCE4"
                     width="100%"

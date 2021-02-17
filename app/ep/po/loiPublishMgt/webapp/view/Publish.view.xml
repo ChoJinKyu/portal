@@ -112,7 +112,8 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <!-- File Upload 시작-->
-                            <UploadCollection
+                            <Text text=""/>
+                            <!-- <UploadCollection
                                 id="UploadCollection"
                                 maximumFilenameLength="55"
                                 maximumFileSize="10"
@@ -126,7 +127,7 @@
                                 fileSizeExceed="onFileSizeExceed"
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
+                                beforeUploadStarts="onBeforeUploadStarts" /> -->
                             <!-- File Upload 끝-->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -158,7 +159,7 @@
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-                                <Column minScreenWidth="Tablet" hAlign="Center" width="5em">
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="7em">
 									<Text text="플랜트" />
 								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Center">
@@ -173,11 +174,11 @@
                                 <Column  minScreenWidth="Tablet" hAlign="Center" width="6em">
 									<Text text="수량" />
                                 </Column>
-                                <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
-									<Text text="단가" />
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="6em">
+									<Text text="통화" />
                                 </Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
-									<Text text="금액" />
+									<Text text="견적금액" />
                                 </Column>
                                 <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
 									<Text text="납기일자" />
@@ -191,18 +192,21 @@
                                 <ColumnListItem>
 									<cells>
                                         <Text text="{details>plant_name}"/>
-                                        <Text text="{details>item_desc}"/>
+                                        <HBox justifyContent="Start">   
+                                            <Text text="{details>item_desc}" />
+                                        </HBox>    
                                         <Text text="{details>spec_desc}"/>
                                         <Text text="{details>unit}"/>
-                                        <Text text="{details>request_quantity}"/>
-                                        <Text text="{
-                                                    path: 'details>request_net_price',
-                                                    formatter: '.numberFormatter.toNumberString'
-                                                }"/>
-                                        <Text text="{
-                                                    path: 'details>request_amount',
-                                                    formatter: '.numberFormatter.toNumberString'
-                                                }"/>
+                                        <HBox justifyContent="End">    
+                                            <Text text="{details>request_quantity}"/>
+                                        </HBox>     
+                                        <Text text="{details>currency_code}"/>
+                                        <HBox justifyContent="End">    
+                                            <Text text="{
+                                                        path: 'details>offline_quotation_amount',
+                                                        formatter: '.numberFormatter.toNumberString'
+                                                    }"/>
+                                        </HBox>            
                                         <Text text="{
                                             path: 'details>delivery_request_date',
                                             formatter: '.dateFormatter.toUTCDateString'

@@ -55,6 +55,7 @@ sap.ui.define([
             }.bind(this));
 
             this.byId("btn_search").firePress();
+            //this._doInitTablePerso();
 
             this.byId("mainTableDelButton").setEnabled(false);
             this.byId("mainTableCancButton").setEnabled(false);
@@ -348,6 +349,31 @@ sap.ui.define([
             var input = {
                 inputData: []
             };
+
+            var org_code_c, product_activity_code_c, activity_dependency_code_c, activity_code_c;
+            var org_code_u, product_activity_code_u, activity_dependency_code_u, activity_code_u;
+            // 신규, 수정 일때 중복 체크
+            for(var z=0; z < oTable.getItems().length; z++) {
+                if(oData.ActivityMappingNameView[z]._row_state_ == "C") {
+                    org_code_c = oData.ActivityMappingNameView[z].org_code;
+                    product_activity_code_c = oData.ActivityMappingNameView[z].product_activity_code;
+                    activity_dependency_code_c = oData.ActivityMappingNameView[z].activity_dependency_code;
+                    activity_code_c = oData.ActivityMappingNameView[z].activity_code;
+                }
+
+                if(oData.ActivityMappingNameView[z]._row_state_ == "U") {
+                    org_code_u = oData.ActivityMappingNameView[z].org_code;
+                    product_activity_code_u = oData.ActivityMappingNameView[z].product_activity_code;
+                    activity_dependency_code_u = oData.ActivityMappingNameView[z].activity_dependency_code;
+                    activity_code_u = oData.ActivityMappingNameView[z].activity_code;
+                }
+
+                if(org_code_c == org_code_u && product_activity_code_c == product_activity_code_u && 
+                    activity_dependency_code_c == activity_dependency_code_u && activity_code_c == activity_code_u) {
+                        sap.m.MessageToast.show("중복 매핑을 할 수 없습니다. \n 다시 입력하여 주시기 바랍니다.");
+                        return;
+                }
+            }
 
             if(this.validator.validate(this.byId("mainTable")) !== true){
                 MessageBox.confirm(this.getModel("I18N").getText("/ECM01002"), {

@@ -97,7 +97,7 @@
         <ToolbarSpacer/>
         <HBox alignItems="End" justifyContent="End" >
             <Button text="Cancel" type="Transparent"  class="sapUiSmallMargin" press=".onExtraRate"/>
-            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onExtraRateApply"/>
+            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onExtraRateApply"  visible="{viewModel>/ucmaster/completion_flag_}"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

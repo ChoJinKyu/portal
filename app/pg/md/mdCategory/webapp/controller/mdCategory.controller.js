@@ -80,15 +80,16 @@ sap.ui.define([
         this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
         // 개인화 - UI 테이블의 경우만 해당
-        this._oTPC = new TablePersoController({
-          customDataKey: "mdCategory"
-        }).setTable(this.byId("mainTable"));
+        // this._oTPC = new TablePersoController({
+        //   customDataKey: "mdCategory"
+        // }).setTable(this.byId("mainTable"));
       },
 
 
-      onMainTablePersoButtonPressed: function (event) {
-        this._oTPC.openDialog();
-      },
+    //   onMainTablePersoButtonPressed: function (event) {
+    //     this._oTPC.openDialog();
+    //   },
+      
       // Display row number without changing data
       onAfterRendering: function () {
         this.getModel("list").setProperty("/mainMode", "Main"); 
@@ -145,6 +146,28 @@ sap.ui.define([
         });
     },
 
+    //checkBox
+    onSeletionChange: function(oEvent) {
+
+        var oTable = this.getView().byId("mainTable");
+        var oSelectedItems = oEvent.getSource().getSelectedContexts("list"),
+            oLength = oSelectedItems.length;
+        
+        if(oLength > 1){
+            oSelectedItems.splice(0,oLength-1);
+        }
+        //oEvent , oRow context 확인
+        var oContext = oSelectedItems[0].getPath();
+        oTable.getItems().some(function (oRows) {
+            if (oRows.getBindingContext("list").getPath() === oContext) {
+                oRows.focus();      
+                oRows.setSelected(true); 
+            }else{
+                oRows.setSelected(false); 
+            }
+        });
+
+    },
 
     onListItemPress: function (oEvent) {
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
@@ -283,13 +306,31 @@ sap.ui.define([
             });
         },
 
+        onCancel: function() {
+            var view = this.getView();
+            var model = view.getModel("list");
+            // Validation
+            if (model.getChanges().length > 0) {
+                MessageBox.confirm(this.getModel("I18N").getText("/NPG10019"), {
+                    title: this.getModel("I18N").getText("/EDIT_CANCEL"),
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: (function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {                            
+                            this.onSearch();
+                        }
+                    }).bind(this)
+                })
+            }else{
+                this.onSearch();
+            }
+        },
 
       onSave: function () {
         var [tId, mName] = arguments;
         var view = this.getView();
         var model = view.getModel(mName);
         // Validation
-        if (model.getChanges() <= 0) {
+        if (model.getChanges().length <= 0) {
 			MessageToast.show(this.getModel("I18N").getText("/NPG10010"));
           return;
         }
@@ -350,6 +391,7 @@ sap.ui.define([
 
                 // after move select the sibling
                 oSelectedProductsTable.getItems()[iSiblingItemIndex].setSelected(true);
+                oSelectedProductsTable.getItems()[iSelectedItemIndex].setSelected(false);
                 that.rowIndex = iSiblingItemIndex;
             }); 
         },

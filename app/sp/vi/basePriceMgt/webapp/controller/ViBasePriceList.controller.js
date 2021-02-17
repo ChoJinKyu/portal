@@ -72,7 +72,7 @@ sap.ui.define([
                     closeWhenApplied: bCloseWhenApplied,  
                     items: {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.getModel("rootModel").getProperty("tenantId"))
+                            new Filter("tenant_id", FilterOperator.EQ, sTenantId)
                         ]
                     }
                 });
@@ -154,7 +154,16 @@ sap.ui.define([
                 }));
             }
 
-            // 품의유형이 있는경우
+            // 품의유형이 있는경우(단. pack/예외자재는 제외하여 조회)
+            var aFilterType = [];
+                aFilterType.push(new Filter("net_price_type_code", FilterOperator.NotContains, 'NPT06' ));
+                aFilterType.push(new Filter("net_price_type_code", FilterOperator.NotContains, 'NPT07' ));
+                
+            aFilters.push(new Filter({
+                    filters: aFilterType,
+                    and: true
+                }));
+
             if( oNetPriceTypeCodeNm ) {
                 aFilters.push(new Filter("net_price_type_code", FilterOperator.EQ, oNetPriceTypeCodeNm));
             }       
@@ -219,7 +228,7 @@ sap.ui.define([
          */
         
         , onExcelExport: function (oEvent) {
-            debugger;
+            
             var sTableId = oEvent.getSource().getParent().getParent().getId();
             if ( !sTableId ) { 
                 return; 
@@ -332,8 +341,8 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-             MessageBox.show("준비중입니다. ", {at: "Center Center"});
-             return;
+            MessageBox.show("준비중입니다. ", {at: "Center Center"});
+            return;
 
             var oListModel = this.getModel("listModel");
             var oBindingContext = oEvent.getParameter("rowBindingContext");

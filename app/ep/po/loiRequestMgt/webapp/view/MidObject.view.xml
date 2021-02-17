@@ -114,11 +114,11 @@
 			</uxap:ObjectPageSection>
 
             <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                            <!-- File Upload 시작-->
+                            
                             <UploadCollection
                                 id="UploadCollection"
                                 maximumFilenameLength="55"
@@ -134,12 +134,26 @@
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
                                 beforeUploadStarts="onBeforeUploadStarts" />
-                            <!-- File Upload 끝-->
+               
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection> -->
+            <!-- 첨부파일 끝 -->
+
+            <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- Approval & Reference 시작 -->
+                            <HBox>
+        
+                            </HBox>
+                            <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>
-            <!-- 첨부파일 끝 -->
 
             <!-- <uxap:ObjectPageSection id="pageSectionDetail" titleUppercase="false" title="상세">
 				<uxap:subSections>
@@ -176,34 +190,46 @@
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Label text="S"/>
-								</Column>
+								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="20px" >
+									<!-- <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                    <t:template>
+                                        <ObjectStatus icon="{
+                                            path: 'viewModel>row_state',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" visible="{midObjectView>/isShowMode}" />
+                                    </t:template> -->
+                                    <Label text=""/>
+                                </Column>
+
+                                
+
+                                
+
 								<Column id="midLineNoColumn" minScreenWidth="Tablet" hAlign="Center" width="60px">
 									<Label text="Line No."/>
 								</Column>
                                 <Column id="midPlantColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="플랜트" required="true"/>
 								</Column>
-								<Column id="midItemCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
+								<!-- <Column id="midItemCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="품목코드" />
-								</Column>
-								<Column id="midItemDescColumn" minScreenWidth="Tablet" hAlign="Center"  width="150px">
+								</Column> -->
+								<Column id="midItemDescColumn" minScreenWidth="Tablet" hAlign="Center"  width="140px">
 									<Label text="품명" required="true"/>
 								</Column>
                                 <Column id="midSpecDesc" minScreenWidth="Tablet" hAlign="Center"  width="50px">
 									<Label text="규격" />
 								</Column>
-                                <Column id="midUnitColumn" minScreenWidth="Tablet" hAlign="Center"  width="60px" >
+                                <Column id="midUnitColumn" minScreenWidth="Tablet" hAlign="Center"  width="80px" >
 									<Label text="단위" required="true"/>
 								</Column>
-                                <Column id="midRequestQuantityColumn" minScreenWidth="Tablet" hAlign="End"  width="60px">
+                                <Column id="midRequestQuantityColumn" minScreenWidth="Tablet" hAlign="Center"  width="60px">
 									<Label text="수량" required="true"/>
 								</Column>
-                                <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="70px">
+                                <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="80px">
 									<Label text="통화" />
 								</Column>
-                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="Right" width="100px">
+                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="단가" />
 								</Column>
                                 <Column id="midRequestAmountColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
@@ -218,15 +244,16 @@
                                 <Column id="midBuyerEmpnoColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="구매담당자" required="true"/>
 								</Column>
-                                <Column id="midRemarkColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
+                                <!-- <Column id="midRemarkColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
 									<Label text="비고" />
-								</Column>
+								</Column> -->
 
 							</columns>
 							<items>
                                 <ColumnListItem press=".onMidTableItemPress">
 									<cells>
                                         <Text text="{details>_row_state_}"  />
+
                                         <Text text="{details>item_sequence}"/>
                                         <!-- <VBox  alignItems="Center">  
                                             <Input value="{details>plant_code}" 
@@ -294,14 +321,14 @@
 
                                         </HBox>    
 
-                                         <HBox>  
+                                         <!-- <HBox>  
                                             <Input value="{details>ep_item_code}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
                                             <Text   text="{details>ep_item_code}"
                                                     visible="{midObjectView>/isShowMode}"/>                                                          
 
-                                        </HBox>  
+                                        </HBox>   -->
 
                                         <HBox>  
                                             <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
@@ -314,7 +341,7 @@
 
                                         </HBox>  
 
-                                        <HBox>  
+                                        <HBox justifyContent="Center">  
                                             <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
                                             <Input value="{details>spec_desc}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
@@ -324,7 +351,7 @@
 
                                         </HBox>  
 
-                                        <HBox>  
+                                        <HBox justifyContent="Center">  
                                             <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
                                             <!-- <Input value="{details>unit}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
@@ -357,7 +384,7 @@
 
                                         </HBox>  
 
-                                         <HBox> 
+                                         <HBox justifyContent="Center"> 
                                             <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
                                             <Input value="{details>request_quantity}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
@@ -420,7 +447,7 @@
                                         </items>
                                         </ComboBox> -->
 
-                                    <HBox> 
+                                    <HBox justifyContent="Center"> 
                                         <!-- <ComboBox
                                             showSecondaryValues= "true"
                                             width="100%" 
@@ -459,7 +486,7 @@
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
                                     </HBox>  
 
-                                    <HBox> 
+                                    <HBox justifyContent="Center"> 
                                         <Input value="{details>request_net_price}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
                                             liveChange="._onLiveChange"
@@ -494,7 +521,7 @@
 
                                     </HBox>  
 
-                                    <HBox> 
+                                    <HBox justifyContent="Center"> 
                                         <Input value="{details>request_amount}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
                                             textAlign="Right" 
@@ -520,7 +547,7 @@
                             
                                     </HBox> 
 
-                                    <HBox>   
+                                    <HBox justifyContent="Center">   
                                         <!-- <Input value="{details>delivery_request_date}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
                                             required="{=!${midObjectView>/isShowMode}}"
@@ -543,12 +570,12 @@
 
                                     </HBox>  
 
-                                    <HBox>   
+                                    <HBox justifyContent="Center">   
                                         <!-- <Input value="{details>supplier_code}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
                                             width="100%"/> -->
 
-                                        <MultiInput value="{details>supplier_code}" 
+                                        <MultiInput value="{details>supplier_name}" 
                                             id="multiinput_supplierwithorg_code" placeholder="{I18N>/SUPPLIER}"
                                             showValueHelp="true" valueHelpRequest=".onMultiInputSupplierWithOrgValuePress"
                                             visible="{=!${midObjectView>/isShowMode}}">
@@ -560,7 +587,7 @@
                                                valueHelpOnly="false" 
                                                valueHelpRequest=".vhSupplierCode"/> -->
                                 
-                                        <Text   text="{details>supplier_code}"
+                                        <Text   text="{details>supplier_name}"
                                                 visible="{midObjectView>/isShowMode}"
                                                 />                                                          
 
@@ -596,7 +623,7 @@
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress($event, 'tenant_id')">
                                         </Input> -->
 
-                                        <HBox> 
+                                        <HBox justifyContent="Center"> 
                                             <!-- <Text text="*" class="mandatory" visible="{=!${midObjectView>/isShowMode}}"/> -->
                                             <Input value="{details>buyer_name}"
                                                 visible="{=!${midObjectView>/isShowMode}}"
@@ -613,7 +640,7 @@
                                         <!-- <Input value="{details>remark}" editable="{midObjectView>/isEditMode}"/> -->
 
 
-                                        <HBox> 
+                                        <!-- <HBox> 
                                             <Input id = "remark_" value="{details>remark}" 
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 width="100%"/> 
@@ -621,7 +648,7 @@
                                                     visible="{midObjectView>/isShowMode}"
                                                     textAlign="Right" />                                                          
 
-                                        </HBox>  
+                                        </HBox>   -->
 									</cells>
 								</ColumnListItem>
 							</items>
