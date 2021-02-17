@@ -18,7 +18,7 @@
                 <m:Title text="[QA]"/>
                 <m:Image 
                     ariaDetails="detailsActiveImage" 
-                    src="./lib/image/logo_procurement.svg"
+                    src="./../image/logo_procurement.svg"
                     class="sapUiSmallMarginEnd"/>
                 <m:IconTabHeader
                     id="toolPageTabHeader"
