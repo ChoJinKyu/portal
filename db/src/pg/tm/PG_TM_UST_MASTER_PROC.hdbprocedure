@@ -1,104 +1,135 @@
 procedure pg_tm_ust_master_proc (
     in  i_tenant_id             nvarchar(5),
     in  i_table_master			table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										monitoring_type_code			nvarchar(30),
-										activate_flag					boolean,
-										monitoring_purpose				blob,
-										scenario_desc					blob,
-										source_system_desc				blob,
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										monitoring_type_code				nvarchar(30),
+										activate_flag						boolean,
+										monitoring_purpose					blob,
+										scenario_desc						blob,
+										source_system_desc					blob,
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
                                 ),
 	in	i_table_scenario		table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										language_code					nvarchar(10),
-										scenario_name					nvarchar(240),
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										language_code						nvarchar(10),
+										scenario_name						nvarchar(240),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
 								),
     in	i_table_company			table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										company_code					nvarchar(10),
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										company_code						nvarchar(10),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
 								),
 	in	i_table_bizunit			table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										bizunit_code					nvarchar(10),
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										bizunit_code						nvarchar(10),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
                                 ),
 	in	i_table_purchasing_type	table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										monitoring_purchasing_type_code	nvarchar(30),
-										language_code					nvarchar(10),
-										monitoring_purchasing_type_name	nvarchar(240),
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										monitoring_purchasing_type_code		nvarchar(30),
+										language_code						nvarchar(10),
+										monitoring_purchasing_type_name		nvarchar(240),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
 								),
 	in	i_table_type			table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										monitoring_type_code			nvarchar(30),
-										language_code					nvarchar(10),
-										monitoring_type_name			nvarchar(240),
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										monitoring_type_code				nvarchar(30),
+										language_code						nvarchar(10),
+										monitoring_type_name				nvarchar(240),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
 								),
 	in	i_table_manager			table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										monitoring_manager_empno		nvarchar(30),
-										monitoring_super_authority_flag	boolean,
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										monitoring_manager_empno			nvarchar(30),
+										monitoring_super_authority_flag		boolean,
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
 								),
 	in	i_table_operation		table (
-										tenant_id						nvarchar(5),
-										scenario_number					bigint,
-										monitoring_operation_mode_code	nvarchar(30),
-										language_code					nvarchar(10),
-										monitoring_operation_mode_name	nvarchar(240),
-										local_create_dtm				timestamp,
-										local_update_dtm				timestamp,
-										create_user_id					nvarchar(255),
-										update_user_id					nvarchar(255),
-										system_create_dtm				timestamp,
-										system_update_dtm				timestamp
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										monitoring_operation_mode_code		nvarchar(30),
+										language_code						nvarchar(10),
+										monitoring_operation_mode_name		nvarchar(240),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
+								),
+	in	i_table_cycle			table (
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										monitoring_cycle_code				nvarchar(10),
+										language_code						nvarchar(10),
+										monitoring_cycle_name				nvarchar(240),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
+								),
+	in	i_table_indicator		table (
+										tenant_id							nvarchar(5),
+										scenario_number						bigint,
+										monitoring_indicator_id				bigint,
+										monitoring_indicator_sequence		bigint,
+										monitoring_ind_number_cd			nvarchar(30),
+										monitoring_ind_condition_cd			nvarchar(10),
+										monitoring_indicator_start_value	nvarchar(100),
+										monitoring_indicator_last_value		nvarchar(100),
+										monitoring_indicator_grade			nvarchar(10),
+										monitoring_ind_compare_base_cd		nvarchar(30),
+										local_create_dtm					timestamp,
+										local_update_dtm					timestamp,
+										create_user_id						nvarchar(255),
+										update_user_id						nvarchar(255),
+										system_create_dtm					timestamp,
+										system_update_dtm					timestamp
 								),
 	out o_table_message			pg_tm_proc_out_type
 )
@@ -108,7 +139,8 @@ sql security invoker
 as
 begin
 
-    declare lv_max_seq                      integer default 0;
+    declare lv_max_snr_seq					integer default 0;
+	declare lv_max_ind_seq					integer default 0;
 
     declare lv_sourcemaster_count           integer default 0;
     declare lv_sourcescenario_count         integer default 0;
@@ -118,6 +150,8 @@ begin
     declare lv_sourcetypecode_count         integer default 0;
     declare lv_sourcemanager_count          integer default 0;
     declare lv_sourceoperation_count        integer default 0;
+	declare lv_sourcecycle_count			integer default 0;
+	declare lv_sourceindicator_count        integer default 0;
 
     declare lv_tenant_id                    nvarchar(5) default '';
     declare lv_scenario_number              integer default 0;
@@ -129,6 +163,8 @@ begin
     declare lv_loop_table_type              integer default 0;
     declare lv_loop_table_manager           integer default 0;
     declare lv_loop_table_operation         integer default 0;
+	declare lv_loop_table_cycle				integer default 0;
+	declare lv_loop_table_indicator			integer default 0;
 
 -- rollback message
 	declare exit handler for sqlexception
@@ -139,7 +175,7 @@ begin
 
 -- Max Sequence
     select  ifnull(max(scenario_number), 0) + 1 as max_scenario_number
-    into    lv_max_seq
+    into    lv_max_snr_seq
     from    pg_tm_master
     where   tenant_id = :i_tenant_id
     ;
@@ -159,19 +195,19 @@ begin
 -- master table
 	o_table_master =
 		select
-                ifnull(master.tenant_id, '')				as tenant_id,
-				ifnull(master.scenario_number, lv_max_seq)	as scenario_number,
-				ifnull(master.monitoring_type_code, '')		as monitoring_type_code,
-				ifnull(master.activate_flag, true)			as activate_flag,
-				ifnull(master.monitoring_purpose, '')		as monitoring_purpose,
-				ifnull(master.scenario_desc, '')			as scenario_desc,
-				ifnull(master.source_system_desc, '')		as source_system_desc,
-				ifnull(master.local_create_dtm, '')			as local_create_dtm,
-				ifnull(master.local_update_dtm, '')			as local_update_dtm,
-				ifnull(master.create_user_id, '')			as create_user_id,
-				ifnull(master.update_user_id, '')			as update_user_id,
-				ifnull(master.system_create_dtm, '')		as system_create_dtm,
-				ifnull(master.system_update_dtm, '')		as system_update_dtm
+                ifnull(master.tenant_id, '')					as tenant_id,
+				ifnull(master.scenario_number, lv_max_snr_seq)	as scenario_number,
+				ifnull(master.monitoring_type_code, '')			as monitoring_type_code,
+				ifnull(master.activate_flag, true)				as activate_flag,
+				ifnull(master.monitoring_purpose, '')			as monitoring_purpose,
+				ifnull(master.scenario_desc, '')				as scenario_desc,
+				ifnull(master.source_system_desc, '')			as source_system_desc,
+				ifnull(master.local_create_dtm, '')				as local_create_dtm,
+				ifnull(master.local_update_dtm, '')				as local_update_dtm,
+				ifnull(master.create_user_id, '')				as create_user_id,
+				ifnull(master.update_user_id, '')				as update_user_id,
+				ifnull(master.system_create_dtm, '')			as system_create_dtm,
+				ifnull(master.system_update_dtm, '')			as system_update_dtm
         from	:i_table_master master
     ;
 
@@ -239,16 +275,16 @@ begin
 -- scenario table
 	o_table_scenario =
 		select
-                ifnull(scenario.tenant_id, '')					as tenant_id,
-				ifnull(scenario.scenario_number, lv_max_seq)	as scenario_number,
-				ifnull(scenario.language_code, '')				as language_code,
-				ifnull(scenario.scenario_name, '')				as scenario_name,
-				ifnull(scenario.local_create_dtm, '')			as local_create_dtm,
-				ifnull(scenario.local_update_dtm, '')			as local_update_dtm,
-				ifnull(scenario.create_user_id, '')				as create_user_id,
-				ifnull(scenario.update_user_id, '')				as update_user_id,
-				ifnull(scenario.system_create_dtm, '')			as system_create_dtm,
-				ifnull(scenario.system_update_dtm, '')			as system_update_dtm
+                ifnull(scenario.tenant_id, '')						as tenant_id,
+				ifnull(scenario.scenario_number, lv_max_snr_seq)	as scenario_number,
+				ifnull(scenario.language_code, '')					as language_code,
+				ifnull(scenario.scenario_name, '')					as scenario_name,
+				ifnull(scenario.local_create_dtm, '')				as local_create_dtm,
+				ifnull(scenario.local_update_dtm, '')				as local_update_dtm,
+				ifnull(scenario.create_user_id, '')					as create_user_id,
+				ifnull(scenario.update_user_id, '')					as update_user_id,
+				ifnull(scenario.system_create_dtm, '')				as system_create_dtm,
+				ifnull(scenario.system_update_dtm, '')				as system_update_dtm
 		from	:i_table_scenario scenario
     ;
 
@@ -350,15 +386,15 @@ begin
 -- company code	table
 	o_table_company =
 		select
-                ifnull(company.tenant_id, '')				as tenant_id,
-				ifnull(company.scenario_number, lv_max_seq)	as scenario_number,
-				ifnull(company.company_code, '')			as company_code,
-				ifnull(company.local_create_dtm, '')		as local_create_dtm,
-				ifnull(company.local_update_dtm, '')		as local_update_dtm,
-				ifnull(company.create_user_id, '')			as create_user_id,
-				ifnull(company.update_user_id, '')			as update_user_id,
-				ifnull(company.system_create_dtm, '')		as system_create_dtm,
-				ifnull(company.system_update_dtm, '')		as system_update_dtm
+                ifnull(company.tenant_id, '')					as tenant_id,
+				ifnull(company.scenario_number, lv_max_snr_seq)	as scenario_number,
+				ifnull(company.company_code, '')				as company_code,
+				ifnull(company.local_create_dtm, '')			as local_create_dtm,
+				ifnull(company.local_update_dtm, '')			as local_update_dtm,
+				ifnull(company.create_user_id, '')				as create_user_id,
+				ifnull(company.update_user_id, '')				as update_user_id,
+				ifnull(company.system_create_dtm, '')			as system_create_dtm,
+				ifnull(company.system_update_dtm, '')			as system_update_dtm
 		from	:i_table_company company
     ;
 
@@ -457,15 +493,15 @@ begin
 -- bizunit code	table
 	o_table_bizunit =
 		select
-                ifnull(bizunit.tenant_id, '')				as tenant_id,
-				ifnull(bizunit.scenario_number, lv_max_seq)	as scenario_number,
-				ifnull(bizunit.bizunit_code, '')			as bizunit_code,
-				ifnull(bizunit.local_create_dtm, '')		as local_create_dtm,
-				ifnull(bizunit.local_update_dtm, '')		as local_update_dtm,
-				ifnull(bizunit.create_user_id, '')			as create_user_id,
-				ifnull(bizunit.update_user_id, '')			as update_user_id,
-				ifnull(bizunit.system_create_dtm, '')		as system_create_dtm,
-				ifnull(bizunit.system_update_dtm, '')		as system_update_dtm
+                ifnull(bizunit.tenant_id, '')					as tenant_id,
+				ifnull(bizunit.scenario_number, lv_max_snr_seq)	as scenario_number,
+				ifnull(bizunit.bizunit_code, '')				as bizunit_code,
+				ifnull(bizunit.local_create_dtm, '')			as local_create_dtm,
+				ifnull(bizunit.local_update_dtm, '')			as local_update_dtm,
+				ifnull(bizunit.create_user_id, '')				as create_user_id,
+				ifnull(bizunit.update_user_id, '')				as update_user_id,
+				ifnull(bizunit.system_create_dtm, '')			as system_create_dtm,
+				ifnull(bizunit.system_update_dtm, '')			as system_update_dtm
 		from	:i_table_bizunit bizunit
     ;
 
@@ -565,7 +601,7 @@ begin
 	o_table_purchasing_type =
 		select
                 ifnull(purchasing.tenant_id, '')						as tenant_id,
-				ifnull(purchasing.scenario_number, lv_max_seq)			as scenario_number,
+				ifnull(purchasing.scenario_number, lv_max_snr_seq)		as scenario_number,
 				ifnull(purchasing.monitoring_purchasing_type_code, '')	as monitoring_purchasing_type_code,
 				ifnull(purchasing.language_code, '')					as language_code,
 				ifnull(purchasing.monitoring_purchasing_type_name, '')	as monitoring_purchasing_type_name,
@@ -683,17 +719,17 @@ begin
 -- type table
 	o_table_type =
 		select
-                ifnull(type.tenant_id, '')					as tenant_id,
-				ifnull(type.scenario_number, lv_max_seq)	as scenario_number,
-				ifnull(type.monitoring_type_code, '')		as monitoring_type_code,
-				ifnull(type.language_code, '')				as language_code,
-				ifnull(type.monitoring_type_name, '')		as monitoring_type_name,
-				ifnull(type.local_create_dtm, '')			as local_create_dtm,
-				ifnull(type.local_update_dtm, '')			as local_update_dtm,
-				ifnull(type.create_user_id, '')				as create_user_id,
-				ifnull(type.update_user_id, '')				as update_user_id,
-				ifnull(type.system_create_dtm, '')			as system_create_dtm,
-				ifnull(type.system_update_dtm, '')			as system_update_dtm
+                ifnull(type.tenant_id, '')						as tenant_id,
+				ifnull(type.scenario_number, lv_max_snr_seq)	as scenario_number,
+				ifnull(type.monitoring_type_code, '')			as monitoring_type_code,
+				ifnull(type.language_code, '')					as language_code,
+				ifnull(type.monitoring_type_name, '')			as monitoring_type_name,
+				ifnull(type.local_create_dtm, '')				as local_create_dtm,
+				ifnull(type.local_update_dtm, '')				as local_update_dtm,
+				ifnull(type.create_user_id, '')					as create_user_id,
+				ifnull(type.update_user_id, '')					as update_user_id,
+				ifnull(type.system_create_dtm, '')				as system_create_dtm,
+				ifnull(type.system_update_dtm, '')				as system_update_dtm
 		from	:i_table_type type
     ;
 
@@ -798,9 +834,9 @@ begin
 	o_table_manager =
 		select
                 ifnull(manager.tenant_id, '')						    as tenant_id,
-				ifnull(manager.scenario_number, lv_max_seq)			    as scenario_number,
+				ifnull(manager.scenario_number, lv_max_snr_seq)			as scenario_number,
 				ifnull(manager.monitoring_manager_empno, '')		    as monitoring_manager_empno,
-				ifnull(manager.monitoring_super_authority_flag, false)  as monitoring_super_authority_flag,
+				ifnull(manager.monitoring_super_authority_flag, false)	as monitoring_super_authority_flag,
 				ifnull(manager.local_create_dtm, '')				    as local_create_dtm,
 				ifnull(manager.local_update_dtm, '')				    as local_update_dtm,
 				ifnull(manager.create_user_id, '')					    as create_user_id,
@@ -916,7 +952,7 @@ begin
 	o_table_operation =
 		select
                 ifnull(operation.tenant_id, '')							as tenant_id,
-				ifnull(operation.scenario_number, lv_max_seq)			as scenario_number,
+				ifnull(operation.scenario_number, lv_max_snr_seq)		as scenario_number,
 				ifnull(operation.monitoring_operation_mode_code, '')	as monitoring_operation_mode_code,
 				ifnull(operation.language_code, '')						as language_code,
 				ifnull(operation.monitoring_operation_mode_name, '')	as monitoring_operation_mode_name,
@@ -1027,6 +1063,276 @@ begin
 				s_operation_tab.monitoring_operation_mode_code,
 				s_operation_tab.language_code,
 				s_operation_tab.monitoring_operation_mode_name,
+				current_timestamp,
+				current_timestamp,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if;
+	
+-- cycle table
+	o_table_cycle =
+		select
+                ifnull(cycle.tenant_id, '')						as tenant_id,
+				ifnull(cycle.scenario_number, lv_max_snr_seq)	as scenario_number,
+				ifnull(cycle.monitoring_cycle_code, '')			as monitoring_cycle_code,
+				ifnull(cycle.language_code, '')					as language_code,
+				ifnull(cycle.monitoring_cycle_name,'')			as monitoring_cycle_name,
+				ifnull(cycle.local_create_dtm, '')				as local_create_dtm,
+				ifnull(cycle.local_update_dtm, '')				as local_update_dtm,
+				ifnull(cycle.create_user_id, '')				as create_user_id,
+				ifnull(cycle.update_user_id, '')				as update_user_id,
+				ifnull(cycle.system_create_dtm, '')				as system_create_dtm,
+				ifnull(cycle.system_update_dtm, '')				as system_update_dtm
+		from	:i_table_cycle cycle
+    ;
+
+    t_table_cycle =
+        select
+                tenant_id,
+                scenario_number,
+                monitoring_cycle_code,
+                language_code
+        from    pg_tm_cycle_code_lng
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
+    ;
+
+    v_table_cycle =
+        select
+				row_number() over(order by t.tenant_id, t.scenario_number, t.monitoring_cycle_code, t.language_code) as row_num,
+                t.tenant_id,
+                t.scenario_number,
+                t.monitoring_cycle_code,
+                t.language_code
+        from    :t_table_cycle as t
+        left outer join :o_table_cycle as o
+        on      t.tenant_id = o.tenant_id
+        and     t.scenario_number = o.scenario_number
+        and     t.monitoring_cycle_code = o.monitoring_cycle_code
+        and     t.language_code = o.language_code
+        where   o.language_code is null
+        order by
+                t.tenant_id,
+                t.scenario_number,
+				t.monitoring_cycle_code,
+                t.language_code
+    ;
+
+    select  count(tenant_id)
+    into    lv_sourcecycle_count
+    from    :i_table_cycle
+    where   tenant_id is not null
+    ;
+
+    if record_count(:i_table_cycle) = 0 then
+
+        delete from pg_tm_cycle_code_lng
+        where       tenant_id       = :lv_tenant_id
+        and         scenario_number = :lv_scenario_number
+        ;
+
+    elseif :lv_sourcecycle_count <= 0 then
+    else
+
+        if	record_count(:v_table_cycle) <> 0 then
+
+			for lv_loop_table_cycle in 1..record_count(:v_table_cycle) do
+
+				delete from pg_tm_cycle_code_lng
+				where       tenant_id					= (select distinct tenant_id from :v_table_cycle)
+				and         scenario_number				= (select distinct scenario_number from :v_table_cycle)
+				and         trim(monitoring_cycle_code)	= (select monitoring_cycle_code from :v_table_cycle where row_num = :lv_loop_table_cycle)
+				;
+
+			end for;
+
+		end if;
+
+		merge into	pg_tm_cycle_code_lng	as t_cycle_tab
+			using	:o_table_cycle			as s_cycle_tab
+			on		t_cycle_tab.tenant_id				= s_cycle_tab.tenant_id
+            and		t_cycle_tab.scenario_number			= s_cycle_tab.scenario_number
+            and     t_cycle_tab.monitoring_cycle_code	= s_cycle_tab.monitoring_cycle_code
+            and     t_cycle_tab.language_code			= s_cycle_tab.language_code
+
+		when matched then
+			update set
+				t_cycle_tab.monitoring_cycle_name	= s_cycle_tab.monitoring_cycle_name,
+				t_cycle_tab.local_update_dtm		= current_timestamp,
+				t_cycle_tab.update_user_id			= trim(session_context('APPLICATIONUSER')),
+				t_cycle_tab.system_update_dtm		= current_timestamp
+
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				monitoring_cycle_code,
+				language_code,
+				monitoring_cycle_name,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
+			)
+			values
+			(
+				s_cycle_tab.tenant_id,
+				s_cycle_tab.scenario_number,
+				s_cycle_tab.monitoring_cycle_code,
+				s_cycle_tab.language_code,
+				s_cycle_tab.monitoring_cycle_name,
+				current_timestamp,
+				current_timestamp,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if;
+	
+-- indicator table
+	o_table_indicator =
+		select
+                ifnull(indicator.tenant_id, '')								as tenant_id,
+				ifnull(indicator.scenario_number, lv_max_snr_seq)			as scenario_number,
+				ifnull(indicator.monitoring_indicator_id, lv_max_snr_seq)	as monitoring_indicator_id,
+				ifnull(indicator.monitoring_indicator_sequence, -1)     	as monitoring_indicator_sequence,
+				ifnull(indicator.monitoring_ind_number_cd,'')				as monitoring_ind_number_cd,				
+				ifnull(indicator.monitoring_ind_condition_cd, '')			as monitoring_ind_condition_cd,
+				ifnull(indicator.monitoring_indicator_start_value, '')		as monitoring_indicator_start_value,
+				ifnull(indicator.monitoring_indicator_last_value,'')		as monitoring_indicator_last_value,				
+				ifnull(indicator.monitoring_indicator_grade, '')			as monitoring_indicator_grade,
+				ifnull(indicator.monitoring_ind_compare_base_cd, '')		as monitoring_ind_compare_base_cd,				
+				ifnull(indicator.local_create_dtm, '')						as local_create_dtm,
+				ifnull(indicator.local_update_dtm, '')						as local_update_dtm,
+				ifnull(indicator.create_user_id, '')						as create_user_id,
+				ifnull(indicator.update_user_id, '')						as update_user_id,
+				ifnull(indicator.system_create_dtm, '')						as system_create_dtm,
+				ifnull(indicator.system_update_dtm, '')						as system_update_dtm
+		from	:i_table_indicator indicator
+    ;
+
+    t_table_indicator =
+        select
+                tenant_id,
+                scenario_number,
+                monitoring_indicator_id,
+                monitoring_indicator_sequence
+        from    pg_tm_indicator_number_dtl
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
+    ;
+
+    v_table_indicator =
+        select
+				row_number() over(order by t.tenant_id, t.scenario_number, t.monitoring_indicator_id, t.monitoring_indicator_sequence) as row_num,
+                t.tenant_id,
+                t.scenario_number,
+                t.monitoring_indicator_id,
+                t.monitoring_indicator_sequence
+        from    :t_table_indicator as t
+        left outer join :o_table_indicator as o
+        on      t.tenant_id 					= o.tenant_id
+        and     t.scenario_number 				= o.scenario_number
+        and     t.monitoring_indicator_id 		= o.monitoring_indicator_id
+        and     t.monitoring_indicator_sequence	= o.monitoring_indicator_sequence
+        where   o.monitoring_indicator_sequence is null
+        order by
+                t.tenant_id,
+                t.scenario_number,
+				t.monitoring_indicator_id,
+                t.monitoring_indicator_sequence
+    ;
+
+    select  count(tenant_id)
+    into    lv_sourceindicator_count
+    from    :i_table_indicator
+    where   tenant_id is not null
+    ;
+
+    if record_count(:i_table_indicator) = 0 then
+
+        delete from pg_tm_indicator_number_dtl
+        where       tenant_id       = :lv_tenant_id
+        and         scenario_number = :lv_scenario_number
+        ;
+
+    elseif :lv_sourceindicator_count <= 0 then
+    else
+
+        if	record_count(:v_table_indicator) <> 0 then
+
+			for lv_loop_table_indicator in 1..record_count(:v_table_indicator) do
+
+				delete from pg_tm_indicator_number_dtl
+				where       tenant_id						= (select distinct tenant_id from :v_table_indicator)
+				and         scenario_number					= (select distinct scenario_number from :v_table_indicator)
+				and         trim(monitoring_indicator_id)	= (select monitoring_indicator_id from :v_table_indicator where row_num = :lv_loop_table_indicator)
+				;
+
+			end for;
+
+		end if;
+
+		merge into	pg_tm_indicator_number_dtl	as t_indicator_tab
+			using	:o_table_indicator			as s_indicator_tab
+			on		t_indicator_tab.tenant_id						= s_indicator_tab.tenant_id
+            and		t_indicator_tab.scenario_number					= s_indicator_tab.scenario_number
+            and     t_indicator_tab.monitoring_indicator_id			= s_indicator_tab.monitoring_indicator_id
+            and     t_indicator_tab.monitoring_indicator_sequence	= s_indicator_tab.monitoring_indicator_sequence
+
+		when matched then
+			update set
+				t_indicator_tab.monitoring_ind_number_cd			= s_indicator_tab.monitoring_ind_number_cd,
+				t_indicator_tab.monitoring_ind_condition_cd			= s_indicator_tab.monitoring_ind_condition_cd,
+				t_indicator_tab.monitoring_indicator_start_value	= s_indicator_tab.monitoring_indicator_start_value,
+				t_indicator_tab.monitoring_indicator_last_value		= s_indicator_tab.monitoring_indicator_last_value,
+				t_indicator_tab.monitoring_indicator_grade			= s_indicator_tab.monitoring_indicator_grade,
+				t_indicator_tab.monitoring_ind_compare_base_cd		= s_indicator_tab.monitoring_ind_compare_base_cd,
+				t_indicator_tab.local_update_dtm					= current_timestamp,
+				t_indicator_tab.update_user_id						= trim(session_context('APPLICATIONUSER')),
+				t_indicator_tab.system_update_dtm					= current_timestamp
+
+		when not matched then
+			insert
+			(
+				tenant_id,
+				scenario_number,
+				monitoring_indicator_id,
+				monitoring_indicator_sequence,
+				monitoring_ind_number_cd,
+				monitoring_ind_condition_cd,
+				monitoring_indicator_start_value,
+				monitoring_indicator_last_value,
+				monitoring_indicator_grade,
+				monitoring_ind_compare_base_cd,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
+			)
+			values
+			(
+				s_indicator_tab.tenant_id,
+				s_indicator_tab.scenario_number,
+				s_indicator_tab.monitoring_indicator_id,
+				s_indicator_tab.monitoring_indicator_sequence,
+				s_indicator_tab.monitoring_ind_number_cd,
+				s_indicator_tab.monitoring_ind_condition_cd,
+				s_indicator_tab.monitoring_indicator_start_value,
+				s_indicator_tab.monitoring_indicator_last_value,
+				s_indicator_tab.monitoring_indicator_grade,
+				s_indicator_tab.monitoring_ind_compare_base_cd,
 				current_timestamp,
 				current_timestamp,
 				trim(session_context('APPLICATIONUSER')),

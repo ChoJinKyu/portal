@@ -25,22 +25,22 @@ view pg_Tm_Indicator_Number_View as
 		on  main.tenant_id                = ind_number_cd.tenant_id
 		and ind_number_cd.group_code      = 'PG_TM_INDC_NUMBER_CODE'
 		and main.monitoring_ind_number_cd = ind_number_cd.code
-		and ind_number_cd.language_cd     = 'KO'
+		and ind_number_cd.language_cd     = upper(substring(session_context('LOCALE'),1,2))
 	left join cm_code_lng as ind_condition_cd
 		on  main.tenant_id                   = ind_condition_cd.tenant_id
 		and ind_condition_cd.group_code      = 'PG_TM_INDC_CMPR_CONDITION_CODE'
 		and main.monitoring_ind_condition_cd = ind_condition_cd.code
-		and ind_condition_cd.language_cd     = 'KO'
+		and ind_condition_cd.language_cd     = upper(substring(session_context('LOCALE'),1,2))
 	left join cm_code_lng as indicator_grade
 		on  main.tenant_id                  = indicator_grade.tenant_id
 		and indicator_grade.group_code      = 'PG_TM_INDC_CMPR_GRADE_CODE'
 		and main.monitoring_indicator_grade = indicator_grade.code
-		and indicator_grade.language_cd     = 'KO'
+		and indicator_grade.language_cd     = upper(substring(session_context('LOCALE'),1,2))
 	left join cm_code_lng as ind_compare_base_cd
 		on  main.tenant_id                      = ind_compare_base_cd.tenant_id
 		and ind_compare_base_cd.group_code      = 'PG_TM_INDC_CMPR_BASIC_CODE'
 		and main.monitoring_ind_compare_base_cd = ind_compare_base_cd.code
-		and ind_compare_base_cd.language_cd     = 'KO'
+		and ind_compare_base_cd.language_cd     = upper(substring(session_context('LOCALE'),1,2))
     group by
         main.tenant_id,
         main.scenario_number,

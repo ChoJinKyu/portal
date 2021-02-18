@@ -103,8 +103,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "ActivitiMappimgMgt") {
-                        return "ActivitiMappimgMgt (Important!)";
+                    if (oColumn.getHeader().getText() === "activityMappingMgt") {
+                        return "activityMappingMgt (Important!)";
                     }
                 }
                 return null;

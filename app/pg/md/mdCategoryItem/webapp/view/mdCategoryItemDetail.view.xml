@@ -72,19 +72,21 @@
                             <Label id="labelCharCodeName" text="{I18N>/SPMD_CHARACTER_CODE_NAME}"/>
                             <VBox>
                                 <Text id="retrieveCharCodeName" text="{master>/spmd_character_code_name}"/>
-                                <Input id="editCharCodeName" value="{
+                                <Input id="editCharCodeName" width="57%" maxLength="50"
+                                    value="{
                                     path: 'master>/spmd_character_code_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 50
                                     }
-                                }" />      
+                                }" required="true"/>      
                             </VBox>
 
                             <Label text="{I18N>/SPMD_CHARACTER_DESC}"/>
                             <VBox>
                                 <Text id="retrieveCharDesc" text="{master>/spmd_character_desc}"/>
-                                <Input id="editCharDesc" value="{
+                                <Input id="editCharDesc" width="57%" maxLength="50"
+                                    value="{
                                         path: 'master>/spmd_character_desc',
                                         type: 'sap.ui.model.type.String',
                                         constraints: {
@@ -137,8 +139,12 @@
 									<cells>
 										<Text text="{details>_row_state_}"/>
 										<Input value="{details>language_code}"/>
-										<Input value="{details>spmd_character_code_name}"/>
-										<Input value="{details>spmd_character_desc}"/>
+										<Input value="{
+                                                    path: 'details>spmd_character_code_name',
+                                                    constraints: {
+                                                        maxLength: 50
+                                                    }}" required="true" maxLength="50"/>
+										<Input value="{details>spmd_character_desc}" maxLength="50"/>
 									</cells>
 								</ColumnListItem>
 							</items>

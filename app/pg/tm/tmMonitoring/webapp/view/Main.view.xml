@@ -110,7 +110,7 @@
 								</customData>
 								<Text text="{I18N>/BUSINESS_UNIT}"/>
 							</Column>
-							<Column hAlign="Center" width="10%">
+							<Column width="10%">
 								<customData>
 									<core:CustomData key="p13nData" value='\{"columnKey": "manager_local_name", "columnIndex":"6", "leadingProperty": "manager_local_name", "sortProperty": "manager_local_name"}'/>
 								</customData>
@@ -118,31 +118,31 @@
 							</Column>
 							<Column hAlign="Center" width="7%">
 								<customData>
-									<core:CustomData key="p13nData" value='\{"columnKey": "enrollment_date", "columnIndex":"7", "leadingProperty": "enrollment_date", "sortProperty": "enrollment_date"}'/>
+									<core:CustomData key="p13nData" value='\{"columnKey": "enrollment_date", "columnIndex":"7", "leadingProperty": "enrollment_date", "sortProperty": "enrollment_date",  "type":"date"}' />
 								</customData>
 								<Text text="{I18N>/DATE}"/>
 							</Column>
 							<Column hAlign="Center">
 								<customData>
-									<core:CustomData key="p13nData" value='\{"columnKey": "operation_mode_display_flag", "columnIndex":"8", "leadingProperty": "operation_mode_display_flag", "sortProperty": "operation_mode_display_flag"}'/>
+									<core:CustomData key="p13nData" value='\{"columnKey": "operation_mode_display_flag", "columnIndex":"8", "leadingProperty": "operation_mode_display_flag", "sortProperty": "operation_mode_display_flag", "type": "boolean"}'/>
 								</customData>
 								<Text text="{I18N>/DISPLAY}"/>
 							</Column>
 							<Column hAlign="Center">
 								<customData>
-									<core:CustomData key="p13nData" value='\{"columnKey": "operation_mode_calling_flag", "columnIndex":"9", "leadingProperty": "operation_mode_calling_flag", "sortProperty": "operation_mode_calling_flag"}'/>
+									<core:CustomData key="p13nData" value='\{"columnKey": "operation_mode_calling_flag", "columnIndex":"9", "leadingProperty": "operation_mode_calling_flag", "sortProperty": "operation_mode_calling_flag", "type": "boolean"}'/>
 								</customData>
 								<Text text="{I18N>/EXPLAIN}"/>
 							</Column>
 							<Column hAlign="Center">
 								<customData>
-									<core:CustomData key="p13nData" value='\{"columnKey": "operation_mode_alram_flag", "columnIndex":"10", "leadingProperty": "operation_mode_alram_flag", "sortProperty": "operation_mode_alram_flag"}'/>
+									<core:CustomData key="p13nData" value='\{"columnKey": "operation_mode_alram_flag", "columnIndex":"10", "leadingProperty": "operation_mode_alram_flag", "sortProperty": "operation_mode_alram_flag", "type": "boolean"}'/>
 								</customData>
 								<Text text="{I18N>/ALRAM}"/>
 							</Column>
 							<Column hAlign="Center">
 								<customData>
-									<core:CustomData key="p13nData" value='\{"columnKey": "activate_flag", "columnIndex":"11", "leadingProperty": "activate_flag", "sortProperty": "activate_flag"}'/>
+									<core:CustomData key="p13nData" value='\{"columnKey": "activate_flag", "columnIndex":"11", "leadingProperty": "activate_flag", "sortProperty": "activate_flag", "type": "boolean"}' />
 								</customData>
 								<Text text="{I18N>/ACTIVATE}"/>
 							</Column>
@@ -156,11 +156,12 @@
 									<ObjectIdentifier text="{=${company_name}.replaceAll(';', ', ')}"/>
 									<ObjectIdentifier text="{=${bizunit_name}.replaceAll(';', ', ')}"/>
 									<ObjectIdentifier text="{=${manager_local_name}.replaceAll(';', ', ')}"/>
-									<ObjectIdentifier text="{path: 'enrollment_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd'} , UTC: true}"/>
+									<ObjectIdentifier text="{path: 'enrollment_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
 									<ObjectStatus icon="{= ${operation_mode_display_flag} === 'true' ? 'sap-icon://accept' : ''}"/>
 									<ObjectStatus icon="{= ${operation_mode_calling_flag} === 'true' ? 'sap-icon://accept' : ''}"/>
 									<ObjectStatus icon="{= ${operation_mode_alram_flag} === 'true' ? 'sap-icon://accept' : ''}"/>
-									<ObjectStatus icon="{= ${activate_flag} === true ? 'sap-icon://accept' : ''}"/>
+                                    <ObjectStatus icon="{= ${activate_flag} === true ? 'sap-icon://accept' : ''}" />
+                                    
 								</cells>
 							</ColumnListItem>
 						</items>

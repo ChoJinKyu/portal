@@ -27,6 +27,7 @@ sap.ui.define([
         return BaseController.extend("pg.tm.tmMonitoring.controller.Main", {
             //Validator
             validator: new Validator(),
+
             onInit: function () {
                 var oMultilingual = new Multilingual();
                 this.setModel(oMultilingual.getModel(), "I18N");
@@ -41,11 +42,18 @@ sap.ui.define([
                 var mExcelSettings = oEvt.getParameter("exportSettings");
                 // Disable Worker as Mockserver is used in Demokit sample
                 mExcelSettings.worker = false;
+                for (var i = 7; i < 11; i++) {
+                    mExcelSettings.workbook.columns[i].falseValue = "No";
+                    mExcelSettings.workbook.columns[i].trueValue = "Yes";
+                }
+
+
             },
 
             /** table sort dialog 
              * @public
              */
+
             onSort: function () {
                 var oSmartTable = this._getSmartTable();
                 if (oSmartTable) {

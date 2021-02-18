@@ -60,14 +60,14 @@
 
                             <Label id="labelCtrgCodeName" text="{I18N>/SPMD_CATEGORY_CODE_NAME}"/>
                             <VBox><Text id="retrieveCtgrCodeName" text="{master>/spmd_category_code_name}"/>
-                            <Input id="editCtgrCodeName"
+                            <Input id="editCtgrCodeName" width="57%" maxLength="50"
                                 value="{
                                     path: 'master>/spmd_category_code_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 50
                                     }
-                                }"/>  
+                                }" required="true" />  
                             </VBox>
 
                             <Label text="{I18N>/FONT_RGB_CODE}"/>
@@ -115,8 +115,8 @@
 								<ColumnListItem type="Inactive">
 									<cells>
 										<Text text="{details>_row_state_}"/>
-										<Input id="tableLngCode" value="{details>language_code}" /> <!--editable="false" -->
-										<Input id="tableCtgrName" value="{details>spmd_category_code_name}"/>
+										<Input id="tableLngCode" hAlign="Center" value="{details>language_code}" /> <!--editable="false" -->
+										<Input id="tableCtgrName" maxLength="50" value="{details>spmd_category_code_name}"/>
 									</cells>
 								</ColumnListItem>
 							</items>

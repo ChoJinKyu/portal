@@ -66,6 +66,8 @@ sap.ui.define([
             this.setModel(new JSONModel(), "masterModel");
             //manager model
             this.setModel(new JSONModel(), "managerModel");
+            //indicator model
+            this.setModel(new JSONModel(), "indicatorModel");
 
 
         },
@@ -81,14 +83,13 @@ sap.ui.define([
 
             //validator 초기화
             this.validator.clearValueState(this.byId("simpleform_edit"));
+            this.validator.clearValueState(this.byId("indicatorTable"));
 
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
                 this.getModel("DetailView").setProperty("/isCreate", true);
-
                 this.getModel("masterModel").setData({});
                 this.getModel("managerModel").setData({});
-                this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
                 this.removeRichTextEditorValue();
                 this._toEditMode();
 
@@ -118,23 +119,6 @@ sap.ui.define([
                         console.log("error", data);
                     }
                 });
-
-                var managerNames = this.manager_local_name.split(';');
-                var managerCodes = this.manager.split(';');
-                var oTokens = [];
-                if (managerNames[0] !== " ") {
-                    for (var i = 0; i < managerNames.length; i++) {
-                        // @ts-ignore
-                        var defToken = new sap.m.Token({
-                            key: managerCodes[i],
-                            text: managerNames[i]
-                        });
-                        oTokens.push(defToken);
-                    };
-                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oTokens);
-                } else {
-                    this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
-                }
 
                 this._toShowMode();
 
@@ -181,24 +165,31 @@ sap.ui.define([
         },
 
         /**
-         * signalList Insert Data(Items)
-         * signalList Row Insert
+         * indicatorTable Insert Data(Items)
+         * indicatorTable Row Insert
          * Note: sid 및 value 값 수정 필요 
          * Odata 바인딩 작업시 변경이 필요할수 있음
          * @public
          */
         // @ts-ignore
         // @ts-ignore
-        onSignalListAddRow: function (oEvent) {
-            var obj = {
-                tenant_id: this.tenant_id,
-                scenario_number: this.scenario_number,
-                monitoring_indicator_id: "",
-                monitoring_indicator_sequence: "",
+        onIndicatorTableAddRow: function (oEvent) {
+            var indicatorTable = this.byId("indicatorTable");
+            if (this.scenario_number !== "New") {
+                var scenario_number = Number(this.scenario_number);
+            } else {
+                scenario_number = null
+            }
+            var newRecod = {
+                tenant_id: "L2100",
+                status: "sap-icon://add",
+                scenario_number: scenario_number,
+                monitoring_indicator_id: scenario_number,
+                monitoring_indicator_sequence: this.byId("indicatorTable").getItems().length + 1,
                 monitoring_ind_number_cd: "",
                 monitoring_ind_condition_cd: "",
-                monitoring_indicator_start_value: "",
-                monitoring_indicator_last_value: "",
+                monitoring_indicator_start_value: null,
+                monitoring_indicator_last_value: null,
                 monitoring_indicator_grade: "",
                 monitoring_ind_compare_base_cd: "",
                 local_create_dtm: new Date(),
@@ -207,48 +198,68 @@ sap.ui.define([
                 update_user_id: "Admin",
                 system_create_dtm: new Date(),
                 system_update_dtm: new Date()
-            };
-            var oModel = this.getView().getModel();
-            var retContext = oModel.createEntry("/TaskMonitoringIndicatorNumberDetail", {
-                properties: obj,
-                success: function () { },
-                error: function () { }
-            });
-            var lisItemForTable = this.oEditableTemplate.clone();
-            lisItemForTable.setBindingContext(retContext);
-            var signalTable = this.byId("signalList");
-            lisItemForTable.getAggregation("cells")[0].setIcon("sap-icon://add");
-            signalTable.addItem(lisItemForTable);
+
+            }
+            var oTableData = this.getModel("indicatorModel").getData();
+            oTableData.indicatorData.push(newRecod);
+            this.getModel("indicatorModel").setData(oTableData);
+
+            // Items[Items.length-1].getAggregation("cells")[0].setIcon("sap-icon://add");
+            // console.log(this.getModel("indicatorModel").getData().indicatorData);
         },
 
         /**
-         * SignalList Row Item 삭제
+         * indicatorTable Row Item 삭제
          * Note: Odata 바인딩 작업시 변경이 필요할수 있음
          * @public
          */
         // @ts-ignore
         // @ts-ignore
-        onSignalListDelete: function (oEvent) {
-            var oTable = this.getView().byId("signalList"); //signal 테이블
+        onIndicatorTableDelete: function (oEvent) {
+            var oTable = this.byId("indicatorTable"); //signal 테이블
+            var oTableModel = this.getModel("indicatorModel");
+            var deleteIdx = [];
             MessageBox.confirm(i18nModel.getText("/NCM00003"), {
                 actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                 emphasizedAction: MessageBox.Action.OK,
                 onClose: function (sAction) {
                     if (sAction === MessageBox.Action.OK) {
-                        var oItems = oTable.getSelectedItems();
-                        for (var i = 0; i < oItems.length; i++) {
-                            if (oItems[i].getAggregation("cells")[0].getIcon() === "sap-icon://add") {
-                                oTable.removeItem(oItems[i]);
+                        // var oItems = oTable.getSelectedItems();
+                        // for (var i = 0; i < oItems.length; i++) {
+                        //     if (oItems[i].getAggregation("cells")[0].getIcon() === "sap-icon://add") {
+                        //         oTable.removeItem(oItems[i]);
+                        //     }
+                        //     oItems[i].getAggregation("cells")[0].setIcon("sap-icon://decline");
+                        //     oItems[i].bindProperty("selected", "false");
+
+                        // }
+
+                        var oTableData = oTableModel.getData();
+                        var aContexts = oTable.getSelectedContexts();
+                        for (var i = aContexts.length - 1; i >= 0; i--) {
+                            var oThisObj = aContexts[i].getObject();
+                            var index = $.map(oTableData.indicatorData, function (obj, index) {
+                                if (obj === oThisObj) {
+                                    return index;
+                                }
+                            })
+                            if (oThisObj.status === "sap-icon://add") {
+                                oTableData.indicatorData.splice(index, 1);
+                            } else {
+                                oThisObj.status = "sap-icon://decline";
                             }
-                            oItems[i].getAggregation("cells")[0].setIcon("sap-icon://decline");
-                            oItems[i].bindProperty("selected", "false");
 
                         }
 
-                    }
+                        oTableModel.setData(oTableData);
+                        oTable.removeSelections(true);
 
+                    }
+                   
                 }
+
             });
+
         },
 
 
@@ -264,7 +275,7 @@ sap.ui.define([
                 onClose: function (sAction) {
                     if (sAction === MessageBox.Action.OK) {
                         //필수입력항목 검사
-                        if (that.validator.validate(that.byId("simpleform_edit")) !== true) {
+                        if (that.validator.validate(that.byId("simpleform_edit")) !== true || that.validator.validate(that.byId("indicatorTable")) !== true) {
                             MessageToast.show(i18nModel.getText("/ECM01002"));
                             return;
                         }
@@ -388,12 +399,6 @@ sap.ui.define([
                         var oItems = managerTable.getSelectedItems();
                         for (var i = 0; i < oItems.length; i++) {
                             var empNo = oItems[i].getAggregation("cells")[1].getProperty("text");
-                            var tokens = that.byId("multiInputWithEmployeeValueHelp").getTokens();
-                            tokens.forEach(function (token) {
-                                if (token.getProperty("key") === empNo) {
-                                    that.byId("multiInputWithEmployeeValueHelp").removeToken(token);
-                                }
-                            });
                             if (oItems[i].getAggregation("cells")[0].getIcon() === "sap-icon://add") {
                                 managerTable.removeItem(oItems[i]);
                             }
@@ -423,37 +428,16 @@ sap.ui.define([
             this._toEditMode();
         },
 
-        // //view에 있는 value reset
-        // _resetView: function () {
-        //     //담당자 multiInput reset
-        //     this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
-        //     //richTextEditorValue reset
-        //     this.removeRichTextEditorValue();
-        //     this.removeFormattedTextValue();
-        //     //refresh
-        //     this.getView().getModel().refresh();
-        //     //담당자 테이블
-        //     this.byId("managerListTable").getBinding("items").filter(new Filter("employee_number", FilterOperator.Contains, " "));
-        //     //tokens remove
-        //     this.byId("combo_purchasing_type").removeAllSelectedItems();
-        //     this.byId("company_edit_combo").removeAllSelectedItems();
-        //     this.byId("bizunit_edit_combo").removeAllSelectedItems();
-        //     this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
-        //     this.byId("multicombo_cycle").removeAllSelectedItems();
-
-        // },
-
         /**
         * Edit모드일 때 설정 
         */
         _toEditMode: function () {
-
             this.getModel("DetailView").setProperty("/isEditMode", true);
             // this._showFormFragment('Detail_Edit');
             // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("managerListTable").setMode(sap.m.ListMode.MultiSelect);
-            this.byId("signalList").setMode(sap.m.ListMode.MultiSelect);
+            this.byId("indicatorTable").setMode(sap.m.ListMode.MultiSelect);
             this._bindMidTable(this.oEditableTemplate, "Edit");
 
         },
@@ -468,7 +452,7 @@ sap.ui.define([
             this.byId("page").setProperty("showFooter", true);
             // signal table
             this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
-            this.byId("signalList").setMode(sap.m.ListMode.None);
+            this.byId("indicatorTable").setMode(sap.m.ListMode.None);
             // 담당자 table
             this.byId("managerListTable").setMode(sap.m.ListMode.None);
 
@@ -489,28 +473,28 @@ sap.ui.define([
                     }),
                     // @ts-ignore
                     new sap.m.Text({
-                        text: "{monitoring_ind_number_cd_name}",
+                        text: "{indicatorModel>monitoring_ind_number_cd_name}",
                         width: "30%"
                     }),
                     // @ts-ignore
                     new sap.m.Text({
-                        text: "{monitoring_ind_condition_cd} ({monitoring_ind_condition_cd_name})"
+                        text: "{indicatorModel>monitoring_ind_condition_cd_name}"
                     }),
                     // @ts-ignore
                     new sap.m.Text({
-                        text: "{monitoring_indicator_start_value}"
+                        text: "{indicatorModel>monitoring_indicator_start_value}"
                     }),
                     // @ts-ignore
                     new sap.m.Text({
-                        text: "{monitoring_indicator_last_value}"
+                        text: "{indicatorModel>monitoring_indicator_last_value}"
                     }),
                     // @ts-ignore
                     new sap.m.Text({
-                        text: "{monitoring_indicator_grade_name}"
+                        text: "{indicatorModel>monitoring_indicator_grade_name}"
                     }),
                     // @ts-ignore
                     new sap.m.Text({
-                        text: "{monitoring_ind_compare_base_cd_name}"
+                        text: "{indicatorModel>monitoring_ind_compare_base_cd_name}"
                     })
                 ],
                 // @ts-ignore
@@ -521,14 +505,15 @@ sap.ui.define([
                 cells: [
                     // @ts-ignore
                     new sap.m.ObjectStatus({
-                        icon: ""
+                        icon: "{indicatorModel>status}"
                     }),
                     // @ts-ignore
                     new sap.m.ComboBox({
                         width: "80%",
-                        selectedKey: "{monitoring_ind_number_cd}",
+                        selectedKey: "{indicatorModel>monitoring_ind_number_cd}",
                         items: {
                             path: '/TaskMonitoringIndicatorNumberCodeView',
+                            filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                             // @ts-ignore
                             template: new sap.ui.core.Item({
                                 key: "{code}",
@@ -537,7 +522,7 @@ sap.ui.define([
                         },
                         selectionChange: function (oEvent) {
                             var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
-                            if (status !== "sap-icon://add") {
+                            if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
                             if (oEvent.getSource().getSelectedKey() === "TKMTINC002") {
@@ -546,21 +531,20 @@ sap.ui.define([
                                 oEvent.getSource().getParent().getAggregation("cells")[6].setSelectedKey("COUNT");
                             }
 
-                        }
-
-                        // ,
-                        // required: true
+                        },
+                        required: true
                     }),
                     // @ts-ignore
                     new sap.m.ComboBox({
                         width: "80%",
                         selectedKey: {
-                            path: 'monitoring_ind_condition_cd',
+                            path: 'indicatorModel>monitoring_ind_condition_cd',
                             // @ts-ignore
-                            type: new sap.ui.model.type.String,
+                            type: new sap.ui.model.type.String
                         },
                         items: {
                             path: '/TaskMonitoringIndicatorComparisonConditionCodeView',
+                            filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                             // @ts-ignore
                             template: new sap.ui.core.Item({
                                 key: "{code}",
@@ -569,7 +553,7 @@ sap.ui.define([
                         },
                         selectionChange: function (oEvent) {
                             var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
-                            if (status !== "sap-icon://add") {
+                            if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
 
@@ -579,10 +563,13 @@ sap.ui.define([
                     // @ts-ignore
                     new sap.m.Input({
                         width: "80%",
-                        type: "Text",
-                        value: "{monitoring_indicator_start_value}",
+                        value: {
+                            path: 'indicatorModel>monitoring_indicator_start_value',
+                            type: new sap.ui.model.type.Integer
+                        },
                         liveChange: function (oEvent) {
-                            if (status !== "sap-icon://add") {
+                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
+                            if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
 
@@ -591,10 +578,13 @@ sap.ui.define([
                     // @ts-ignore
                     new sap.m.Input({
                         width: "80%",
-                        type: "Text",
-                        value: "{monitoring_indicator_last_value}",
+                        value: {
+                            path: 'indicatorModel>monitoring_indicator_last_value',
+                            type: new sap.ui.model.type.Integer
+                        },
                         liveChange: function (oEvent) {
-                            if (status !== "sap-icon://add") {
+                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
+                            if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
 
@@ -604,9 +594,10 @@ sap.ui.define([
                     // @ts-ignore
                     new sap.m.ComboBox({
                         width: "80%",
-                        selectedKey: "{monitoring_indicator_grade}",
+                        selectedKey: "{indicatorModel>monitoring_indicator_grade}",
                         items: {
                             path: "/TaskMonitoringIndicatorComparisionGradeCodeView",
+                            filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                             // @ts-ignore
                             template: new sap.ui.core.Item({
                                 key: "{code}",
@@ -614,11 +605,10 @@ sap.ui.define([
                             })
                         },
                         selectionChange: function (oEvent) {
-                            if (status !== "sap-icon://add") {
+                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
+                            if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
-
-
                         }
                         // ,
                         // required: true
@@ -626,9 +616,10 @@ sap.ui.define([
                     // @ts-ignore
                     new sap.m.ComboBox({
                         width: "80%",
-                        selectedKey: "{monitoring_ind_compare_base_cd}",
+                        selectedKey: "{indicatorModel>monitoring_ind_compare_base_cd}",
                         items: {
                             path: "/TaskMonitoringIndicatorComparisionBasicCodeView",
+                            filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                             // @ts-ignore
                             template: new sap.ui.core.Item({
                                 key: "{code}",
@@ -636,7 +627,8 @@ sap.ui.define([
                             })
                         },
                         selectionChange: function (oEvent) {
-                            if (status !== "sap-icon://add") {
+                            var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
+                            if (status !== "sap-icon://add" && status !== "sap-icon://decline" ) {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
 
@@ -653,7 +645,7 @@ sap.ui.define([
 
         onChangeAuthorityFlag: function (oEvent) {
             var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
-            if (status !== "sap-icon://add") {
+            if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
             }
             if (oEvent.getSource().getSelectedKey() === "TKMTINC002") {
@@ -672,171 +664,162 @@ sap.ui.define([
                     new Filter("tenant_id", FilterOperator.Contains, this.tenant_id),
                     new Filter("scenario_number", FilterOperator.EQ, this.scenario_number)
                 ];
+                //TaskMonitoringIndicatorNumberView
+                this.getOwnerComponent().getModel().read("/TaskMonitoringIndicatorNumberView", {
+                    filters: aFilters,
+                    success: function (data) {
+                        if (data && data.results.length) {
+                            this.getModel("indicatorModel").setProperty("/indicatorData", data.results);
+                        } else {
+                            this.getModel("indicatorModel").setProperty("/indicatorData", []);
+                        }
+
+                    }.bind(this),
+                    error: function (data) {
+                        console.log("error", data);
+                    }
+                });
+            } else {
+                this.getModel("indicatorModel").setProperty("/indicatorData", []);
             }
-            this.setModel(new JSONModel, "signalModel");
-            this.getModel("signalModel").setProperty("/signalData");
-            this.byId("signalList").bindItems({
-                path: "signalModel>/signalData",
-                filters: aFilters,
+
+            this.byId("indicatorTable").bindItems({
+                path: 'indicatorModel>/indicatorData',
+                // filters: aFilters,
                 template: oTemplate
             }).setKeyboardMode(sKeyboardMode);
 
         },
 
-        /**
-        * Detail_Edit, Detail_Show Fragment load 
-        */
-
-        // _oFragments: {},
-        // _showFormFragment: function (sFragmentName) {
-        //     var oPageSubSection = this.byId("pageSubSection1");
-        //     this._loadFragment(sFragmentName, function (oFragment) {
-        //         oPageSubSection.removeAllBlocks();
-        //         oPageSubSection.addBlock(oFragment);
-        //     })
-        // },
-        // _loadFragment: function (sFragmentName, oHandler) {
-        //     if (!this._oFragments[sFragmentName]) {
-        //         Fragment.load({
-        //             id: this.getView().getId(),
-        //             name: "pg.tm.tmMonitoring.view." + sFragmentName,
-        //             controller: this
-        //         }).then(function (oFragment) {
-        //             this._oFragments[sFragmentName] = oFragment;
-        //             if (oHandler) oHandler(oFragment);
-        //         }.bind(this));
-
-        //     } else {
-        //         if (oHandler) oHandler(this._oFragments[sFragmentName]);
-        //     }
-        // },
 
         onMultiInputWithEmployeeValuePress: function () {
-            if (!this.oEmployeeMultiSelectionValueHelp) {
-                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
-                    title: "Choose Employees",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                        ]
-                    }
-                });
-                // @ts-ignore
-                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
-                    var defToken = this.byId("multiInputWithEmployeeValueHelp").getTokens();
-                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
-                    // var that = this;
-                    var oTable = oEvent.getSource().oDialog.oTable;
-                    var selectedIndices = oTable.getSelectedIndices();
-
-                    var selectedEntries = [];
-                    var tableData = oTable.getModel().getData();
-                    for (var index = 0; index < selectedIndices.length; index++) {
-                        var tableIndex = selectedIndices[index];
-                        var tableRow = tableData[tableIndex];
-                        selectedEntries.push(tableRow);
-                    }
-
-                    // @ts-ignore
-                    var afterToken = oEvent.getSource().getTokens();
-                    //삭제
-                    var manager_table = this.byId("managerListTable");
-                    var tableItems = this.byId("managerListTable").getItems();
-                    var resultDelete = defToken.filter(function (each1) {
-                        return afterToken.every(function (each2) {
-                            return each1.getProperty("key") !== each2.getProperty("key");
-                        });
-                    });
-
-                    resultDelete.forEach(function (deleteItem) {
-                        tableItems.forEach(function (tableItem) {
-                            if (tableItem.getAggregation("cells")[1].getProperty("text") === deleteItem.getProperty("key")) {
-                                if (tableItem.getAggregation("cells")[0].getIcon() === "sap-icon://add") {
-                                    manager_table.removeItem(tableItem);
-                                } else {
-                                    tableItem.getAggregation("cells")[0].setIcon("sap-icon://decline");
-                                }
-                            }
-                        });
-
-                    });
-
-                    //생성
-                    var resultAdd = selectedEntries.filter(function (each1) {
-                        return defToken.every(function (each2) {
-                            return each1.employee_number !== each2.getProperty("key");
-                        });
-                    });
-                    var that = this;
-                    resultAdd.forEach(function (item) {
-                        // @ts-ignore
-                        var segmentItemYes = new sap.m.SegmentedButtonItem({ text: "Yes", key: "Yes" });
-                        // @ts-ignore
-                        var segmentItemNo = new sap.m.SegmentedButtonItem({ text: "No", key: "No" });
-                        // @ts-ignore
-                        var lisItemForTable = new sap.m.ColumnListItem({
-                            cells: [
-                                // @ts-ignore
-                                new sap.m.ObjectStatus({
-                                    icon: "sap-icon://add"
-                                }),
-                                //사번
-                                // @ts-ignore
-                                new sap.m.Text({
-                                    text: item.employee_number
-                                }),
-                                // @ts-ignore
-                                new sap.m.Text({
-                                    text: item.user_local_name
-                                }),
-                                // @ts-ignore
-                                new sap.m.Text({
-                                    text: item.email_id
-                                }),
-                                // @ts-ignore
-                                new sap.m.Text({
-                                    text: item.department_local_name
-                                }),
-                                // @ts-ignore
-                                new sap.m.Text({
-                                    text: item.job_title
-                                }),
-                                new sap.m.Text({
-                                    text: ""
-                                }),
-                                // @ts-ignore
-                                new sap.m.SegmentedButton({
-                                    items: [segmentItemYes, segmentItemNo],
-                                    selectedKey: "No"
-                                })
-                            ]
-
-                        });
-
-                        that.byId("managerListTable").addItem(lisItemForTable);
-
-                    });
-
-                }.bind(this));
-            }
-            this.oEmployeeMultiSelectionValueHelp.open();
-            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
-        },
-        //담당자 token 삭제
-        onTokenUpdate: function (oEvent) {
-            var removedTokens = oEvent.getParameter("removedTokens");
-            var tableItems = this.byId("managerListTable").getItems();
-            var that = this;
-            tableItems.forEach(function (tableItem) {
-                if (tableItem.getAggregation("cells")[1].getProperty("text") === removedTokens[0].getProperty("key")) {
-                    if (tableItem.getAggregation("cells")[0].getIcon() === "sap-icon://add") {
-                        that.byId("managerListTable").removeItem(tableItem);
-                    }
-                    tableItem.getAggregation("cells")[0].setIcon("sap-icon://decline");
+            // if (!this.oEmployeeMultiSelectionValueHelp) {
+            this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                title: "Choose Employees",
+                multiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    ]
                 }
             });
+            // @ts-ignore
+            var managerItems = this.byId("managerListTable").getItems();
+            // var managerNames = this.manager_local_name.split(';');
+            // var managerCodes = this.manager.split(';');
+            var oTokens = [];
 
+            for (var i = 0; i < managerItems.length; i++) {
+                // @ts-ignore
+                if (managerItems[i].getAggregation("cells")[0].getIcon() !== "sap-icon://decline") {
+                    // @ts-ignore
+                    var defToken = new sap.m.Token({
+                        key: managerItems[i].getAggregation("cells")[1].getText(),
+                        text: managerItems[i].getAggregation("cells")[2].getText()
+                    });
+                    oTokens.push(defToken);
+                }
+            };
+
+
+            this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                var defToken = oTokens;
+                var oTable = oEvent.getSource().oDialog.oTable;
+                var selectedIndices = oTable.getSelectedIndices();
+
+                var selectedEntries = [];
+                var tableData = oTable.getModel().getData();
+                for (var index = 0; index < selectedIndices.length; index++) {
+                    var tableIndex = selectedIndices[index];
+                    var tableRow = tableData[tableIndex];
+                    selectedEntries.push(tableRow);
+                }
+
+                // @ts-ignore
+                var afterToken = oEvent.getSource().getTokens();
+                //삭제
+                var manager_table = this.byId("managerListTable");
+                var tableItems = this.byId("managerListTable").getItems();
+                var resultDelete = defToken.filter(function (each1) {
+                    return afterToken.every(function (each2) {
+                        return each1.getProperty("key") !== each2.getProperty("key");
+                    });
+                });
+
+                resultDelete.forEach(function (deleteItem) {
+                    tableItems.forEach(function (tableItem) {
+                        if (tableItem.getAggregation("cells")[1].getProperty("text") === deleteItem.getProperty("key")) {
+                            if (tableItem.getAggregation("cells")[0].getIcon() === "sap-icon://add") {
+                                manager_table.removeItem(tableItem);
+                            } else {
+                                tableItem.getAggregation("cells")[0].setIcon("sap-icon://decline");
+                            }
+                        }
+                    });
+
+                });
+
+                //생성
+                var resultAdd = selectedEntries.filter(function (each1) {
+                    return defToken.every(function (each2) {
+                        return each1.employee_number !== each2.getProperty("key");
+                    });
+                });
+                var that = this;
+                resultAdd.forEach(function (item) {
+                    // @ts-ignore
+                    var segmentItemYes = new sap.m.SegmentedButtonItem({ text: "Yes", key: "Yes" });
+                    // @ts-ignore
+                    var segmentItemNo = new sap.m.SegmentedButtonItem({ text: "No", key: "No" });
+                    // @ts-ignore
+                    var lisItemForTable = new sap.m.ColumnListItem({
+                        cells: [
+                            // @ts-ignore
+                            new sap.m.ObjectStatus({
+                                icon: "sap-icon://add"
+                            }),
+                            //사번
+                            // @ts-ignore
+                            new sap.m.Text({
+                                text: item.employee_number
+                            }),
+                            // @ts-ignore
+                            new sap.m.Text({
+                                text: item.user_local_name
+                            }),
+                            // @ts-ignore
+                            new sap.m.Text({
+                                text: item.email_id
+                            }),
+                            // @ts-ignore
+                            new sap.m.Text({
+                                text: item.department_local_name
+                            }),
+                            // @ts-ignore
+                            new sap.m.Text({
+                                text: item.job_title
+                            }),
+                            // @ts-ignore
+                            new sap.m.Text({
+                                text: ""
+                            }),
+                            // @ts-ignore
+                            new sap.m.SegmentedButton({
+                                items: [segmentItemYes, segmentItemNo],
+                                selectedKey: "No"
+                            })
+                        ]
+
+                    });
+
+                    that.byId("managerListTable").addItem(lisItemForTable);
+
+                });
+
+            }.bind(this));
+            // }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(oTokens);
         },
 
         //모니터링 시나리오 Delete 버튼
@@ -878,7 +861,7 @@ sap.ui.define([
                 success: function (data) {
                     sap.m.MessageToast.show(i18nModel.getText("/NCM01002"));
                     that.getRouter().navTo("main", {}, true);
-                   
+
                     // that._resetView();
                     //refresh
                     oModel.refresh(true);
@@ -1081,6 +1064,58 @@ sap.ui.define([
                     operationDataArr.push(operationObj);
                 }
             });
+            //주기
+            var monitoring_cycles = this.byId("multicombo_cycle").getSelectedItems(),
+                cycleArr = [];
+            monitoring_cycles.forEach(function (cycle) {
+                for (code of language_code) {
+                    var cycleObj = {
+                        "tenant_id": "L2100",
+                        "scenario_number": scenario_number,
+                        "monitoring_cycle_code": cycle.getProperty("key"),
+                        "language_code": code,
+                        "monitoring_cycle_name": cycle.getProperty("text"),
+                        "local_create_dtm": new Date(),
+                        "local_update_dtm": new Date(),
+                        "create_user_id": "Admin",
+                        "update_user_id": "Admin",
+                        "system_create_dtm": new Date(),
+                        "system_update_dtm": new Date()
+                    };
+                    cycleArr.push(cycleObj);
+                }
+            });
+            //지표
+            var indicatorsItems = this.byId("indicatorTable").getItems(),
+                indicatorArr = [];
+            for (var m = 0; m < indicatorsItems.length; m++) {
+                var statusIcon = indicatorsItems[m].getAggregation("cells")[0].getIcon(),
+                    cells = indicatorsItems[m].getAggregation("cells");
+
+                if (statusIcon !== "sap-icon://decline") {
+                    var indicatorObj = {
+                        tenant_id: "L2100",
+                        scenario_number: scenario_number,
+                        monitoring_indicator_id: scenario_number,
+                        monitoring_indicator_sequence: m + 1,
+                        monitoring_ind_number_cd: cells[1].getSelectedKey(),
+                        monitoring_ind_condition_cd: cells[2].getSelectedKey(),
+                        monitoring_indicator_start_value: cells[3].getValue(),
+                        monitoring_indicator_last_value: cells[4].getValue(),
+                        monitoring_indicator_grade: cells[5].getSelectedKey(),
+                        monitoring_ind_compare_base_cd: cells[6].getSelectedKey(),
+                        local_create_dtm: new Date(),
+                        local_update_dtm: new Date(),
+                        create_user_id: "Admin",
+                        update_user_id: "Admin",
+                        system_create_dtm: new Date(),
+                        system_update_dtm: new Date()
+                    };
+                    indicatorArr.push(indicatorObj);
+                }
+            };
+
+            // console.log(IndicatorArr);
 
             var inputInfo = {
                 "InputData":
@@ -1093,10 +1128,11 @@ sap.ui.define([
                     "sourcePurchasingType": purchasingTypeArr,
                     "sourceTypeCode": TypeArr,
                     "sourceManager": managerArr,
-                    "sourceOperation": operationDataArr
+                    "sourceOperation": operationDataArr,
+                    "sourceCycle": cycleArr,
+                    "sourceIndicator": indicatorArr
                 }
             };
-            // console.log(inputInfo);
 
             $.ajax({
                 url: urlInfo,
@@ -1107,14 +1143,12 @@ sap.ui.define([
                     sap.m.MessageToast.show(i18nModel.getText("/NCM01001"));
                     that.getRouter().navTo("main", {}, true);
                     oModel.refresh(true);
-                     oView.getModel("managerModel").refresh(true);
+                    oView.getModel("managerModel").refresh(true);
                     // that._resetView();
                     // console.log('data:', data);
                 },
                 error: function (e) {
                     sap.m.MessageToast.show(i18nModel.getText("/EPG00003"));
-                    var v_returnModel = oView.getModel("returnModel").getData().data;
-                    // console.log('v_returnModel_e:', v_returnModel);
                 }
             });
         }

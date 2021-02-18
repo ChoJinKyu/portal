@@ -9,7 +9,7 @@ VIEW PG_MI_SAC_MAT_BOM_MAPPING_VIEW AS
     			,'202001'           	AS  "DATE"
     			,'20200101'         	AS  LATEST_MI_DATE
     			,'20200101'         	AS  LATEST_NET_PRICE_CFM_DATE
-    			,'#'                	AS  SOURCE_CURRENCY
+    			,A.CURRENCY_UNIT       	AS  SOURCE_CURRENCY
     			,'#'                	AS  TARGET_CURRENCY
     			,A.QUANTITY_UNIT		AS	UOM
     			,A.MI_MATERIAL_CODE     AS	MI_MATERIAL     --  CATEGORY_CODE 삭제 (2021.02.03)

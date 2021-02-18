@@ -18,6 +18,8 @@ using {pg as MIMaxNIDView} from '../../../../db/cds/pg/mi/PG_MI_MAX_NODE_ID_VIEW
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
 using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
+//Supplier&Material
+using {sp.Np_Net_Price_Mst_View as NetPriceMaster} from  '../../../../db/cds/sp/np/SP_NP_NET_PRICE_MST_VIEW-model';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/CM_ORG_COMPANY-model';	
@@ -330,26 +332,77 @@ service marketIntelligenceService {
     // Material View
     view MaterialView @(title : '자재코드 조회 View') as
         select distinct
-            key tenant_id, //회사코드
-            key material_code, //자재코드
-                material_desc //자재코드명
-        from MaterialDesc
-        order by
-            tenant_id,
-            material_code
+            key mst.tenant_id          as tenant_id, //회사코드
+            key mst.material_code      as material_code, //자재코드
+                material.material_desc as material_desc //자재코드명
+        from NetPriceMaster as mst
+        left join MaterialDesc as material
+            on mst.tenant_id = material.tenant_id
+            and mst.material_code = material.material_code
+            and material.language_code = upper(substring(session_context('LOCALE'),1,2))
+        group by
+            mst.tenant_id,
+            mst.material_code,
+            material.material_desc
         ;
 
     // // Supplier View
     view SupplierView @(title : '공급업체 조회 View') as
         select distinct
-            key tenant_id, //회사코드
-            key supplier_code, //공급업체코드
-                supplier_local_name, //공급업체로컬명
-                supplier_english_name //공급업체영어명
-        from SupplierMaster
-        order by
-            tenant_id,
-            supplier_code
+            key mst.tenant_id                  as tenant_id, //회사코드
+            key mst.supplier_code              as supplier_code, //공급업체코드
+                supplier.supplier_local_name   as supplier_local_name, //공급업체로컬명
+                supplier.supplier_english_name as supplier_english_name //공급업체영문명
+        from NetPriceMaster as mst
+        left join SupplierMaster as supplier
+            on mst.tenant_id = supplier.tenant_id
+            and mst.supplier_code = supplier.supplier_code
+        group by
+            mst.tenant_id,
+            mst.supplier_code,
+            supplier.supplier_local_name,
+            supplier.supplier_english_name
+        ;
+
+    // // Material & Supplier View
+    view MaterialNSupplierView @(title : '공급업체 조회 View') as
+        select distinct
+            key mst.tenant_id                    as tenant_id, //회사코드
+            key mst.org_code                     as org_code, //구매운영조직코드
+                mst.org_name                     as org_name, //구매운영조직명
+            key mst.net_price_document_type_code as net_price_document_type_code, //단가문서유형코드
+                mst.net_price_document_type_name as net_price_document_type_name, //단가문서유형명
+                mst.uom_code                     as uom_code, //UOM코드
+            key mst.material_code                as material_code, //자재코드
+                material.material_desc           as material_desc, //자재명
+            key mst.supplier_code                as supplier_code, //공급업체코드
+                supplier.supplier_local_name     as supplier_local_name, //공급업체로컬명
+                supplier.supplier_english_name   as supplier_english_name, //공급업체영문명
+                mst.currency_code                as currency_code //통화코드
+        from NetPriceMaster as mst
+        left join MaterialDesc as material
+            on mst.tenant_id = material.tenant_id
+            and mst.material_code = material.material_code
+            and material.language_code = upper(substring(session_context('LOCALE'),1,2))
+        left join SupplierMaster as supplier
+            on mst.tenant_id = supplier.tenant_id
+            and mst.supplier_code = supplier.supplier_code
+        where 1 = 1
+            and mst.language_cd = upper(substring(session_context('LOCALE'),1,2))
+            and mst.org_type_code = 'PL'
+        group by
+            mst.tenant_id,
+            mst.org_code,
+            mst.org_name,
+            mst.net_price_document_type_code,
+            mst.net_price_document_type_name,
+            mst.uom_code,
+            mst.material_code,
+            material.material_desc,
+            mst.supplier_code,
+            supplier.supplier_local_name,
+            supplier.supplier_english_name,
+            mst.currency_code
         ;
 
 }

@@ -88,7 +88,7 @@
                     </VBox>
                     
                     <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
-                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
+                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" visible="{= ${list>/mainMode}==='Main'?true:false}"/>
                         <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" />
                         </layoutData>
@@ -207,37 +207,37 @@
                         <HBox alignItems="Center">
                             <Text text="{list>spmd_character_sort_seq}" ></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{list>org_code}"></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{list>org_infos/bizunit_name}"></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{list>spmd_category_code}"></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox>
                             <Text text="{list>category_infos/spmd_category_code_name}"></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{list>spmd_character_code}"></Text>
                         </HBox>
                         <HBox>
                             <Text text="{list>spmd_character_code_name}"></Text>
                         </HBox>
-                        <HBox alalignItemsign="Center">
+                        <HBox>
                             <Text text="{list>spmd_character_desc}" ></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{list>create_user_id}"></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{list>update_user_id}"></Text>
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{path : 'list>local_create_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text> 
                         </HBox>
-                        <HBox alignItems="Center">
+                        <HBox justifyContent="Center">
                             <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
                         </HBox>
                     </cells>

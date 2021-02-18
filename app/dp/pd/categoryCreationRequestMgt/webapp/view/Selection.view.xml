@@ -175,7 +175,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" width="50%"/>
+                                        <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" width="50%" liveChange="onLiveChange" />
                                         <Text id="requestTitleTx" text="{master>/request_title}" visible="{viewModel>/showMode}" width="50%"/>
                                     
                                         <Label
@@ -184,7 +184,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" width="50%"/>
+                                        <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" width="50%" liveChange="onLiveChange" />
                                         <Text id="requestCategoryNameTx" text="{master>/request_category_name}" visible="{viewModel>/showMode}" width="50%"/>
                                         
                                         <Label
@@ -193,12 +193,13 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}" width="50%"/>
+                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}" width="50%" liveChange="onLiveChange" />
                                         <Text id="similarCategoryCode" text="{master>/similar_category_code}" visible="{viewModel>/showMode}" width="50%"/>
                                    
                                         <Label text="{I18N>/DESCRIPTION}: " required="true"/>
                                         <!-- Text Editor 시작 -->
-                                        <rte:RichTextEditor 
+                                        <rte:RichTextEditor
+                                            id="richTextEditor"
                                             width="100%"
                                             height="300px" 
                                             value="{master>/request_desc}" 
@@ -207,7 +208,8 @@
                                             showGroupLink="true" 
                                             showGroupInsert="true"
                                             editorType="TinyMCE4"
-                                            visible="{viewModel>/editMode}">
+                                            visible="{viewModel>/editMode}"
+                                            change="onChange" >
                                         </rte:RichTextEditor>
                                         <!-- Text Editor 끝 -->
                                         <FormattedText height="200px" htmlText="{= ${master>/request_desc} ? ${master>/request_desc} : '' }" visible="{= !${viewModel>/editMode}}" width="100%"/>

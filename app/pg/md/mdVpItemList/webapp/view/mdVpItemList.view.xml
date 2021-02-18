@@ -14,7 +14,10 @@
     height="100%">
 
 
-<f:DynamicPage id="dynamicPageId1" headerExpanded="true" toggleHeaderOnTitleClick="{/titleClickable}">
+<f:DynamicPage id="dynamicPageId1" 
+    headerExpanded="true" 
+    fitContent="true"
+    toggleHeaderOnTitleClick="true" >
       <!--DynamicPage Title -->
       <f:title>
             <lib-f:CustomDynamicPageTitle>
@@ -37,7 +40,20 @@
                     columnsL="2"
                     columnsM="2">
                     <form:content>
-                        <VBox>
+                        
+                    </form:content>
+                    </form:SimpleForm>
+                </lib-f:fixedContent>
+            </lib-f:CustomDynamicPageTitle>
+      </f:title>  
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm class="searchBox" maxContainerCols="2" layout="ResponsiveGridLayout" editable="true" 
+                    adjustLabelSpan="false" 
+                    labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                       <VBox>
                             <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
                             <ComboBox id="searchTenantCombo" showSecondaryValues="true" width="100%" items="{
                                     path: 'org>/Org_Tenant',
@@ -105,10 +121,9 @@
                             </layoutData>
                         </FlexBox>
                     </form:content>
-                    </form:SimpleForm>
-                </lib-f:fixedContent>
-            </lib-f:CustomDynamicPageTitle>
-      </f:title>   
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header> 
          
       <f:content>
         <VBox>
@@ -163,8 +178,8 @@
                     <t:Column label="{I18N>/VENDOR_POOL}" hAlign="Center" width="15rem">    
                         <t:template>
                             <HBox>
-                                <CheckBox selected="{list>checked}" select=".setIdSelect" visible="{= ${list>drill_state}==='leaf'? true:false}" />
-                                <Text text="{list>vendor_pool_local_name}" wrapping="false" />
+                                <CheckBox selected="{list>checked}" text="{list>vendor_pool_local_name}" select=".setIdSelect" visible="{= ${list>drill_state}==='leaf'? true:false}" />
+                                <Text text="{list>vendor_pool_local_name}" wrapping="false" visible="{= ${list>drill_state}==='leaf'? false:true}"/>
                             </HBox>
                         </t:template>
                     </t:Column>
@@ -189,276 +204,327 @@
                         </t:template>
                     </t:Column>
                     <!-- textAlign="left" -->
-                    <t:Column label="{I18N>/SPMD_CHAR_001}" hAlign="Center" id="attrItem1" width="6.5em" visible="false" >    
+                    <!-- <t:Column label="{I18N>/SPMD_CHAR_001}" justifyContent="Center" id="attrItem1" width="6.5em" visible="false" >   -->
+                    <t:Column id="attrItem1" width="8em" visible="false" >   
+                        <Label text="{I18N>/SPMD_CHAR_001}" width="100%" textAlign="Center"/>
                         <t:template>
-                            <lib-m:ColoredText color="{list>attrItemColor1}" text="{list>attrItemName1}" wrapping="false" />
+                            <lib-m:ColoredText textAlign="Left" color="{list>attrItemColor1}" text="{list>attrItemName1}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_002}" hAlign="Center" id="attrItem2" width="6.5em" visible="false">    
+                    <t:Column id="attrItem2" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_002}" width="100%" textAlign="Center"/>   
                         <t:template>
-                             <lib-m:ColoredText color="{list>attrItemColor2}" text="{list>attrItemName2}" wrapping="false" />
+                             <lib-m:ColoredText textAlign="Left" color="{list>attrItemColor2}" text="{list>attrItemName2}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_003}" hAlign="Center" id="attrItem3" width="6.5em" visible="false">    
+                    <t:Column id="attrItem3" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_003}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor3}" text="{list>attrItemName3}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_004}" hAlign="Center" id="attrItem4" width="6.5em" visible="false">    
+                    <t:Column id="attrItem4" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_004}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor4}" text="{list>attrItemName4}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_005}" hAlign="Center" id="attrItem5" width="6.5em" visible="false">    
+                    <t:Column id="attrItem5" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_005}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor5}" text="{list>attrItemName5}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_006}" hAlign="Center" id="attrItem6" width="6.5em" visible="false">    
+                    <t:Column id="attrItem6" width="8em" visible="false">  
+                        <Label text="{I18N>/SPMD_CHAR_006}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor6}" text="{list>attrItemName6}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_007}" hAlign="Center" id="attrItem7" width="6.5em" visible="false">    
+                    <t:Column id="attrItem7" width="8em" visible="false">  
+                        <Label text="{I18N>/SPMD_CHAR_007}" width="100%" textAlign="Center"/>  
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor7}" text="{list>attrItemName7}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_008}" hAlign="Center" id="attrItem8" width="6.5em" visible="false">    
+                    <t:Column id="attrItem8" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_008}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor8}" text="{list>attrItemName8}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_009}" hAlign="Center" id="attrItem9" width="6.5em" visible="false">    
+                    <t:Column id="attrItem9" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_009}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor9}" text="{list>attrItemName9}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_010}" hAlign="Center" id="attrItem10" width="6.5em" visible="false">    
+                    <t:Column id="attrItem10" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_010}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor10}" text="{list>attrItemName10}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                     
-                    <t:Column label="{I18N>/SPMD_CHAR_011}" hAlign="Center" id="attrItem11" width="6.5em" visible="false">    
+                    <t:Column id="attrItem11" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_011}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor11}" text="{list>attrItemName11}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_012}" hAlign="Center" id="attrItem12" width="6.5em" visible="false">    
+                    <t:Column id="attrItem12" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_012}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor12}" text="{list>attrItemName12}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_013}" hAlign="Center" id="attrItem13" width="6.5em" visible="false">    
+                    <t:Column id="attrItem13" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_013}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor13}" text="{list>attrItemName13}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_014}" hAlign="Center" id="attrItem14" width="6.5em" visible="false">    
+                    <t:Column id="attrItem14" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_014}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor14}" text="{list>attrItemName14}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_015}" hAlign="Center" id="attrItem15" width="6.5em" visible="false">    
+                    <t:Column id="attrItem15" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_015}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor15}" text="{list>attrItemName15}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_016}" hAlign="Center" id="attrItem16" width="6.5em" visible="false">    
+                    <t:Column id="attrItem16" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_016}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor16}" text="{list>attrItemName16}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_017}" hAlign="Center" id="attrItem17" width="6.5em" visible="false">    
+                    <t:Column id="attrItem17" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_017}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor17}" text="{list>attrItemName17}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_018}" hAlign="Center" id="attrItem18" width="6.5em" visible="false">    
+                    <t:Column id="attrItem18" width="8em" visible="false">  
+                        <Label text="{I18N>/SPMD_CHAR_018}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor18}" text="{list>attrItemName18}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_019}" hAlign="Center" id="attrItem19" width="6.5em" visible="false">    
+                    <t:Column id="attrItem19" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_019}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor19}" text="{list>attrItemName19}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_020}" hAlign="Center" id="attrItem20" width="6.5em" visible="false">    
+                    <t:Column id="attrItem20" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_020}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor20}" text="{list>attrItemName20}" wrapping="false"/>
                         </t:template>
                     </t:Column>
 
-                    <t:Column label="{I18N>/SPMD_CHAR_021}" hAlign="Center" id="attrItem21" width="6.5em" visible="false">    
+                    <t:Column id="attrItem21" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_021}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor21}" text="{list>attrItemName21}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_022}" hAlign="Center" id="attrItem22" width="6.5em" visible="false">    
+                    <t:Column id="attrItem22" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_022}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor22}" text="{list>attrItemName22}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_023}" hAlign="Center" id="attrItem23" width="6.5em" visible="false">    
+                    <t:Column id="attrItem23" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_023}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor23}" text="{list>attrItemName23}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_024}" hAlign="Center" id="attrItem24" width="6.5em" visible="false">    
+                    <t:Column id="attrItem24" width="8em" visible="false">  
+                        <Label text="{I18N>/SPMD_CHAR_024}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor24}" text="{list>attrItemName24}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_025}" hAlign="Center" id="attrItem25" width="6.5em" visible="false">    
+                    <t:Column id="attrItem25" width="8em" visible="false">  
+                        <Label text="{I18N>/SPMD_CHAR_025}" width="100%" textAlign="Center"/>   
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor25}" text="{list>attrItemName25}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_026}" hAlign="Center" id="attrItem26" width="6.5em" visible="false">    
+                    <t:Column id="attrItem26" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_026}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor26}" text="{list>attrItemName26}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_027}" hAlign="Center" id="attrItem27" width="6.5em" visible="false">    
+                    <t:Column id="attrItem27" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_027}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor27}" text="{list>attrItemName27}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_028}" hAlign="Center" id="attrItem28" width="6.5em" visible="false">    
+                    <t:Column id="attrItem28" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_028}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor28}" text="{list>attrItemName28}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_029}" hAlign="Center" id="attrItem29" width="6.5em" visible="false">    
+                    <t:Column id="attrItem29" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_029}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor29}" text="{list>attrItemName29}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_030}" hAlign="Center" id="attrItem30" width="6.5em" visible="false">    
+                    <t:Column id="attrItem30" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_030}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor30}" text="{list>attrItemName30}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                     
-                    <t:Column label="{I18N>/SPMD_CHAR_031}" hAlign="Center" id="attrItem31" width="6.5em" visible="false">    
+                    <t:Column id="attrItem31" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_031}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor31}" text="{list>attrItemName31}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_023}" hAlign="Center" id="attrItem32" width="6.5em" visible="false">    
+                    <t:Column id="attrItem32" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_032}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor32}" text="{list>attrItemName32}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_033}" hAlign="Center" id="attrItem33" width="6.5em" visible="false">    
+                    <t:Column id="attrItem33" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_033}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor33}" text="{list>attrItemName33}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_034}" hAlign="Center" id="attrItem34" width="6.5em" visible="false">    
+                    <t:Column id="attrItem34" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_034}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor34}" text="{list>attrItemName34}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_035}" hAlign="Center" id="attrItem35" width="6.5em" visible="false">    
+                    <t:Column id="attrItem35" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_035}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor35}" text="{list>attrItemName35}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_036}" hAlign="Center" id="attrItem36" width="6.5em" visible="false">    
+                    <t:Column id="attrItem36" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_036}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor36}" text="{list>attrItemName36}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_037}" hAlign="Center" id="attrItem37" width="6.5em" visible="false">    
+                    <t:Column id="attrItem37" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_037}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor37}" text="{list>attrItemName37}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_038}" hAlign="Center" id="attrItem38" width="6.5em" visible="false">    
+                    <t:Column id="attrItem38" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_038}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor38}" text="{list>attrItemName38}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_039}" hAlign="Center" id="attrItem39" width="6.5em" visible="false">    
+                    <t:Column id="attrItem39" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_039}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor39}" text="{list>attrItemName39}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_040}" hAlign="Center" id="attrItem40" width="6.5em" visible="false">    
+                    <t:Column id="attrItem40" width="8em" visible="false">  
+                        <Label text="{I18N>/SPMD_CHAR_040}" width="100%" textAlign="Center"/>   
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor40}" text="{list>attrItemName40}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                     
-                    <t:Column label="{I18N>/SPMD_CHAR_041}" hAlign="Center" id="attrItem41" width="6.5em" visible="false">    
+                    <t:Column id="attrItem41" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_041}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor41}" text="{list>attrItemName41}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_042}" hAlign="Center" id="attrItem42" width="6.5em" visible="false">    
+                    <t:Column id="attrItem42" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_042}" width="100%" textAlign="Center"/>    
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor42}" text="{list>attrItemName42}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_043}" hAlign="Center" id="attrItem43" width="6.5em" visible="false">    
+                    <t:Column id="attrItem43" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_043}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor43}" text="{list>attrItemName43}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_044}" hAlign="Center" id="attrItem44" width="6.5em" visible="false">    
+                    <t:Column id="attrItem44" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_044}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor44}" text="{list>attrItemName44}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_045}" hAlign="Center" id="attrItem45" width="6.5em" visible="false">    
+                    <t:Column id="attrItem45" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_045}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor45}" text="{list>attrItemName45}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_046}" hAlign="Center" id="attrItem46" width="6.5em" visible="false">    
+                    <t:Column id="attrItem46" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_046}" width="100%" textAlign="Center"/>       
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor46}" text="{list>attrItemName46}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_047}" hAlign="Center" id="attrItem47" width="6.5em" visible="false">    
+                    <t:Column id="attrItem47" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_047}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor47}" text="{list>attrItemName47}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_048}" hAlign="Center" id="attrItem48" width="6.5em" visible="false">    
+                    <t:Column id="attrItem48" width="8em" visible="false">
+                        <Label text="{I18N>/SPMD_CHAR_048}" width="100%" textAlign="Center"/>       
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor48}" text="{list>attrItemName48}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_049}" hAlign="Center" id="attrItem49" width="6.5em" visible="false">    
+                    <t:Column id="attrItem49" width="8em" visible="false"> 
+                        <Label text="{I18N>/SPMD_CHAR_049}" width="100%" textAlign="Center"/>      
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor49}" text="{list>attrItemName49}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_050}" hAlign="Center" id="attrItem50" width="6.5em" visible="false">    
+                    <t:Column id="attrItem50" width="8em" visible="false">  
+                        <Label text="{I18N>/SPMD_CHAR_050}" width="100%" textAlign="Center"/>     
                         <t:template>
                              <lib-m:ColoredText color="{list>attrItemColor50}" text="{list>attrItemName50}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/CREATE_USER_ID}"  hAlign="Center" width="6.5em">    
+                    <t:Column label="{I18N>/CREATE_USER_ID}"  hAlign="Center" width="8em">    
                         <t:template>
                             <Text text="{list>create_user_id}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/UPDATE_USER_ID}" hAlign="Center" width="6.5em">    
+                    <t:Column label="{I18N>/UPDATE_USER_ID}" hAlign="Center" width="8em">    
                         <t:template>
                             <Text text="{list>update_user_id}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/LOCAL_CREATE_DTM}" hAlign="Center" width="6.5em">    
+                    <t:Column label="{I18N>/LOCAL_CREATE_DTM}" hAlign="Center" width="8em">    
                         <t:template>
                             <Text text="{path : 'list>local_create_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/LOCAL_CHANGE_DTM}" hAlign="Center"  width="6.5em">    
+                    <t:Column label="{I18N>/LOCAL_CHANGE_DTM}" hAlign="Center"  width="8em">    
                         <t:template>
                             <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" wrapping="false"/>
                         </t:template>

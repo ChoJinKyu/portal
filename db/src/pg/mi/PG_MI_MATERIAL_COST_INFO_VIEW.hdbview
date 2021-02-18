@@ -19,7 +19,7 @@ view pg_MI_Material_Cost_Info_View as
     left join pg_mi_material_code_lng as mattext
         on  main.tenant_id			= mattext.tenant_id
         and main.mi_material_code	= mattext.mi_material_code
-		and	mattext.language_code	= 'KO'
+		and	mattext.language_code	= upper(substring(session_context('LOCALE'),1,2))
     group by	
         main.tenant_id,
         main.mi_material_code,

@@ -78,11 +78,6 @@ begin
 		where tenant_id = lv_tenant_id
 		and scenario_number = lv_scenario_number
 		;
--- delete table: cycle
-		delete from pg_tm_cycle_code_lng
-		where tenant_id = lv_tenant_id
-		and scenario_number = lv_scenario_number
-		;
 -- delete table: purchasing type
 		delete from pg_tm_purchasing_type_code_lng
 		where tenant_id = lv_tenant_id
@@ -90,6 +85,16 @@ begin
 		;
 -- delete table: type
 		delete from pg_tm_type_code_lng
+		where tenant_id = lv_tenant_id
+		and scenario_number = lv_scenario_number
+		;
+-- delete table: cycle
+		delete from pg_tm_cycle_code_lng
+		where tenant_id = lv_tenant_id
+		and scenario_number = lv_scenario_number
+		;
+-- delete table: incicator
+		delete from pg_tm_indicator_number_dtl
 		where tenant_id = lv_tenant_id
 		and scenario_number = lv_scenario_number
 		;

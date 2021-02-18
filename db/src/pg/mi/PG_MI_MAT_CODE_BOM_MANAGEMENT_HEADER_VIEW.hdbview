@@ -21,7 +21,7 @@ view pg_MI_Mat_Code_Bom_Management_Header_View as
 	left join dp_mm_material_desc_lng as mattext
 		on	header.tenant_id		= mattext.tenant_id
 		and	header.material_code	= mattext.material_code
-		and mattext.language_code	= 'EN'
+		and mattext.language_code	= upper(substring(session_context('LOCALE'),1,2))
 	left join sp_sm_supplier_mst as supplier
 		on	header.tenant_id		= supplier.tenant_id
 		and	header.supplier_code	= supplier.supplier_code

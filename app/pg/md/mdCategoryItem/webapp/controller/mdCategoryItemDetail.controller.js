@@ -652,6 +652,7 @@ sap.ui.define([
             var oLanguageCode = new ComboBox({
                     selectedKey: "{details>language_code}",
                     required : true,
+                    textAlign: "Center",
                     editable: "{= ${details>_row_state_} === 'C' ? true : false}"
                 });
                 oLanguageCode.bindItems({
@@ -682,7 +683,8 @@ sap.ui.define([
                                 maxLength: 50
                             }
 						},
-						required: true
+                        required: true,
+                        maxLength: 50
 					}),
 					new Input({
 						value: {
@@ -691,7 +693,8 @@ sap.ui.define([
                             constraints: {
                                 maxLength: 50
                             }
-						}
+                        },
+                        maxLength: 50
 					})
 				]
             });

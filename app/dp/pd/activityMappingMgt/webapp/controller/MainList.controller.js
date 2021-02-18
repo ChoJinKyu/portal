@@ -21,8 +21,10 @@ sap.ui.define([
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment",
-    "sap/ui/model/Sorter"
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, Sorter) {
+    "sap/ui/model/Sorter",
+    "sap/ui/core/syncStyleClass"
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator,
+     MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, Sorter, syncStyleClass) {
     "use strict";
 
     return BaseController.extend("dp.pd.activityMappingMgt.controller.MainList", {
@@ -30,6 +32,7 @@ sap.ui.define([
         formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(),
+        oOrgCode: null,
 
         onInit: function () {
             var oViewModel = this.getResourceBundle();
@@ -54,7 +57,7 @@ sap.ui.define([
                 }, true);
             }.bind(this));
 
-            this.byId("btn_search").firePress();
+            //this.byId("btn_search").firePress();
             //this._doInitTablePerso();
 
             this.byId("mainTableDelButton").setEnabled(false);
@@ -135,7 +138,9 @@ sap.ui.define([
                         oModel.oData.ActivityMappingNameView[i]._row_state_ = "";                        
                     }
 
-                    oTable.removeSelections(true);
+                    //oTable.removeSelections(true);
+
+                    this.oOrgCode = this.byId("searchAUCombo").getSelectedKey();
 
                 }.bind(this)
             });
@@ -357,19 +362,18 @@ sap.ui.define([
                 if(oData.ActivityMappingNameView[z]._row_state_ == "C") {
                     org_code_c = oData.ActivityMappingNameView[z].org_code;
                     product_activity_code_c = oData.ActivityMappingNameView[z].product_activity_code;
-                    activity_dependency_code_c = oData.ActivityMappingNameView[z].activity_dependency_code;
                     activity_code_c = oData.ActivityMappingNameView[z].activity_code;
                 }
 
                 if(oData.ActivityMappingNameView[z]._row_state_ == "U") {
                     org_code_u = oData.ActivityMappingNameView[z].org_code;
                     product_activity_code_u = oData.ActivityMappingNameView[z].product_activity_code;
-                    activity_dependency_code_u = oData.ActivityMappingNameView[z].activity_dependency_code;
                     activity_code_u = oData.ActivityMappingNameView[z].activity_code;
                 }
 
-                if(org_code_c == org_code_u && product_activity_code_c == product_activity_code_u && 
-                    activity_dependency_code_c == activity_dependency_code_u && activity_code_c == activity_code_u) {
+                if(org_code_c != undefined && org_code_u != undefined && product_activity_code_c != undefined && product_activity_code_u != undefined &&
+                    activity_code_c != undefined && activity_code_u != undefined &&
+                    org_code_c == org_code_u && product_activity_code_c == product_activity_code_u && activity_code_c == activity_code_u) {
                         sap.m.MessageToast.show("중복 매핑을 할 수 없습니다. \n 다시 입력하여 주시기 바랍니다.");
                         return;
                 }
@@ -569,10 +573,21 @@ sap.ui.define([
             }
 
             this._atDialog.then(function (_oDialog) {
-                _oDialog.open();
-            });
-        },
+                var aFilters = [
+                    new Filter("org_code", FilterOperator.EQ, this.oOrgCode),
+                ];
+                var oItemTemplate = new sap.m.ColumnListItem({
+                    cells : [
+                        new sap.m.Text({text:"{activity_code}"}),
+                        new sap.m.Text({text:"{activity_name}"})
+                    ]
+                });
 
+                _oDialog.bindItems("/PdPartActivityTemplateView", oItemTemplate, null, aFilters);
+                _oDialog.open();
+            }.bind(this));
+        },
+        
         handleActivitySearch: function (oEvent) {
             var sValue = oEvent.getParameter("value");
             var oFilters = [];

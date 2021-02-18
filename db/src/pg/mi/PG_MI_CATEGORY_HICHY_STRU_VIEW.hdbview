@@ -87,7 +87,7 @@ from
 									left join pg_mi_category_lng as text
 										on	master.tenant_id		= text.tenant_id
 										and	master.category_code	= text.category_code
-										and text.language_code		= 'KO'
+										and text.language_code		= upper(substring(session_context('LOCALE'),1,2))
 							)
 							start where master.parent_node_id is null
 							sibling order by parent_id
@@ -166,7 +166,7 @@ from
 											left join pg_mi_category_lng as text
 												on	master.tenant_id		= text.tenant_id
 												and	master.category_code	= text.category_code
-												and text.language_code		= 'KO'
+												and text.language_code		= upper(substring(session_context('LOCALE'),1,2))
 									)
 									start where master.parent_node_id is null
 									sibling order by parent_id

@@ -23,12 +23,12 @@ view pg_MI_Mat_Prc_Management_View as
 	left join pg_mi_material_code_lng as mattext
 		on  main.tenant_id			= mattext.tenant_id
 		and main.mi_material_code	= mattext.mi_material_code
-		and mattext.language_code	= 'KO'
+		and mattext.language_code	= upper(substring(session_context('LOCALE'),1,2))
 	left join pg_mi_material_code as matcode
 		on  main.tenant_id    		= matcode.tenant_id
 		and main.mi_material_code	= matcode.mi_material_code
 	left join pg_mi_category_lng as catgtext
 		on  matcode.tenant_id    	= catgtext.tenant_id
 		and matcode.category_code	= catgtext.category_code
-		and catgtext.language_code	= 'KO'
+		and catgtext.language_code	= upper(substring(session_context('LOCALE'),1,2))
 	;

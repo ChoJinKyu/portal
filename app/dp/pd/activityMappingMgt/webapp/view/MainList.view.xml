@@ -87,20 +87,20 @@
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/PRODUCT_ACTIVITY}: " labelFor="searchProductActivity"></Label>
-                            <Input id="searchProductActivity" />
+                            <Input id="searchProductActivity"  />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Activity: " labelFor="searchActivity"></Label>
-                            <Input id="searchActivity" />
+                            <Input id="searchActivity"  />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
-                            <Button id="btn_search" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
+                            <Button id="btn_search" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>
@@ -174,7 +174,7 @@
                             </HBox>
                             <HBox>
                                 <Text text="{list>product_activity_code}" visible="true" />
-                                <Input value="{list>product_activity_code}" visible="false" editable="false" />
+                                <Input value="{list>product_activity_code}" visible="false" editable="false"  />
                             </HBox>
                             <HBox>
                                 <Text text="{list>product_activity_name}" visible="true" />

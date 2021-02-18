@@ -53,7 +53,7 @@ from
 	left join pg_tm_operation_mode_code_lng as oprmd
 		on  main.tenant_id					= oprmd.tenant_id
 		and main.scenario_number			= oprmd.scenario_number
-		and oprmd.language_code				= 'KO'
+		and oprmd.language_code				= upper(substring(session_context('LOCALE'),1,2))
 	group by
 		main.monitoring_type_code,
 		main.scenario_number,
@@ -181,7 +181,7 @@ from
 	left join pg_tm_purchasing_type_code_lng as purtp
 		on  main.tenant_id			= purtp.tenant_id
 		and main.scenario_number	= purtp.scenario_number
-		and purtp.language_code		= 'KO'
+		and purtp.language_code		= upper(substring(session_context('LOCALE'),1,2))
 	group by
 		main.monitoring_type_code,
 		main.scenario_number,
@@ -211,7 +211,7 @@ from
 	left join pg_tm_cycle_code_lng as cle
 		on  main.tenant_id			= cle.tenant_id
 		and main.scenario_number	= cle.scenario_number
-		and cle.language_code		= 'KO'
+		and cle.language_code		= upper(substring(session_context('LOCALE'),1,2))
 	group by
 		main.monitoring_type_code,
 		main.scenario_number,
@@ -223,12 +223,12 @@ left join pg_tm_master as master
 left join pg_tm_scenario_number_lng as snr
 		on  result.tenant_id			= snr.tenant_id
 		and result.scenario_number		= snr.scenario_number
-		and snr.language_code			= 'KO'
+		and snr.language_code			= upper(substring(session_context('LOCALE'),1,2))
 left join pg_tm_type_code_lng as tp
 		on  result.tenant_id			= tp.tenant_id
 		and result.scenario_number		= tp.scenario_number
 		and result.monitoring_type_code	= tp.monitoring_type_code
-		and tp.language_code			= 'KO'
+		and tp.language_code			= upper(substring(session_context('LOCALE'),1,2))
 left join cm_org_tenant as org_t
 		on  result.tenant_id			= org_t.tenant_id
 group by

@@ -177,6 +177,37 @@ sap.ui.define([
 
             var progressCode, CUType, statsCode;
 
+            if(flag != "D" && flag == "R"){
+                if(this.byId("categoryGroupCodeCombo").getSelectedKey() === "" ) {
+                    MessageToast.show("카테고리 그룹은 필수 선택 항목입니다.");
+                    return;
+                }
+
+                if(this.byId("requestTitle").getValue() === "") {
+                    this.byId("requestTitle").setValueState("Error");
+                    MessageToast.show("요청명은 필수 입력 항목입니다.");
+                    return;
+                }
+
+                if(this.byId("requestCategoryName").getValue() === "") {
+                    this.byId("requestCategoryName").setValueState("Error");
+                    MessageToast.show("요청카테고리명은 필수 입력 항목입니다.");
+                    return;
+                }
+
+                if(this.byId("searchField").getValue() === "") {
+                    this.byId("searchField").setValueState("Error");
+                    MessageToast.show("유사카테고리는 필수 입력 항목입니다.");
+                    return;
+                }
+
+                if(this.byId("richTextEditor").getValue() === "") {
+                    this.byId("richTextEditor").setValueState("Error");
+                    MessageToast.show("설명은 필수 입력 항목입니다.");
+                    return;
+                }
+            }
+            
             if (this._sRequestNumber !== "new"){
                 CUType = "U";
                 
@@ -608,7 +639,25 @@ sap.ui.define([
             
         },
        
-        
+        onLiveChange: function(oEvent) {
+            var objPath = oEvent.oSource.mBindingInfos.value.parts[0].path;
+            if(objPath == "/request_title") {
+                this.byId("requestTitle").setValueState("None");
+            }
+            if (objPath == "/request_category_name") {
+                this.byId("requestCategoryName").setValueState("None");
+            } 
+            if (objPath == "/similar_category_code") {
+                this.byId("searchField").setValueState("None");
+            }
+        },
+
+        onChange: function(oEvent) {
+            var objPath = oEvent.oSource.mBindingInfos.value.parts[0].path;
+            if (objPath == "/request_desc") {
+                this.byId("richTextEditor").setValueState("None");
+            }
+        }
 
         
 

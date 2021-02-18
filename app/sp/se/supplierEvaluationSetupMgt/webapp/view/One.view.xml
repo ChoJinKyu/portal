@@ -524,16 +524,13 @@
                                         class="sapFDynamicPageAlignContent"
                                         width="auto"
                                         items="{
-                                            path: 'DetailView>/quantitative'
-                                            ,
-                                            sorter: { path: 'sort_sequence'
-                                                    }
-                                            }"
+                                            path: 'DetailView>/quantitative'}"
                                         mode="{=
                                             ${DetailView>/isEditMode} ? 'SingleSelectLeft' : 'None'
                                         }"
                                         
                                             >
+                                            <!-- sorter: { path: 'sort_sequence', descending: 'false' } -->
                                             <!-- selectionChange="onSelectItem"   -->
                                             <headerToolbar>
                                                 <Toolbar>
@@ -847,8 +844,7 @@
                         title="직원 검색"
                         items="{
                             filters: [
-                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_EVAL_EXECUTE_ROLE_CODE'}
+                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                             ]
                         }"
                         apply=".onEmployeeDialogApplyPress"

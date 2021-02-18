@@ -177,7 +177,7 @@
 							<uxap:subSections>
 								<uxap:ObjectPageSubSection>
 									<uxap:blocks>
-										<VBox>
+										<!-- <VBox>
 											<f:SimpleForm id="SimpleFormChange354" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="0" labelSpanM="0" emptySpanL="0" emptySpanM="0" columnsL="3" columnsM="3">
 												<f:content>
 													<VBox id="VBox_manager" class="sapUiNoMarginBottom">
@@ -188,7 +188,7 @@
 															<l:GridData span="XL3 L4 M4 S12"/>
 														</layoutData>
 													</VBox>
-													<VBox id="managerVBox" class="sapUiNoMarginTop">
+													<VBox id="managerVBox" class="sapUiNoMarginTop"> -->
 														<Table id="managerListTable" class="sapUiNoMarginTop" autoPopinMode="true" items="{managerModel>/manager}" mode="MultiSelect">
 															<headerToolbar class="sapUiNoMarginTop">
 																<OverflowToolbar>
@@ -207,7 +207,7 @@
 																</Column>
 																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
-																		<Label text="{I18N>/EMPNO}"/>
+																		<Label text="{I18N>/MONITORING_MANAGER_EMPNO}"/>
 																	</header>
 																</Column>
 																<Column minScreenWidth="Tablet" demandPopin="true">
@@ -261,13 +261,13 @@
 																</ColumnListItem>
 															</items>
 														</Table>
-														<layoutData>
+														<!-- <layoutData>
 															<l:GridData span="XL12 L12 M12 S12"/>
 														</layoutData>
 													</VBox>
 												</f:content>
 											</f:SimpleForm>
-										</VBox>
+										</VBox> -->
 									</uxap:blocks>
 								</uxap:ObjectPageSubSection>
 							</uxap:subSections>
@@ -364,25 +364,25 @@
 							<uxap:subSections>
 								<uxap:ObjectPageSubSection>
 									<uxap:blocks>
-										<Table id="signalList" class="sapUiNoMarginTop"  autoPopinMode="true" mode="MultiSelect">
+										<Table id="indicatorTable" class="sapUiNoMarginTop"  autoPopinMode="true" mode="MultiSelect">
 											<headerToolbar class="sapUiNoMarginTop">
 												<OverflowToolbar>
 													<content>
 														<ToolbarSpacer/>
-														<Button text="{I18N>/ROW_ADD}" id="buttonSignalAddRow" press=".onSignalListAddRow" enabled="{=${DetailView>/isEditMode}}" type="Transparent"/>
-														<Button text="{I18N>/ROW_DELETE}" id="buttonSignalDeleteRow" press=".onSignalListDelete" enabled="{=${DetailView>/isEditMode}}" type="Transparent"/>
+														<Button text="{I18N>/ROW_ADD}" id="buttonSignalAddRow" press=".onIndicatorTableAddRow" enabled="{=${DetailView>/isEditMode}}" type="Transparent"/>
+														<Button text="{I18N>/ROW_DELETE}" id="buttonSignalDeleteRow" press=".onIndicatorTableDelete" enabled="{=${DetailView>/isEditMode}}" type="Transparent"/>
 													</content>
 												</OverflowToolbar>
 											</headerToolbar>
 											<columns>
-												<Column width="5rem">
+												<Column width="5rem" visible="{=${DetailView>/isEditMode}}">
 													<header>
 														<Label text="{I18N>/STATUS}"/>
 													</header>
 												</Column>
 												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
-														<Label text="{I18N>/INDICATOR}"/>
+														<Label text="{I18N>/INDICATOR}" required="true"/>
 													</header>
 												</Column>
 												<Column minScreenWidth="Tablet" demandPopin="true">
@@ -405,7 +405,7 @@
 												</Column>
 												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
-														<Label text="{I18N>/UNIT}"/>
+														<Label text="{I18N>/UNIT}" />
 													</header>
 												</Column>
 											</columns>
@@ -413,14 +413,14 @@
 												<ColumnListItem type="Active" press="signalListTableItemPress">
 													<cells>
 														<Text text=""/>
-														<ComboBox width="80%" items="{/TaskMonitoringIndicatorNumberCodeView}" selectedKey="" selectionChange=".onChangeIndicator">
+														<ComboBox width="80%" required="true" items="{/TaskMonitoringIndicatorNumberCodeView}" selectedKey="" selectionChange=".onChangeIndicator">
 															<core:Item key="{code}" text="{code_name}"/>
 														</ComboBox>
 														<ComboBox items="{/TaskMonitoringIndicatorComparisonConditionCodeView}" width="80%" selectedKey="{path: 'monitoring_ind_condition_cd', type: 'sap.ui.model.type.String'}">
 															<core:Item key="{code}" text="{code} ({code_name})"/>
 														</ComboBox>
-														<Input value="{monitoring_indicator_start_value}" width="80%"/>
-														<Input value="{monitoring_indicator_last_value}" width="80%"/>
+														<Input value="{path: 'indicatorModel>monitoring_indicator_start_value', type: 'sap.ui.model.type.Integer'}" width="80%"/>
+														<Input value="{path: 'indicatorModel>monitoring_indicator_last_value', type: 'sap.ui.model.type.Integer'}" width="80%"/>
 														<ComboBox items="{/TaskMonitoringIndicatorComparisionGradeCodeView}" selectedKey="{monitoring_indicator_grade}" width="80%">
 															<core:Item key="{code}" text="{code_name}"/>
 														</ComboBox>

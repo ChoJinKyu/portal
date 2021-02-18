@@ -4,87 +4,51 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "partCategoryMgt-mainList-mainColumnCom",
+                id: "partCategoryMgt-mainList-mainCategoryCodeColumn",
                 order: 0,
-                text: "회사",
+                text: "Category 코드",
                 visible: true
             },
             {
-                id: "partCategoryMgt-mainList-mainColumnAU",
+                id: "partCategoryMgt-mainList-mainSequenceColumn",
                 order: 1,
-                text: "조직코드",
+                text: "Sequence",
                 visible: true
             },
             {
-                id: "partCategoryMgt-mainList-mainColumnPC",
+                id: "partCategoryMgt-mainList-mainCategoryNameColumn",
                 order: 2,
-                text: "Part Category",
+                text: "Category 명",
                 visible: true
             },            
             {
-                id: "partCategoryMgt-mainList-mainColumnPT",
+                id: "partCategoryMgt-mainList-mainCategoryGroupColumn",
                 order: 3,
-                text: "Project Type",
+                text: "Category 그룹",
                 visible: true
             },
             {
-                id: "partCategoryMgt-mainList-mainColumnAC",
+                id: "partCategoryMgt-mainList-mainCategoryGroupNameColumn",
                 order: 4,
-                text: "Activity 코드",
+                text: "Category Group 명",
                 visible: true
             },            
             {
-                id: "partCategoryMgt-mainList-mainColumnAN",
+                id: "partCategoryMgt-mainList-mainActiveFlagColumn",
                 order: 5,
-                text: "Activity 명",
+                text: "상태",
                 visible: true
             },            
             {
-                id: "partCategoryMgt-mainList-mainColumnUseYn",
+                id: "partCategoryMgt-mainList-mainUpdateUserIdColumn",
                 order: 6,
-                text: "사용여부",
+                text: "수정사용자ID",
                 visible: true
             },            
             {
-                id: "partCategoryMgt-mainList-mainColumnS",
+                id: "partCategoryMgt-mainList-mainLocalUpdateDtmColumn",
                 order: 7,
-                text: "s",
-                visible: true
-            },            
-            {
-                id: "partCategoryMgt-mainList-mainColumnA",
-                order: 8,
-                text: "a",
-                visible: true
-            },            
-            {
-                id: "partCategoryMgt-mainList-mainColumnB",
-                order: 9,
-                text: "b",
-                visible: true
-            },            
-            {
-                id: "partCategoryMgt-mainList-mainColumnC",
-                order: 10,
-                text: "c",
-                visible: true
-            },            
-            {
-                id: "partCategoryMgt-mainList-mainColumnD",
-                order: 11,
-                text: "d",
-                visible: true
-            },            
-            {
-                id: "partCategoryMgt-mainList-mainColumnUDM",
-                order: 12,
-                text: "수정일자",
-                visible: true
-            },            
-            {
-                id: "partCategoryMgt-mainList-mainColumnUUI",
-                order: 13,
-                text: "수정자",
+                text: "로컬변경일시",
                 visible: true
             }
         ];
@@ -141,7 +105,7 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnCom") != -1) {
+                if (sId.indexOf("mainCategoryCodeColumn") != -1) {
                     return "Columns of Key";
                 }
                 return "Others";
