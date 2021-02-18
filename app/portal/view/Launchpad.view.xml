@@ -34,7 +34,7 @@
                     </m:items>
                 </m:IconTabHeader>
 
-                <m:Link text="SAC 바로가기" target="_blank" href="https://lgcns.jp10.hcs.cloud.sap"></m:Link>
+                <m:Link text="SAC 바로가기" target="_blank" href="https://lgcns-q.jp10.hcs.cloud.sap"></m:Link>
                 <m:Link text="|" width="3px" emphasized="true" enabled="false"></m:Link>
                 <m:Link text="Ariba 바로가기" target="_blank" href="https://lgc-T.sourcing.jp.cloud.ariba.com"></m:Link>
 
