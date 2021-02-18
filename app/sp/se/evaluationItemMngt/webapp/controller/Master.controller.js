@@ -355,7 +355,7 @@ sap.ui.define([
                             "tenant_id" : oUserSession.tenantId,
                             "company_code" : oUserSession.companyCode,
                             "org_type_code" : oUserSession.orgTypeCode,
-                            "org_code" : oUserSession.orgCode,
+                            "org_code" : oCondData.EQ.org_code,
                             "evaluation_operation_unit_code" : oCondData.EQ.evaluation_operation_unit_code,
                             "evaluation_type_code" : oCondData.EQ.evaluation_type_code,
                         },
@@ -667,20 +667,14 @@ sap.ui.define([
             }
 
             , onRowSelectionChange : function(oEvent){
-                var oNavParam, oTable, aSelectedIdx, oContext, oRowData, oViewModel;
+                var oNavParam, oTable, iSelectedIdx, oContext, oRowData, oViewModel;
                 
                 oNavParam = {};
                 oNavParam.new = "N";
 
                 oTable = oEvent.getSource();
-                aSelectedIdx = oTable.getSelectedIndices();
-
-                if(!aSelectedIdx.length){
-                    // MessageBox.warning("선택된 데이터가 없습니다.");
-                    return;
-                }
-
-                oContext = oTable.getContextByIndex(aSelectedIdx[0]);
+                iSelectedIdx = oEvent.getParameter("rowIndex");
+                oContext = oTable.getContextByIndex(iSelectedIdx);
                 oRowData = oContext.getObject();
                 oViewModel = this.getView().getModel("viewModel");
 
