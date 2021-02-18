@@ -1,11 +1,18 @@
 sap.ui.define([
     "ext/lib/UIComponent",
-    "ext/lib/util/SppUserSessionUtil",
+    //"ext/lib/util/SppUserSessionUtil",
     "sap/ui/model/json/JSONModel",
     "ext/lib/util/Multilingual",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-], function (UIComponent, SppUserSessionUtil, JSONModel, Multilingual, Filter, FilterOperator) {
+], function (
+    UIComponent, 
+    //SppUserSessionUtil, 
+    JSONModel, 
+    Multilingual, 
+    Filter, 
+    FilterOperator
+) {
     "use strict";
 
     return UIComponent.extend("sp.np.netPriceMgt.Component", {

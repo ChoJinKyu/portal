@@ -232,11 +232,11 @@ BEGIN
     IF I_TENANT_ID IS NULL OR TRIM(I_TENANT_ID) = '' THEN
         O_RETURN_MSG  = 'Tenant Id 는 필수 입니다.';
         SIGNAL V_USER_EXCEPTION;
-    
+    /*
     ELSEIF I_COMPANY_CODE IS NULL OR TRIM(I_COMPANY_CODE) = '' THEN
         O_RETURN_MSG  = 'Company Code 는 필수 입니다.';
         SIGNAL V_USER_EXCEPTION;
-    
+    */
     ELSEIF I_APPROVAL_TITLE IS NULL OR TRIM(I_APPROVAL_TITLE) = '' THEN
         O_RETURN_MSG  = '품의 제목은 필수 입니다.';
         SIGNAL V_USER_EXCEPTION;
@@ -307,12 +307,12 @@ BEGIN
     IF I_TENANT_ID IS NOT NULL AND TRIM(I_TENANT_ID) != '' AND (V_TENANT_ID IS NULL OR TRIM(V_TENANT_ID) = '') THEN
         O_RETURN_MSG  = 'Tenant Id 가 유효하지 않습니다.';
         SIGNAL V_USER_EXCEPTION;
-
+    /*
     -- 단가문서유형코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
     ELSEIF I_COMPANY_CODE IS NOT NULL AND TRIM(I_COMPANY_CODE) != '' AND (V_COMPANY_CODE IS NULL OR TRIM(V_COMPANY_CODE) = '') THEN
         O_RETURN_MSG  = 'Company Code 가 유효하지 않습니다.';
         SIGNAL V_USER_EXCEPTION;
-
+    */
     -- 단가문서유형코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
     ELSEIF I_NET_PRICE_DOCUMENT_TYPE_CODE IS NOT NULL AND TRIM(I_NET_PRICE_DOCUMENT_TYPE_CODE) != '' AND (V_NET_PRICE_DOCUMENT_TYPE_CODE IS NULL OR TRIM(V_NET_PRICE_DOCUMENT_TYPE_CODE) = '') THEN
         O_RETURN_MSG  = 'Netprice Document Type Code 가 유효하지 않습니다.';
@@ -328,8 +328,6 @@ BEGIN
         O_RETURN_MSG  = 'Outcom Code 가 유효하지 않습니다.';
         SIGNAL V_USER_EXCEPTION;
     END IF;
-
-
 
 
 
@@ -375,19 +373,19 @@ BEGIN
             SIGNAL V_USER_EXCEPTION;
 
 
-        -- 환율 코드
+        -- 단가 코드
         ELSEIF c_item.NET_PRICE IS NULL THEN
             O_RETURN_MSG  = '단가는 필수 입니다.';
             SIGNAL V_USER_EXCEPTION;
 
 
-        -- 환율 코드
+        -- 통화 코드
         ELSEIF c_item.CURRENCY_CODE IS NULL OR TRIM(c_item.CURRENCY_CODE) = '' THEN
-            O_RETURN_MSG  = '환율 코드는 필수 입니다.';
+            O_RETURN_MSG  = '통화 코드는 필수 입니다.';
             SIGNAL V_USER_EXCEPTION;
 
         ELSEIF c_item.DB_CURRENCY_CODE IS NULL OR TRIM(c_item.DB_CURRENCY_CODE) = '' THEN
-            O_RETURN_MSG  = '유효하지 않은 환율 코드 가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은 통화 코드 가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
 
 
@@ -500,7 +498,7 @@ BEGIN
                   I_TENANT_ID                -- TENANT_ID
                 , V_APPROVAL_NUMBER          -- APPROVAL_NUMBER
                 , NULL                       -- LEGACY_APPROVAL_NUMBER
-                , I_COMPANY_CODE             -- COMPANY_CODE
+                , 'LGCKR'      --I_COMPANY_CODE             -- COMPANY_CODE
                 , NULL                       -- ORG_TYPE_CODE
                 , NULL                       -- ORG_CODE
                 , 'SP'                       -- CHAIN_CODE

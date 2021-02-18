@@ -1,6 +1,6 @@
 sap.ui.define([
     "./App.controller",
-    "ext/lib/util/SppUserSessionUtil",
+    //"ext/lib/util/SppUserSessionUtil",
     "ext/lib/model/ManagedListModel",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Validator",
@@ -25,7 +25,7 @@ sap.ui.define([
 ],
     function (
         BaseController,
-        SppUserSessionUtil,
+        //SppUserSessionUtil,
         ManagedListModel,
         TransactionManager,
         Validator,
@@ -206,7 +206,7 @@ sap.ui.define([
                         "approval_title": "",
                         "approval_status_code": "DR",    // DR: Draft
                         "approval_status_name": oRootModel.getProperty("/processList/0/code_name"),
-                        "requestor_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
+                        "requestor_empno": "00000",
                         "request_date": this.getOwnerComponent()._changeDateString(oToday)
                     };
                     oDetailModel.setData(oNewBasePriceData);
@@ -668,7 +668,7 @@ sap.ui.define([
                 procObj = {
                     "param": {
                         "tenant_id": "L2100",
-                        "language_code": SppUserSessionUtil.getUserInfo().LANGUAGE_CODE,
+                        "language_code": "KO",
                         "inDetails": []
                     }
                 };
@@ -681,7 +681,7 @@ sap.ui.define([
                         var inDetailObj = {};
                         inDetailObj.rowval = Number(idx + 1);
                         inDetailObj.tenant_id = "L2100";
-                        inDetailObj.company_code = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
+                        inDetailObj.company_code = "LGCKR";
                         //inDetailObj.org_type_code = item.org_type_code;
                         inDetailObj.org_code = item.org_code;
                         inDetailObj.approval_number = item.approval_number;
@@ -773,14 +773,14 @@ sap.ui.define([
                     "param": {
                         "master": {
                             "tenant_id": "L2100",
-                            "company_code": SppUserSessionUtil.getUserInfo().COMPANY_CODE,
+                            "company_code": "LGCKR",
                             "approval_number": (that.byId("approval_number").getText() === "N/A") ? null : String(that.byId("approval_number").getText()),				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
                             "approval_title": that.byId("approval_title").getValue(),
                             "approval_contents": that.byId("approval_contents").getValue(),
                             "attch_group_number": "temp00",
                             "net_price_document_type_code": that.byId("net_price_document_type_code").getSelectedKey(),
                             "net_price_source_code": that.byId("net_price_source_code").getSelectedKey(),
-                            "buyer_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER
+                            "buyer_empno": "00000"//SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER
                         },
                         "general": []
                     }

@@ -214,7 +214,7 @@
                                                 <Text text="{generalInfoList>item_sequence}"  />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
+                                        <t:Column hAlign="Center" width="5rem">
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{path: 'generalInfoList>company_code'}"  />

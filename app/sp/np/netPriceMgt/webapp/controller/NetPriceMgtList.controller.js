@@ -1,6 +1,6 @@
 sap.ui.define([
     "./App.controller",
-    "ext/lib/util/SppUserSessionUtil",
+    //"ext/lib/util/SppUserSessionUtil",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -22,7 +22,7 @@ sap.ui.define([
 ],
     function (
         BaseController, 
-        SppUserSessionUtil,
+        //SppUserSessionUtil,
         JSONModel, 
         Filter, 
         FilterOperator, 
