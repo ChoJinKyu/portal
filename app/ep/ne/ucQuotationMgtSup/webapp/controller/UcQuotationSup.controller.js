@@ -452,7 +452,7 @@ sap.ui.define([
                     supplier_item_create_flag: (!e.supplier_item_create_flag ? false : Boolean(e.supplier_item_create_flag)),
                     row_state: (!e.const_quotation_item_number ? 'C' : e.row_state),
                     net_price_contract_title : e.net_price_contract_title,
-                    extra_rate_count : (!e.extra_rate_count ? null : parseFloat(e.extra_rate_count)),
+                    extra_rate_count : parseFloat(e.extra_rate_count),
 //row_state: (!e.const_quotation_item_number ? 'C' : 'U'),
                     create_user_id: (!e.create_user_id ? 'Admin' : e.create_user_id),
                     update_user_id: (!e.update_user_id ? 'Admin' : e.update_user_id)
@@ -711,7 +711,7 @@ sap.ui.define([
                         new Sorter("item_sequence", false)
                     ],
                     success: function (oData) {
-                        // console.log(" UcQuotationDtlView ::: ", oData.results);
+                        console.log(" UcQuotationDtlView ::: ", oData.results);
 
                         // console.log(" const_start_date ::: ", oData.results[0]);
                         // console.log("convertDateToString  const_start_date ::: ", that.convertDateToString(oData.results[0]["const_start_date"]));
@@ -1456,8 +1456,11 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             oModel.read("/UcApprovalExtraRateView", {
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, mstData.tenant_id),
-                    new Filter("company_code", FilterOperator.EQ, mstData.company_code)//,
-                    //new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
+                    new Filter("company_code", FilterOperator.EQ, mstData.company_code),
+                    new Filter("net_price_contract_document_no", FilterOperator.EQ, this.net_price_contract_document_no_),
+                    new Filter("net_price_contract_degree", FilterOperator.EQ, this.net_price_contract_degree_)
+                    //new Filter("net_price_contract_extra_seq", FilterOperator.EQ, this.net_price_contract_extra_seq_)
+
                 ],
                 success: function (oData) {
                     console.log(" UcApprovalExtraRateView ::: ", oData.results);
@@ -1493,7 +1496,7 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             return promise;
         },
 
-        onTableExtraRatePress: function (oEvent,falg_) {
+        onTableExtraRatePress: function (oEvent) {
 
             console.log(" empl abc----------------->", oEvent); 
 
@@ -1506,9 +1509,7 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             var rateData = oViewModel.getProperty("/ucRate");
 
 
-            oViewModel.setProperty('/ucmaster/completion_flag_',falg_);
-
-                        console.log("completion_flag  ------> " , oViewModel.getProperty("/ucmaster/completion_flag_"));
+            
             
 
             console.log("dtlData  ------> " , dtlData);
@@ -1523,16 +1524,33 @@ console.log("Math.round========", (Math.round(coms*100)/100.0));
             var beforeIndex = parseInt(sPath.substr(11,1));
             var test_val = [];
             ///ucdetails/2
-             //console.log(" sPath----------------->", sPath); 
+
              console.log(" sPath----------------->", sPath);
              console.log(" this.rateIndex----------------->", this.rateIndex);  
-             //console.log(" this.tenant_id----------------->", dtlData[0]["tenant_id"]); 
              console.log(" this.tenant_id----------------->", dtlData[this.rateIndex]["tenant_id"]); 
              console.log(" this.company_code----------------->", dtlData[this.rateIndex]["company_code"]); 
              console.log(" this.const_quotation_number----------------->", dtlData[this.rateIndex]["const_quotation_number"]); 
              console.log(" this.const_quotation_item_number----------------->", dtlData[beforeIndex]["const_quotation_item_number"]); 
+             console.log(" dtlData @@@@@ extra_rate_count ----------------->", dtlData[beforeIndex]["extra_rate_count"]); 
 
-             console.log(" $$$$$$$$$$$$$$$$$$ this.net_price_contract_document_no----------------->", dtlData[beforeIndex]["net_price_contract_document_no"]); 
+            this.net_price_contract_document_no_ = dtlData[beforeIndex]["net_price_contract_document_no"];
+            this.net_price_contract_degree_ = dtlData[beforeIndex]["net_price_contract_degree"];
+            this.net_price_contract_extra_seq_ = dtlData[beforeIndex]["net_price_contract_extra_seq"];
+
+            var rate_count = parseFloat(dtlData[beforeIndex]["extra_rate_count"]);
+            var labor_net_price = parseFloat(dtlData[beforeIndex]["labor_net_price"]);
+            var editMode = this.getModel("midObjectViewModel").getProperty("/isEditMode");
+
+            if(editMode == true){
+                if(rate_count > 0 || labor_net_price > 0){
+                    oViewModel.setProperty('/ucmaster/completion_flag_',true);
+                }
+            }else{
+                oViewModel.setProperty('/ucmaster/completion_flag_',false);
+            }
+            
+            console.log("completion_flag  ------> " , oViewModel.getProperty("/ucmaster/completion_flag_"));
+            console.log(" $$$$$$$$$$$$$$$$$$ this.net_price_contract_document_no----------------->", dtlData[beforeIndex]["net_price_contract_document_no"]); 
 
 //oView.byId("searchNetPriceContractTitle").setText(dtlData[beforeIndex]["net_price_contract_title"]);
 
@@ -1676,17 +1694,12 @@ console.log(" check document_no----------------->" ,dtl_net_price_contract_docum
                             console.log(" test_val----------------->", test_val);
                             oView.byId("popRateTable").clearSelection();
                             for(var i=0; i < test_val.length ; i++){
-                                oView.byId("popRateTable").addSelectionInterval(test_val[i],test_val.length);
+                                oView.byId("popRateTable").addSelectionInterval(test_val[i],test_val[i]);
                                 console.log("############################################" , test_val[i]);
                             }
 
                         //}
                         
-                        //console.log(" beforeRateData----------------->", beforeRateData[0]); 
-                        //console.log(" beforeRateData- net_price_contract_title---------------->", beforeRateData[0]["net_price_contract_title"]);   
-
-                        //oView.byId("searchNetPriceContractTitle").setText(beforeRateData[0]["net_price_contract_title"]);
-
                         console.log(" beforeRateData- net_price_contract_title---------------->", dtlData[beforeIndex]["net_price_contract_title"]);   
 
                         oView.byId("searchNetPriceContractTitle").setText(dtlData[beforeIndex]["net_price_contract_title"]);
@@ -1705,10 +1718,7 @@ console.log(" check document_no----------------->" ,dtl_net_price_contract_docum
 
                 oView.byId("searchNetPriceContractDocumentNo").setText(dtlData[beforeIndex]["net_price_contract_document_no"]); 
                 
-
-
-
-                dtlData[this.rateIndex]["const_quotation_item_number"]
+                //dtlData[this.rateIndex]["const_quotation_item_number"]
 
             }).bind(this));
 

@@ -113,10 +113,10 @@
                             <SegmentedButton id="searchEffectiveStatus" class="sapUiSmallMarginBottom" selectedKey="All" width="100%">                                            
                                 <items>
                                     <SegmentedButtonItem text="All" key="all" width="3rem"  />
-                                    <SegmentedButtonItem text="유효" key="1" width="3rem"  />
-                                    <SegmentedButtonItem text="만료" key="2" width="3rem"  />
-                                    <SegmentedButtonItem text="종료" key="3" width="3rem"  />
-                                    <SegmentedButtonItem text="대기" key="4" width="3rem"  />
+                                    <SegmentedButtonItem text="유효" key="VALID" width="3rem"  />
+                                    <SegmentedButtonItem text="만료" key="EXPIRE" width="3rem"  />
+                                    <SegmentedButtonItem text="종료" key="INVALID" width="3rem"  />
+                                    <SegmentedButtonItem text="대기" key="READY" width="3rem"  />
                                 </items>
                             </SegmentedButton>                     
                             <!-- <SegmentedButton id="searchEffectiveStatus" selectedKey="{list>/effective_status_name}" items="{

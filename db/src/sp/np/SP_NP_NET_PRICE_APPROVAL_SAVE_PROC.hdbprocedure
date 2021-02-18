@@ -68,6 +68,96 @@ BEGIN
     *********** 변수 선언 **********************************************************
     *******************************************************************************/
 
+    /* Parameter I_DETAILS 유효성 체크 위한 Cursor */
+    DECLARE CURSOR c_Details  FOR
+    SELECT
+           DTL.ORG_CODE
+          ,DTL.MATERIAL_CODE
+          ,(SELECT S.MATERIAL_CODE
+              FROM DP_MM_MATERIAL_MST S
+             WHERE S.TENANT_ID       = I_TENANT_ID
+               AND S.MATERIAL_CODE   = DTL.MATERIAL_CODE
+           ) AS DB_MATERIAL_CODE
+           
+          ,DTL.PAYTERMS_CODE
+          ,(SELECT S.CODE
+              FROM CM_CODE_DTL S
+             WHERE S.TENANT_ID  = I_TENANT_ID
+               AND S.GROUP_CODE = 'PAYMENT_TERMS'   
+               AND S.CODE       = DTL.PAYTERMS_CODE
+           ) AS DB_PAYTERMS_CODE    -- 지불조건코드
+           
+          ,DTL.SUPPLIER_CODE
+          ,(SELECT S.SUPPLIER_CODE
+              FROM SP_SM_SUPPLIER_MST S
+             WHERE S.TENANT_ID       = I_TENANT_ID
+               AND S.SUPPLIER_CODE   = DTL.SUPPLIER_CODE
+           ) AS DB_SUPPLIER_CODE    -- 공급업체코드
+          ,DTL.EFFECTIVE_START_DATE -- YYYYMMDD
+          ,DTL.EFFECTIVE_END_DATE   -- YYYYMMDD
+          ,DTL.NET_PRICE
+          ,DTL.CURRENCY_CODE
+          ,(SELECT S.CURRENCY_CODE
+              FROM CM_CURRENCY S
+             WHERE S.TENANT_ID       = I_TENANT_ID
+               AND S.CURRENCY_CODE   = DTL.CURRENCY_CODE
+               AND S.USE_FLAG        = true
+           ) AS DB_CURRENCY_CODE    -- 공급업체코드
+          
+          ,DTL.VENDOR_POOL_CODE
+          ,(SELECT S.VENDOR_POOL_CODE
+              FROM PG_VP_VENDOR_POOL_MST S
+             WHERE S.TENANT_ID       = I_TENANT_ID
+            /* AND org_code   ::  일단 무시 Vendor Pool에서 Org의 의미 확인 필요 */
+               AND S.VENDOR_POOL_CODE   = DTL.VENDOR_POOL_CODE
+           ) AS DB_VENDOR_POOL_CODE    -- 협력사풀코드
+          
+          ,DTL.MARKET_CODE
+          ,(SELECT S.CODE
+              FROM CM_CODE_DTL S
+             WHERE S.TENANT_ID  = I_TENANT_ID
+               AND S.GROUP_CODE = 'DP_VI_MARKET_CODE'   
+               AND S.CODE       = DTL.MARKET_CODE
+           ) AS DB_MARKET_CODE      -- 납선코드
+          
+          ,DTL.NET_PRICE_APPROVAL_REASON_CODE AS APPROVAL_REASON_CODE
+          ,(SELECT S.CODE
+              FROM CM_CODE_DTL S
+             WHERE S.TENANT_ID  = I_TENANT_ID
+               AND S.GROUP_CODE = 'SP_NET_PRICE_REASON_CODE'   
+               AND S.CODE       = DTL.NET_PRICE_APPROVAL_REASON_CODE
+           ) AS DB_APPROVAL_REASON_CODE      -- 단가품의사유코드
+           
+          ,DTL.NET_PRICE_TYPE_CODE
+          ,(SELECT S.CODE
+              FROM CM_CODE_DTL S
+             WHERE S.TENANT_ID  = I_TENANT_ID
+               AND S.GROUP_CODE = 'SP_NET_PRICE_TYPE'   
+               AND S.CODE       = DTL.NET_PRICE_TYPE_CODE
+           ) AS DB_NET_PRICE_TYPE_CODE      -- 단가유형코드
+           
+          ,DTL.MAKER_CODE
+          ,(SELECT S.MAKER_CODE
+              FROM SP_SM_MAKER_CAL_VIEW S
+             WHERE S.TENANT_ID       = I_TENANT_ID
+            /* AND org_code   ::  일단 무시 Vendor Pool에서 Org의 의미 확인 필요 */
+               AND S.MAKER_CODE   = DTL.MAKER_CODE
+           ) AS DB_MAKER_CODE    -- 협력사풀코드
+          
+          ,DTL.INCOTERMS
+          ,(SELECT S.CODE
+              FROM CM_CODE_DTL S
+             WHERE S.TENANT_ID  = I_TENANT_ID
+               AND S.GROUP_CODE = 'OP_INCOTERMS'   
+               AND S.CODE       = DTL.INCOTERMS
+           ) AS DB_INCOTERMS      -- 단가유형코드
+      
+      FROM :I_DETAILS   DTL
+     WHERE DTL._ROW_STATE_     in ('C','U') /* 신규 및 수정 만 체크 */
+    ;
+
+
+
     DECLARE V_APPROVAL_NUMBER NVARCHAR(20) = I_APPROVAL_NUMBER;
     DECLARE V_CURRENT_STATUS_CODE           NVARCHAR(30);
 
@@ -76,19 +166,6 @@ BEGIN
     DECLARE V_NET_PRICE_DOCUMENT_TYPE_CODE  NVARCHAR(30);
     DECLARE V_NET_PRICE_SOURCE_CODE         NVARCHAR(30);
     DECLARE V_OUTCOME_CODE                  NVARCHAR(30);
-
-
-    DECLARE V_MATERIAL_CODE_EMPTY_CNT       INTEGER;
-    DECLARE V_MATERIAL_CODE_INVAILD         INTEGER;
-    DECLARE V_PAYTERMS_CODE_INVAILD         INTEGER;
-    DECLARE V_SUPPLIER_CODE_INVAILD         INTEGER;
-    DECLARE V_CURRENCY_CODE_INVAILD         INTEGER;
-    DECLARE V_VENDOR_POOL_CODE_INVAILD      INTEGER;
-    DECLARE V_MARKET_CODE_INVAILD           INTEGER;
-    DECLARE V_APPROVAL_REASON_CODE_INVAILD  INTEGER;
-    DECLARE V_NET_PRICE_TYPE_CODE_INVAILD   INTEGER;
-    DECLARE V_MAKER_CODE_INVAILD            INTEGER;
-    DECLARE V_INCOTERMS_INVAILD             INTEGER;
 
 
     /*******************************************************************************
@@ -253,183 +330,122 @@ BEGIN
     END IF;
 
 
+
+
+
+
     /* 입력값 유효성 체크(Detail) */
-    BEGIN
-        /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            O_RETURN_MSG  = '단가품의 상세(일반) 데이터 체크 중 오류 발생';
-            SIGNAL V_USER_EXCEPTION SET MESSAGE_TEXT = ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE;
-        END;
-
-        SELECT COUNT(CASE WHEN MATERIAL_CODE        IS NULL                                         THEN 1 END) AS MATERIAL_CODE_EMPTY_CNT
-              ,COUNT(CASE WHEN                                      DB_MATERIAL_CODE        IS NULL THEN 1 END) AS MATERIAL_CODE_INVAILD
-              ,COUNT(CASE WHEN PAYTERMS_CODE        IS NOT NULL AND DB_PAYTERMS_CODE        IS NULL THEN 1 END) AS PAYTERMS_CODE_INVAILD
-              ,COUNT(CASE WHEN SUPPLIER_CODE        IS NOT NULL AND DB_SUPPLIER_CODE        IS NULL THEN 1 END) AS SUPPLIER_CODE_INVAILD
-              ,COUNT(CASE WHEN CURRENCY_CODE        IS NOT NULL AND DB_CURRENCY_CODE        IS NULL THEN 1 END) AS CURRENCY_CODE_INVAILD
-              ,COUNT(CASE WHEN VENDOR_POOL_CODE     IS NOT NULL AND DB_VENDOR_POOL_CODE     IS NULL THEN 1 END) AS VENDOR_POOL_CODE_INVAILD
-              ,COUNT(CASE WHEN MARKET_CODE          IS NOT NULL AND DB_MARKET_CODE          IS NULL THEN 1 END) AS MARKET_CODE_INVAILD
-              ,COUNT(CASE WHEN APPROVAL_REASON_CODE IS NOT NULL AND DB_APPROVAL_REASON_CODE IS NULL THEN 1 END) AS APPROVAL_REASON_CODE_INVAILD
-              ,COUNT(CASE WHEN NET_PRICE_TYPE_CODE  IS NOT NULL AND DB_NET_PRICE_TYPE_CODE  IS NULL THEN 1 END) AS NET_PRICE_TYPE_CODE_INVAILD
-              ,COUNT(CASE WHEN MAKER_CODE           IS NOT NULL AND DB_MAKER_CODE           IS NULL THEN 1 END) AS MAKER_CODE_INVAILD
-              ,COUNT(CASE WHEN INCOTERMS            IS NOT NULL AND DB_INCOTERMS            IS NULL THEN 1 END) AS INCOTERMS_INVAILD
-
-          INTO V_MATERIAL_CODE_EMPTY_CNT
-              ,V_MATERIAL_CODE_INVAILD
-              ,V_PAYTERMS_CODE_INVAILD
-              ,V_SUPPLIER_CODE_INVAILD
-              ,V_CURRENCY_CODE_INVAILD
-              ,V_VENDOR_POOL_CODE_INVAILD
-              ,V_MARKET_CODE_INVAILD
-              ,V_APPROVAL_REASON_CODE_INVAILD
-              ,V_NET_PRICE_TYPE_CODE_INVAILD
-              ,V_MAKER_CODE_INVAILD
-              ,V_INCOTERMS_INVAILD
-          FROM (
-                SELECT
-                       DTL.ORG_CODE
-                      ,DTL.MATERIAL_CODE
-                      ,(SELECT S.MATERIAL_CODE
-                          FROM DP_MM_MATERIAL_MST S
-                         WHERE S.TENANT_ID       = I_TENANT_ID
-                           AND S.MATERIAL_CODE   = DTL.MATERIAL_CODE
-                       ) AS DB_MATERIAL_CODE
-                       
-                      ,DTL.PAYTERMS_CODE
-                      ,(SELECT S.CODE
-                          FROM CM_CODE_DTL S
-                         WHERE S.TENANT_ID  = I_TENANT_ID
-                           AND S.GROUP_CODE = 'PAYMENT_TERMS'   
-                           AND S.CODE       = DTL.PAYTERMS_CODE
-                       ) AS DB_PAYTERMS_CODE    -- 지불조건코드
-                       
-                      ,DTL.SUPPLIER_CODE
-                      ,(SELECT S.SUPPLIER_CODE
-                          FROM SP_SM_SUPPLIER_MST S
-                         WHERE S.TENANT_ID       = I_TENANT_ID
-                           AND S.SUPPLIER_CODE   = DTL.SUPPLIER_CODE
-                       ) AS DB_SUPPLIER_CODE    -- 공급업체코드
-                       
-                     , DTL.EFFECTIVE_START_DATE -- YYYYMMDD
-                     , DTL.EFFECTIVE_END_DATE   -- YYYYMMDD
-                     
-                     ,DTL.CURRENCY_CODE
-                     , (SELECT S.CURRENCY_CODE
-                          FROM CM_CURRENCY S
-                         WHERE S.TENANT_ID       = I_TENANT_ID
-                           AND S.CURRENCY_CODE   = DTL.CURRENCY_CODE
-                           AND S.USE_FLAG        = true
-                       ) AS DB_CURRENCY_CODE    -- 공급업체코드
-                      
-                      ,DTL.VENDOR_POOL_CODE
-                      ,(SELECT S.VENDOR_POOL_CODE
-                          FROM PG_VP_VENDOR_POOL_MST S
-                         WHERE S.TENANT_ID       = I_TENANT_ID
-                        /* AND org_code   ::  일단 무시 Vendor Pool에서 Org의 의미 확인 필요 */
-                           AND S.VENDOR_POOL_CODE   = DTL.VENDOR_POOL_CODE
-                       ) AS DB_VENDOR_POOL_CODE    -- 협력사풀코드
-                      
-                      ,DTL.MARKET_CODE
-                      ,(SELECT S.CODE
-                          FROM CM_CODE_DTL S
-                         WHERE S.TENANT_ID  = I_TENANT_ID
-                           AND S.GROUP_CODE = 'DP_VI_MARKET_CODE'   
-                           AND S.CODE       = DTL.MARKET_CODE
-                       ) AS DB_MARKET_CODE      -- 납선코드
-                      
-                      ,DTL.NET_PRICE_APPROVAL_REASON_CODE AS APPROVAL_REASON_CODE
-                      ,(SELECT S.CODE
-                          FROM CM_CODE_DTL S
-                         WHERE S.TENANT_ID  = I_TENANT_ID
-                           AND S.GROUP_CODE = 'SP_NET_PRICE_REASON_CODE'   
-                           AND S.CODE       = DTL.NET_PRICE_APPROVAL_REASON_CODE
-                       ) AS DB_APPROVAL_REASON_CODE      -- 단가품의사유코드
-                       
-                      ,DTL.NET_PRICE_TYPE_CODE
-                      ,(SELECT S.CODE
-                          FROM CM_CODE_DTL S
-                         WHERE S.TENANT_ID  = I_TENANT_ID
-                           AND S.GROUP_CODE = 'SP_NET_PRICE_TYPE'   
-                           AND S.CODE       = DTL.NET_PRICE_TYPE_CODE
-                       ) AS DB_NET_PRICE_TYPE_CODE      -- 단가유형코드
-                       
-                      ,DTL.MAKER_CODE
-                      ,(SELECT S.MAKER_CODE
-                          FROM SP_SM_MAKER_CAL_VIEW S
-                         WHERE S.TENANT_ID       = I_TENANT_ID
-                        /* AND org_code   ::  일단 무시 Vendor Pool에서 Org의 의미 확인 필요 */
-                           AND S.MAKER_CODE   = DTL.MAKER_CODE
-                       ) AS DB_MAKER_CODE    -- 협력사풀코드
-                      
-                      ,DTL.INCOTERMS
-                      ,(SELECT S.CODE
-                          FROM CM_CODE_DTL S
-                         WHERE S.TENANT_ID  = I_TENANT_ID
-                           AND S.GROUP_CODE = 'OP_INCOTERMS'   
-                           AND S.CODE       = DTL.INCOTERMS
-                       ) AS DB_INCOTERMS      -- 단가유형코드
-                  
-                  FROM :I_DETAILS   DTL
-                 WHERE DTL._ROW_STATE_     in ('C','U') /* 신규 및 수정 만 체크 */
-               );
-
-    END;
-
-    -- Material 코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    IF V_MATERIAL_CODE_EMPTY_CNT > 0 THEN
-        O_RETURN_MSG  = 'Material Code는 필수 입니다.';
-        SIGNAL V_USER_EXCEPTION;
-
-    -- Material 코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_MATERIAL_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Material Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
-
-    -- Payterms코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_PAYTERMS_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Payterms Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
-
-    -- Supplier코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_SUPPLIER_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Supplier Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
+    FOR c_item as c_Details DO
     
-    -- Currency코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_CURRENCY_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 환율 코드 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
+        -- Material Code
+        IF c_item.MATERIAL_CODE IS NULL OR TRIM(c_item.MATERIAL_CODE) = '' THEN
+            O_RETURN_MSG  = 'Material Code는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
     
-    -- Vendor Pool코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_VENDOR_POOL_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Vendor Pool Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
+        ELSEIF c_item.DB_MATERIAL_CODE IS NULL OR TRIM(c_item.DB_MATERIAL_CODE) = '' THEN
+            O_RETURN_MSG  = '유효하지 않은 Material Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
     
-    -- Market코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_MARKET_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Market Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
-    
-    -- Net Price Approval Reason코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_APPROVAL_REASON_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Net Price Approval Reason Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
-    
-    -- Net Price Type 코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_NET_PRICE_TYPE_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Net Price Type Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
-    
-    -- Maker코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_MAKER_CODE_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Maker Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
-    
-    -- Incoterms코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
-    ELSEIF V_INCOTERMS_INVAILD > 0 THEN
-        O_RETURN_MSG  = '유효하지 않은 Incoterms Code 가 존재합니다.';
-        SIGNAL V_USER_EXCEPTION;
-    END IF;
+
+        -- Payterms Code
+        ELSEIF c_item.PAYTERMS_CODE IS NOT NULL AND TRIM(c_item.PAYTERMS_CODE) != '' AND (c_item.DB_PAYTERMS_CODE IS NULL OR TRIM(c_item.DB_PAYTERMS_CODE) = '') THEN
+            O_RETURN_MSG  = '유효하지 않은 Payterms Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+
+        -- Supplier Code
+        ELSEIF c_item.SUPPLIER_CODE IS NULL OR TRIM(c_item.SUPPLIER_CODE) = '' THEN
+            O_RETURN_MSG  = 'Supplier Code는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+        ELSEIF c_item.DB_SUPPLIER_CODE IS NULL OR TRIM(c_item.DB_SUPPLIER_CODE) = '' THEN
+            O_RETURN_MSG  = '유효하지 않은  가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+        
+            
+        -- 유효시작일자
+        ELSEIF c_item.EFFECTIVE_START_DATE IS NULL OR TRIM(c_item.EFFECTIVE_START_DATE) = '' THEN
+            O_RETURN_MSG  = '유효시작일자는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+
+        -- 유효종료일자
+        ELSEIF c_item.EFFECTIVE_END_DATE IS NULL OR TRIM(c_item.EFFECTIVE_END_DATE) = '' THEN
+            O_RETURN_MSG  = '유효종료일자는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+
+        -- 환율 코드
+        ELSEIF c_item.NET_PRICE IS NULL THEN
+            O_RETURN_MSG  = '단가는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+
+        -- 환율 코드
+        ELSEIF c_item.CURRENCY_CODE IS NULL OR TRIM(c_item.CURRENCY_CODE) = '' THEN
+            O_RETURN_MSG  = '환율 코드는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+        ELSEIF c_item.DB_CURRENCY_CODE IS NULL OR TRIM(c_item.DB_CURRENCY_CODE) = '' THEN
+            O_RETURN_MSG  = '유효하지 않은 환율 코드 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+
+        -- Vendor Pool Code
+        ELSEIF c_item.VENDOR_POOL_CODE IS NOT NULL AND TRIM(c_item.VENDOR_POOL_CODE) != '' AND (c_item.DB_VENDOR_POOL_CODE IS NULL OR TRIM(c_item.DB_VENDOR_POOL_CODE) = '') THEN
+            O_RETURN_MSG  = '유효하지 않은 Vendor Pool Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+        /*
+        ELSEIF c_item.VENDOR_POOL_CODE IS NULL OR TRIM(c_item.VENDOR_POOL_CODE) = '' THEN
+            O_RETURN_MSG  = 'Vendor Pool Code는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+        
+        ELSEIF c_item.DB_VENDOR_POOL_CODE IS NULL OR TRIM(c_item.DB_VENDOR_POOL_CODE) = '' THEN
+            O_RETURN_MSG  = '유효하지 않은 Vendor Pool Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+        */
+
+        -- Market Code (납선코드)
+        ELSEIF c_item.MARKET_CODE IS NULL OR TRIM(c_item.MARKET_CODE) = '' THEN
+            O_RETURN_MSG  = 'Market Code는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+        
+        ELSEIF c_item.DB_MARKET_CODE IS NULL OR TRIM(c_item.DB_MARKET_CODE) = '' THEN
+            O_RETURN_MSG  = '유효하지 않은 Market Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+
+        -- Net Price Approval Reason Code
+        ELSEIF c_item.APPROVAL_REASON_CODE IS NOT NULL AND TRIM(c_item.APPROVAL_REASON_CODE) != '' AND (c_item.DB_APPROVAL_REASON_CODE IS NULL OR TRIM(c_item.DB_APPROVAL_REASON_CODE) = '') THEN
+            O_RETURN_MSG  = '유효하지 않은 Net Price Approval Reason Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+        /*
+        -- Net Price Type Code
+        ELSEIF c_item.NET_PRICE_TYPE_CODE IS NULL OR TRIM(c_item.NET_PRICE_TYPE_CODE) = '' THEN
+            O_RETURN_MSG  = 'Net Price Type Code는 필수 입니다.';
+            SIGNAL V_USER_EXCEPTION;
+        
+        ELSEIF c_item.DB_NET_PRICE_TYPE_CODE IS NULL OR TRIM(c_item.DB_NET_PRICE_TYPE_CODE) = '' THEN
+            O_RETURN_MSG  = '유효하지 않은 Net Price Type Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+        */
+
+        -- Maker Code
+        ELSEIF c_item.MAKER_CODE IS NOT NULL AND TRIM(c_item.MAKER_CODE) != '' AND (c_item.DB_MAKER_CODE IS NULL OR TRIM(c_item.DB_MAKER_CODE) = '') THEN
+            O_RETURN_MSG  = '유효하지 않은 Maker Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+
+        -- Maker Code
+        ELSEIF c_item.INCOTERMS IS NOT NULL AND TRIM(c_item.INCOTERMS) != '' AND (c_item.DB_INCOTERMS IS NULL OR TRIM(c_item.DB_INCOTERMS) = '') THEN
+            O_RETURN_MSG  = '유효하지 않은 Incoterms Code 가 존재합니다.';
+            SIGNAL V_USER_EXCEPTION;
+
+        END IF;
+
+    END FOR;
+
 
 
     /* Approval Number가 없으면, Master 신규 등록 */
@@ -449,7 +465,6 @@ BEGIN
              WHERE TENANT_ID          = :I_TENANT_ID
                AND APPROVAL_NUMBER LIKE 'N' || TO_CHAR(NOW(), 'YYYYMMDD') || '%'
             ;
-
         END;
         
         BEGIN

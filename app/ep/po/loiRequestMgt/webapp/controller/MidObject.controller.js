@@ -933,7 +933,7 @@ sap.ui.define([
 
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
-            this.byId("pageNavBackButton").setEnabled(false);
+            //this.byId("pageNavBackButton").setEnabled(false);
             this.byId("pageSaveButton").setVisible(true);
             this.byId("pageByPassButton").setVisible(true);
             this.byId("pageRequestButton").setVisible(true);
@@ -998,7 +998,7 @@ sap.ui.define([
                 this.byId("pageRequestButton").setVisible(false);
             }
             //this.byId("pageDeleteButton").setEnabled(true);
-            this.byId("pageNavBackButton").setEnabled(true);
+            //this.byId("pageNavBackButton").setEnabled(true);
 
             // this.byId("pageSaveButton").setVisible(false);
             // this.byId("pageByPassButton").setVisible(false);
@@ -1237,6 +1237,10 @@ sap.ui.define([
 
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/buyer_name", oEvent.getParameter("item").user_local_name);
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/buyer_empno", oEvent.getParameter("item").employee_number);
+
+            if (!oDetailsModel.getProperty("/LOIRequestDetailView/" + rowIndex + "/_row_state_")) {
+                oDetailsModel.setProperty("/LOIRequestDetailView/" + rowIndex + "/_row_state_", "U");
+            }
                
         },
 
@@ -1260,6 +1264,9 @@ sap.ui.define([
 
         onPlantDialogApplyPress: function(oEvent){
 
+            //var oDetailsItem = oEvent.getSource().getParent().getItems();
+            //console.log("oDetailsItem----------------->" , oEvent.getSource()); 
+            
             //this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
             //var sDepNo = oEvent.getParameter("item").plant_code;
             var oDetailsModel = this.getModel("details");
@@ -1268,6 +1275,12 @@ sap.ui.define([
 
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/plant_name", oEvent.getParameter("item").plant_name);
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/plant_code", oEvent.getParameter("item").plant_code);
+
+            if (!oDetailsModel.getProperty("/LOIRequestDetailView/" + rowIndex + "/_row_state_")) {
+                oDetailsModel.setProperty("/LOIRequestDetailView/" + rowIndex + "/_row_state_", "U");
+            }
+
+            //oDetailsModel.destroy();
                
         },
 
@@ -1295,6 +1308,12 @@ sap.ui.define([
 
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/supplier_name", oEvent.getParameter("item").supplier_local_name);
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/supplier_code", oEvent.getParameter("item").supplier_code);
+
+            if (!oDetailsModel.getProperty("/LOIRequestDetailView/" + rowIndex + "/_row_state_")) {
+                oDetailsModel.setProperty("/LOIRequestDetailView/" + rowIndex + "/_row_state_", "U");
+            }
+
+            
         },
 
 

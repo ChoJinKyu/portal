@@ -69,6 +69,11 @@ sap.ui.define([
             this.getView().byId("searchPoDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
 
+        onStatusColor: function (statusColor) {
+            if (!statusColor) return 1;
+            return parseInt(statusColor);
+        },
+
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();

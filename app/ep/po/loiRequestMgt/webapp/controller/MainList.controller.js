@@ -89,6 +89,11 @@ sap.ui.define([
             this._applySearch(aSearchFilters);
         },
 
+        onStatusColor: function (statusColor) {
+            if (!statusColor) return 1;
+            return parseInt(statusColor);
+        },
+
         onTableItemPress: function (oEvent) {
 
             // console.log("oEvent.getSource=", oEvent.getSource());

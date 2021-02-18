@@ -286,7 +286,7 @@
                     <Text text="{= ${list>declare_target_flag} === true ? 'Y' : 'N'}"/> 
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainForexDeclareStatusName" width="6rem" hAlign="Center">
+                <t:Column id="mainForexDeclareStatusName" width="8rem" hAlign="Center">
                 <Label text="진행상태" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>forex_declare_status_name}"/>

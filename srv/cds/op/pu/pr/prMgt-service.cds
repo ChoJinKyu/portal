@@ -156,6 +156,7 @@ service PrMgtService {
                 IFNULL( ( Select material_group_name 
                     From materialGroup
                     Where  tenant_id = prDtl.tenant_id 
+                       And language_code = 'KO'
                        And material_group_code = IFNULL( prDtl.material_group_code, '') ), '' ) as material_group_name : String(100),
 
 

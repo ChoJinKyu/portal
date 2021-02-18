@@ -25,6 +25,7 @@ entity Li_Request_List_View {
         requestor_name             : String(50)             @title : '요청자명';
         request_department_code    : String(50)             @title : '요청부서코드';
         request_department_name    : String(50)             @title : '요청부서명';
+        color_type_code             : String(30)            @title : 'LOI선정상태컬러';
         
 
 

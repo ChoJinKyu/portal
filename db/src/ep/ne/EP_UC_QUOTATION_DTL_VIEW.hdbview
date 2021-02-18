@@ -32,7 +32,6 @@ select
         from ep_uc_quotation_extra as ext
         where ext.tenant_id = dtl.tenant_id
         and ext.company_code = dtl.company_code
-        --and ext.net_price_contract_document_no = dtl.net_price_contract_document_no
         and ext.net_price_contract_degree = dtl.net_price_contract_degree
         and ext.const_quotation_item_number = dtl.const_quotation_item_number
         and ext.const_quotation_number = dtl.const_quotation_number

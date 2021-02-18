@@ -8,7 +8,6 @@
     <Dialog id="dialogContractItem" class="sapUiSmallMargin" title="단가계약품목" contentWidth="100%"  contentHeight="630px" afterClose="dialogContractItemAfterclose">
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm id="popSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2" Height="350px">
-<!-- selectedKey="{contModel>/tenant_id}" -->
                     <form:content>
                         <VBox>
                             <Label
@@ -179,7 +178,7 @@
                                             }"/>
                                 </t:template>
                                 </t:Column>  
-                                <t:Column id="popNetPriceContractTitle" width="20rem" hAlign="Center">
+                                <t:Column id="popNetPriceContractTitle" width="20rem" hAlign="Left">
                                 <Label text="계약명" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>net_price_contract_title}"/>
@@ -277,7 +276,7 @@
                                             }"/>
                                 </t:template>
                                 </t:Column>  
-                                <t:Column id="popNetPriceContractTitle2" width="20rem" hAlign="Center">
+                                <t:Column id="popNetPriceContractTitle2" width="20rem" hAlign="Left">
                                 <Label text="계약명" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{viewModel>net_price_contract_title}"/>

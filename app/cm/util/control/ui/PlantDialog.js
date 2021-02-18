@@ -18,10 +18,10 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "plant_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "plant_name" },
-                items: { type: "sap.ui.core.Control"}
+                textField: { type: "string", group: "Misc", defaultValue: "plant_name" }
             }
         },
         
@@ -59,30 +59,69 @@ sap.ui.define([
             ];
         },
 
+        extractBindingInfo(oValue, oScope){
+            if(oValue && (oValue.filters || oValue.sorters)){
+                var oParam = jQuery.extend(true, {}, oValue);
+                this.oFilters = oValue.filters || [];
+                this.oSorters = oValue.sorters || [];
+            }else{
+                return Parent.prototype.extractBindingInfo.call(this, oValue, oScope);
+            }
+        },
+
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                aFilters = this.getProperty("items").filters || [],
-                aSorters = this.getProperty("items").sorters || [];
+                aFilters = this.oFilters || [],
+                aSorters = this.oSorters || [];
+
             if(sKeyword){
                 aFilters.push(
                     new Filter({
                         filters: [
-                            new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
-                            new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
+                            new Filter({
+                                path: this.getProperty("keyField"),
+                                operator: FilterOperator.Contains,
+                                value1: sKeyword,
+                                caseSensitive: false
+                            }),
+                            new Filter({
+                                path: this.getProperty("textField"),
+                                operator: FilterOperator.Contains,
+                                value1: sKeyword,
+                                caseSensitive: false
+                            })
                         ],
                         and: false
                     })
                 );
+                this.sKeywordFlag = true;
+            }else{
+                this.sKeywordFlag = false;
             }
             ODataV2ServiceProvider.getService("cm.util.OrgService").read("/Plant", {
                 
+                fetchOthers: true,
                 filters: aFilters,
                 sorters: aSorters,
                 success: function(oData){
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
+                }.bind(this),
+                fetchOthersSuccess: function(aDatas){
+                    var aDialogData = this.oDialog.getData();
+                    aDatas.forEach(function(oData){
+                        aDialogData = aDialogData.concat(oData.results);
+                    }.bind(this));
+                    this.oDialog.setData(aDialogData);
+                    this.oDialog.setBusy(false);
                 }.bind(this)
             });
+            if(this.sKeywordFlag === true){
+                aFilters.length = aFilters.length -1;
+            }
+        },
+
+        beforeOpen: function(){
         }
 
     });

@@ -361,9 +361,10 @@
                                 <t:template>
                                     <!-- <Text text="{viewModel>extra_rate}"/> -->
                                     <HBox justifyContent="Center">
-                                        <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event,true)" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" visible="{=!${midObjectViewModel>/isShowMode}}"/>                
-                                        <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event,false)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" visible="{midObjectViewModel>/isShowMode}"/>               
+                                        <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" visible="{=!${midObjectViewModel>/isShowMode}}"/>                
+                                        <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" visible="{midObjectViewModel>/isShowMode}"/>               
                                     </HBox>
+                                    <!-- <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" />        -->
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainMaterialNetPrice" width="8rem" hAlign="Right">

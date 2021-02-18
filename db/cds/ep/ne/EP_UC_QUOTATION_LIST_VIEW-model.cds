@@ -39,6 +39,7 @@ entity Uc_Quotation_List_View {
         facility_department_code   : String(50)             @title : '시설부서코드'; 
         completion_attch_group_number   : String(50)        @title : '준공첨부파일그룹번호'; 
         delivery_request_date      : Date                   @title : '납품요청일자';
+        color_type_code             : String(30)            @title : '선정상태컬러';
 
 
 }

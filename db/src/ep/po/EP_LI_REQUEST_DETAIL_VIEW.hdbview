@@ -26,14 +26,21 @@ select
       and vd.loi_item_number  = dtl.loi_item_number
     group by vd.tenant_id,vd.company_code,vd.loi_write_number,vd.loi_item_number
     ) as supplier_code,
-    (select STRING_AGG(vd.supplier_code,','ORDER BY vd.supplier_code DESC) AS result 
-        from ep_li_supplier as vd
-    where vd.tenant_id        = dtl.tenant_id
-      and vd.company_code     = dtl.company_code
-      and vd.loi_write_number = dtl.loi_write_number
-      and vd.loi_item_number  = dtl.loi_item_number
-    group by vd.tenant_id,vd.company_code,vd.loi_write_number,vd.loi_item_number
-    ) as supplier_name,
+    (
+	select  supplier_name
+	from (
+		select vd.tenant_id, vd.company_code, vd.loi_write_number, vd.loi_item_number, STRING_AGG(supm.supplier_local_name,',') as supplier_name
+		from ep_li_supplier as vd
+		left outer join sp_sm_supplier_mst as supm
+		on vd.tenant_id = supm.tenant_id 
+		and vd.supplier_code = supm.supplier_code 
+		group by vd.tenant_id,vd.company_code,vd.loi_write_number,vd.loi_item_number    
+	) as vd
+	where  vd.tenant_id        = dtl.tenant_id
+	and vd.company_code     = dtl.company_code
+	and vd.loi_write_number = dtl.loi_write_number
+	and vd.loi_item_number  = dtl.loi_item_number
+	) as supplier_name,
     dtl.buyer_empno,
     (select cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) from dummy) as buyer_name,
     dtl.purchasing_department_code,

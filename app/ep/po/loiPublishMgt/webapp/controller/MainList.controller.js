@@ -634,11 +634,11 @@ sap.ui.define([
                         1번 로직
                         견적번호가 없으면 링크불가
                     */
-                    if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
-                        //MessageToast.show("견적번호가 없습니다.");
-                        existRfq = false;
-                        return false;
-                    }
+                    // if (oModel.getData().LOIPublishItemView[chkIdx].quotation_number == 0) {
+                    //     //MessageToast.show("견적번호가 없습니다.");
+                    //     existRfq = false;
+                    //     return false;
+                    // }
 
                     sQuotationNumber += oModel.getData().LOIPublishItemView[chkIdx].quotation_number + (oSelected.length == index + 1 ? "" : ",");
                     sQuotationItemNumber += oModel.getData().LOIPublishItemView[chkIdx].quotation_item_number + (oSelected.length == index + 1 ? "" : ",");
@@ -662,7 +662,7 @@ sap.ui.define([
 
                     //LOI번호 동일체크
                     var loiNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_number;
-                    // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
+                    console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
                     if (index > 0 && !loiNumberArr.includes(loiNumber)) {
                         MessageToast.show("LOI번호가 동일하지 않습니다.");
                         canSelect = false;
@@ -691,11 +691,11 @@ sap.ui.define([
                 sLoiSelectionNumber = "new";
             }
 
-            if (!sQuotationNumber) {
+            if (!sQuotationNumber || sQuotationNumber == 0) {
                 sQuotationNumber = "new";
             }
 
-            if (!sQuotationItemNumber) {
+            if (!sQuotationItemNumber || sQuotationItemNumber == 0) {
                 sQuotationItemNumber = "new";
             }
 

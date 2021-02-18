@@ -168,7 +168,7 @@
             <t:rowSettingsTemplate>
             </t:rowSettingsTemplate>
             <t:columns>
-                <t:Column id="mainLoiNumber" width="10rem">
+                <t:Column id="mainLoiNumber" width="10rem"  hAlign="Center">
                 <Label text="LOI번호" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>loi_number}"/>
@@ -205,7 +205,7 @@
                 <t:Column id="mainLoiRequestStatusCode" width="10rem"  hAlign="Center">
                 <Label text="진행상태" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{listModel>loi_request_status_name}"/>
+                    <!-- <Text text="{listModel>loi_request_status_name}"/> -->
                         <tnt:InfoLabel 
                             text="{listModel>loi_request_status_name}" 
                             colorScheme="{
@@ -213,6 +213,13 @@
                                 formatter: '.onStatusColor'
                             }" 
                             />
+                        <!-- <tnt:InfoLabel 
+                        text="{list>loi_selection_status_name}" 
+                        visible="{= ${list>loi_selection_status_code} === '' ? false : true }"
+                        colorScheme="{
+                                path: 'list>loi_selection_status_color',
+                                formatter: '.onStatusColor'
+                            }" />    -->
                 </t:template>
                 </t:Column>
                 <t:Column id="mainBuyerEmpno" width="6rem">
@@ -221,7 +228,7 @@
                     <Text text="{listModel>buyer_name}"/>
                 </t:template>
                 </t:Column>    
-                <t:Column id="mainPublishDate" width="8rem">
+                <t:Column id="mainPublishDate" width="8rem"  hAlign="Center">
                 <Label text="발행일자" textAlign="Center" width="100%"/>
                 <t:template>
                      <Text text="{

@@ -186,7 +186,7 @@
                     <Text text="{viewModel>supplier_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainUcConstStartDate" width="10rem" hAlign="Center">
+                <t:Column id="mainUcConstStartDate" width="8rem" hAlign="Center">
                 <Label text="공사시작일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -195,7 +195,7 @@
                             }"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="mainUcConstEndDate" width="10rem" hAlign="Center">
+                <t:Column id="mainUcConstEndDate" width="8rem" hAlign="Center">
                 <Label text="공사종료일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -204,7 +204,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainUcQuotationStatusCode" width="12rem" hAlign="Center">
+                <t:Column id="mainUcQuotationStatusCode" width="10rem" hAlign="Center">
                 <Label text="진행상태" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>quotation_status_name}"/>
@@ -217,19 +217,19 @@
                             />
                 </t:template>
                 </t:Column>              
-                <t:Column id="mainUcPrNumber" width="12rem">
+                <t:Column id="mainUcPrNumber" width="8rem" hAlign="Center">
                 <Label text="PR번호" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>pr_number}"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="mainUcConstPersonEmpno" width="12rem">
+                <t:Column id="mainUcConstPersonEmpno" width="6rem">
                 <Label text="물량검토자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>const_person_name}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainUcBuyerEmpno" width="12rem">
+                <t:Column id="mainUcBuyerEmpno" width="6rem">
                 <Label text="구매담당자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>buyer_name}"/>

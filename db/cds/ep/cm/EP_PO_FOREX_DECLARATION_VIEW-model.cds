@@ -31,5 +31,6 @@ entity Po_Forex_Declaration_View {
         purchasing_department_code  : String(30)            @title : '구매담당부서코드';	
         purchasing_department_name  : String(240)           @title : '구매담당부서로컬명';        
         buyer_empno                 : String(50)            @title : '구매담당자사번';	
-        buyer_name                  : String(240)           @title : '구매담당자로컬명';	        
+        buyer_name                  : String(240)           @title : '구매담당자로컬명';	
+        color_type_code             : String(30)            @title : '선정상태컬러';        
 }

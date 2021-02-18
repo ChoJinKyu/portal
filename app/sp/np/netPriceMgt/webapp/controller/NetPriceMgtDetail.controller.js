@@ -301,18 +301,18 @@ sap.ui.define([
                             
                             
                             var generalInfoModel = that.getModel("generalInfoList");
-
                             if (!that.oSearchMultiMaterialMasterDialog) {
                                 that.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({
                                     title: "Choose Material Code",
                                     multiSelection: false,
-                                    companyCode: SppUserSessionUtil.getUserInfo().COMPANY_CODE,
+                                    companyCode: "LGCKR",
                                     purOrg: oRootModel.getProperty("/purOrg"),
                                     tenantId: "L2100"
                                 });
                                 that.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
                                     console.log("apply event!!!");
                                     //oViewModel.refresh();
+                                    generalInfoModel.setProperty(that.sPath + "/company_code", oEvent.mParameters.item.company_code);
                                     generalInfoModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
                                     generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
                                     generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);

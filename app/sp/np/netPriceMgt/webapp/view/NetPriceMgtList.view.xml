@@ -23,7 +23,7 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Company Name" labelFor="search_company_s" required="true"></Label>     
+                                <Label text="Company" labelFor="search_company_s" required="true"></Label>     
                                 <MultiComboBox id="search_company_s" width="100%" required="true" 
                                     items="{
                                                 path: 'org>/Org_Company',

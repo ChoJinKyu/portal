@@ -134,7 +134,8 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
             param.put("details_temp_table"  , detailTableName       );
             param.put("approvers_temp_table", approverTableName     );
             param.put("referers_temp_table" , refererTableName      );
-            param.put("user_id"             , userSession.getUserId());
+            //param.put("user_id"                , userSession.getUserId());
+            param.put("user_id"                , "00000"  );
             
             // Procedure Call
             Map<String, Object> resultMap = super.executeProcedure(APPROVAL_SAVE_PROCEDURE_LAYOUT, param);
@@ -159,7 +160,8 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
                 param2.put("tenant_id"              , master.getTenantId());
                 param2.put("approval_number"        , master.getApprovalNumber());
                 param2.put("approve_status_code"    , master.getApproveStatusCode());
-                param2.put("user_id"                , userSession.getUserId());
+                //param2.put("user_id"                , userSession.getUserId());
+                param2.put("user_id"                , "00000"  );
     
                 // Procedure Call
                 Map<String, Object> resultMap2 = super.executeProcedure(APPROVAL_STATUS_CHANGE_PROCEDURE_LAYOUT, param2);
@@ -222,7 +224,8 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
 
             Map<String,Object> param = new HashMap<String,Object>();
             param.putAll( vParam );
-            param.put("user_id"             , userSession.getUserId());
+            //param2.put("user_id"                , userSession.getUserId());
+            param.put("user_id"                , "00000"  );
 
             // Procedure Call
             Map<String, Object> resultMap = super.executeProcedure(APPROVAL_STATUS_CHANGE_PROCEDURE_LAYOUT, param);
@@ -292,7 +295,8 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
 
             Map<String,Object> param = new HashMap<String,Object>();
             param.putAll( vParam );
-            param.put("user_id"             , userSession.getUserId());
+            //param.put("user_id"                , userSession.getUserId());
+            param.put("user_id"                , "00000"  );
 
             // Procedure Call
             Map<String, Object> resultMap = super.executeProcedure(APPROVAL_DELETE_PROCEDURE_LAYOUT, param);

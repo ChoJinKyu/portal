@@ -73,6 +73,11 @@ sap.ui.define([
 
         },
 
+        onStatusColor: function (statusColor) {
+            if (!statusColor) return 1;
+            return parseInt(statusColor);
+        },
+
         /**
          * Search 버튼 클릭(Filter 추출)
          */

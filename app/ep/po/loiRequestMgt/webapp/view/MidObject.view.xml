@@ -32,19 +32,20 @@
 		showEditHeaderButton="true" 
 		showFooter="true">
        
-		 <uxap:headerTitle>
+        <uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="LOI 발행요청 상세" wrapping="true" />
-				</uxap:expandedHeading>
-				<uxap:snappedTitleOnMobile>
-					<Title text="품의정보" />
-				</uxap:snappedTitleOnMobile>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="LOI 발행요청 상세" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>            
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
-		</uxap:headerTitle>
+        </uxap:headerTitle>
+        
 
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" visible="true">
@@ -308,16 +309,10 @@
                                             <Input value="{details>plant_code}"
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                                 required="{=!${midObjectView>/isShowMode}}"
-                                               
                                                 showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress($event)">
                                             </Input>
-                                            <Text   text="{details>plant_code}"
-                                                    visible="{midObjectView>/isShowMode}"/>    
-                                             <!-- <Label  text="{details>plant_code}" design="Bold"
-                                                        visible="{midObjectView>/isShowMode}"
-                                                        textAlign="Right" 
-                                                        width="50px"                                                              
-                                                        class="sapUiLargeMarginEnd"/>                                                        -->
+                                            <!-- <Text text="{details>plant_code}" visible="false" />   -->
+                                            <Text text="{details>plant_code}" visible="{midObjectView>/isShowMode}"/>    
 
                                         </HBox>    
 
@@ -480,7 +475,7 @@
                                                 placeholder="{I18N>/OPTION}"
                                                 visible="{=!${midObjectView>/isShowMode}}"
                                             >
-                                            <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" />
+                                            <core:Item key="{currency_code}" text="{currency_code}" />
                                             </ComboBox>
                                         <Text   text="{details>currency_code}"
                                                 visible="{midObjectView>/isShowMode}"/>                                                          
@@ -570,27 +565,14 @@
 
                                     </HBox>  
 
-                                    <HBox justifyContent="Center">   
-                                        <!-- <Input value="{details>supplier_code}" 
-                                            visible="{=!${midObjectView>/isShowMode}}"
-                                            width="100%"/> -->
-
+                                    <HBox justifyContent="Left">   
                                         <MultiInput value="{details>supplier_name}" 
                                             id="multiinput_supplierwithorg_code" placeholder="{I18N>/SUPPLIER}"
                                             showValueHelp="true" valueHelpRequest=".onMultiInputSupplierWithOrgValuePress"
                                             visible="{=!${midObjectView>/isShowMode}}">
                                         </MultiInput>
-
-
-                                        <!-- <Input id="search_Sup" placeholder="Input data" 
-                                               showValueHelp="true" 
-                                               valueHelpOnly="false" 
-                                               valueHelpRequest=".vhSupplierCode"/> -->
-                                
-                                        <Text   text="{details>supplier_name}"
-                                                visible="{midObjectView>/isShowMode}"
-                                                />                                                          
-
+                                        <Text text="{details>supplier_code}" visible="false" />  
+                                        <Text text="{details>supplier_name}" visible="{midObjectView>/isShowMode}"/>                                                          
                                     </HBox>  
 
                                         

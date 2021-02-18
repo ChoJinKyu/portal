@@ -131,9 +131,9 @@ BEGIN
             SELECT COUNT(CASE WHEN ORG_CODE             IS NULL OR TRIM(ORG_CODE)             = '' THEN 1 END) AS ORG_CODE_INVAILD
                   ,COUNT(CASE WHEN MATERIAL_CODE        IS NULL OR TRIM(MATERIAL_CODE)        = '' THEN 1 END) AS MATERIAL_CODE_INVAILD
                   ,COUNT(CASE WHEN SUPPLIER_CODE        IS NULL OR TRIM(SUPPLIER_CODE)        = '' THEN 1 END) AS SUPPLIER_CODE_INVAILD
-                  ,COUNT(CASE WHEN EFFECTIVE_START_DATE IS NULL                                     THEN 1 END) AS EFFECTIVE_START_DATE_INVAILD
-                  ,COUNT(CASE WHEN EFFECTIVE_END_DATE   IS NULL                                     THEN 1 END) AS EFFECTIVE_END_DATE_INVAILD
-                  ,COUNT(CASE WHEN NET_PRICE            IS NULL                                     THEN 1 END) AS NET_PRICE_INVAILD
+                  ,COUNT(CASE WHEN EFFECTIVE_START_DATE IS NULL                                    THEN 1 END) AS EFFECTIVE_START_DATE_INVAILD
+                  ,COUNT(CASE WHEN EFFECTIVE_END_DATE   IS NULL                                    THEN 1 END) AS EFFECTIVE_END_DATE_INVAILD
+                  ,COUNT(CASE WHEN NET_PRICE            IS NULL                                    THEN 1 END) AS NET_PRICE_INVAILD
                   ,COUNT(CASE WHEN CURRENCY_CODE        IS NULL OR TRIM(CURRENCY_CODE)        = '' THEN 1 END) AS CURRENCY_CODE_INVAILD
                   ,COUNT(CASE WHEN VENDOR_POOL_CODE     IS NULL OR TRIM(VENDOR_POOL_CODE)     = '' THEN 1 END) AS VENDOR_POOL_CODE_INVAILD
                   ,COUNT(CASE WHEN MARKET_CODE          IS NULL OR TRIM(MARKET_CODE)          = '' THEN 1 END) AS MARKET_CODE_INVAILD
@@ -204,9 +204,11 @@ BEGIN
             O_RETURN_MSG  = '협력사풀코드가 누락된 건이 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
         */
+
         ELSEIF V_MARKET_CODE_INVAILD > 0 THEN
             O_RETURN_MSG  = '납선코드가 누락된 건이 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
+
         /*
         ELSEIF V_NET_PRICE_TYPE_CODE_INVAILD > 0 THEN
             O_RETURN_MSG  = '단가유형코드가 누락된 건이 존재합니다.';
