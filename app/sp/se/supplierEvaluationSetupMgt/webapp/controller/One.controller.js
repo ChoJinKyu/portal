@@ -10,10 +10,11 @@ sap.ui.define([
     "sap/ui/core/ValueState",
     "sap/ui/core/message/Message",
     "sap/ui/core/MessageType",
-    "sap/m/SegmentedButtonItem"
+    "sap/m/SegmentedButtonItem",
+    "sap/ui/model/Sorter"
 
 ], function (BaseController, History, MessageBox, MessageToast, Filter,JSONModel, 
-    Multilingual, Item, ValueState, Message, MessageType , SegmentedButtonItem
+    Multilingual, Item, ValueState, Message, MessageType , SegmentedButtonItem , Sorter
     ) {
     "use strict";
 
@@ -689,27 +690,27 @@ sap.ui.define([
         * @public
         **/            
         onQunAdd : function(oEvent){
-            var oView = this.getView().getModel("DetailView");            
-            var oModel = oView.getProperty("/quantitative");
+            var oModel = this.getView().getModel("DetailView");            
+            var oItem = oModel.getProperty("/quantitative");
 
-                oModel.push({
-                "tenant_id": this.tenant_id,
+                oItem.push({
+                    "tenant_id": this.tenant_id,
                     "company_code": this.company_code,
                     "org_type_code":  this.org_type_code,
                     "org_code":this.org_code,  
                     "evaluation_operation_unit_code": this.evaluation_operation_unit_code,
-                    "qttive_item_code": "",
-                    "qttive_item_name": "",
-                    "qttive_item_uom_code": "",
-                    "qttive_item_measure_mode_code": "",
-                    "qttive_item_desc": "",
-                    "sort_sequence": 1,
                     "transaction_code":"I",
                     "crudFlg" : "I",
                     "rowEditable":true
                 });
+                    // "qttive_item_code": "",
+                    // "qttive_item_name": "",
+                    // "qttive_item_uom_code": "",
+                    // "qttive_item_measure_mode_code": "",
+                    // "qttive_item_desc": "",
+                    // "sort_sequence": "",
           
-                oView.setProperty("/quantitative",oModel);
+                oModel.setProperty("/quantitative",oItem);
 
             },
             
@@ -1391,6 +1392,7 @@ sap.ui.define([
 
                 oView.getModel().read("/QttiveItem", {
                 filters: QttiveItemListFilters,
+                sorters : [new Sorter("sort_sequence")],
                 success: function (oData) {
                         oView.getModel("DetailView").setProperty("/quantitative",oData.results);
                         
@@ -1488,5 +1490,9 @@ sap.ui.define([
                 
             },
 
+            // onSorter: function(a,b){
+                
+            //     return parseInt(a)-parseInt(b);
+            // }
     });
 });
