@@ -110,7 +110,13 @@ sap.ui.define([
             var sCompanyCode = this.oCompanyCode.getValue(),
                 sCompanyHsCode = this.oCompanyHsCode.getValue(),
                 sCompanyHsText = this.oCompanyHsText.getValue(),
-                aFilters = this.getProperty("items").filters || [];
+                aFilters = [];
+
+                if(this.getProperty("items").filters.length > 0){
+                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                        aFilters.push(this.getProperty("items").filters[i])
+                    }
+                }
 
                 if(sCompanyCode){
                     aFilters.push(new Filter("tolower(country_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));

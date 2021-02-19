@@ -164,8 +164,13 @@ sap.ui.define([
                 sCompanyCode = this.oCompanyCode._lastValue,
                 sBizunitCode = this.oBizunitCode._lastValue,
                 sLocalUserName = this.oLocalUserName.getValue(),
+                aFilters = [];
 
-                aFilters = this.getProperty("items").filters || [];
+                if(this.getProperty("items").filters.length > 0){
+                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                        aFilters.push(this.getProperty("items").filters[i])
+                    }
+                }
 
                 if(sCompanyCode){
                     aFilters.push(new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));
@@ -176,10 +181,11 @@ sap.ui.define([
                 }
 
                 if(sLocalUserName){
-                    aFilters.push(new Filter("tolower(idea_manager_name)", FilterOperator.Contains, "'" + sLocalUserName.toLowerCase().replace("'","''") + "'"));
+                    console.log("aaa")
+                    aFilters.push(new Filter("(idea_manager_name)", FilterOperator.Contains, "'" + sLocalUserName.toLowerCase().replace("'","''") + "'"));
                 }
 
-
+                console.log(aFilters)
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.ImService/").read("/IdeaManager", {
                 filters: aFilters,
                 sorters: [
@@ -187,6 +193,7 @@ sap.ui.define([
                 ],
                 success: function(oData){
                     var aRecords = oData.results;
+                    console.log(oData);
                     this.oDialog.setData(aRecords, false);
                     this.oDialog.oTable.setBusy(false);
       

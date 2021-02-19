@@ -86,7 +86,13 @@ sap.ui.define([
         loadData: function(){
             var sMaterialClassCode = this.oMaterialClassCode.getValue(),
                 sMaterialClassName = this.oMaterialClassName.getValue(),
-                aFilters = this.getProperty("items").filters || [];
+                aFilters = [];
+
+                if(this.getProperty("items").filters.length > 0){
+                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                        aFilters.push(this.getProperty("items").filters[i])
+                    }
+                }
 
                 if(sMaterialClassCode){
                     aFilters.push(new Filter("tolower(material_class_code)", FilterOperator.Contains, "'" + sMaterialClassCode.toLowerCase().replace("'","''") + "'"));

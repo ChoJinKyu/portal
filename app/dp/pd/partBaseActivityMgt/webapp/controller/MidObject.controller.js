@@ -19,12 +19,11 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-    "sap/m/ObjectStatus",
-    "dp/util/control/ui/CategoryDialog",
+    "sap/m/ObjectStatus",    
     "sap/f/LayoutType"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, CategoryDialog, LayoutType) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType) {
 		
 	"use strict";
 
@@ -533,14 +532,7 @@ sap.ui.define([
 
             var oLngTable = this.byId("lngTable");            
            
-            var CUType = CUDType;
-
-            if(CUType !== "D" ){
-                if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
-                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                        return;
-                }
-            }
+            var CUType = CUDType;            
 
             if(CUType !== "D") {
                 if(this._sActivityCode !== "new"){
@@ -551,6 +543,13 @@ sap.ui.define([
             }  
 
             console.log(CUType);
+
+            if(CUType === "U"){
+                if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                    return;
+                }
+            }
             
             var activeFlg = "false"; 
 
@@ -628,7 +627,7 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                        v_this._onRoutedThisPage("U");
+                                        v_this._onRoutedThisPage();
                                     }                                    
                                     
                                 }else{
@@ -729,8 +728,8 @@ sap.ui.define([
 				// });
 				//oLanguagesModel.setData(olanguagesData);
 			}
-		},
-
+        },
+        
 		/**
 		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
@@ -739,7 +738,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(oEvent){
             var oView = this.getView();
 
-            if(oEvent !== "U"){
+            if(oEvent){
                 var oArgs = oEvent.getParameter("arguments");
                 this._sTenantId = oArgs.tenantId;
                 this._sActivityCode = oArgs.activityCode;
@@ -865,16 +864,16 @@ sap.ui.define([
 		_toEditMode: function(){
            
 			// this.byId("page").setSelectedSection("pageSectionMain");			
-			this.byId("pageEditButton").setEnabled(false);			
-            this.byId("pageSaveButton").setEnabled(true);
-            this.byId("pageCancelButton").setEnabled(true);
+			this.byId("pageEditButton").setVisible(false);			
+            this.byId("pageSaveButton").setVisible(true);
+            this.byId("pageCancelButton").setVisible(true);
             if(this._sActivityCode === "new"){
-                this.byId("pageDeleteButton").setEnabled(false);
+                this.byId("pageDeleteButton").setVisible(false);
             } else {
-                this.byId("pageDeleteButton").setEnabled(true);
+                this.byId("pageDeleteButton").setVisible(true);
             }
-			this.byId("lngTableAddButton").setEnabled(true);
-            this.byId("lngTableDeleteButton").setEnabled(true);
+			this.byId("lngTableAddButton").setVisible(true);
+            this.byId("lngTableDeleteButton").setVisible(true);
                       
             
             this.getView().getModel("contModel").setProperty("/editMode", true);
@@ -884,12 +883,12 @@ sap.ui.define([
 		_toShowMode: function(){		
 			
 			// this.byId("page").setSelectedSection("pageSectionMain");			
-			this.byId("pageEditButton").setEnabled(true);			
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageCancelButton").setEnabled(false);
-            this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("lngTableAddButton").setEnabled(false);
-            this.byId("lngTableDeleteButton").setEnabled(false);           
+			this.byId("pageEditButton").setVisible(true);			
+            this.byId("pageSaveButton").setVisible(false);
+            this.byId("pageCancelButton").setVisible(false);
+            this.byId("pageDeleteButton").setVisible(false);
+			this.byId("lngTableAddButton").setVisible(false);
+            this.byId("lngTableDeleteButton").setVisible(false);           
 
             this.getView().getModel("contModel").setProperty("/editMode", false);
             this.getView().getModel("contModel").setProperty("/readMode", true);

@@ -86,7 +86,13 @@ sap.ui.define([
         loadData: function(){
             var sMaterialCommodity = this.oMaterialCommodity.getValue(),
                 sMaterialCommodityName = this.oMaterialCommodityName.getValue(),
-                aFilters = this.getProperty("items").filters || [];
+                aFilters = [];
+
+                if(this.getProperty("items").filters.length > 0){
+                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                        aFilters.push(this.getProperty("items").filters[i])
+                    }
+                }
 
                 if(sMaterialCommodity){
                     aFilters.push(new Filter("tolower(commodity_code)", FilterOperator.Contains, "'" + sMaterialCommodity.toLowerCase().replace("'","''") + "'"));

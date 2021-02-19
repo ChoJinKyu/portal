@@ -19,20 +19,26 @@
 		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".handleClose" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="{I18N>/UOM_CLASS} {I18N>/DETAIL}" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>
 				<uxap:expandedHeading>
-					<Title text="UOM Class Details" wrapping="true" />
+					<Title text="{I18N>/UOM_CLASS} {I18N>/DETAIL}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="UOM Class Details" wrapping="true" />
+					<Title text="{I18N>/UOM_CLASS} {I18N>/DETAIL}" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for UOM Class : {master>/uom_class_code}" />
+					<Text text="{I18N>/UOM_CLASS_CODE} : {master>/uom_class_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for UOM Class : {master>/uom_class_code}" />
+					<Text text="{I18N>/UOM_CLASS_CODE} : {master>/uom_class_code}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="UOM Class Details" />
+					<Title text="{I18N>/UOM_CLASS} {I18N>/DETAIL}" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<!-- <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" /> -->
@@ -44,7 +50,7 @@
 					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                     <OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" press="handleFullScreen" tooltip="Enter Full Screen Mode" visible="{contModel>/midObject/visibleFullScreenBtn}"/>
                     <OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen" press="handleExitFullScreen" tooltip="Exit Full Screen Mode" visible="{= !${contModel>/midObject/visibleFullScreenBtn}}"/>
-                    <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press="handleClose"  tooltip="Close column"/>
+                    <!-- <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press="handleClose"  tooltip="Close column"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -72,85 +78,231 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="General Info">
+			<uxap:ObjectPageSection showTitle="false" id="pageSectionMain" titleUppercase="false" title="{I18N>/DEFAULT}{I18N>/INFORMATION}">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection1" >
+					<uxap:ObjectPageSubSection id="pageSubSection1">
+                        <form:SimpleForm         
+                            editable="true"
+                            layout="ResponsiveGridLayout"			
+                            labelSpanXL="12"
+                            labelSpanL="12"
+                            labelSpanM="12"
+                            labelSpanS="12"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            columnsXL="1"
+                            columnsL="1"
+                            columnsM="1" >                            
+                            <form:content>
+                                <VBox width="100%">
+                                    <Label text="{I18N>/UOM_CLASS_CODE}" visible="{contModel>/createMode}"  required="true"/>                                    
+                                    <Input 
+                                        width="50%"
+                                        value="{
+                                            path: 'master>/uom_class_code',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 10
+                                            }
+                                        }" visible="{contModel>/createMode}" editable="{contModel>/createMode}" required="true">
+                                    </Input>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="100%">
+                                    <Label text="{I18N>/UOM_CLASS_NAME}" required="true"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/uom_class_name}"
+                                        visible="{contModel>/readMode}">
+                                    </Text>                                    
+                                    <Input 
+                                        width="50%"
+                                        value="{
+                                            path: 'master>/uom_class_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 20
+                                            }
+                                        }" visible="{contModel>/editMode}" editable="{contModel>/editMode}" required="true">
+                                    </Input>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="100%">
+                                    <Label text="{I18N>/BASE_UOM_CODE}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/base_uom_code}">
+                                    </Text>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="100%">
+                                    <Label text="{I18N>/BASE_UOM_NAME}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/base_uom_name}">
+                                    </Text>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="100%">
+                                    <Label text="{I18N>/UOM_CLASS_DESC}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/uom_class_desc}"
+                                        visible="{contModel>/readMode}">
+                                    </Text>                                    
+                                    <Input 
+                                        width="50%"
+                                        value="{
+                                            path: 'master>/uom_class_desc',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 50
+                                            }
+                                        }" visible="{contModel>/editMode}" editable="{contModel>/editMode}">
+                                    </Input>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox width="100%">			
+                                    <Label text="{I18N>/DISABLE_DATE}"/>
+                                    <Text width="50%" visible="{contModel>/readMode}" text="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}"/>
+                                    <DatePicker width="50%" visible="{contModel>/editMode}" placeholder="YYYY. MM. DD." value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox>                                                                
+                            </form:content>
+                        </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>
+			</uxap:ObjectPageSection>			
 
-			<!-- <uxap:ObjectPageSection titleUppercase="false" title="Managed Values">
+			<uxap:ObjectPageSection 
+                titleUppercase="false" 
+                title="{I18N>/MULTILINGUAL} ({= (${details>/UomClassLng})?${details>/UomClassLng}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<form:SimpleForm editable="false">
-							<Label text="Created by"/>
-							<Text text="{master>/create_user_id}"/>
-							<Label text="Created At"/>
-							<Text text="{
-									path: 'master>/system_create_dtm',
-									formatter: '.dateFormatter.toUTCDateTimeString'
-								}"/>
-							<Label text="Updated by"/>
-							<Text text="{master>/update_user_id}"/>
-							<Label text="Updated At"/>
-							<Text text="{
-									path: 'master>/system_update_dtm',
-									formatter: '.dateFormatter.toUTCDateTimeString'
-								}"/>
-						</form:SimpleForm>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection> -->
-
-			<uxap:ObjectPageSection titleUppercase="false" title="Langauage">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-						<Table id="midTable" 
-								sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false"								
-								items="{details>/UomClassLng}"
-								class="sapFDynamicPageAlignContent" 
-								updateFinished=".onMidTableUpdateFinished"
-                                mode="SingleSelectLeft"
-								width="auto">
+                    <uxap:blocks>
+						<Table 
+                            id="midTable" 
+                            mode="{= ${contModel>/readMode}?'None':'MultiSelect'}"
+                            sticky="HeaderToolbar,ColumnHeaders"
+                            inset="false"
+                            class="sapFDynamicPageAlignContent"
+                            width="auto"
+                            items="{
+                                path: 'details>/UomClassLng'
+                            }">
 							<headerToolbar>
-								<OverflowToolbar>
-									<!-- <Title text="Langauage" level="H2"/> -->
-									<ToolbarSpacer/>
-									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
-									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
-									<ToolbarSeparator/>
+                                <Toolbar visible="true">
+                                    <ToolbarSpacer/>
+                                    <HBox >
+                                        <Button
+                                            id="midTableAddButton" 
+                                            type="Transparent" 
+                                            text="{I18N>/ROW_ADD}"
+                                            press=".onMidTableAddButtonPress"/>
+                                        <Button
+                                            id="midTableDeleteButton" 
+                                            type="Transparent" 
+                                            text="{I18N>/ROW_DELETE}"
+                                            press=".onMidTableDeleteButtonPress"/>
+                                    </HBox>
+                                    <ToolbarSeparator/>
 									<SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" />
-									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
-								</OverflowToolbar>
-							</headerToolbar>
+                                </Toolbar>
+                            </headerToolbar>
 							<columns>
-								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Text text="S" />
-								</Column>
-								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center" importance="High">
-									<Text text="{I18N>/LANGUAGE}" />
-								</Column>
-								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="{I18N>/UOM_CLASS_NAME}" />
-								</Column>
-								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="{I18N>/UOM_CLASS_DESC}" />
-								</Column>
-							</columns>
-							<items>
-								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
-									<cells>
-										<Text text="{details>_row_state_}"/>
-										<Input value="{details>language_code}"/>
-										<Input value="{details>uom_class_name}"/>
-										<Input value="{details>uom_class_desc}"/>
-									</cells>
-								</ColumnListItem>
-							</items>
-						</Table>
+                                <Column 
+                                    visible="{contModel>/editMode}"
+                                    width="4em">
+                                    <Label text="{I18N>/STATUS}"/>
+                                </Column>
+                                <Column>
+                                    <Label text="{I18N>/LANGUAGE}" required="true" />
+                                </Column>
+                                <Column>
+                                    <Label text="{I18N>/UOM_CLASS_NAME}" />
+                                </Column>
+                                <Column>
+                                    <Label text="{I18N>/UOM_CLASS_DESC}" />
+                                </Column>
+                            </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>                                            
+                                            <ObjectStatus icon="{
+                                                path: 'details>_row_state_',
+                                                formatter: '.formatter.toModelStateColumnIcon'
+                                            }" />
+                                            <HBox>
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{details>language_code}"/>                                                
+                                                <ComboBox 
+                                                    visible="{contModel>/editMode}"
+                                                    showSecondaryValues= "true"
+                                                    width="100%" 
+                                                    selectedKey="{details>language_code}"
+                                                    items="{
+                                                        path: 'util>/Code',
+                                                        templateShareable:true,
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
+                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                                        ]
+                                                    }" editable="{= ${details>_row_state_} === 'C' }" required="true"> 
+                                                    <items>
+                                                        <core:ListItem 
+                                                            key="{util>code}" 
+                                                            text="{util>code_name}"
+                                                            additionalText="{util>code}"/>
+                                                    </items>
+                                                </ComboBox>
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{details>uom_class_name}" />
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    maxLength="240"
+                                                    value="{details>uom_class_name}" />
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{details>uom_class_desc}" />
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    maxLength="240"
+                                                    value="{details>uom_class_desc}" />
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -166,13 +318,10 @@
                     visible="{= ${message>/}.length > 0 }"
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />				
-				<ToolbarSpacer />
-				<!-- <Button type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/> -->
-                <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />
-                <!-- <Button id="pageDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/> -->
-				<Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
-				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+				<ToolbarSpacer />				
+                    <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />                
+                    <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+                    <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

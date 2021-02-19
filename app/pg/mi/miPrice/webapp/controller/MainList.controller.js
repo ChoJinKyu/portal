@@ -248,7 +248,7 @@ sap.ui.define([
 
                 if(sMi_material_code === "")oValueStates.mi_material_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                 else if(sMi_material_code !== "" && sMi_material_name === "")oValueStates.mi_material_code = {valueState: "Error", valueStateText: "등록이 안된 코드입니다"};
-                else if(sMi_material_code.length > 10)oValueStates.mi_material_code = {valueState: "Error", valueStateText: "10자 이하의 값을 입력하십시오."}; //임시 공통 Validation 완성후 삭제
+                else if(sMi_material_code.length > 40)oValueStates.mi_material_code = {valueState: "Error", valueStateText: "40자 이하의 값을 입력하십시오."}; //임시 공통 Validation 완성후 삭제
                 
                 if(sCurrency_unit === "")oValueStates.currency_unit = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                 if(sQuantity_unit === "")oValueStates.quantity_unit = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
@@ -333,8 +333,8 @@ sap.ui.define([
                                     "sourcing_group_code": oRow["sourcing_group_code"],
                                     "termsdelv": oRow["termsdelv"],
                                     
-                                    "use_flag": true,
-                                    "tenant_id": "L2100",
+                                    "use_flag": oRow["use_flag"] !== undefined ? oRow["use_flag"] : true,
+                                    "tenant_id": oRow["tenant_id"] !== undefined ? oRow["tenant_id"] : "L2100",
                                     "local_create_dtm": new Date(),
                                     "local_update_dtm": new Date(),
                                     "create_user_id": "Admin",
@@ -702,7 +702,12 @@ sap.ui.define([
                             //oRow.mi_date = new Date( oRow.mi_date );
                             aValidKeys.forEach(function(sValidKey){
                                 var sValue = oRow[sValidKey];
+                                var bRequired = true;
                                 var sObjectPath = "";
+
+
+                                // if(oRow["tenant_id"] === undefined || oRow["tenant_id"] === ""){
+                                // }
 
                                 if(sValue !== undefined && sValue !== ""){
                                     sValue = that.replaceSpecialCharacters(sValue);

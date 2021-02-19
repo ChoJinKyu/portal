@@ -291,14 +291,7 @@ sap.ui.define([
 
             // var oLngTable = this.byId("lngTable");            
            
-            var CUType = CUDType;
-
-            if(CUType === "U" ){
-                if(!oMasterModel.isChanged()) {
-                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                        return;
-                }
-            }
+            var CUType = CUDType;            
 
             if(CUType !== "D") {
                 if(this._sActivityCode !== "new"){
@@ -306,9 +299,16 @@ sap.ui.define([
                 } else {
                     CUType = "C";
                 }
-            }  
+            } 
 
             console.log(CUType);
+           
+            if(CUType === "U"){
+                if(!oMasterModel.isChanged()) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                    return;
+                }
+            }            
             
             var attachmentMandatoryFlag = "false";
             var approveMandatoryFlag = "false";
@@ -415,7 +415,7 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                        v_this._onRoutedThisPage("U");
+                                        v_this._onRoutedThisPage();
                                     }
                                     // sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     // v_this._toShowMode();                                
@@ -505,8 +505,8 @@ sap.ui.define([
 			// 	//oLanguagesModel.setData(olanguagesData);
 			// }
 		},
-
-		/**
+        
+        /**
 		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
@@ -514,7 +514,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(oEvent){
             var oView = this.getView();
 
-            if(oEvent !== "U"){
+            if(oEvent){
                 var oArgs = oEvent.getParameter("arguments");
                 this._sTenantId = oArgs.tenantId;
                 this._sCompanyCode = oArgs.companyCode;
@@ -656,13 +656,13 @@ sap.ui.define([
 		_toEditMode: function(){
            
 			// this.byId("page").setSelectedSection("pageSectionMain");			
-			this.byId("pageEditButton").setEnabled(false);			
-            this.byId("pageSaveButton").setEnabled(true);
-            this.byId("pageCancelButton").setEnabled(true);
+			this.byId("pageEditButton").setVisible(false);			
+            this.byId("pageSaveButton").setVisible(true);
+            this.byId("pageCancelButton").setVisible(true);
             if(this._sActivityCode === "new"){
-                this.byId("pageDeleteButton").setEnabled(false);
+                this.byId("pageDeleteButton").setVisible(false);
             } else {
-                this.byId("pageDeleteButton").setEnabled(true);
+                this.byId("pageDeleteButton").setVisible(true);
             }
 			// this.byId("lngTableAddButton").setEnabled(true);
             // this.byId("lngTableDeleteButton").setEnabled(true);                      
@@ -674,10 +674,10 @@ sap.ui.define([
 		_toShowMode: function(){		
 			
 			// this.byId("page").setSelectedSection("pageSectionMain");			
-			this.byId("pageEditButton").setEnabled(true);			
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageCancelButton").setEnabled(false);
-            this.byId("pageDeleteButton").setEnabled(false);
+			this.byId("pageEditButton").setVisible(true);			
+            this.byId("pageSaveButton").setVisible(false);
+            this.byId("pageCancelButton").setVisible(false);
+            this.byId("pageDeleteButton").setVisible(false);
 			// this.byId("lngTableAddButton").setEnabled(false);
             // this.byId("lngTableDeleteButton").setEnabled(false);           
 

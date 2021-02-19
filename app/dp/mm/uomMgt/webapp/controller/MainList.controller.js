@@ -222,7 +222,7 @@ sap.ui.define([
 		_getSearchStates: function(){
             var sTenantId = "L2100",
                 sUomClass = this.getView().byId("searchUomClass").getSelectedKey(),			
-                sUom = this.getView().byId("searchUom").getSelectedKey(),
+                // sUom = this.getView().byId("searchUom").getSelectedKey(),
 			 	sBU = this.getView().byId("searchBUSegmentButton").getSelectedKey();
 			
             var aSearchFilters = [];
@@ -232,9 +232,9 @@ sap.ui.define([
 			if (sUomClass && sUomClass.length > 0) {
 				aSearchFilters.push(new Filter("uom_class_code", FilterOperator.EQ, sUomClass));
             }
-            if (sUom && sUom.length > 0) {
-				aSearchFilters.push(new Filter("uom_code", FilterOperator.EQ, sUom));
-            }
+            // if (sUom && sUom.length > 0) {
+			// 	aSearchFilters.push(new Filter("uom_code", FilterOperator.EQ, sUom));
+            // }
             // if (sBU && sBU.length > 0) {
 			// 	aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
 			// }

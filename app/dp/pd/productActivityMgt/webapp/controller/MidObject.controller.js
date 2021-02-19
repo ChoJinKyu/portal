@@ -7,7 +7,8 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
     "ext/lib/util/Validator",
 	"ext/lib/formatter/Formatter",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/util/SppUserSession",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -20,9 +21,9 @@ sap.ui.define([
 	"sap/m/Input",
 	"ext/lib/control/m/CodeComboBox",
     "sap/ui/core/Item",
-    "sap/ui/model/Sorter",
+    "sap/ui/model/Sorter"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
-        Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+        SppUserSession, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
         ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item, Sorter) {
 	"use strict";
 
@@ -32,9 +33,18 @@ sap.ui.define([
 
 		validator: new Validator(),
 		
-		formatter: Formatter,
+        formatter: Formatter,
+        
         dateFormatter: DateFormatter,
+
         _detailDeleteData : [],
+
+        _oViewData : {
+            sTenantId : "",
+            sLoginUserId : "",
+            sControlOptionCode : ""
+        },
+
 		viewFormatter: (function(){
 			return {
 				toStatus: function(oData){
@@ -53,6 +63,9 @@ sap.ui.define([
 		 */
 		onInit : function () {
 
+            var oView = this.getView(),
+                oSppUserSession = new SppUserSession();
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 			this.setModel(new ManagedModel(), "master");
@@ -61,10 +74,11 @@ sap.ui.define([
                 editMode : false,
             }), "midObjectViewModel");
             this.setModel(new JSONModel([]), "langDataModel");
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
-			oTransactionManager.addDataModel(this.getModel("details"));
+            oTransactionManager.addDataModel(this.getModel("details"));
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
             
@@ -72,7 +86,6 @@ sap.ui.define([
 
 			//this._initTables();
             this.enableMessagePopover();
-
 
 		}, 
 
@@ -88,8 +101,8 @@ sap.ui.define([
 			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
+				tenantId: this._oViewData.sTenantId,
+				controlOptionCode: this._oViewData.sControlOptionCode
 			});
 		},
 		/**
@@ -100,8 +113,8 @@ sap.ui.define([
 			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
+				tenantId: this._oViewData.sTenantId,
+				controlOptionCode: this._oViewData.sControlOptionCode
 			});
 		},
 		/**
@@ -143,7 +156,7 @@ sap.ui.define([
             // }
 
 			oDetailsModel.addRecord({
-				"tenant_id": this._sTenantId,
+				"tenant_id": this._oViewData.sTenantId,
 				"product_activity_code": "",
 				"language_cd": "",
 				"code_name": ""			
@@ -239,6 +252,14 @@ sap.ui.define([
                 val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val); 
         },
+        
+        onProductCodeChange : function(oEvent){
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+                val = val.replace(/[ㄱ-ㅎ가-힣]/g, "");
+                val = val.replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi, "");
+            _oInput.setValue(val); 
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -275,44 +296,43 @@ sap.ui.define([
         },
         
 		_onRoutedThisPage: function(oEvent){
-            
+
             var oView = this.getView(),
+                mainTable = this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("mainTable"),
                 that = this;
 
-            if(oEvent){
+            oView.setBusy(true);
+
+            if( oEvent && oEvent !== "U"){
                 var oArgs = oEvent.getParameter("arguments");
-                this._sTenantId = oArgs.tenantId;
-                this._sControlOptionCode = oArgs.controlOptionCode;
+                this._oViewData.sTenantId = oArgs.tenantId;
+                this._oViewData.sControlOptionCode = oArgs.controlOptionCode;
                 this._slayout = oArgs.layout;
 
-                //로그인 세션 작업완료시 수정
-                this._sLoginUserId = "TestUserId";
-                this._sLoginUserName = "TestUserName";
+                //로그인 세션
+                this._oViewData.sLoginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
+
             }
 
             //ScrollTop
             var oObjectPageLayout = this.getView().byId("page");
             var oFirstSection = oObjectPageLayout.getSections()[0];
             oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
-
-
-            this.getView().setBusy(true);
             
             //Main List 화면 테이블의 컬럼을 줄이기 위한 설정
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("localUpdateDtmColumn").setVisible(false);
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("updateUserIdColumn").setVisible(false);
-            
 
             //Detail 화면 테이블 데이터 세팅
-			if(this._sControlOptionCode == "new"){
+			if(this._oViewData.sControlOptionCode == "new"){
 
 				//It comes Add button pressed from the before page.
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-                    "tenant_id": this._sTenantId,
-                    "update_user_id": this._sLoginUserId,
+                    "tenant_id": this._oViewData.sTenantId,
+                    "update_user_id": this._oViewData.sLoginUserId,
                     "local_update_dtm": new Date(),
 					"product_activity_code": "",
 					"activity_name": "",
@@ -325,7 +345,7 @@ sap.ui.define([
 
                 oDetailsModel.setData([], "/PdProdActivityTemplateLng");
 				oDetailsModel.addRecord({
-					"tenant_id": this._sTenantId,
+					"tenant_id": this._oViewData.sTenantId,
 					"product_activity_code": "",
 					"language_cd": "",
 					"code_name": ""			
@@ -344,13 +364,14 @@ sap.ui.define([
                         }
                     }
                 });
+
+                oView.setBusy(false);
                 this._toEditMode();
                 
 			}else{
-                oView.setBusy(true);
 
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
-                var sObjectPath = "/PdProdActivityTemplateView(tenant_id='" + this._sTenantId + "',product_activity_code='" + this._sControlOptionCode + "')";
+                var sObjectPath = "/PdProdActivityTemplateView(tenant_id='" + this._oViewData.sTenantId + "',product_activity_code='" + this._oViewData.sControlOptionCode + "')";
                 var oMasterModel = this.getModel("master");
                 
 				oMasterModel.setTransactionModel(this.getModel());
@@ -361,7 +382,12 @@ sap.ui.define([
                                 }else{
                                     rData.active_flag = "false";
                                 }
-                            oMasterModel.setData(rData);
+                            oMasterModel.setData(rData, reponse);
+                            //메인화면 테이블 선택위치 바꾸기
+
+                            if(oEvent === "U"){
+                                mainTable.setSelectionInterval(parseInt(rData.sequence)-1, parseInt(rData.sequence)-1);
+                            }
                     }
                 });
 			
@@ -370,8 +396,8 @@ sap.ui.define([
                 
 				oDetailsModel.read("/PdProdActivityTemplateLng", {
 					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("product_activity_code", FilterOperator.EQ, this._sControlOptionCode),
+						new Filter("tenant_id", FilterOperator.EQ, this._oViewData.sTenantId),
+						new Filter("product_activity_code", FilterOperator.EQ, this._oViewData.sControlOptionCode),
 					],
 					success: function (rData, reponse) {
 
@@ -379,9 +405,9 @@ sap.ui.define([
                             for(var i=0;i<reponse.data.results.length;i++){
                                 reponse.data.results[i].addItem = false;
                             }
-                           // that.getView().getModel("pdActivityLeng").setData(reponse.data.results);
                             oDetailsModel.setData(reponse.data.results);
                         }
+                        
                     }
                 });
 
@@ -389,22 +415,25 @@ sap.ui.define([
 
 				oLangDataModel.read("/Code", {
 					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("tenant_id", FilterOperator.EQ, this._oViewData.sTenantId),
 						new Filter("group_code", FilterOperator.EQ, "CM_LANG_CODE"),
 					],
 					success: function (rData, reponse) {
                         if(rData.results.length>0){
                             that.getView().getModel("langDataModel").setData(reponse.data.results);
                         }
+                        
                     }
                 });
+
+                oView.setBusy(false);
+
                 //detail table detete data 초기화 ;
                 this._detailDeleteData = [];
-                oView.setBusy(false);
                 this._toShowMode();
             
             }
-            this.getView().setBusy(false);
+
 			oTransactionManager.setServiceModel(this.getModel());
         },
         
@@ -430,21 +459,31 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 oTable = this.byId("pdActivityLengTable"),
                 v_this = this;
-                
-            oMasterModel.setProperty("/product_activity_code", oMasterModel.getProperty("/product_activity_code").trim());
-
-            var oMasterData = oMasterModel.oData;
-            var oDetailsData = oDetailsModel.oData;
 
             var CUType = CUDType;
 
             if(CUType !== "D") {
-                if(this._sControlOptionCode !== "new"){
+                if(this._oViewData.sControlOptionCode !== "new"){
                     CUType = "U";                
                 } else {
                     CUType = "C";
                 }
-            }               
+            } 
+
+            console.log(CUType);
+
+            if(CUType === "U"){
+               if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+                   console.log(CUType);
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                    return;
+                } 
+            }
+
+            oMasterModel.setProperty("/product_activity_code", oMasterModel.getProperty("/product_activity_code").trim());
+
+            var oMasterData = oMasterModel.oData;
+            var oDetailsData = oDetailsModel.oData;
 
             var activeFlg = "false";
 
@@ -460,7 +499,7 @@ sap.ui.define([
                 description             : oMasterData.description,
                 sequence                : oMasterData.sequence === "" ? "1" : oMasterData.sequence,
                 active_flag             : activeFlg,
-                update_user_id          : this._sLoginUserId,
+                update_user_id          : this._oViewData.sLoginUserId,
                 crud_type_code          : CUType
             };
 
@@ -472,13 +511,6 @@ sap.ui.define([
                 }
             }; 
 
-            if(CUType === "S"){
-               if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                    return;
-                } 
-            }
-
             for (var i = 0; i <  oTable.getItems().length; i++) {
                 if(oDetailsData.PdProdActivityTemplateLng[i].product_activity_code === ""){
                     oDetailsData.PdProdActivityTemplateLng[i].product_activity_code = oMasterData.product_activity_code;
@@ -488,12 +520,12 @@ sap.ui.define([
                     product_activity_code: oDetailsData.PdProdActivityTemplateLng[i].product_activity_code,
                     language_cd: oDetailsData.PdProdActivityTemplateLng[i].language_cd,
                     code_name: oDetailsData.PdProdActivityTemplateLng[i].code_name,
-                    update_user_id: this._sLoginUserId,                        
+                    update_user_id: this._oViewData.sLoginUserId,                        
                     crud_type_code: oDetailsData.PdProdActivityTemplateLng[i]._row_state_ ? oDetailsData.PdProdActivityTemplateLng[i]._row_state_ : CUType
                 });
             }
 
-            input.inputData.pdDtl = pdDtlVal;        
+            input.inputData.pdDtl = pdDtlVal;   
 
             if(this.validator.validate(this.byId("page")) !== true) return;
 
@@ -526,7 +558,7 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                        v_this._onRoutedThisPage();
+                                        v_this._onRoutedThisPage("U");
                                     }
                                 }else{
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
@@ -535,7 +567,7 @@ sap.ui.define([
                             },
                             error: function (rst) {
                                     console.log("error");
-                                    MessageBox.error("예기치 않은 오류가 발생하였습니다.");
+                                    MessageBox.error(v_this.getModel("I18N").getText("/ERROR"));
                             }
                         });
 					};

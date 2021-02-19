@@ -12,7 +12,7 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/model/Sorter",
-    "ext/lib/util/ExcelUtil",
+    "ext/lib/util/ExcelUtil"
 ], function (BaseController, Multilingual, ManagedListModel, TransactionManager, JSONModel, DateFormatter, 
         TablePersoController, MainListPersoService, 
         Filter, FilterOperator, MessageBox, MessageToast, Sorter, ExcelUtil) {
@@ -24,7 +24,9 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         
         _oViewData : {
-            tenant_id : ""
+            tenant_id : "",
+            user_id : "",
+            language_code : ""
         },
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -43,11 +45,14 @@ sap.ui.define([
             var oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+
             //세션에서 tenant_id 받기 전 하드코딩 코드수정 필요
-            this._oViewData.tenant_id = "L2101"
+            //this._oViewData.tenant_id = this.getSessionTenantId()
+            this._oViewData.tenant_id = "L2101";
 
             this.enableMessagePopover();
             //this._doInitTablePerso();
+
         },
 		
         onRenderedFirst : function () {
@@ -88,7 +93,12 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoButtonPressed: function(oEvent){
-            
+
+        //     var mainTable = this.byId("mainTable");
+        //   //  mainTable.clearSelection();
+        //     mainTable.setSelectedIndex(0);
+
+
 			//this._oTPC.openDialog();
 		},
 
@@ -148,13 +158,7 @@ sap.ui.define([
 				layout: oNextUIState.layout, 
 				tenantId: this._oViewData.tenant_id,
 				controlOptionCode: "new"				
-            });
-
-			// //수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
-			// if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-			// 	this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
-            // }	
-            
+            });	   
         },
 
         onExportPress : function(_oEvent){

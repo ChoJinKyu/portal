@@ -19,14 +19,16 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/MANAGEMENT}" />
+                    <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/MANAGEMENT}" />
+                    </HBox>                    
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
-                <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                <f:navigationActions>                    
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -120,7 +122,7 @@
                                 labelFor="searchKeyword">
                             </Label>
                             <Input id="searchKeyword" 
-                                placeholder="" change=".onPageSearchButtonPress"/>
+                                placeholder=""/>
                             <layoutData>
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />
@@ -158,11 +160,11 @@
 
                     <ToolbarSeparator/>
                     <Button id="rTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                    
-                    <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                    <!-- <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                         <layoutData>
                             <OverflowToolbarLayoutData priority="NeverOverflow" />
                         </layoutData>
-                    </Button>
+                    </Button> -->
                 </OverflowToolbar>
             </t:extension>
             <t:rowSettingsTemplate>

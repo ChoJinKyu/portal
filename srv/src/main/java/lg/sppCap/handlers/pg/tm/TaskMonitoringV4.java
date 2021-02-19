@@ -28,6 +28,8 @@ import cds.gen.pg.taskmonitoringv4service.DeleteOutType;
 import cds.gen.pg.taskmonitoringv4service.DeleteTaskMonitoringMasterProcContext;
 import cds.gen.pg.taskmonitoringv4service.TaskMonitoringBizunit;
 import cds.gen.pg.taskmonitoringv4service.TaskMonitoringCompany;
+import cds.gen.pg.taskmonitoringv4service.TaskMonitoringCycle;
+import cds.gen.pg.taskmonitoringv4service.TaskMonitoringIndicator;
 import cds.gen.pg.taskmonitoringv4service.TaskMonitoringManager;
 import cds.gen.pg.taskmonitoringv4service.TaskMonitoringMaster;
 import cds.gen.pg.taskmonitoringv4service.TaskMonitoringOperation;
@@ -176,6 +178,43 @@ public class TaskMonitoringV4 implements EventHandler {
 		v_sql_createTable_operation.append("system_create_dtm timestamp, ");
 		v_sql_createTable_operation.append("system_update_dtm timestamp ");
         v_sql_createTable_operation.append(")");
+		
+		// create temp table: local_temp_cycle
+        StringBuffer v_sql_createTable_cycle = new StringBuffer();
+		v_sql_createTable_cycle.append("create local temporary column table #local_temp_cycle ( ");
+		v_sql_createTable_cycle.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_cycle.append("scenario_number bigint, ");
+		v_sql_createTable_cycle.append("monitoring_cycle_code nvarchar(10), ");
+		v_sql_createTable_cycle.append("language_code nvarchar(10), ");
+		v_sql_createTable_cycle.append("monitoring_cycle_name nvarchar(240), ");
+		v_sql_createTable_cycle.append("local_create_dtm timestamp, ");
+		v_sql_createTable_cycle.append("local_update_dtm timestamp, ");
+		v_sql_createTable_cycle.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_cycle.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_cycle.append("system_create_dtm timestamp, ");
+		v_sql_createTable_cycle.append("system_update_dtm timestamp ");
+        v_sql_createTable_cycle.append(")");
+		
+		// create temp table: local_temp_indicator
+        StringBuffer v_sql_createTable_indicator = new StringBuffer();
+		v_sql_createTable_indicator.append("create local temporary column table #local_temp_indicator ( ");
+		v_sql_createTable_indicator.append("tenant_id nvarchar(5), ");
+		v_sql_createTable_indicator.append("scenario_number bigint, ");
+		v_sql_createTable_indicator.append("monitoring_indicator_id bigint, ");
+		v_sql_createTable_indicator.append("monitoring_indicator_sequence bigint, ");
+		v_sql_createTable_indicator.append("monitoring_ind_number_cd nvarchar(30), ");		
+		v_sql_createTable_indicator.append("monitoring_ind_condition_cd nvarchar(10), ");
+		v_sql_createTable_indicator.append("monitoring_indicator_start_value nvarchar(100), ");
+		v_sql_createTable_indicator.append("monitoring_indicator_last_value nvarchar(100), ");
+		v_sql_createTable_indicator.append("monitoring_indicator_grade nvarchar(10), ");
+		v_sql_createTable_indicator.append("monitoring_ind_compare_base_cd nvarchar(30), ");		
+		v_sql_createTable_indicator.append("local_create_dtm timestamp, ");
+		v_sql_createTable_indicator.append("local_update_dtm timestamp, ");
+		v_sql_createTable_indicator.append("create_user_id nvarchar(255), ");
+		v_sql_createTable_indicator.append("update_user_id nvarchar(255), ");
+		v_sql_createTable_indicator.append("system_create_dtm timestamp, ");
+		v_sql_createTable_indicator.append("system_update_dtm timestamp ");
+        v_sql_createTable_indicator.append(")");
 
         // // drop temp table:
         String v_sql_dropTableMaster =          "drop table #local_temp_master";
@@ -185,47 +224,59 @@ public class TaskMonitoringV4 implements EventHandler {
         String v_sql_dropTablePurchasingType =  "drop table #local_temp_purchasingtype";
         String v_sql_dropTableMTypeCode =       "drop table #local_temp_typecode";
         String v_sql_dropTableManager =         "drop table #local_temp_manager";
-        String v_sql_dropTableOperation =       "drop table #local_temp_operation";
+        String v_sql_dropTableOperation =       "drop table #local_temp_operation";		
+		String v_sql_dropTableCycle =       	"drop table #local_temp_cycle";
+		String v_sql_dropTableIndicator =       "drop table #local_temp_indicator";
 
 		// insert temp table: master
-        StringBuffer v_sql_insertTable_master= new StringBuffer();
+        StringBuffer v_sql_insertTable_master = new StringBuffer();
 		v_sql_insertTable_master.append("insert into #local_temp_master values ");
         v_sql_insertTable_master.append("(?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert table: scenario
-        StringBuffer v_sql_insertTable_scenario= new StringBuffer();
+        StringBuffer v_sql_insertTable_scenario = new StringBuffer();
 		v_sql_insertTable_scenario.append("insert into #local_temp_scenario values ");
 		v_sql_insertTable_scenario.append("(?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: company
-        StringBuffer v_sql_insertTable_company= new StringBuffer();
+        StringBuffer v_sql_insertTable_company = new StringBuffer();
 		v_sql_insertTable_company.append("insert into #local_temp_company values ");
         v_sql_insertTable_company.append("(?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: bizunit
-        StringBuffer v_sql_insertTable_bizunit= new StringBuffer();
+        StringBuffer v_sql_insertTable_bizunit = new StringBuffer();
 		v_sql_insertTable_bizunit.append("insert into #local_temp_bizunit values ");
         v_sql_insertTable_bizunit.append("(?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: purchasingtype
-        StringBuffer v_sql_insertTable_purchasingtype= new StringBuffer();
+        StringBuffer v_sql_insertTable_purchasingtype = new StringBuffer();
 		v_sql_insertTable_purchasingtype.append("insert into #local_temp_purchasingtype values ");
 		v_sql_insertTable_purchasingtype.append("(?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: typecode
-        StringBuffer v_sql_insertTable_typecode= new StringBuffer();
+        StringBuffer v_sql_insertTable_typecode = new StringBuffer();
 		v_sql_insertTable_typecode.append("insert into #local_temp_typecode values ");
 		v_sql_insertTable_typecode.append("(?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: manager
-        StringBuffer v_sql_insertTable_manager= new StringBuffer();
+        StringBuffer v_sql_insertTable_manager = new StringBuffer();
 		v_sql_insertTable_manager.append("insert into #local_temp_manager values ");
 		v_sql_insertTable_manager.append("(?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: operation
-        StringBuffer v_sql_insertTable_operation= new StringBuffer();
+        StringBuffer v_sql_insertTable_operation = new StringBuffer();
 		v_sql_insertTable_operation.append("insert into #local_temp_operation values ");
         v_sql_insertTable_operation.append("(?,?,?,?,?,?,?,?,?,?,?)");
+		
+		// insert temp table: cycle
+        StringBuffer v_sql_insertTable_cycle = new StringBuffer();
+		v_sql_insertTable_cycle.append("insert into #local_temp_cycle values ");
+        v_sql_insertTable_cycle.append("(?,?,?,?,?,?,?,?,?,?,?)");
+		
+		// insert temp table: indicator
+        StringBuffer v_sql_insertTable_indicator = new StringBuffer();
+		v_sql_insertTable_indicator.append("insert into #local_temp_indicator values ");
+        v_sql_insertTable_indicator.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -239,7 +290,10 @@ public class TaskMonitoringV4 implements EventHandler {
 		v_sql_callProc.append("i_table_purchasing_type => #local_temp_purchasingtype, ");
 		v_sql_callProc.append("i_table_type => #local_temp_typecode, ");
 		v_sql_callProc.append("i_table_manager => #local_temp_manager, ");
-		v_sql_callProc.append("i_table_operation => #local_temp_operation, ");
+		v_sql_callProc.append("i_table_operation => #local_temp_operation, ");		
+		v_sql_callProc.append("i_table_cycle => #local_temp_cycle, ");
+		v_sql_callProc.append("i_table_indicator => #local_temp_indicator, ");
+		
 		// append: out table => local temp table
 		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
@@ -256,7 +310,9 @@ public class TaskMonitoringV4 implements EventHandler {
 		jdbc.execute(v_sql_createTable_purchasingtype.toString());
 		jdbc.execute(v_sql_createTable_typecode.toString());
 		jdbc.execute(v_sql_createTable_manager.toString());
-		jdbc.execute(v_sql_createTable_operation.toString());
+		jdbc.execute(v_sql_createTable_operation.toString());		
+		jdbc.execute(v_sql_createTable_cycle.toString());
+		jdbc.execute(v_sql_createTable_indicator.toString());
 
 		Collection<UpsertOutType>	v_result		= new ArrayList<>();
 
@@ -267,7 +323,9 @@ public class TaskMonitoringV4 implements EventHandler {
 		Collection<TaskMonitoringPurchasingType>    v_inPurchasingType	= context.getInputData().getSourcePurchasingType();
 		Collection<TaskMonitoringTypeCode>          v_inTypeCode		= context.getInputData().getSourceTypeCode();
 		Collection<TaskMonitoringManager>			v_inManager			= context.getInputData().getSourceManager();
-		Collection<TaskMonitoringOperation>         v_inOperation		= context.getInputData().getSourceOperation();
+		Collection<TaskMonitoringOperation>         v_inOperation		= context.getInputData().getSourceOperation();		
+		Collection<TaskMonitoringCycle>         	v_inCycle			= context.getInputData().getSourceCycle();
+		Collection<TaskMonitoringIndicator>         v_inIndicator		= context.getInputData().getSourceIndicator();
         
         // insert local temp table : master
         List<Object[]> batch_master = new ArrayList<Object[]>();
@@ -457,6 +515,59 @@ public class TaskMonitoringV4 implements EventHandler {
 
         int[] updateCounts_batch_operation = jdbc.batchUpdate(v_sql_insertTable_operation.toString(), batch_operation);
 
+		// insert local temp table : cycle
+        List<Object[]> batch_cycle = new ArrayList<Object[]>();
+        if(!v_inCycle.isEmpty() && v_inCycle.size() > 0){
+            for(TaskMonitoringCycle v_inRow : v_inCycle){
+                Object[] values = new Object[]
+				{
+					v_inRow.get("tenant_id"),
+					v_inRow.get("scenario_number"),
+					v_inRow.get("monitoring_cycle_code"),
+					v_inRow.get("language_code"),
+					v_inRow.get("monitoring_cycle_name"),
+					v_inRow.get("local_create_dtm"),
+					v_inRow.get("local_update_dtm"),
+					v_inRow.get("create_user_id"),
+					v_inRow.get("update_user_id"),
+					v_inRow.get("system_create_dtm"),
+					v_inRow.get("system_update_dtm")
+				};
+                batch_cycle.add(values);
+            }
+        }
+
+        int[] updateCounts_batch_cycle = jdbc.batchUpdate(v_sql_insertTable_cycle.toString(), batch_cycle);
+
+		// insert local temp table : indicator
+        List<Object[]> batch_indicator = new ArrayList<Object[]>();
+        if(!v_inIndicator.isEmpty() && v_inIndicator.size() > 0){
+            for(TaskMonitoringIndicator v_inRow : v_inIndicator){
+                Object[] values = new Object[]
+				{
+					v_inRow.get("tenant_id"),
+					v_inRow.get("scenario_number"),
+					v_inRow.get("monitoring_indicator_id"),
+					v_inRow.get("monitoring_indicator_sequence"),
+					v_inRow.get("monitoring_ind_number_cd"),					
+					v_inRow.get("monitoring_ind_condition_cd"),
+					v_inRow.get("monitoring_indicator_start_value"),
+					v_inRow.get("monitoring_indicator_last_value"),
+					v_inRow.get("monitoring_indicator_grade"),
+					v_inRow.get("monitoring_ind_compare_base_cd"),					
+					v_inRow.get("local_create_dtm"),
+					v_inRow.get("local_update_dtm"),
+					v_inRow.get("create_user_id"),
+					v_inRow.get("update_user_id"),
+					v_inRow.get("system_create_dtm"),
+					v_inRow.get("system_update_dtm")
+				};
+                batch_indicator.add(values);
+            }
+        }
+
+        int[] updateCounts_batch_indicator = jdbc.batchUpdate(v_sql_insertTable_indicator.toString(), batch_indicator);
+
 		// procedure call
 		List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 		paramList.add(new SqlParameter("i_tenant_id", Types.NVARCHAR));
@@ -491,6 +602,8 @@ public class TaskMonitoringV4 implements EventHandler {
 		jdbc.execute(v_sql_dropTableMTypeCode);
 		jdbc.execute(v_sql_dropTableManager);
 		jdbc.execute(v_sql_dropTableOperation);
+		jdbc.execute(v_sql_dropTableCycle);
+		jdbc.execute(v_sql_dropTableIndicator);
 
         context.setResult(v_result);
         context.setCompleted();

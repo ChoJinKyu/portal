@@ -77,13 +77,17 @@
                             columnsM="1" >
                             
                             <form:content>
-                                <VBox width="100%">            
-                                    <Label text="{I18N>/PROD_ACTIVITY_CODE}" required="true"/>
+                                <VBox width="100%">
+                                    <HBox>            
+                                        <Label text="{I18N>/PROD_ACTIVITY_CODE}" required="true" class="sapUiSmallMarginEnd"/>
+                                        <Label text="({I18N>/PART_ACTIVITY_RULE})"/>                                            
+                                    </HBox>                                     
                                     <Text
                                         width="50%"
                                         text="{master>/activity_code}"
                                         visible="{contModel>/readMode}">
                                     </Text>
+                                    
                                     <Input 
                                         width="50%"
                                         value="{
@@ -92,11 +96,12 @@
                                             constraints: {
                                                 maxLength: 40
                                             }
-                                        }" visible="{contModel>/editMode}" editable="false"></Input>
-                                        <layoutData>
-                                            <layout:GridData
-                                                span="XL12 L12 M12 S12" />
-                                        </layoutData>
+                                        }" visible="{contModel>/editMode}" editable="false">
+                                    </Input>
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
                                 </VBox>
                                 <VBox width="100%">			
                                     <Label text="{I18N>/DESCRIPTION}"/>
@@ -637,10 +642,10 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-                <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />							
-                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
-                <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteEditButtonPress"/>
-                <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />	
+                <Button visible="false" id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />							
+                <Button visible="false" id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+                <Button visible="false" id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteEditButtonPress"/>
+                <Button visible="false" id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />	
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

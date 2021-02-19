@@ -87,7 +87,13 @@ sap.ui.define([
         loadData: function(){
             var sMaterialGroup = this.oMaterialGroup.getValue(),
                 sMaterialGroupName = this.oMaterialGroupName.getValue(),
-                aFilters = this.getProperty("items").filters || [];
+                aFilters = [];
+
+                if(this.getProperty("items").filters.length > 0){
+                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                        aFilters.push(this.getProperty("items").filters[i])
+                    }
+                }
 
                 if(sMaterialGroup){
                     aFilters.push(new Filter("tolower(material_group_code)", FilterOperator.Contains, "'" + sMaterialGroup.toLowerCase().replace("'","''") + "'"));

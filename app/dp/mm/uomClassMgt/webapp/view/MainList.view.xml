@@ -15,7 +15,10 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="{I18N>/UOM_CLASS}" />
+                    </HBox>                    
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -24,8 +27,7 @@
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
-                <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                <f:navigationActions>                    
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -94,11 +96,11 @@
                     <headerToolbar>
                         <OverflowToolbar>
                             <!-- <Title text="UOM Class ({= ${list>/UomClass}.length || 0})" level="H2"/> -->
-                            <Title text="UOM Class" level="H2"/>
+                            <Title text="{I18N>/UOM_CLASS}" level="H2"/>
                             <ToolbarSpacer/>
-                            <SearchField id="mainTableSearchField" placeholder="Class" width="10rem" search=".onMainTableFilterPress" />
-                            <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                            <SearchField id="mainTableSearchField" placeholder="{I18N>/CLASS}" width="10rem" search=".onMainTableFilterPress" />
+                            <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="rTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>

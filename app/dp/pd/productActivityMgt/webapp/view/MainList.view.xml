@@ -35,8 +35,7 @@
                         <VBox>
                             <Label text="{I18N>/CODE_NAME_DESC}: " labelFor="searchProductActivity"></Label>
                             <Input 
-                                id="searchProductActivity"
-                                change=".onPageSearchButtonPress"/>
+                                id="searchProductActivity"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>

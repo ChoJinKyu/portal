@@ -94,7 +94,7 @@
                             
                             <form:content>
                                 <VBox>            
-                                    <Label text="{I18N>/ACTIVITY_CODE}" required="true"/>
+                                    <Label text="{I18N>/PRODUCT_ACTIVITY_CODE}" required="true"/>
                                     <Text
                                         text="{master>/product_activity_code}"
                                         visible="{= !${midObjectViewModel>/isAddedMode} }">
@@ -105,7 +105,11 @@
                                             constraints: {
                                                 maxLength: 40
                                             }
-                                        }" visible="{= ${midObjectViewModel>/isAddedMode} }" editable="{contModel>/createMode}" required="true"></Input>
+                                        }"
+                                        visible="{= ${midObjectViewModel>/isAddedMode} }"
+                                        editable="{contModel>/createMode}" 
+                                        required="true"
+                                        liveChange=".onProductCodeChange"/>
                                         <layoutData>
                                             <layout:GridData
                                                 span="XL12 L12 M12 S12" />
@@ -140,7 +144,7 @@
                                         }" 
                                         visible="{midObjectViewModel>/editMode}"
                                         editable="{= !${midObjectViewModel>/isAddedMode} }"
-                                        liveChange="onSequenceChange"/>
+                                        liveChange=".onSequenceChange"/>
                                         <layoutData>
                                             <layout:GridData
                                                 span="XL12 L12 M12 S12" />
@@ -233,7 +237,6 @@
                                                         <core:ListItem key="{langDataModel>code}" text="{langDataModel>code_name}" additionalText="{langDataModel>code}" />
                                                     </items>
                                                 </ComboBox>
-
                                             </HBox>
                                             <HBox
                                                 direction="Column">
@@ -260,10 +263,10 @@
 			<OverflowToolbar>
                 <ToolbarSpacer />
                 
-                <Button enabled="{= !${midObjectViewModel>/editMode} }" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditeButton" />							
-                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButton"/>
-                <Button enabled="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? false : true : false }" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
-                <Button enabled="{midObjectViewModel>/editMode}" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButton" />
+                <Button visible="{= !${midObjectViewModel>/editMode} }" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditeButton" />							
+                <Button visible="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButton"/>
+                <Button visible="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? false : true : false }" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
+                <Button visible="{midObjectViewModel>/editMode}" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButton" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
