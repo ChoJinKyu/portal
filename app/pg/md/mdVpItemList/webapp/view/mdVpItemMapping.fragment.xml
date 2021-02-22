@@ -24,23 +24,23 @@
         </f:DynamicPageTitle>
       </f:title> -->                 
         <content>
-        <VBox> 
-            <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
+        <VBox class="sapUiSmallMargin"> 
+            <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiSmallMargin" ><!-- sapUiLargeMarginBottom -->   
+			<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">     
                 <layout:VerticalLayout class="sapUiSmallMarginBegin">
                     <Label text="{I18N>/VENDOR_POOL_LOCAL_NAME}" design="Bold"/>
                     <Text id="vpCode1"/>       
                 </layout:VerticalLayout>      
-                <!-- <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="VP Level 2" design="Bold"/>
-                    <Text id="vpCode2"/>       
-                </layout:VerticalLayout>      -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <Label text="{I18N>/VENDOR_POOL_CODE}" design="Bold"/>
                     <Text id="vpCode3"/>       
                 </layout:VerticalLayout>
+            </layout:HorizontalLayout>
             </FlexBox> 
+        </VBox>
+        <VBox>
             <HBox renderType="Bare">
-                <mvc:XMLView id="availableItems" class="sapUiContentPadding" viewName="pg.md.mdVpItemList.view.availableItems" />
+                <mvc:XMLView id="availableItems" viewName="pg.md.mdVpItemList.view.availableItems" />
                 <VBox justifyContent="Center" class="sapUiTinyMarginBeginEnd">
                     <Button
                         class="sapUiTinyMarginBottom"
@@ -52,7 +52,7 @@
                         tooltip="Move to available"
                         press="moveToAvailableItemsTable"/>
                 </VBox>
-                <mvc:XMLView id="selectedItems" class="sapUiSmallMarginBeginEnd sapUiContentPadding" viewName="pg.md.mdVpItemList.view.selectedItems" />
+                <mvc:XMLView id="selectedItems" class="sapUiSmallMarginBeginEnd" viewName="pg.md.mdVpItemList.view.selectedItems" />
             </HBox>
         </VBox>                     
         </content>

@@ -2,14 +2,24 @@
     controllerName="pg.md.mdVpItemList.controller.selectedItems"
 	xmlns:dnd="sap.ui.core.dnd"
 	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:c="sap.ui.core"
+	xmlns:uxap="sap.uxap" 
 	xmlns="sap.m"
     xmlns:lib-m="ext.lib.control.m"
 	xmlns:t="sap.ui.table"
 	height="100%">
+    <uxap:ObjectPageLayout 
+        id="sheetMgtPage"
+		upperCaseAnchorBar="false"
+        showFooter="true"
+        showAnchorBar="false"
+        toggleHeaderOnTitleClick="false"
+        headerContentPinnable="false"
+        preserveHeaderStateOnScroll="true">
 
+        <uxap:headerContent>
         <t:Table id="table"
             selectionMode="Single"
+            selectionBehavior="RowOnly" 
             rows="{
                 path: 'tblModel>/right',
                 sorter: [
@@ -22,7 +32,7 @@
 		    noData="Please drag-and-drop Character here."
             width="100%">
             <t:extension>
-                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                <OverflowToolbar>
                     <Title text="{I18N>/ASSIGN_SPMD_CHARACTER_LIST} ({= ${tblModel>/right}.length})" level="H2" />
                 </OverflowToolbar>
             </t:extension>
@@ -70,4 +80,6 @@
                     drop="onDropSelectedItemsTable"/>
             </t:dragDropConfig>
         </t:Table>
+        </uxap:headerContent>
+	</uxap:ObjectPageLayout>
 </mvc:View>
