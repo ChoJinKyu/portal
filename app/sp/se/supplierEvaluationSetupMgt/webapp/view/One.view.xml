@@ -11,16 +11,18 @@
         xmlns:cm-ui="cm.util.control.ui"
         controllerName="sp.se.supplierEvaluationSetupMgt.controller.One"
         xmlns:flex="sap.f"
+        xmlns:layout="sap.ui.layout"
         >
    
         <!-- <App id="idAppControl"> -->
-        <Page title="설정정보" 
+        <!-- <Page title="설정정보" 
         showNavButton="true" 
         navButtonType="Back" 
-        navButtonPress="onNavToBack"> 
+        navButtonPress="onNavToBack">  -->
         <!-- showNavButton="true"  : 상단 < 버튼  -->
 
-            <content>  
+            <!-- <content>   -->
+                
                 <uxap:ObjectPageLayout
                     id="page" 
                     alwaysShowContentHeader="false" 
@@ -31,7 +33,19 @@
                     showFooter="true" 
                     class="sapUiContentPadding">
 
-                    <uxap:headerTitle/>
+                    <uxap:headerTitle>
+                    <uxap:ObjectPageDynamicHeaderTitle 
+                        pinnable="false"
+                    >
+                        <uxap:heading>
+                            <Toolbar style="Clear">
+                                <Button icon="sap-icon://nav-back" press="onNavToBack"/>
+                                <Title text="{I18N>/CONFIGURATION}{I18N>/INFORMATION}"/>
+                            </Toolbar >
+                        </uxap:heading>
+                    </uxap:ObjectPageDynamicHeaderTitle>
+                  </uxap:headerTitle>
+
                     <uxap:headerContent/>
                     
                     <uxap:sections>
@@ -51,13 +65,13 @@
                                         <VBox>
                                             <f:SimpleForm 
                                                 id="SimpleFormChange354" 
-                                                maxContainerCols="2"
-                                                editable="true"
-                                                layout="ColumnLayout"
-                                                adjustLabelSpan="false">
+                                                adjustLabelSpan="false"
+                                                layout="ResponsiveGridLayout"
+                                                >
 
                                                 <f:content>
-                                                    <!-- Column1. 운영단위코드 -->
+                                                    <!-- 운영단위코드 -->
+                                                    <VBox>
                                                     <Label text="{I18N>/OPERATION_UNIT_CODE}" required="true"/>                                                                        
                                                     <Input  id="opCodeInput" 
                                                             width="100%" 
@@ -81,8 +95,37 @@
                                                                 maxLength : 240
                                                             }   
                                                             }" -->
-                                                            
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData>
+                                                    </VBox>
+                                                    
+                                                    <!-- 운영단위 명 -->
+                                                    <VBox>
+                                                    <Label text="{I18N>/OPERATION_UNIT_NAME}" required="true"/>
+                                                    
+                                                    <Input  id="opCodeName" 
+                                                        width="100%" 
+                                                        placeholder="input operation unit name"
+                                                        value= "{
+                                                             path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_name',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                maxLength : 50
+                                                            }   
+                                                            }"
+                                                        editable="{=${DetailView>/isEditMode}}"
+                                                        fieldGroupIds="required"
+                                                        required="true"   
+                                                        />
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData>     
+                                                    </VBox> 
+
+
                                                     <!-- 배점설계여부 -->
+                                                    <VBox>
                                                     <Label text="{I18N>/DISTRB_SCOR_ENG_FLAG}" required="true"/>
                                                     <SegmentedButton
                                                             selectedKey="{
@@ -97,8 +140,33 @@
                                                                 <SegmentedButtonItem text="No" key="false" />
                                                             </items>
                                                     </SegmentedButton>
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData>
+                                                    </VBox>
+
+                                                    <!-- 발의 품의 여부 -->
+                                                    <VBox>
+                                                    <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}" required="true"/> 
+                                                        <SegmentedButton  
+                                                        selectedKey="{
+                                                            path : 'DetailView>/OperationUnitMst/evaluation_request_approval_flag',
+                                                            type: 'sap.ui.model.type.Boolean'
+                                                        }"
+                                                        enabled="{DetailView>/isEditMode}">
+                                                            <items>
+                                                                <SegmentedButtonItem text="Yes" key="true" />
+                                                                <SegmentedButtonItem text="No" key="false" />
+                                                            </items>
+                                                        </SegmentedButton>
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData> 
+                                                    </VBox>
+
 
                                                     <!-- 운영 전략 수립 여부 -->
+                                                    <VBox>
                                                     <Label text="{I18N>/OPERATION_PLAN_FLAG}" required="true"/> 
                                                     <SegmentedButton 
                                                             selectedKey="{
@@ -112,8 +180,32 @@
                                                                 <SegmentedButtonItem text="No" key="false" />
                                                             </items>
                                                     </SegmentedButton>
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData>
+                                                    </VBox> 
+
+                                                    <!-- 사용 여부 -->
+                                                    <VBox>
+                                                    <Label text="{I18N>/USE_FLAG}" required="true"/> 
+                                                        <SegmentedButton  
+                                                        selectedKey="{
+                                                            path : 'DetailView>/OperationUnitMst/use_flag',
+                                                            type: 'sap.ui.model.type.Boolean'
+                                                        }"
+                                                        enabled="{DetailView>/isEditMode}" >
+                                                            <items>
+                                                                <SegmentedButtonItem text="Yes" key="true" />
+                                                                <SegmentedButtonItem text="No" key="false" />
+                                                            </items>
+                                                        </SegmentedButton>
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData>    
+                                                    </VBox> 
 
                                                     <!-- V/P 운연단위 -->
+                                                    <VBox>
                                                     <Label text="{I18N>/VP_OPERATION_UNIT}" required="true"/> 
                                                     <MultiComboBox id="searchMultiComboCode" width="100%" showSecondaryValues="true" 
                                                             items="{
@@ -136,6 +228,11 @@
                                                             <core:ListItem key="{common>code}" text="{common>code_name}" additionalText="{common>code}"/>
                                                         </items>
                                                     </MultiComboBox>
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData>
+                                                    </VBox> 
+
                                                         <!-- <MultiComboBox
                                                         id="oVPCombo"                                                           
                                                             />                                                             -->
@@ -154,24 +251,8 @@
                                                         
                                                         </MultiComboBox>-->                            
 
-                                                    <!-- Column2. 운영단위 명 -->
-                                                    <Label text="{I18N>/OPERATION_UNIT_NAME}" required="true"/>
                                                     
-                                                    <Input  id="opCodeName" 
-                                                        width="100%" 
-                                                        placeholder="input operation unit name"
-                                                        value= "{
-                                                             path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_name',
-                                                             type : 'sap.ui.model.odata.type.String',
-                                                             constraints : {
-                                                                maxLength : 50
-                                                            }   
-                                                            }"
-                                                        editable="{=${DetailView>/isEditMode}}"
-                                                        fieldGroupIds="required"
-                                                        required="true"   
-                                                        />
-                                                        
+                                                       
 
                                                             <!-- enabled="{=
                                                                 ${DetailView>/isEditMode}
@@ -191,38 +272,10 @@
                                                                 <lib-m:CodePickerValueHelp contentWidth="500px" title="user_local_name"
                                                                     keyFieldHeaderText="user_local_name" textFieldHeaderText="user_local_name" />
                                                             </lib-m:CodePicker> -->
-
-                                                        
+                                                  
                                                     
-                                                    <!-- 발의 품의 여부 -->
-                                                    <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}" required="true"/> 
-                                                        <SegmentedButton  
-                                                        selectedKey="{
-                                                            path : 'DetailView>/OperationUnitMst/evaluation_request_approval_flag',
-                                                            type: 'sap.ui.model.type.Boolean'
-                                                        }"
-                                                        enabled="{DetailView>/isEditMode}">
-                                                            <items>
-                                                                <SegmentedButtonItem text="Yes" key="true" />
-                                                                <SegmentedButtonItem text="No" key="false" />
-                                                            </items>
-                                                        </SegmentedButton>
-
-                                                    <!-- 사용 여부 -->
-                                                    <Label text="{I18N>/USE_FLAG}" required="true"/> 
-                                                        <SegmentedButton  
-                                                        selectedKey="{
-                                                            path : 'DetailView>/OperationUnitMst/use_flag',
-                                                            type: 'sap.ui.model.type.Boolean'
-                                                        }"
-                                                        enabled="{DetailView>/isEditMode}" >
-                                                            <items>
-                                                                <SegmentedButtonItem text="Yes" key="true" />
-                                                                <SegmentedButtonItem text="No" key="false" />
-                                                            </items>
-                                                        </SegmentedButton>
-
                                                     <!-- 평가 대상 V/P 레벨 -->
+                                                    <VBox>
                                                     <Label text="{I18N>/EVAL_APPLY_VENDOR_POOL_LVL_NO}" required="true"/> 
                                                         <SegmentedButton
                                                         id="vendor_pool_lvl"
@@ -233,7 +286,12 @@
                                                                 <SegmentedButtonItem text="2 Level" key="2" />
                                                                 <SegmentedButtonItem text="3 Level" key="3" />
                                                             </items>  -->
-                                                        </SegmentedButton>                                                                    
+                                                        </SegmentedButton> 
+                                                    <layoutData>
+                                                        <layout:GridData span="L3 M6 S12" />
+                                                    </layoutData>    
+                                                    </VBox>   
+                                                                                                                   
 
                                                 </f:content>
                                             </f:SimpleForm>
@@ -268,10 +326,11 @@
                                                 <Toolbar>
                                                     <ToolbarSpacer/>
                                                     <HBox>
-                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onManagerAdd" enabled="{DetailView>/isEditMode}" />
-                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onTableDelete" enabled="{DetailView>/isEditMode}"/>
-                                                        <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" enabled="{=${DetailView>/isEditMode}}"
-                                                            visible="{=!${DetailView>/isCreateMode}}"/>
+                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onManagerAdd" visible="{DetailView>/isEditMode}" />
+                                                        <Button text="{I18N>/ROW_DELETE}" type="Transparent" press="onTableDelete" visible="{DetailView>/isEditMode}"/>
+                                                        <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" visible="{=${DetailView>/isEditMode}}"
+                                                            />
+                                                            <!-- visible="{=!${DetailView>/isCreateMode}}" -->
                                                         
                                                     </HBox>
                                                 </Toolbar>
@@ -457,9 +516,11 @@
                                                             type="Transparent" 
                                                             text="{I18N>/NEW}" 
                                                             press=".onCreateTwo"
-                                                            visible="{= !${DetailView>/isCreateMode}}"
-                                                            enabled="{= ${DetailView>/isEditMode}}"
+                                                            
                                                             />
+                                                            
+                                                            <!-- visible="{= ${DetailView>/isEditMode}}" -->
+                                                            <!-- visible="{= !${DetailView>/isCreateMode}}" -->
                                                             <!-- enabled="{DetailView>/isEditMode}" -->
                                                     </HBox>
                                                 </Toolbar>
@@ -536,10 +597,11 @@
                                                 <Toolbar>
                                                     <ToolbarSpacer/>
                                                     <HBox>
-                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onQunAdd" enabled="{=${DetailView>/isEditMode}}"/>
-                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onTableDelete" enabled="{=${DetailView>/isEditMode}}"/>
-                                                        <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" enabled="{=${DetailView>/isEditMode}}"
-                                                            visible="{=!${DetailView>/isCreateMode}}"/>
+                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onQunAdd" visible="{=${DetailView>/isEditMode}}"/>
+                                                        <Button text="{I18N>/ROW_DELETE}" type="Transparent" press="onTableDelete" visible="{=${DetailView>/isEditMode}}"/>
+                                                        <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" visible="{=${DetailView>/isEditMode}}"
+                                                           />
+                                                            <!-- visible="{=!${DetailView>/isCreateMode}}" -->
                                                         </HBox>
                                                 </Toolbar>
                                             </headerToolbar>
@@ -824,16 +886,17 @@
                     <OverflowToolbar>
                         <ToolbarSpacer/>
                         <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" 
-                            visible="{=!${DetailView>/isCreateMode}}" 
-                            enabled="{=
-                                !${DetailView>/isEditMode}
-                            }" />
+                            visible="{=!${DetailView>/isEditMode}}" 
+                             />
                         <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" 
-                            enabled="{=
+                            visible="{=
                                 ${DetailView>/isEditMode}
                             }"/>
+                            <!-- enabled="{=
+                                !${DetailView>/isEditMode}
+                            }" -->
                         <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
-                        <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
+                        <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" visible="{=${DetailView>/isEditMode}}"/>
                     </OverflowToolbar>
                     </uxap:footer>
 
@@ -856,7 +919,7 @@
                         apply=".onCompanyDetailDialogApplyPress"
                     /> -->
                     
-                    </content>
-                </Page>
+                    <!-- </content> -->
+                <!-- </Page> -->
     <!-- </App> -->
 </mvc:View>

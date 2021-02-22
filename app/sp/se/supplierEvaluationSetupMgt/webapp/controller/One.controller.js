@@ -1061,7 +1061,23 @@ sap.ui.define([
             },
 
              onCreateTwo: function (oEvent) { 
+                
+                if(this.scenario_number==="New"){
 
+                    MessageBox.confirm(i18nModel.getText("/NSP00002"), {
+                    actions: [MessageBox.Action.OK],
+                    emphasizedAction: MessageBox.Action.OK,
+                    onClose: function (sAction) {
+                        if (sAction === MessageBox.Action.OK) {
+
+                            return;
+                        }
+
+                     }
+                    });
+
+                    
+                }else{
                     this.getRouter().navTo("two", {
                         scenario_number: "New",
                         tenant_id: this.tenant_id,
@@ -1075,13 +1091,15 @@ sap.ui.define([
                         
                     });
                     
-                },
+                }
+
+                }
 
         /**
          * footer Cancel 버튼 기능
          * @public
          */
-            onPageCancelEditButtonPress: function () {
+          ,  onPageCancelEditButtonPress: function () {
                 
                  MessageBox.confirm(i18nModel.getText("/NPG00013"), {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],

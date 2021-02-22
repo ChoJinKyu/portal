@@ -4,22 +4,24 @@ sap.ui.define([
     "sap/m/MessageToast",    
     "ext/lib/util/Multilingual",
     "sap/ui/core/Item",
-    "sap/ui/model/Sorter"
+    "sap/ui/model/Sorter",
+    "sap/ui/model/json/JSONModel"
 ],
 
-    function (BaseController, Filter, MessageToast,  Multilingual, Item, Sorter) {
+    function (BaseController, Filter, MessageToast,  Multilingual, Item, Sorter, JSONModel) {
         "use strict";
 
         return BaseController.extend("sp.se.supplierEvaluationSetupMgt.controller.Main", {
           
             onInit: function () {
                 var oMultilingual, oOwnerComponent , i18nModel;
+                var oViewModel;
 
                 oMultilingual = new Multilingual();
                 this.setModel(oMultilingual.getModel(), "I18N");
                 i18nModel = this.getModel("I18N");
                 
-                this.getView().byId("smartFilterBar")._oSearchButton.setText(i18nModel.getText("/SEARCH"));
+                // this.getView().byId("smartFilterBar")._oSearchButton.setText(i18nModel.getText("/SEARCH"));
 
                 oOwnerComponent = this.getOwnerComponent();
                 this.oRouter = oOwnerComponent.getRouter();
@@ -30,6 +32,9 @@ sap.ui.define([
                 this.tenant_id = "L2100";
                 this.company_code = "LGCKR";
                 
+
+                oViewModel = new JSONModel();
+                this.setModel(oViewModel, "mainModel");
                 //콤보박스 선택없을때 
                 //oTenantCombo.setRequired();
                 //sap.ui.getCore().byId("tenant_combo").setValueState("Error");
@@ -38,6 +43,7 @@ sap.ui.define([
 
             _onDetailMatched: function (){
                 var oTenantCombo, aTenantComboFilters;
+            
 
                     oTenantCombo = this.byId("tenant_combo");
 
@@ -57,7 +63,8 @@ sap.ui.define([
 
                 // Detail View -> Main View 전환시 재조회 추후 SmartTable -> m.table 변경예정
                 if(this.byId("tenant_combo").getSelectedKey())
-                   this.byId("MonitorList").rebindTable();
+                this.onSearchTable();
+                //    this.byId("MonitorList").rebindTable();
 
             },
             
@@ -70,9 +77,9 @@ sap.ui.define([
                 
                 oView = this.getView();
 
-                oBindingParams = oEvent.getParameter("bindingParams");
+                // oBindingParams = oEvent.getParameter("bindingParams");
 
-                this.byId("MonitorListTable").getModel().refresh(true);
+                // this.byId("MonitorListTable").getModel().refresh(true);
 
                 // var oSmtFilter = this.getView().byId("smartFilterBar");
 
@@ -87,14 +94,29 @@ sap.ui.define([
                     aSearchFilters.push(new Filter("company_code", 'EQ', this.company_code));
                     aSearchFilters.push(new Filter("org_code", 'EQ', tenant_name));   
                     
-                    oBindingParams.filters.push(new Filter(aSearchFilters, true));
+                    
+                    oView.getModel().read("/SupEvalOpUnitListView", {
+                    filters: aSearchFilters,
+                    success: function (oData) {
+
+                        oView.getModel("mainModel").setProperty("/mainListTable",oData.results);                    
+                        //this.getView().getModel("DetailView").setData(oManager);            
+                        
+                        }.bind(this),
+                        error: function () {
+                        }
+
+                        });
+
+
+                    // oBindingParams.filters.push(new Filter(aSearchFilters, true));
                    
 
                 }else if (tenant_name.length === 0) {
-                    oBindingParams.filters.push(new Filter([]));
+                    // oBindingParams.filters.push(new Filter([]));
                 }
                     //정렬
-                    oBindingParams.sorter= [new Sorter("evaluation_operation_unit_code")];
+                    // oBindingParams.sorter= [new Sorter("evaluation_operation_unit_code")];
             },
             _getComboItem : function (){
                 var oTenantCombo, oContext, oModel, oItem
@@ -119,10 +141,17 @@ sap.ui.define([
             onNavToDetail: function (oEvent) {
                
                 // 선택한 테이블의 행의 정보
-                var oEventContext = oEvent.getSource().getBindingContext();
-                var oEventModel = oEventContext.getModel();
-                var oEventItem = oEventModel.getProperty(oEventContext.getPath());                
+                // var oEventContext = oEvent.getSource().getBindingContext();
+                // var oEventModel = oEventContext.getModel();
+                // var oEventItem = oEventModel.getProperty(oEventContext.getPath());                
                 
+                var oSource = oEvent.getSource();
+                var sPath = oSource.getBindingContextPath();
+                var oModel = oSource.getModel("mainModel");
+                var oEventItem = oModel.getProperty(sPath);   
+                //oEvent.getSource().getModel("mainModel").getProperty("/mainListTable/1")
+
+
                 // 선택된 ComboBox 정보
                 // var oTenantCombo = this.byId("tenant_combo");
                 // var oContext = oTenantCombo.getSelectedItem().getBindingContext();

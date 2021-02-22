@@ -199,10 +199,11 @@
                                         <Toolbar>
                                             <ToolbarSpacer/>
                                             <HBox>
-                                                <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onScaleAdd" enabled="{=${TwoView>/isEditMode}}"/>
-                                                <Button text="{I18N>/DELETE}" type="Transparent" press="onScaleDelete" enabled="{=${TwoView>/isEditMode}}"/>
-                                                <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" enabled="{=${TwoView>/isEditMode}}"
-                                                        visible="{=!${TwoView>/isCreateMode}}"/>
+                                                <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onScaleAdd" visible="{=${TwoView>/isEditMode}}"/>
+                                                <Button text="{I18N>/ROW_DELETE}" type="Transparent" press="onScaleDelete" visible="{=${TwoView>/isEditMode}}"/>
+                                                <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" visible="{=${TwoView>/isEditMode}}"
+                                                      />
+                                                        <!-- visible="{=!${TwoView>/isCreateMode}}" -->
                                                 </HBox>
                                         </Toolbar>
                                     </headerToolbar>
