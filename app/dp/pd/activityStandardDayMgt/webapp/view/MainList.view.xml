@@ -150,12 +150,12 @@
                         <Title id="mainTableTitle" text="Activity {I18N>/STANDARD_DAYS} {I18N>/LIST} ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
-                        <ToolbarSeparator/>
+                        <!-- <ToolbarSeparator/>
                         <Button id="mainTablePersoButton" icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="NeverOverflow" />
                             </layoutData>
-                        </Button>
+                        </Button> -->
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>

@@ -29,7 +29,7 @@ SELECT pcc.TENANT_ID,
 	left join (select code_name, tenant_id, category_group_code, category_code
 	        from DP_PD_PART_CATEGORY_LNG 
 	        where TENANT_ID = 'L2101' and CATEGORY_GROUP_CODE = 'CO' and LANGUAGE_CD='KO') pc1
-	on pcc.CATEGORY_GROUP_CODE = pc1.CATEGORY_GROUP_CODE AND pcc.CREATE_CATEGORY_CODE = pc1.CATEGORY_CODE
+	on pcc.CATEGORY_GROUP_CODE = pc1.CATEGORY_GROUP_CODE AND pcc.SIMILAR_CATEGORY_CODE = pc1.CATEGORY_CODE
 	left join (select code_name, tenant_id, category_group_code, category_code
 	        from DP_PD_PART_CATEGORY_LNG 
 	        where TENANT_ID = 'L2101' and CATEGORY_GROUP_CODE = 'CO' and LANGUAGE_CD='KO') pc2

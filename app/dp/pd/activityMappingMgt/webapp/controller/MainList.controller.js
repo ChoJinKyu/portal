@@ -82,14 +82,14 @@ sap.ui.define([
                 var aSorter = this._getSorter();
                     
                 if(this.byId("searchCompanyCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCompanyCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01001"));
                     return;
                 } else {
                     this.validator.clearValueState(this.byId("searchCompanyCombo"));
                 }
 
                 if(this.byId("searchAUCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchAUCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01001"));
                     return;
                 } else {
                     this.validator.clearValueState(this.byId("searchAUCombo"));
@@ -138,7 +138,7 @@ sap.ui.define([
                         oModel.oData.ActivityMappingNameView[i]._row_state_ = "";                        
                     }
 
-                    //oTable.removeSelections(true);
+                    oTable.removeSelections(true);
 
                     this.oOrgCode = this.byId("searchAUCombo").getSelectedKey();
 
@@ -208,6 +208,13 @@ sap.ui.define([
             if (oModel.oData) {
                 oDataArr = oModel.getProperty("/ActivityMappingNameView");
                 oDataLength = oDataArr.length;
+            }
+
+            var oData = oModel.oData;
+            for (var i = 0; i < oTable.getItems().length; i++) {
+                if (oData.ActivityMappingNameView[i]._row_state_ == "U") {
+                   oTable.removeSelections(true);
+                }
             }
 
             oModel.addRecord({
@@ -286,7 +293,7 @@ sap.ui.define([
                             this.byId("mainTableDelButton").setEnabled(false);
                             this.byId("mainTableCancButton").setEnabled(false);
                             this.byId("rTableExportButton").setEnabled(true);
-                            this.byId("mainTablePersoButton").setEnabled(true);
+                            //this.byId("mainTablePersoButton").setEnabled(true);
 
                         }
                     }).bind(this)
@@ -312,7 +319,7 @@ sap.ui.define([
                 this.byId("mainTableDelButton").setEnabled(false);
                 this.byId("mainTableCancButton").setEnabled(false);
                 this.byId("rTableExportButton").setEnabled(true);
-                this.byId("mainTablePersoButton").setEnabled(true);
+                //this.byId("mainTablePersoButton").setEnabled(true);
             }
         },
 
@@ -374,7 +381,7 @@ sap.ui.define([
                 if(org_code_c != undefined && org_code_u != undefined && product_activity_code_c != undefined && product_activity_code_u != undefined &&
                     activity_code_c != undefined && activity_code_u != undefined &&
                     org_code_c == org_code_u && product_activity_code_c == product_activity_code_u && activity_code_c == activity_code_u) {
-                        sap.m.MessageToast.show("중복 매핑을 할 수 없습니다. \n 다시 입력하여 주시기 바랍니다.");
+                        sap.m.MessageToast.show(this.getModel("I18N").getText("/NDP60005"));
                         return;
                 }
             }
@@ -441,7 +448,7 @@ sap.ui.define([
                 this.byId("mainTableDelButton").setEnabled(false);
                 this.byId("mainTableCancButton").setEnabled(false);
                 this.byId("rTableExportButton").setEnabled(true);
-                this.byId("mainTablePersoButton").setEnabled(true);
+                //this.byId("mainTablePersoButton").setEnabled(true);
             }
         },
 
@@ -463,7 +470,9 @@ sap.ui.define([
                     oTable.getAggregation('items')[i].getCells()[6].getItems()[1].setVisible(false);
                 }
             }
+      
             
+
             if (oItem != null && oItem != undefined) {
                 this.byId("mainTableCancButton").setEnabled(true);
 
@@ -486,7 +495,7 @@ sap.ui.define([
                 this.byId("mainTableDelButton").setEnabled(true);
                 this.byId("mainTableCancButton").setEnabled(true);
                 this.byId("rTableExportButton").setEnabled(false);
-                this.byId("mainTablePersoButton").setEnabled(false);
+                //this.byId("mainTablePersoButton").setEnabled(false);
             } else {
                 var oModel2 = this.getView().getModel("list");
                 var oData = oModel2.oData;
@@ -501,16 +510,17 @@ sap.ui.define([
                     this.byId("mainTableDelButton").setEnabled(false);
                     this.byId("mainTableSaveButton").setEnabled(true);
                     this.byId("rTableExportButton").setEnabled(false);
-                    this.byId("mainTablePersoButton").setEnabled(false);
+                    //this.byId("mainTablePersoButton").setEnabled(false);
                 }else{
                     this.byId("mainTableCancButton").setEnabled(false);
                     this.byId("mainTableDelButton").setEnabled(false);
                     this.byId("mainTableSaveButton").setEnabled(false);
                     this.byId("rTableExportButton").setEnabled(true);
-                    this.byId("mainTablePersoButton").setEnabled(true);
+                    //this.byId("mainTablePersoButton").setEnabled(true);
                 }
-               
             }
+
+            //oTable.removeSelections(true);
         },
 
         onSearchProductActivity: function (oEvent) {

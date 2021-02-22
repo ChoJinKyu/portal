@@ -34,6 +34,7 @@ entity Pd_Part_Category_View {
         update_user_id        : String;
         local_update_dtm      : DateTime;
         path                  : String;
+        path_name             : String;
         hierarchy_rank        : Integer;
         hierarchy_tree_size   : Integer;
         hierarchy_parent_rank : Integer;
@@ -53,6 +54,7 @@ entity Pd_Part_Parent_Category_View {
         parent_category_code  : String;
         sequence              : Decimal;
         path                  : String;
+        path_name             : String;
         hierarchy_rank        : Integer;
         hierarchy_tree_size   : Integer;
         hierarchy_parent_rank : Integer;

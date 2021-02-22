@@ -15,6 +15,7 @@ SELECT X.NODE_ID
       ,X.local_update_dtm
 --      ,SUBSTR(IFNULL(X.PATH,'-- '), 3) AS PATH
       ,X.PATH
+      ,X.PATH_NAME
       ,X.HIERARCHY_RANK
       ,X.HIERARCHY_TREE_SIZE
       ,X.HIERARCHY_PARENT_RANK
@@ -37,23 +38,22 @@ SELECT X.NODE_ID
             	 AND CATEGORY_CODE = M.PARENT_CATEGORY_CODE 
             	 AND CATEGORY_GROUP_CODE = M.CATEGORY_GROUP_CODE
             	 AND LANGUAGE_CD = 'KO') AS PARENT_CATEGORY_NAME
-        FROM DP_PD_PART_CATEGORY M, DP_PD_PART_CATEGORY_LNG L, CM_CODE_LNG CG
-       WHERE M.TENANT_ID = L.TENANT_ID
-         AND M.CATEGORY_CODE = L.CATEGORY_CODE
-         AND M.CATEGORY_GROUP_CODE = L.CATEGORY_GROUP_CODE
-         AND L.LANGUAGE_CD = 'KO'
-         AND m.tenant_id = 'L2101'
+        FROM DP_PD_PART_CATEGORY M
+			LEFT join ( select * from DP_PD_PART_CATEGORY_LNG where TENANT_ID = 'L2101' ) L
+			on M.TENANT_ID = L.TENANT_ID AND M.CATEGORY_GROUP_CODE = L.CATEGORY_GROUP_CODE AND M.CATEGORY_CODE = L.CATEGORY_CODE AND L.LANGUAGE_CD='KO'
+		    left join (select code, code_name
+			        from CM_CODE_LNG 
+			        where TENANT_ID = 'L2101' AND group_code='DP_PD_CATEGORY_GROUP' and LANGUAGE_CD='KO' ) CG
+			on M.CATEGORY_GROUP_CODE = CG.CODE 
+       WHERE m.tenant_id = 'L2101'
 	     AND m.category_group_code = 'CO'
-	     AND m.tenant_id = CG.tenant_id
-	     AND m.category_group_code = CG.code
-	     AND CG.group_code = 'DP_PD_CATEGORY_GROUP'
-	     AND CG.code = 'CO'
-         AND CG.LANGUAGE_CD = 'KO'
     )
     START WHERE PARENT_CATEGORY_CODE = '@TOP'
     SIBLING ORDER BY PARENT_ID, SEQUENCE
   )
   MEASURES (
-	STRING_AGG(NODE_ID, '/') AS PATH
+	STRING_AGG(NODE_ID, '/') AS PATH, 
+	STRING_AGG(CATEGORY_NAME, ' > ') AS PATH_NAME
   )
- ) X;
+ ) X
+--  where X.active_flag = false

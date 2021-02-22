@@ -44,8 +44,6 @@ sap.ui.define([
 
                 oView.setModel(oMultilingual.getModel(), "I18N");
                 
-                
-
                 //로그인 세션 작업완료시 수정
                 this.loginUserId = "17370CHEM@lgchem.com";
                 this.tenantId = "L2101";
@@ -96,6 +94,7 @@ sap.ui.define([
                             }
                         }), "tree");
 
+                        
                     }).bind(this))
                     // 실패시
                     .catch(function (oError) {
@@ -103,6 +102,7 @@ sap.ui.define([
                     // 모래시계해제
                     .finally((function () {
                         this.getView().setBusy(false);
+                        this.getView().byId("treeTable").collapseAll();
                     }).bind(this));
             },
 

@@ -55,7 +55,7 @@ sap.ui.define([
                 }, true);
             }.bind(this));
 
-            this.byId("btn_search").firePress();
+            //this.byId("btn_search").firePress();
             this._doInitTablePerso();
         },
 
@@ -75,7 +75,7 @@ sap.ui.define([
                 var aSearchFilters = this._getSearchStates();
 
                 if(this.byId("searchCompanyCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCompanyCombo")) !== true) {
-                    MessageToast.show("필수 선택 항목입니다.");
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01001"));
                     return;
                 } else {
                     this.validator.clearValueState(this.byId("searchCompanyCombo"));

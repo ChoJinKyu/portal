@@ -7,7 +7,7 @@
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns:f="sap.f" 
     xmlns:lib-m="ext.lib.m"
-    height="100%">
+    height="auto">
     
     <Dialog id="PartCategory" class="sapUiSizeCompact" title="Select Part Category" contentWidth="30%" >
         <content>

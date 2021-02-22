@@ -123,11 +123,11 @@
                             <Button id="mainTableButtonAllOpen" icon="sap-icon://expand-all" tooltip="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
                             
                             <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment"  enabled="{=${sm>/screen} === 'M' ? true : false}"/>
-                            <Button id="mainTablePersoButton" icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"  enabled="{=${sm>/screen} === 'M' ? true : false}">
+                            <!-- <Button id="mainTablePersoButton" icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"  enabled="{=${sm>/screen} === 'M' ? true : false}">
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
-                            </Button>
+                            </Button> -->
                         </OverflowToolbar>
                     </t:extension>
                     

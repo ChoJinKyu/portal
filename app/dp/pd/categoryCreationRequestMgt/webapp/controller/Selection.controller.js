@@ -178,32 +178,32 @@ sap.ui.define([
             var progressCode, CUType, statsCode;
 
             if(flag != "D" && flag == "R"){
-                if(this.byId("categoryGroupCodeCombo").getSelectedKey() === "" ) {
-                    MessageToast.show("카테고리 그룹은 필수 선택 항목입니다.");
+                if(this.byId("categoryGroupCodeCombo").getSelectedKey() === "" ) {//ECM01002
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01001"));
                     return;
                 }
 
                 if(this.byId("requestTitle").getValue() === "") {
                     this.byId("requestTitle").setValueState("Error");
-                    MessageToast.show("요청명은 필수 입력 항목입니다.");
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
                     return;
                 }
 
                 if(this.byId("requestCategoryName").getValue() === "") {
                     this.byId("requestCategoryName").setValueState("Error");
-                    MessageToast.show("요청카테고리명은 필수 입력 항목입니다.");
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
                     return;
                 }
 
-                if(this.byId("searchField").getValue() === "") {
-                    this.byId("searchField").setValueState("Error");
-                    MessageToast.show("유사카테고리는 필수 입력 항목입니다.");
+                if(this.byId("similarCategoryCode").getValue() === "") {
+                    this.byId("similarCategoryCode").setValueState("Error");
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
                     return;
                 }
 
                 if(this.byId("richTextEditor").getValue() === "") {
                     this.byId("richTextEditor").setValueState("Error");
-                    MessageToast.show("설명은 필수 입력 항목입니다.");
+                    MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
                     return;
                 }
             }
@@ -242,6 +242,7 @@ sap.ui.define([
                 }
             }
            
+
             var pdMstVal = {
                 tenant_id                : oMasterData.tenant_id,
                 request_number           : oMasterData.request_number,
@@ -327,40 +328,28 @@ sap.ui.define([
                             contentType: "application/json",
                             success: function (rst) {
                                 if(rst.return_code =="OK"){
-                                    //sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    if(flag == "D"){
+                                    if(flag == "D"){    // Draft
                                          sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
-                                    }else if(flag == "R"){
+                                        //this.byId("similarCategoryCode").setValue("");
+                                    }else if(flag == "R"){  // Request
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
-                                    }else if(flag == "E"){
+                                    }else if(flag == "E"){  // REJECT
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NDP60004"));
                                         v_this.onPageNavBackButtonPress();
-                                    }else if(flag == "F"){
+                                    }else if(flag == "F"){  // CANCEL
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NDP60003"));
                                         v_this.onPageNavBackButtonPress();
-                                    }else if(flag == "A"){
+                                    }else if(flag == "A"){  // APPROVAL
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
-                                    }else if(flag == "DL"){
+                                    }else if(flag == "DL"){ // DELETE
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));
                                         v_this.onPageNavBackButtonPress();
-                                    }else if(flag == "C"){
+                                    }else if(flag == "C"){  // CONFIRM_CREATE
                                         v_this.onMoveAddCreate();
-                                        // MessageBox.confirm("검토 완료되었습니다. \n Category를 생성을 진행하시겠습니까?", {
-                                        //     title : "Confirmation",
-                                        //     initialFocus : sap.m.MessageBox.Action.CANCEL,
-                                        //     onClose : function(sButton) {
-                                        //         if (sButton === MessageBox.Action.OK) {
-                                                    
-                                        //         } else {
-                                        //             v_this.onPageNavBackButtonPress();
-                                        //         }
-                                        //     }
-                                        // });
                                     }
-                                    
                                 }else{
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
@@ -493,8 +482,8 @@ sap.ui.define([
 		 */
         onSearch: function () {
             var oView = this.getView();
-            var sObjectPath = "/pdPartCategoryCreationRequest(tenant_id='" + this._sTenantId + "',category_group_code='"+ this._sCategoryGroupCode + "',request_number='" + this._sRequestNumber + "')";
-            //var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number + "')";
+            var sObjectPath = "/pdPartCategoryCreationRequestView(tenant_id='" + this._sTenantId + "',request_number='" + this._sRequestNumber + "',category_group_code='"+ this._sCategoryGroupCode + "')";
+            
             var oMasterModel = this.getModel("master");
             var v_this = this;
             this.statusGloCode = "";
@@ -504,12 +493,13 @@ sap.ui.define([
             oMasterModel.setTransactionModel(this.getModel());
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
+                    console.log(oData);
                     //oView.byId("ideaCompany").setValue(oData.company_code);
                     oView.setBusy(false);
                     v_this._toShowMode();
                 }
             });
-            
+           
             // var sObjectPath2 = "/approvalLine(tenant_id='" + this._sTenantId + "',org_type_code='" + this._sOrgTypeCode + 
             //                     "',category_group_code'"+ this._sCategoryGroupCode + "',category_code='" + categoryCode + "')";
             // var oDetailsModel = this.getModel("details");
@@ -529,40 +519,52 @@ sap.ui.define([
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
             var oDetailsModel = this.getModel("details");
-            var oData = oDetailsModel.oData;
+            var oMasterData = oMasterModel.oData;
 
             this.getView().getModel("viewModel").setProperty("/showMode", true);
             this.getView().getModel("viewModel").setProperty("/editMode", false);
-            //this.byId("page").setProperty("showFooter", true);
-            
+
             this.byId("pageNavBackButton").setVisible(true);
-            this.byId("pageEditButton").setEnabled(true);
+
+            if(oMasterData.progress_status_code === 'A') {
+                this.byId("pageEditButton").setVisible(true);
+                this.byId("pageADeleteButton").setVisible(true);
+                this.byId("pageAListButton").setVisible(true);
+                this.byId("pageASaveButton").setVisible(false);
+                this.byId("pageACancelButton").setVisible(false);
+                this.byId("pageASubmitButton").setVisible(false);
+            }
             
-            this.byId("pageNSaveButton").setEnabled(false);
-            this.byId("pageASaveButton").setEnabled(false);
-            this.byId("pageNCancelButton").setEnabled(false);
-            this.byId("pageACancelButton").setEnabled(false);
-            this.byId("pageNListButton").setEnabled(true);
-            this.byId("pageAListButton").setEnabled(true);
-            this.byId("pageNSubmitButton").setEnabled(false);
-            this.byId("pageASubmitButton").setEnabled(false);
         },
         
         _toEditMode: function () {
+            var oMasterModel = this.getModel("master");
+            var oDetailsModel = this.getModel("details");
+            var oMasterData = oMasterModel.oData;
+
             this.getView().getModel("viewModel").setProperty("/showMode", false);
             this.getView().getModel("viewModel").setProperty("/editMode", true);
-            var oMasterModel = this.getModel("master")
-            //this.byId("page").setProperty("showFooter", true);
+
             this.byId("pageNavBackButton").setVisible(false);
-            this.byId("pageEditButton").setEnabled(false);
-            this.byId("pageNSaveButton").setEnabled(true);
-            this.byId("pageASaveButton").setEnabled(true);
-            this.byId("pageNCancelButton").setEnabled(true);
-            this.byId("pageACancelButton").setEnabled(true);
-            this.byId("pageNListButton").setEnabled(false);
-            this.byId("pageAListButton").setEnabled(false);
-            this.byId("pageNSubmitButton").setEnabled(true);
-            this.byId("pageASubmitButton").setEnabled(true);
+
+            if(oMasterData.request_number === 'new') {
+                this.byId("pageNSaveButton").setEnabled(true);
+                this.byId("pageNListButton").setEnabled(true);
+                this.byId("pageNSubmitButton").setEnabled(true);
+            }
+
+            if(oMasterData.progress_status_code === 'A') {
+                //this.byId("pageEditButton").setEnabled(false);
+                this.byId("pageEditButton").setVisible(false);
+                //this.byId("pageADeleteButton").setEnabled(false);
+                this.byId("pageADeleteButton").setVisible(false);
+                //this.byId("pageAListButton").setEnabled(false);
+                this.byId("pageAListButton").setVisible(false);
+                this.byId("pageASaveButton").setVisible(true);
+                this.byId("pageACancelButton").setVisible(true);
+                this.byId("pageASubmitButton").setVisible(true);
+            }
+
         },
 
         onSearchPartCategory: function (oEvent) {
@@ -628,12 +630,12 @@ sap.ui.define([
             var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
 
             if(row.drill_state !== "leaf"){
-                MessageToast.show("Leaf Category만 선택할 수 있습니다.");
+                MessageToast.show(this.getModel("I18N").getText("/NDP60006"));
                 return;
             } else {
-                this.byId("searchField").setValue(row.category_name);
-                this.byId("similarCategoryCode").setText(row.category_code);
-
+                this.getModel("master").getData().similar_category_code = row.category_code;
+                this.byId("similarCategoryCode").setValue(row.category_name + " [" + row.category_code + "]");
+                
                 this.partCategoryPopupClose();
             }
             
@@ -648,16 +650,16 @@ sap.ui.define([
                 this.byId("requestCategoryName").setValueState("None");
             } 
             if (objPath == "/similar_category_code") {
-                this.byId("searchField").setValueState("None");
+                this.byId("similarCategoryCode").setValueState("None");
             }
         },
 
-        onChange: function(oEvent) {
-            var objPath = oEvent.oSource.mBindingInfos.value.parts[0].path;
-            if (objPath == "/request_desc") {
-                this.byId("richTextEditor").setValueState("None");
-            }
-        }
+        // onChange: function(oEvent) {
+        //     var objPath = oEvent.oSource.mBindingInfos.value.parts[0].path;
+        //     if (objPath == "/request_desc") {
+        //         this.byId("richTextEditor").setValueState("None");
+        //     }
+        // }
 
         
 
