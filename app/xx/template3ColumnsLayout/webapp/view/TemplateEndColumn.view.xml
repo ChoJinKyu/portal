@@ -6,6 +6,7 @@
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:lib-rte="ext.lib.control.ui.rte"
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
@@ -69,7 +70,7 @@
 
 		<uxap:sections>
 
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Department">
+			<uxap:ObjectPageSection titleUppercase="false" title="Department">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <form:SimpleForm editable="false">
@@ -77,8 +78,11 @@
                             <core:Title text="Normal" />
                             <Label text="{I18N>/CODE}"/>
                             <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}" editable="{endPageViewModel>/isAddedMode}">
+
                                 <Text text="{department>/department_code}"/>
+
                                 <Input value="{department>/department_code}"/>
+                                    
                             </lib-m:EditModeVBox>
                             <Label text="Korean Name"/>
                             <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
@@ -191,7 +195,18 @@
 						</Table>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>
+            </uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Descriptions">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <lib-rte:RichTextEditor
+                            editMode="{endPageViewModel>/isEditMode}"
+                            value="{department>/note}"
+                            height="400px" width="100%" />
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Path">
 				<uxap:subSections>

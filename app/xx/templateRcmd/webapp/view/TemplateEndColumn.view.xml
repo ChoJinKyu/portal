@@ -84,12 +84,17 @@
                         <form:SimpleForm editable="false">
 
                             <core:Title text="Normal" />
-                            <Label text="{I18N>/CODE}"/>
+                            <Label text="{I18N>/CODE}" required="true"/>
                             <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}" editable="{endPageViewModel>/isAddedMode}">
                                 <Text text="{department_code}"/>
-                                <Input value="{department_code}"/>
+                                <Input value="{department_code}" required="true"/>
                             </lib-m:EditModeVBox>
-                            <Label text="Korean Name"/>
+                            <Label text="Name" required="true"/>
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
+                                <Text text="{department_name}"/>
+                                <Input value="{department_name}" required="true"/>
+                            </lib-m:EditModeVBox>
+                            <Label text="Korean Name" required="true"/>
                             <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{department_korean_name}"/>
                                 <Input value="{department_korean_name}"/>
@@ -98,12 +103,6 @@
                             <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{department_english_name}"/>
                                 <Input value="{department_english_name}"/>
-                            </lib-m:EditModeVBox>
-                            <Label text="Leader Employee No."/>
-                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
-                                <Text text="{department_leader_empno}" />
-                                <Input value="{department_leader_empno}"
-                                    showValueHelp="true" valueHelpRequest=".onDepartmentLeaderEmployeeValueHelpPress"/>
                             </lib-m:EditModeVBox>
 
                             <core:Title text="Settings" />
@@ -123,13 +122,22 @@
                                     }">
                                 </lib-m:CodeComboBox>
                             </lib-m:EditModeVBox>
+                            <Label text="Leader Employee No."/>
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
+                                <Text text="{department_leader_empno}" />
+                                <Input value="{department_leader_empno}" required="true"
+                                    showValueHelp="true" valueHelpRequest=".onDepartmentLeaderEmployeeValueHelpPress"/>
+                            </lib-m:EditModeVBox>
                             <Label text="Used"/>
                             <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{
                                         path: 'use_flag',
                                         formatter: '.viewFormatter.toYesNo'
                                     }"/>
-                                <SegmentedButton selectedKey="{use_flag}">
+                                <SegmentedButton selectedKey="{
+                                        path: 'use_flag',
+                                        type: 'sap.ui.model.type.Boolean'
+                                    }">
                                     <items>
                                         <SegmentedButtonItem text="Yes" key="true"/>
                                         <SegmentedButtonItem text="No" key="false"/>
@@ -169,7 +177,7 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="Members">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<Table id="employeeList" 
+						<lib-m:Table id="employeeList"
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
                                 items="{
@@ -185,39 +193,51 @@
                                 }"
                                 growing="true"
                                 growingThreshold="10"
-								class="sapFDynamicPageAlignContent" 
+								class="sapUiSizeCompact sapFDynamicPageAlignContent" 
                                 mode="None" 
                                 selectionChange=".onEmployeeListSelectionChange"
+                                updateFinished="onEmployeeListUpdateFinished"
                                 itemPress=".onEmployeeListItemPress"
+                                delete=".onEmployeeListDeleteButtonPress"
 								width="auto">
-							<headerToolbar>
-								<OverflowToolbar>
-                                    <Title text="Employees who member of department" level="H2"/>
-									<ToolbarSpacer/>
+							<lib-m:headerToolbar>
+								<OverflowToolbar class="sapUiSizeCompact">
+                                    <Title text="Employees" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <SearchField placeholder="Name" width="10rem" search=".onEmployeeListSearch" />
+                                    <Button id="employeeListAddButton" text="Add" type="Transparent" press=".onEmployeeListAddButtonPress" />
+                                    <Button id="employeeListDeleteButton" text="Delete" type="Transparent" press=".onEmployeeListDeleteButtonPress" />
 								</OverflowToolbar>
-							</headerToolbar>
-							<columns>
+							</lib-m:headerToolbar>
+							<lib-m:columns>
+								<Column minScreenWidth="Tablet" width="2rem">
+                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
 									<Label text="{I18N>/NAME}" />
 								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Left" width="8rem" popinDisplay="WithoutHeader" >
+								<Column minScreenWidth="Tablet" hAlign="Left" width="8rem" demandPopin="true" popinDisplay="WithoutHeader" >
 									<Label text="Job Title" />
 								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
 									<Label text="Gender" />
 								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Left" width="10rem" demandPopin="true" >
+								<Column minScreenWidth="Tablet" hAlign="Left" width="10rem" >
 									<Label text="Emp No." />
 								</Column>
-							</columns>
-                            <items>
+							</lib-m:columns>
+                            <lib-m:items>
                                 <ColumnListItem type="Active">
                                     <cells>
-                                        <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
+                                        <ObjectStatus icon="{
+                                            path: '__metadata/_row_state_',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
+                                        <lib-m:EditModeVBox editMode="{= ${endPageViewModel>/isEditMode} === true &amp;&amp; ${__metadata/_row_state_} !== 'D' }">
                                             <Text text="{user_local_name}"/>
                                             <Input value="{user_local_name}" required="true"/>
                                         </lib-m:EditModeVBox>
-                                        <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
+                                        <lib-m:EditModeVBox editMode="{= ${endPageViewModel>/isEditMode} === true &amp;&amp; ${__metadata/_row_state_} !== 'D' }">
                                             <Text text="{job_title}"/>
                                             <Input value="{job_title}" required="true"/>
                                         </lib-m:EditModeVBox>
@@ -225,8 +245,8 @@
                                         <Text text="{employee_number}"/>
                                     </cells>
                                 </ColumnListItem>
-                            </items>
-						</Table>
+                            </lib-m:items>
+						</lib-m:Table>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -235,25 +255,23 @@
 		
 		<uxap:footer>
 			<OverflowToolbar>
-                <Button
+                <!-- <Button
                     icon="sap-icon://alert"
                     type="Emphasized"
                     text="{= ${message>/}.length }"
                     visible="{= ${message>/}.length > 0 }"
                     ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />
+                    press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
 				<lib-m:EditModeButton type="Transparent" id="pageEditModeButton" press=".onPageEditModeButtonPress" />
-                <Button id="employeeListAddButton" text="Add Employee" type="Transparent" press=".onEmployeeListAddButtonPress" />
-                <Button id="employeeListDeleteButton" text="Remove Employees" type="Transparent" press=".onEmployeeListDeleteButtonPress" />
-				<Button type="Transparent" id="pageDeleteButton" text="Delete" press=".onPageDeleteButtonPress" />
+				<Button type="Transparent" id="pageDeleteButton" text="Delete 부서" press=".onPageDeleteButtonPress" />
 				<Button type="Emphasized" id="pageSaveButton" text="Save" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
     </uxap:ObjectPageLayout>
     
 
-    <Dialog id="dialogCreateEmployee" class="sapUiSizeCompact" title="Create a Employee" contentWidth="35%">
+    <Dialog id="dialogCreateEmployee" title="Create a Employee" contentWidth="35%">
         <content>
             <VBox>
                 <form:SimpleForm 

@@ -104,7 +104,7 @@
 							<Text text="{
 									path: 'company>/system_update_dtm',
 									formatter: '.dateFormatter.toUTCDateTimeString'
-								}"/>
+                                }"/>
 						</form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -151,5 +151,78 @@
 
 		</uxap:sections>
 		
-	</uxap:ObjectPageLayout>
+    </uxap:ObjectPageLayout>
+    
+    <Dialog id="dialogCreateDepartment" class="sapUiSizeCompact" title="Create a Department" contentWidth="35%">
+        <content>
+            <VBox>
+                <form:SimpleForm 
+                        maxContainerCols="2"
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        adjustLabelSpan="false"
+                        labelSpanL="4"
+                        labelSpanM="4"
+                        emptySpanL="0"
+                        emptySpanM="0"
+                        columnsL="2"
+                        columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="department_code" required="true"/>
+                            <Input value="{dialogCreateModel>/department_code}" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="department_name" required="true"/>
+                            <Input value="{dialogCreateModel>/department_name}" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="parent_department_code" required="true"/>
+                            <Input value="{dialogCreateModel>/parent_department_code}" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="use_flag" required="true"/>
+                            <SegmentedButton 
+                                selectedKey="{
+                                    path: 'dialogCreateModel>/use_flag',
+                                    type : 'sap.ui.model.type.Boolean'
+                                }" >
+                                <items>
+                                    <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                    <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                </items>
+                            </SegmentedButton>
+                        </VBox>
+                        <VBox>
+                            <Label text="department_korean_name" />
+                            <Input value="{dialogCreateModel>/department_korean_name}" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="department_english_name" />
+                            <Input value="{dialogCreateModel>/department_english_name}" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="department_leader_empno" />
+                            <Input value="{dialogCreateModel>/department_leader_empno}" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="department_type_code" />
+                            <Input value="{dialogCreateModel>/department_type_code}" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="full_path_desc" />
+                            <Input value="{dialogCreateModel>/full_path_desc}" required="true" />
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="Cancel" type="Transparent" press=".onDialogCreateDepartmentCancelButtonPress"/>
+        </beginButton>
+        <endButton>
+            <Button text="Create" type="Emphasized" press=".onDialogCreateDepartmentCreateButtonPress"/>
+        </endButton>
+    </Dialog>
+
 </mvc:View>

@@ -18,7 +18,7 @@
                   inset="false"
                   noDataText="No Data"
                   class="sapFDynamicPageAlignContent" 
-                  updateFinished=".onMainTableUpdateFinished"
+                  updateFinished=".onRtableUpdateFinished"
                   items="{rModelList>/Message}"
                   mode="MultiSelect" 
                   width="auto">
@@ -29,8 +29,8 @@
                         <Button text="Load Data" type="Transparent" press=".onRLoadPress" />
                         <Button text="Reset Data" type="Transparent" press=".onResetRModelListPress" />
                         <Button text="Change Mode" type="Transparent" press=".onChangeModePress" />
-                        <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
-                        <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" />
+                        <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress($event, {modelName: 'rModelList', path: '/Message'})" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                        <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange($event, {modelName : 'rModelList', path : '/Message'})" />
                         <!--<Button text="Import" type="Transparent" press=".onImportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>-->
                     </OverflowToolbar>
                 </headerToolbar>
@@ -40,6 +40,10 @@
                     </Column>
                     <Column width="10em">
                         <Text text="Product" />
+                        <customData>
+                            <!--Import 적용될 property-->
+                            <core:CustomData key="bindName" value="product_id" />
+                        </customData>
                     </Column>
                     <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em">
                         <VBox>
@@ -47,70 +51,107 @@
                         </VBox>
                         <!--specify customData for Excel Imporing-->
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="chain_code" />
                         </customData>
                     </Column>
                     <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em">
                         <Text text="Language" />
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="language_code" />
                         </customData>
                     </Column>
                     <Column minScreenWidth="Tablet" hAlign="Center" width="15em">
                         <Text text="Code" />
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="message_code" />
                         </customData>
                     </Column>
                     <Column minScreenWidth="Tablet" hAlign="Left">
                         <Text text="Content" textAlign="Center" />
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="message_contents" />
                         </customData>
                     </Column>
                     <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
                         <Text text="Type" />
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="message_type_code" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
-                        <Text text="Price" textAlign="Center" />
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
+                        <Text text="Price"/>
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="price" />
+                            <!--Export EDM Type-->
+                            <core:CustomData key="type" value="Number" />
+                            <!--Export 천단위 표시 여부-->
+                            <core:CustomData key="delimiter" value="true" />
+                            <!--Export 숫자 값 옆에 측정 단위 또는 통화로 표시 할 텍스트-->
+                            <core:CustomData key="unit" value="KRW" />
+                            <!--Export Width 지정(default 20)-->
+                            <core:CustomData key="width" value="30" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
                         <Text text="Using" textAlign="Center" />
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="use_flag" />
+                            <!--Export EDM Type-->
+                            <core:CustomData key="type" value="Boolean" />
+                            <!--Export Boolean type 의 text 표현-->
+                            <core:CustomData key="trueValue" value="Yes" />
+                            <core:CustomData key="falseValue" value="No" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
                         <Text text="create date" textAlign="Center" />
                         <customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="local_create_dtm" />
-                            <!--EDM Type-->
+                            <!--Export EDM Type-->
                             <core:CustomData key="type" value="Date" />
-                            <!--format-->
+                            <!--Export format-->
                             <core:CustomData key="format" value="yyyy-mm-dd" />
+                            <!--엑셀 칼럼 textAlign-->
+                            <core:CustomData key="textAlign" value="Center" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
                         <Text text="update datetime" textAlign="Center" />
                         <customData>
+                            <!--Import시 적용될 property-->
                             <core:CustomData key="bindName" value="local_update_dtm" />
                             <!--EDM Type-->
                             <core:CustomData key="type" value="DateTime" />
                             <!--format 시간은 분단위 까지만 출력됩니다.-->
                             <core:CustomData key="format" value="yyyy-mm-dd HH:mm:ss" />
+                            <!--엑셀 칼럼 textAlign-->
+                            <core:CustomData key="textAlign" value="Center" />
                         </customData>
                     </Column>
                     <Column minScreenWidth="Tablet" hAlign="End" width="10em" visible="false">
                         <Text text="Hidden Column" textAlign="Center" />
-                        <!--감춤칼럼을 excel export 대상으로 지정-->
                         <customData>
-                            <core:CustomData key="exportData" value="true" />
+                            <!--Import시 적용될 property-->
+                            <core:CustomData key="bindName" value="product_name" />
+                            <!--엑셀 칼럼 width 지정-->
+                            <core:CustomData key="width" value="50" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                        <Text text="noExport Column" textAlign="Center" />
+                        <customData>
+                            <!--Import시 적용될 property-->
+                            <core:CustomData key="bindName" value="create_user_id" />
+                            <!--엑셀 칼럼 width 지정 true 이어야 적용됨-->
+                            <core:CustomData key="noExport" value="true" />
                         </customData>
                     </Column>
                 </columns>
@@ -178,7 +219,7 @@
                                     ],
                                     type: 'sap.ui.model.type.Currency',
                                     formatOptions: {showMeasure: false}
-                                }" unit="{rModelList>currency_code}" textAlign="End" />
+                                }" unit="{rModelList>currency_code}" textDirection="RTL" />
                             <Switch state="{= typeof ${rModelList>use_flag} === 'string' ? JSON.parse(${rModelList>use_flag}) : ${rModelList>use_flag}}" customTextOn="Yes" customTextOff="No">
                                 <layoutData>
                                     <FlexItemData growFactor="1" />
@@ -192,13 +233,16 @@
                                     path: 'rModelList>local_update_dtm',
                                     formatter: '.DateFormatter.toUTCDateTimeString'
                                 }"/>
-                            <Text text="{rModelList>name}" />
+                            <Text text="{rModelList>product_name}" />
+                            <Text text="{rModelList>create_user_id}" />
                         </cells>
                     </ColumnListItem>
                 </items>
             </Table>
-            <OverflowToolbar />
-            <table:Table id="gTable" title="GridTable" sticky="HeaderToolbar,ColumnHeaders" inset="false" noDataText="{I18N>/NCM01004}" class="sapFDynamicPageAlignContent" updateFinished=".onMainTableUpdateFinished" rows="{gModelList>/Message}" width="auto">
+
+
+            <!--Grid Table-->
+            <table:Table id="gTable" sticky="HeaderToolbar,ColumnHeaders" inset="false" noDataText="{I18N>/NCM01004}" class="sapFDynamicPageAlignContent sapUiLargeMarginTop" updateFinished=".onGtableUpdateFinished" rows="{gModelList>/Message}" width="auto">
                 <table:extension>
                     <OverflowToolbar>
                         <Title text="Grid Table / Total : {= ${gModelList>/Message}.length > 0 ? '(' + ${gModelList>/Message}.length + ')' : '0'}" level="H2" />
@@ -206,14 +250,15 @@
                         <Button text="Load Data" type="Transparent" press=".onGLoadPress" />
                         <Button text="Reset Data" type="Transparent" press=".onResetGModelListPress" />
                         <Button text="Change mode" type="Transparent" press=".onChangeModePress" />
-                        <Button id="gTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
-                        <u:FileUploader id="gFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" />
+                        <Button id="gTableExportButton" text="Export" type="Transparent" press=".onExportPress($event, {modelName: 'gModelList', path: '/Message'})" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                        <u:FileUploader id="gFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange($event, {modelName : 'gModelList', path : '/Message'})" />
                     </OverflowToolbar>
                 </table:extension>
                 <table:columns>
                     <table:Column width="11rem">
                         <!--specify customData for Excel Imporing-->
                         <table:customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="chain_code" />
                         </table:customData>
                         <Label text="Chain" />
@@ -233,6 +278,7 @@
                     </table:Column>
                     <table:Column width="11rem">
                         <table:customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="language_code" />
                         </table:customData>
                         <Label text="Language" />
@@ -252,6 +298,7 @@
                     </table:Column>
                     <table:Column width="9rem" hAlign="End">
                         <table:customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="message_code" />
                         </table:customData>
                         <Label text="Code" />
@@ -272,6 +319,7 @@
                     </table:Column>
                     <table:Column width="9rem">
                         <table:customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="message_contents" />
                         </table:customData>
                         <Label text="Content" />
@@ -281,6 +329,7 @@
                     </table:Column>
                     <table:Column width="9rem">
                         <table:customData>
+                            <!--Import 적용될 property-->
                             <core:CustomData key="bindName" value="message_type_code" />
                         </table:customData>
                         <Label text="Type" />
@@ -302,6 +351,89 @@
                             </ComboBox>
                         </table:template>
                     </table:Column>
+					<table:Column
+						width="11rem"
+						headerSpan="3,2">
+						<table:multiLabels>
+							<Label text="Contact" textAlign="Center" width="100%"/>
+							<Label text="Address" textAlign="Center" width="100%"/>
+							<Label text="Street" textAlign="Center" width="100%"/>
+                        </table:multiLabels>
+                        <table:customData>
+                            <!--Import 적용될 property-->
+                            <core:CustomData key="bindName" value="street" />
+                        </table:customData>
+						<table:template>
+							<Text text="{gModelList>street}" wrapping="false"/>
+						</table:template>
+					</table:Column>
+					<table:Column
+						width="11rem"
+						headerSpan="2">
+						<table:multiLabels>
+							<Label text="Contact"/>
+							<Label text="Address"/>
+							<Label text="City" textAlign="Center" width="100%"/>
+                        </table:multiLabels>
+                        <table:customData>
+                            <!--Import 적용될 property-->
+                            <core:CustomData key="bindName" value="city" />
+                        </table:customData>
+						<table:template>
+							<Input value="{gModelList>city}"/>
+						</table:template>
+					</table:Column>
+					<table:Column
+						width="11rem">
+						<table:multiLabels>
+							<Label text="Contact"/>
+							<Label text="Phone" textAlign="Center" width="100%"/>
+                        </table:multiLabels>
+                        <table:customData>
+                            <!--Import 적용될 property-->
+                            <core:CustomData key="bindName" value="phone" />
+                        </table:customData>
+						<table:template>
+							<Input value="{gModelList>phone}"/>
+						</table:template>
+					</table:Column>
+					<table:Column width="8rem" hAlign="End">
+						<table:multiLabels>
+							<Label visible="false" />
+							<Label visible="false" />
+							<Label text="Scale" />
+                        </table:multiLabels>
+                        <table:customData>
+                            <!--Import 적용될 property-->
+                            <core:CustomData key="bindName" value="scale" />
+                            <!--Export column textAlign-->
+                            <core:CustomData key="textAlign" value="End" />
+                            <!--Export column EDM Type-->
+                            <core:CustomData key="type" value="Number" />
+                            <!--Export column scale 2자리-->
+                            <core:CustomData key="scale" value="2" />
+                        </table:customData>
+						<table:template>
+							<Text text="{gModelList>scale}"/>
+						</table:template>
+                    </table:Column>
+                    <table:Column width="8rem" hAlign="Center">
+                        <Label text="Create Date" />
+                        <table:customData>
+                            <!--Import 적용될 property-->
+                            <core:CustomData key="bindName" value="local_create_dtm" />
+                            <!--Export EDM Type-->
+                            <core:CustomData key="type" value="Date" />
+                            <!--Export format-->
+                            <core:CustomData key="format" value="yyyy-mm-dd" />
+                        </table:customData>
+						<table:template>
+							<Text text="{
+                                    path: 'gModelList>local_create_dtm',
+                                    formatter: '.DateFormatter.toUTCDateString'
+                                }"/>
+						</table:template>
+					</table:Column>
                 </table:columns>
             </table:Table>
         </content>

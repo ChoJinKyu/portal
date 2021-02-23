@@ -2,7 +2,8 @@ sap.ui.define([
 	    "./BaseController",					
         "sap/ui/model/Filter",						
         "sap/ui/model/Sorter",			
-        "sap/m/MessageBox",
+        "sap/m/MessageBox",		
+        "sap/m/MessageToast",
         "ext/lib/util/Multilingual",
         "sap/ui/core/ListItem",
         "sap/m/SegmentedButtonItem",
@@ -11,7 +12,7 @@ sap.ui.define([
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function ( Controller, Filter, Sorter, MessageBox, 
+    function ( Controller, Filter, Sorter, MessageBox, MessageToast,
         Multilingual, ListItem, SegmentedButtonItem, 
         CalculationBuilderVariable ) {
         "use strict";
@@ -531,7 +532,7 @@ sap.ui.define([
              */
             , onPressPageNavBack : function(){
                 
-                this.getOwnerComponent().getRouter().navTo("Master");
+                this.getOwnerComponent().getRouter().navTo("Master", {search:"Y"});
             }
             /**
              * 해당 상세 평가 삭제
@@ -568,14 +569,19 @@ sap.ui.define([
                             data: JSON.stringify(oSaveData),
                             contentType: "application/json",
                             success: function (data) {
-                                MessageBox.success(oI18NModel.getProperty("/NCM01002"), {
-                                    onClose : function (sAction) {
-                                        oView.setBusy(false);
-                                        oComponent.getRouter().navTo("Master",{
-                                            search : true
-                                        });
-                                    }
+                                MessageToast.show(oI18NModel.getProperty("/NCM01002"));
+                                oView.setBusy(false);
+                                oComponent.getRouter().navTo("Master",{
+                                    search : true
                                 });
+                                // MessageBox.success(oI18NModel.getProperty("/NCM01002"), {
+                                //     onClose : function (sAction) {
+                                //         oView.setBusy(false);
+                                //         oComponent.getRouter().navTo("Master",{
+                                //             search : true
+                                //         });
+                                //     }
+                                // });
                             },
                             error: function (e) {
                                 var sDetails;
@@ -638,18 +644,29 @@ sap.ui.define([
                             data: JSON.stringify(oSaveData),
                             contentType: "application/json",
                             success: function (data) {
-                                MessageBox.success(oI18NModel.getProperty("/NCM01001"), {
-                                    onClose : function (sAction) {
-                                        oView.setBusy(false);
-                                        if(oArgs.new === "Y"){
-                                            oComponent.getRouter().navTo("Master",{
-                                                search : true
-                                            });
-                                            return;
-                                        }
-                                        this._readHeader();
-                                    }.bind(this)
-                                });
+                                MessageToast.show(oI18NModel.getProperty("/NCM01001"));
+                                oView.setBusy(false);
+                                if(oArgs.new === "Y"){
+                                    oComponent.getRouter().navTo("Master",{
+                                        search : true
+                                    });
+                                    return;
+                                }
+                                this._readHeader();
+                                this.getOwnerComponent().byId("Master").byId("btnSearch").firePress();
+                                // MessageBox.success(oI18NModel.getProperty("/NCM01001"), {
+                                //     onClose : function (sAction) {
+                                //         oView.setBusy(false);
+                                //         if(oArgs.new === "Y"){
+                                //             oComponent.getRouter().navTo("Master",{
+                                //                 search : true
+                                //             });
+                                //             return;
+                                //         }
+                                //         this._readHeader();
+                                //         this.getOwnerComponent().byId("Master").byId("btnSearch").firePress();
+                                //     }.bind(this)
+                                // });
                             }.bind(this),
                             error: function (e) {
                                 var sDetails;

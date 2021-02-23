@@ -57,7 +57,7 @@ sap.ui.define([
         constructor: function(){
             Parent.apply(this, arguments);
             this.setModel(new JSONModel());
-            this.addStyleClass("sapUiSizeCompact");
+            this.addStyleClass("sapUiSizeCozy");
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -189,7 +189,7 @@ sap.ui.define([
             }
         },
 
-        setData: function(aRecords){
+        setData: function(aRecords, callback){
             this.getModel().setSizeLimit(aRecords.length || 100);
             this.getModel().setData(aRecords, false);
             this.oTable.clearSelection();
@@ -212,9 +212,9 @@ sap.ui.define([
                     }.bind(this));
                     
                 }
-                this.oTable.setBusy(false);
+                if(callback) callback();
             }else{
-                this.oTable.setBusy(false);
+                if(callback) callback();
             }
         },
 
@@ -244,7 +244,6 @@ sap.ui.define([
 
         _onSearchPress: function(oEvent){
             this.fireEvent("searchPress");
-            // this.oTable.setBusy(true);
         },
 
         _onTableItemSelect: function(oEvent){

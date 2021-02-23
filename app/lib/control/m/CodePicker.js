@@ -18,8 +18,7 @@ sap.ui.define([
                 textField: { type: "string", group: "Misc", defaultValue: "code_name" },
                 additionalTextField: { type: "string", group: "Misc" },
                 showValueHelp: { type: "boolean", group: "Behavior", defaultValue: true },
-                showSuggestion: { type: "boolean", group: "Behavior", defaultValue: true },
-                textFormatMode: { type: "string", group: "Behavior", defaultValue: "KeyValue" }
+                showSuggestion: { type: "boolean", group: "Behavior", defaultValue: true }
             },
             defaultAggregation: "valueHelp",
             aggregations: {

@@ -14,10 +14,6 @@ sap.ui.define([
 	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, Multilingual, MessageBox, MessageToast, deepExtend, fileDownload, $) {
     "use strict";
     
-    var _fileGroupId;
-    var _oUploadCollection;
-    var _oResourceModel;
-
 	return Controller.extend("xx.templateGuie.controller.UploadCollection", {
         onInit: function(initParam) {            
             this._fileGroupId = initParam.fileGroupId;

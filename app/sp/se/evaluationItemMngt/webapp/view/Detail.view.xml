@@ -21,12 +21,25 @@
         
 		<uxap:headerTitle>
             <!-- 상세 -->
-			<uxap:ObjectPageHeader objectTitle="{I18N>/DETAIL}">
+			<!-- <uxap:ObjectPageHeader objectTitle="{I18N>/DETAIL}">
                 <uxap:actions>
                     <OverflowToolbarButton type="Transparent" icon="{viewModel>/App/btnScreen}" text="screen" tooltip="screen change" press="onPressLayoutChange" />
                     <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
                 </uxap:actions> 
-			</uxap:ObjectPageHeader>
+			</uxap:ObjectPageHeader> -->
+            <uxap:ObjectPageDynamicHeaderTitle 
+                pinnable="false"
+            >
+                <uxap:heading>
+                    <Toolbar style="Clear">
+                        <Button icon="sap-icon://nav-back" press="onPressPageNavBack"/>
+                        <Title text="{I18N>/DETAIL}"/>
+                    </Toolbar >
+                </uxap:heading>
+                <uxap:actions>
+                    <OverflowToolbarButton type="Transparent" icon="{viewModel>/App/btnScreen}" text="screen" tooltip="screen change" press="onPressLayoutChange" />
+                </uxap:actions>
+			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
 		<uxap:headerContent>

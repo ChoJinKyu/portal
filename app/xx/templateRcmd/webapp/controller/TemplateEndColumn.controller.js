@@ -51,6 +51,7 @@ sap.ui.define([
 		onInit : function () {
             this.setModel(this.getMultilingual().getModel(), "I18N");
 			this.setModel(new JSONModel(), "endPageViewModel");
+			this.setModel(new JSONModel(), "employeeEditModel");
 
             this.getRouter().getRoute("endPage").attachPatternMatched(this._onRoutedThisPage, this);
 		}, 
@@ -119,9 +120,11 @@ sap.ui.define([
                         title : "Comfirmation",
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
                         onClose : function(sButton) {
-                            if(sButton == MessageBox.Action.OK)
+                            if(sButton == MessageBox.Action.OK){
+                                this.getModel().resetChanges();
                                 cancelEdit();
-                        }
+                            }
+                        }.bind(this)
                     });
                 }else{
                     cancelEdit();
@@ -141,7 +144,7 @@ sap.ui.define([
                     multiSelection: false,
                     items: {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId)
                         ]
                     }
                 });
@@ -180,32 +183,6 @@ sap.ui.define([
 			});
 		},
 
-		onEmployeeListAddButtonPress: function(){
-            this.byId("dialogCreateEmployee").open();
-		},
-
-		onEmployeeListDeleteButtonPress: function(){
-			var oTable = this.getList(),
-				oModel = this.getModel(),
-				aPaths = oTable.getSelectedContextPaths();
-			aPaths.forEach(function(sPath){
-				oModel.remove(sPath, {
-                    groupId: "removes",
-                    success: function(e){}.bind(this),
-                    error: function(e){}.bind(this)
-                })
-			});
-            oModel.submitChanges({
-                groupId: "removes",
-                success: function(ok){
-                    MessageToast.show("Removed");   //TODO: i18n
-                }.bind(this),
-                error: function(){
-                    MessageToast.show("Error"); //TODO: i18n
-                }.bind(this)
-            });
-		},
-		
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -251,6 +228,7 @@ sap.ui.define([
 			});
 
         },
+
         
         // onEmployeeListSelectionChange: function(oEvent){
         //     return;
@@ -277,6 +255,10 @@ sap.ui.define([
         //     }
         // },
 
+		onEmployeeListAddButtonPress: function(){
+            this.byId("dialogCreateEmployee").open();
+        },
+        
         onDialogCreateEmployeeCancelButtonPress: function(){
             this.byId("dialogCreateEmployee").close();
         },
@@ -284,19 +266,22 @@ sap.ui.define([
         onDialogCreateEmployeeCreateButtonPress: function(){
 			var oModel = this.getModel(),
                 oContext = oModel.createEntry("/Employee", {
-                     properties: {
-                         "tenant_id": "L2100",
-                         "employee_number": "1000001",
-                         "user_status_code": "C",
-                         "user_local_name": this.byId("dialogCreateEmployeeLocalName").getValue(),
-                         "assign_type_code": "R",
-                         "department_code": "58644670",
-                         "job_title": this.byId("dialogCreateEmployeeJobTitle").getValue(),
-                         "gender_code": this.byId("dialogCreateEmployeeGenderCode").getValue()
+                    groupId: "adds",
+                    properties: {
+                        "tenant_id": this._sTenantId,
+                        "employee_number": this.byId("dialogCreateEmployeeNo").getValue(),
+                        "user_status_code": "C",
+                        "user_local_name": this.byId("dialogCreateEmployeeLocalName").getValue(),
+                        "assign_type_code": "R",
+                        "department_code": "58644670",
+                        "job_title": this.byId("dialogCreateEmployeeJobTitle").getValue(),
+                        "gender_code": this.byId("dialogCreateEmployeeGenderCode").getValue()
                      }
                 });
             this.getList().setBindingContext(oContext);
+            // oModel.deleteCreatedEntry(oContext);
             oModel.submitChanges({
+                groupId: "adds",
                 success: function(e){
                     this.byId("dialogCreateEmployee").close();
                     MessageToast.show("Created");   //TODO : i18n
@@ -307,6 +292,76 @@ sap.ui.define([
             });
         },
 
+		onEmployeeListDeleteButtonPress: function(){
+			var oTable = this.getList(),
+				oModel = this.getModel(),
+				oEmployeeEditModel = this.getModel("employeeEditModel"),
+                aPaths = oTable.getSelectedContextPaths(),
+                oEmployee;
+            oEmployeeEditModel.setProperty("/DELETED", aPaths);
+			aPaths.forEach(function(sPath){
+                oEmployee = oModel.getProperty(sPath);
+                oEmployee["__metadata"]["_deleted_"] = true;
+                // oEmployee["__metadata"]["_row_state_"] = "D";
+				oModel.setProperty(sPath + "/__metadata/_row_state_", "D");
+                oModel.update(sPath, oEmployee, {
+                    groupId: "changes"
+                });
+            });
+			this.getList().removeSelections();
+			// aPaths.forEach(function(sPath){
+			// 	oModel.remove(sPath, {
+            //         groupId: "removes",
+            //         success: function(e){}.bind(this),
+            //         error: function(e){}.bind(this)
+            //     })
+			// });
+            // oModel.submitChanges({
+            //     groupId: "removes",
+            //     success: function(ok){
+            //         MessageToast.show("Removed");   //TODO: i18n
+            //     }.bind(this),
+            //     error: function(){
+            //         MessageToast.show("Error"); //TODO: i18n
+            //     }.bind(this)
+            // });
+        },
+        
+		onEmployeeListDeleteButtonPress: function(){
+			var oTable = this.getList(),
+				oModel = this.getModel(),
+				oEmployeeEditModel = this.getModel("employeeEditModel"),
+                aPaths = oTable.getSelectedContextPaths(),
+                oEmployee;
+            oEmployeeEditModel.setProperty("/DELETED", aPaths);
+			aPaths.forEach(function(sPath){
+                oEmployee = oModel.getProperty(sPath);
+                oEmployee["__metadata"]["_deleted_"] = true;
+                // oEmployee["__metadata"]["_row_state_"] = "D";
+				oModel.setProperty(sPath + "/__metadata/_row_state_", "D");
+                oModel.update(sPath, oEmployee, {
+                    groupId: "changes"
+                });
+            });
+			this.getList().removeSelections();
+			// aPaths.forEach(function(sPath){
+			// 	oModel.remove(sPath, {
+            //         groupId: "removes",
+            //         success: function(e){}.bind(this),
+            //         error: function(e){}.bind(this)
+            //     })
+			// });
+            // oModel.submitChanges({
+            //     groupId: "removes",
+            //     success: function(ok){
+            //         MessageToast.show("Removed");   //TODO: i18n
+            //     }.bind(this),
+            //     error: function(){
+            //         MessageToast.show("Error"); //TODO: i18n
+            //     }.bind(this)
+            // });
+		},
+		
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
@@ -348,7 +403,7 @@ sap.ui.define([
             });
             
             this.getList().getBinding("items").filter([
-                new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                 new Filter("department_code", FilterOperator.EQ, "58644670")
             ], "Application");
         
@@ -377,6 +432,7 @@ sap.ui.define([
 			this.byId("employeeListAddButton").setEnabled(!VIEW_MODE);
 			this.byId("employeeListDeleteButton").setEnabled(!VIEW_MODE);
 			this.getList().setMode(sap.m.ListMode.None);
+            // this.getList().setShowSelectAll(true);
 			// this.getList().getColumns()[0].setVisible(!VIEW_MODE);
 			// this._bindTable(this.oReadOnlyTemplate, "Navigation");
         },
@@ -396,65 +452,11 @@ sap.ui.define([
 
 			this.byId("employeeListAddButton").setEnabled(!VIEW_MODE);
 			this.byId("employeeListDeleteButton").setEnabled(!VIEW_MODE);
-			this.getList().setMode(sap.m.ListMode.MultiSelect);
+            this.getList().setMode(sap.m.ListMode.Delete);
+            this.getList().setEnableSelectAll(false);
 			// this.getList().getColumns()[0].setVisible(!VIEW_MODE);
 			// this._bindTable(this.oEditableTemplate, "Edit");
-		},
-
-		_initTableTemplates: function(){
-			this.oReadOnlyTemplate = new ColumnListItem({
-				cells: [
-					new ObjectIdentifier({
-						text: "{employee>employee_number}"
-					}), 
-					new Text({
-						text: "{employee>user_local_name}"
-					}), 
-					new Text({
-						text: "{employee>job_title}"
-					}), 
-					new Text({
-						text: "{employee>gender_code}"
-					})
-				]
-			});
-
-			this.oEditableTemplate = new ColumnListItem({
-				cells: [
-					new Text({
-						text: "{employee>employee_number}"
-					}), 
-					new Text({
-						text: "{employee>user_local_name}"
-					}), 
-					new Input({
-						value: {
-							path: "employee>job_title",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							}),
-						},
-						required: true
-					}),
-					new Input({
-						value: {
-							path: "employee>gender_code",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							})
-						},
-						required: true
-					})
-				]
-            });
-		},
-
-		_bindTable: function(oTemplate, sKeyboardMode){
-			this.getList().bindItems({
-				path: "employee>/",
-				template: oTemplate
-			}).setKeyboardMode(sKeyboardMode);
-        }
+		}
 
 	});
 });

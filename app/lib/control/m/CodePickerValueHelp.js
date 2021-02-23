@@ -33,7 +33,7 @@ sap.ui.define([
         init: function () {
             Parent.prototype.init.call(this);
             this.oDialog = new Dialog();
-            this.oDialog.addStyleClass("sapUiSizeCompact");
+            this.oDialog.addStyleClass("sapUiSizeCozy");
             this._firstTime = 0;
             this.oDialog.attachEvent("beforeOpen", this._onBeforeOpen.bind(this));
         },

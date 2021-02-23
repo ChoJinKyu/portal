@@ -937,7 +937,7 @@
                                                                                 path: 'sort_no',
                                                                                 descending: false
                                                                             }}" 
-                                                                        showSecondaryValues= "true"
+                                                                        showSecondaryValues= "true" filterSecondaryValues="true"
                                                                         selectedKey="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" >
                                                                         <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
@@ -1062,7 +1062,7 @@
                                                                                 path: 'currency_code',
                                                                                 descending: false
                                                                             }}" 
-                                                                        showSecondaryValues= "true"
+                                                                        showSecondaryValues= "true" filterSecondaryValues="true"
                                                                         selectedKey="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" >
                                                                         <core:ListItem key="{common>currency_code}" text="{common>currency_code_name}" additionalText="{common>currency_code}"/>
@@ -1257,7 +1257,7 @@
                                                                                 path: 'sort_no',
                                                                                 descending: true
                                                                             }}" 
-                                                                        showSecondaryValues= "true"
+                                                                        showSecondaryValues= "true" filterSecondaryValues="true"
                                                                         selectedKey="{NegoHeaders>incoterms_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" >
                                                                         <core:ListItem key="{incoterms_code}" text="{incoterms_name}" additionalText="{incoterms_code}"/>
@@ -1278,7 +1278,7 @@
                                                                                 path: 'sort_no',
                                                                                 descending: true
                                                                             }}" 
-                                                                        showSecondaryValues= "true"
+                                                                        showSecondaryValues= "true" filterSecondaryValues="true"
                                                                         selectedKey="{NegoHeaders>payment_terms_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" >
                                                                         <core:ListItem key="{payment_terms_code}" text="{payment_terms_name}" additionalText="{payment_terms_code}"/>
@@ -1299,7 +1299,7 @@
                                                                                 path: 'sort_no',
                                                                                 descending: true
                                                                             }}" 
-                                                                        showSecondaryValues= "true"
+                                                                        showSecondaryValues= "true" filterSecondaryValues="true"
                                                                         selectedKey="{NegoHeaders>market_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" >
                                                                         <core:ListItem key="{market_code}" text="{market_name}" additionalText="{market_code}"/>

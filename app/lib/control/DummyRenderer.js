@@ -1,7 +1,9 @@
 sap.ui.define([
-    "./DummyRenderer", 
     "sap/ui/core/Renderer"
 ],
-function (DummyRenderer, Renderer) {
-		return Renderer.extend(DummyRenderer);
+function (Renderer) {
+    return jQuery.extend(true, {
+        render: function(oRm, oControl){
+        }
+    }, Renderer);
 }, /* bExport= */ true);

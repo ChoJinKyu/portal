@@ -72,13 +72,7 @@ sap.ui.define([
             if(!this.oSearchCountryDialog){
                 this.oSearchCountryDialog = new CountryDialog({
                     title: "Choose a Country",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                            new Filter("group_code", FilterOperator.EQ, "L2100")
-                        ]
-                    }
+                    multiSelection: true
                 });
                 this.oSearchCountryDialog.attachEvent("apply", function(oEvent){
                     oInput.setTokens(oEvent.getSource().getTokens());

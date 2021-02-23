@@ -1,62 +1,79 @@
 [
     {
         "name": "Search Controls",
-        "icon": "sap-icon://source-code",
+        "icon": "sap-icon://example",
         "viewName": "example1"
     },
     {
         "name": "Validations",
-        "icon": "sap-icon://source-code",
+        "desc": "사용하지 마세요. 정책 변경중입니다.",
+        "info": "Warning",
+        "highlight": "Error",
+        "icon": "sap-icon://example",
         "viewName": "example2"
     },
     {
         "name": "Smart Table",
-        "icon": "sap-icon://source-code",
+        "info": "Incomplete",
+        "icon": "sap-icon://example",
         "viewName": "example3"
     },
     {
-        "name": "X - Inline Edit Table for ext.lib.model.v2.ODataModel",
-        "icon": "sap-icon://source-code",
-        "viewName": "example4"
-    },
-    {
         "name": "Code Combo",
-        "icon": "sap-icon://source-code",
+        "info": "Completed",
+        "icon": "sap-icon://example",
         "viewName": "example5_1"
     },
     {
         "name": "Code Dialog",
-        "icon": "sap-icon://source-code",
+        "icon": "sap-icon://example",
         "viewName": "example5_2"
     },
     {
+        "name": "Scrum Dialog ",
+        "desc": "스크럼 별 공통 다이얼로그",
+        "info": "Completed",
+        "icon": "sap-icon://example",
+        "viewName": "example5_3"
+    },
+    {
         "name": "Import / Export Excel",
-        "icon": "sap-icon://source-code",
+        "icon": "sap-icon://example",
         "viewName": "example6"
     },
     {
         "name": "Dynamic Column Table likes Pivot",
-        "icon": "sap-icon://source-code",
+        "icon": "sap-icon://example",
         "viewName": "example7"
     },
     {
         "name": "Number formated - With Locale and Currency",
-        "icon": "sap-icon://source-code",
+        "info": "Completed",
+        "icon": "sap-icon://example",
         "viewName": "example8_1"
     },
     {
         "name": "Date Formatter",
-        "icon": "sap-icon://source-code",
+        "info": "Completed",
+        "icon": "sap-icon://example",
         "viewName": "example8_2"
     },
     {
-        "name": "X - Using OData V4",
-        "icon": "sap-icon://source-code",
-        "viewName": "example9"
+        "name": "Free Test",
+        "info": "Completed",
+        "icon": "sap-icon://example",
+        "viewName": "example0"
     },
     {
-        "name": "Free Test",
-        "icon": "sap-icon://source-code",
-        "viewName": "example0"
+        "name": "X - Inline Edit Table for ext.lib.model.v2.ODataModel",
+        "info": "Completed",
+        "icon": "sap-icon://example",
+        "viewName": "example4"
+    },
+    {
+        "name": "X - Using OData V4",
+        "info": "Information",
+        "icon": "sap-icon://example",
+        "viewName": "example9"
     }
 ]

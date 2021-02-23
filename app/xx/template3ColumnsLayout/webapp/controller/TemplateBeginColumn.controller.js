@@ -10,7 +10,7 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/ui/thirdparty/jquery",
+    "sap/ui/thirdparty/jquery"
 ], function (BaseController, Multilingual, JSONModel, ExcelUtil, DateFormatter, 
         TablePersoController, 
         CountryDialog,
@@ -199,7 +199,7 @@ sap.ui.define([
                 }));
             }
 			return aSearchFilters;
-		},
+        }
 
 	});
 });

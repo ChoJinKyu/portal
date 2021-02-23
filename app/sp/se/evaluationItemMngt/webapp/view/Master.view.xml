@@ -24,7 +24,7 @@
             <f:DynamicPageTitle>
                 <f:heading>
                      <!-- 평가항목 관리 -->
-                    <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" />
+                    <Title text="{I18N>/EVAL_ITEM} {I18N>/MANAGEMENT}" />
                 </f:heading>
 
                 <!-- <f:expandedHeading> -->
@@ -39,24 +39,27 @@
                     <!-- <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" /> -->
                 <!-- </f:snappedHeading> -->
                 <f:snappedContent>
-                    <!-- <form:SimpleForm 
+                    <form:SimpleForm 
                         layout="ResponsiveGridLayout"
-                    > -->
+                    >
                         <VBox>
                             <!-- 평가항목명 -->
                             <Label text="{I18N>/EVAL_ITEM_NM}" />
                             <Input 
                                 value="{viewModel>/cond/Contains/evaluation_article_name}"
                             />
-                            <!-- <layoutData>
-                                <layout:GridData span="L2 M6 S12" />
-                            </layoutData> -->
+                            <layoutData>
+                                <layout:GridData span="L3 M6 S12" />
+                            </layoutData>
                         </VBox>
-                        <FlexBox alignItems="End" justifyContent="End">
+                        <VBox alignItems="End" justifyContent="End">
                             <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
                             <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
-                        </FlexBox>
-                    <!-- </form:SimpleForm> -->
+                            <layoutData>
+                                <layout:GridData span="L2 M2 S2" indent="L7 M4 S0"/>
+                            </layoutData>
+                        </VBox>
+                    </form:SimpleForm>
                 </f:snappedContent>
                 
                 <f:actions>
@@ -139,7 +142,7 @@
                     </VBox>
                     <FlexBox alignItems="End" justifyContent="End">
                         <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
-                        <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
+                        <Button id="btnSearch" text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
                         <layoutData>
                             <layout:GridData span="XL12 L12 M12 S12" />
                         </layoutData>
@@ -150,14 +153,11 @@
         <f:content>
             <t:TreeTable 
                 id="treeTable"
-                enableSelectAll="false"
                 minAutoRowCount="10"
                 visibleRowCountMode="Auto"
-                enableColumnReordering="false"
-                class="sapFDynamicPageAlignContent" 
-                rowSelectionChange="onRowSelectionChange"
+                cellClick="onRowSelectionChange"
                 selectionMode="Single"
-                selectionBehavior="Row"
+                rowActionCount="1"
                 fixedColumnCount="1"
                 rows="{
                     path : 'viewModel>/Tree',
@@ -210,7 +210,11 @@
                         <Button icon="sap-icon://action-settings" type="Transparent" press="onMainTablePersoButtonPressed"/>
                     </OverflowToolbar>
                 </t:extension>
-                
+                <t:rowActionTemplate>
+                    <t:RowAction>
+                        <t:RowActionItem type="Navigation"/>
+                    </t:RowAction>
+                </t:rowActionTemplate>
                 <t:columns>
                     <!-- 평가항목 -->
                     <t:Column label="{I18N>/EVAL_ITEM}" name="" width="20em">    

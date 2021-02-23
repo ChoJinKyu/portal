@@ -184,7 +184,6 @@ sap.ui.define([
                 this._bind(oBinding, afilters);
                 console.log("bind 후");
 
-                console.log("aaaaa", this.getView().byId("aaa").getText());
 
 
 
@@ -531,6 +530,7 @@ sap.ui.define([
                         var oArrayHiePath = [];
                         var oFiltersMetaCode = [];
                         var oModel = that.getView().getModel();
+                        
 
                         if (sButton === MessageBox.Action.OK) {
 
@@ -604,6 +604,13 @@ sap.ui.define([
                                                     use_flag: true
                                                 });
 
+                                                
+                                                //count 조회 용
+                                                var read1 = that._read("/MICategoryHierarchyStructureView", []);
+                                                read1.then(function(data){
+                                                    that.getView().getModel("Main").oData.count = data.results.length;
+                                                    that.getView().getModel("Main").refresh(true);
+                                                });
 
                                                 var oFCL = that.getView().getParent().getParent();
                                                 oFCL.setLayout();
@@ -1214,9 +1221,12 @@ sap.ui.define([
 
                 if (this._lflag != "S") {
                     // 소문자 -> 대문자 변환
-                    inputCode.setValue(inputCode.getValue().toUpperCase());
+                    var tempValue = inputCode.getValue().toUpperCase();
+                    // 공백 제거
+                    tempValue = tempValue.replaceAll(" ", "");
 
-
+                    inputCode.setValue(tempValue);
+                    
                     // var value = e.getParameters().value;
                     var value = inputCode.getValue();
                     var result = micacodeArray.includes(value);

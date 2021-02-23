@@ -6,3 +6,22 @@
     /* top: -1rem;
     position: relative; */
 }
+
+
+.sapUiCustomRTV {
+    overflow: scroll;    
+}
+.sapUiRTE .mce-panel {
+    box-shadow: none;
+}
+.sapUiRTE.sapUiCustomViewMode .mce-top-part{
+    display: none;
+} 
+.sapUiRTE.sapUiCustomViewMode .mce-edit-area.mce-panel {
+    background-color: transparent;
+    border: 0;
+}
+.sapUiRTE.sapUiCustomViewMode .mce-panel,
+.sapUiRTE.sapUiCustomViewMode iframe body.mce-content-body {
+    background-color: transparent;
+}

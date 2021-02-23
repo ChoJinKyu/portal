@@ -136,17 +136,40 @@ sap.ui.define([
 		},
 
 		onMidTableAddButtonPress: function(){
-			var oTable = this.byId("midTable"),
-				oDepartmentModel = this.getModel("department");
-			oDepartmentModel.addRecord({
-				"tenant_id": this._sTenantId,
+            this.setModel(new JSONModel({
+                "tenant_id": this._sTenantId,
 				"company_code": this._sCompanyCode,
-				"control_option_level_code": "",
-				"control_option_level_val": "",
-				"company_name": ""
-			}, "/Company");
-            this.validator.clearValueState(this.byId("midTable"));
-		},
+				"department_code": "",
+				"department_name": "",
+                "department_korean_name": "",
+                "department_english_name": "",
+                "parent_department_code": "",
+                "department_leader_empno": "",
+                "department_type_code": "",
+                "full_path_desc": "",
+                "use_flag": true
+            }), "dialogCreateModel");
+            this.byId("dialogCreateDepartment").open();
+        },
+        
+        onDialogCreateDepartmentCancelButtonPress: function(){
+            this.byId("dialogCreateDepartment").close();
+        },
+
+        onDialogCreateDepartmentCreateButtonPress: function(){
+            var oModel = this.getModel(),
+                dialogCreateModelData = this.getModel("dialogCreateModel").getData();
+            oModel.create("/Department", dialogCreateModelData, {
+                success: function(oData) {
+                    MessageToast.show("Created");   //TODO : i18n
+                    this.byId("dialogCreateDepartment").close();
+                    this._loadDepartment();
+                }.bind(this),
+                error: function(oError) {
+                    MessageToast.show("Fail");   //TODO : i18n
+                }
+            });
+        },
 
 		onMidTableDeleteButtonPress: function(){
 			var oTable = this.byId("midTable"),
@@ -293,24 +316,31 @@ sap.ui.define([
 					}.bind(this)
 				});
 			
-				oView.setBusy(true);
+                this._loadDepartment();
+                
+				this._toShowMode();
+			}
+        },
+        
+        _loadDepartment: function(){
+            var oView = this.getView();
+            oView.setBusy(true);
 				this.getModel().read("/Department", {
                     urlParameters: {
                         "$top": 20,
-                        "$expand": "parent,children"
+                        "$expand": "parent,children",
+                        "$orderby" : "department_code desc"
                     },
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+						new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
 					],
 					success: function(oData){
                         this.getModel("department").setProperty("/", oData.results);
 						oView.setBusy(false);
 					}.bind(this)
 				});
-				this._toShowMode();
-			}
-		},
+        },
 
 		_toEditMode: function(){
 			var VIEW_MODE = false;
@@ -413,28 +443,35 @@ sap.ui.define([
             //navigate next column
         },
 
-		_oFragments: {},
-		_showFormFragment : function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function(oFragment){
-				oPageSubSection.removeAllBlocks();
-				oPageSubSection.addBlock(oFragment);
-			})
-        },
-        _loadFragment: function (sFragmentName, oHandler) {
-			if(!this._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "xx.template3ColumnsLayout.view." + sFragmentName,
-					controller: this
-				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this._oFragments[sFragmentName]);
-			}
-		}
+        _oFragments: {},
+        _showFormFragment : function (sFragmentName) {
+            var oPageSubSection = this.byId("pageSubSection1");
+            this._loadFragment(sFragmentName, function(oFragment){
+                oPageSubSection.removeAllBlocks();
+                oPageSubSection.addBlock(oFragment);
+            })
+        },
+        _loadFragment: function (sFragmentName, oHandler) {
+            if(!this._oFragments[sFragmentName]){
+                Fragment.load({
+                    id: this.getView().getId(),
+                    name: "xx.template3ColumnsLayout.view." + sFragmentName,
+                    controller: this
+                }).then(function(oFragment){
+                    this._oFragments[sFragmentName] = oFragment;
+                    if(oHandler) oHandler(oFragment);
+                }.bind(this));
+            }else{
+                if(oHandler) oHandler(this._oFragments[sFragmentName]);
+            }
+        },
+
+        onExit: function(){
+            for(var sFragmentName in this._oFragments){
+                this._oFragments[sFragmentName].destroy();
+                delete this._oFragments[sFragmentName];
+            }
+        }
 
 
 	});

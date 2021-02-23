@@ -16,7 +16,10 @@
         <f:title>
             <lib-f:CustomDynamicPageTitle>
                 <lib-f:heading>
-                    <Title text="3컬럼 Layout" />
+                    <HBox>
+                        <lib-m:FavoriteMenuButton />
+                        <Title text="3컬럼 Layout" />
+                    </HBox>
                 </lib-f:heading>
                 <lib-f:actions>
                 </lib-f:actions>
@@ -95,7 +98,8 @@
                     </headerToolbar>
                     <columns>
                         <Column minScreenWidth="Desktop" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Label text="{I18N>/COMPANY}" />
+                            <!-- <Label text="{I18N>/COMPANY}" /> -->
+                            <lib-m:ColoredLabel id="fontColor" text="{I18N>/COMPANY}" color="red"/>
                         </Column>
                         <Column minScreenWidth="Desktop" hAlign="Center" width="7rem">
                             <Label text="{I18N>/CURRENCY}" />

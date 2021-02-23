@@ -61,7 +61,7 @@ sap.ui.define([
         constructor: function(){
             Parent.apply(this, arguments);
             this.setModel(new JSONModel());
-            this.addStyleClass("sapUiSizeCompact");
+            this.addStyleClass("sapUiSizeCozy");
             
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -195,7 +195,7 @@ sap.ui.define([
             }
         },
 
-        setData: function(aRecords){
+        setData: function(aRecords, callback){
             this.oTable.removeSelections(true);
             this.getModel().setSizeLimit(aRecords.length || 100);
             this.getModel().setData(aRecords, false);
@@ -214,6 +214,9 @@ sap.ui.define([
                         }.bind(this));
                     }.bind(this));
                 }
+                if(callback) callback();
+            }else{
+                if(callback) callback();
             }
         },
 

@@ -157,6 +157,13 @@ sap.ui.define([
                     }.bind(this)
                 });
 
+                delete oValue.serviceName;
+                delete oValue.serviceUri;
+                delete oValue.entityName;
+                delete oValue.filters;
+                delete oValue.sorters;
+                delete oValue.parameters;
+
             }else{
                 return Parent.prototype.extractBindingInfo.call(this, oValue, oScope);
             }

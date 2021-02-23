@@ -240,6 +240,13 @@
           ]
         },
         {
+          "pattern": "example5_3",
+          "name": "example5_3",
+          "target": [
+            "example5_3"
+          ]
+        },
+        {
           "pattern": "example6",
           "name": "example6",
           "target": [
@@ -307,6 +314,10 @@
         "example5_2": {
           "viewName": "CodeDialog",
           "viewId": "example5_2"
+        },
+        "example5_3": {
+          "viewName": "ScrumDialog",
+          "viewId": "example5_3"
         },
         "example6": {
           "viewName": "ExcelUtilExam",

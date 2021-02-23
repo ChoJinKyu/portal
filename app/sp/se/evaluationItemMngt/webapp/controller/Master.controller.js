@@ -678,6 +678,7 @@ sap.ui.define([
                 oRowData = oContext.getObject();
                 oViewModel = this.getView().getModel("viewModel");
 
+                oTable.setSelectedIndex(iSelectedIdx);
                 // oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
                 oNavParam.leaf = oRowData.leaf_flag;
                 oNavParam.refKey = oRowData.ref_key;

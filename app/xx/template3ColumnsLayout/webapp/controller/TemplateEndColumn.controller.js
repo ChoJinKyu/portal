@@ -168,24 +168,24 @@ sap.ui.define([
 		 */
         onPageDeleteButtonPress: function(){
 			var oView = this.getView(),
-				oDepartmentModel = this.getModel("department"),
-				that = this;
-			MessageBox.confirm("Are you sure to delete this control option and employee?", {
+				oModel = this.getModel();
+			MessageBox.confirm("Are you sure to delete this department?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oDepartmentModel.removeData();
-						oDepartmentModel.submitChanges({
-							success: function(ok){
-								oView.setBusy(false);
-								that.onPageNavBackButtonPress.call(that);
-								MessageToast.show("Success to delete.");
-							}
-						});
+                        var sPath = "/Department(tenant_id='" + this._sTenantId + "',department_code='" + this._sDepartmentCode + "')";
+                        oModel.remove(sPath, {
+                            success: function(oData) {
+                                MessageToast.show("Deleted");   //TODO : i18n
+                                this.onPageNavBackButtonPress();
+                            }.bind(this),
+                            error: function(oError) {
+                                MessageToast.show("Fail");   //TODO : i18n
+                            }
+                        });
 					};
-				}
+				}.bind(this)
 			});
 		},
 
@@ -230,7 +230,8 @@ sap.ui.define([
 			});
 			oTable.removeSelections(true);
             this.validator.clearValueState(this.getList());
-		},
+        },
+        
 		
 		/**
 		 * Event handler for saving page changes
@@ -333,7 +334,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(oEvent){
 			var oArgs = oEvent.getParameter("arguments"),
-				oView = this.getView();
+                oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
 			this._sCompanyCode = oArgs.companyCode;
 			this._sDepartmentCode = oArgs.departmentCode;
@@ -408,7 +409,7 @@ sap.ui.define([
 
 			this.byId("employeeListAddButton").setEnabled(!VIEW_MODE);
 			this.byId("employeeListDeleteButton").setEnabled(!VIEW_MODE);
-			this.getList().setMode(sap.m.ListMode.None);
+            this.getList().setMode(sap.m.ListMode.None);
         },
         
 		_toEditMode: function(){
@@ -447,6 +448,6 @@ sap.ui.define([
             if(!this.updatedEmployees) this.updatedEmployees = [];
             this.updatedEmployees.push(oEvent.getParameter("context").getObject());
         },
-
+        
 	});
 });

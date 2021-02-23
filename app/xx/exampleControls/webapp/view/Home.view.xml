@@ -8,15 +8,24 @@
     <Page id="page" title="UI5 Examples">
         <content>
             <VBox>
+
+                <List headerText="Examples" items="{examples>/}" >
+                    <StandardListItem
+                        title="{examples>name}"
+                        icon="{examples>icon}"
+                        description="{examples>desc}"
+                        info="{examples>info}"
+                        infoState="{examples>highlight}"
+                        infoStateInverted="true" 
+                        type="Navigation" press=".onListItemPress"/>
+                </List>
+                
                 <MessageStrip class="sapUiMediumMarginBottom"
-                    text="하단의 목록을 확장하여 각종 예제를 참조하세요."
+                    text="항목을 선택하여 예제를 참조하세요."
                     showIcon="true"
                     showCloseButton="false">
                 </MessageStrip>
                 
-                <List headerText="Examples" items="{examples>/}" >
-                    <StandardListItem title="{examples>name}" type="Navigation" press=".onListItemPress" />
-                </List>
             </VBox>
         </content>
         <footer>

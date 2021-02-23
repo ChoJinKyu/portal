@@ -57,7 +57,7 @@ sap.ui.define([
             oSheet.build().finally(function() {
                 oSheet.destroy();
                 if(_oParam.success){_oParam.success();}
-            });
+            }).catch(function(sMessage) { console.log("Export error: " + sMessage); });
         }
         /**
          * sheet 에 적용할 columns 정보를 반환
@@ -72,12 +72,14 @@ sap.ui.define([
             }
 
             aColumns.forEach(function(oCol, nIdx) {
-                if((oCol.data("exportData") && oCol.data("exportData") === "true") || (typeof oCol.getVisible === "function" ? oCol.getVisible() : oCol.getHeader().getVisible())) {
+                if(!(oCol.data("noExport") && oCol.data("noExport") === "true")) {
                     //label 을 FlexBox 로 감싸는 부분 대비
                     //var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();
                     var sLabel = "";
                     if(typeof oCol.getLabel === "function") {
-                        if(typeof oCol.getLabel().getText === "function") {
+                        if(typeof oCol.getMultiLabels === "function" && oCol.getMultiLabels().length > 0) {//MultiLabels의 맨 아래 label 적용
+                            sLabel = oCol.getMultiLabels()[oCol.getMultiLabels().length-1].getText();
+                        } else if(typeof oCol.getLabel().getText === "function") {
                             sLabel = oCol.getLabel().getText();
                         } else if(typeof oCol.getLabel().getItems === "function") {
                             $.each(oCol.getLabel().getItems(), function(idx, oItem) {
@@ -122,31 +124,33 @@ sap.ui.define([
                     // }
                     var sPath = [oBindingInfo.prop.parts[0].path];
                     var sWidth = oCol.data("width") || oCol.getWidth();//passed as customData
-                    var sTextAlign = oCol.data("textAlign") || oBindingInfo.align || "Left";//passed as customData
-                    var nWidth = 10;
-                    console.log("sLabel",sLabel);
+                    var sTextAlign = oCol.data("textAlign") || ((oCol.data("type") && oCol.data("type").toLowerCase() === "number") ? "Right" : oBindingInfo.align || "Left");//CustomData 우선적용
+                    
+                    var nWidth = 0;
                     if($.isNumeric(sWidth)) {
                         nWidth = parseInt(sWidth, 10);
                     } else if(sWidth.toLowerCase() === "auto") {
                         nWidth = 50;
                     } else if(sWidth.indexOf("%") > -1) {
                         let sRefine = sWidth.replace("%", "");
-                        nWidth = parseInt(sRefine);
+                        nWidth = parseInt(sRefine * 2);
                     } else {
-                        nWidth = 15;
+                        nWidth = 20;
                     }
-                    console.log("nWidth",nWidth);
                     aColumnConfig.push({
-                        label : sLabel,
-                        width : nWidth,
-                        textAlign: sTextAlign,
-                        property : sPath,
-                        type : oCol.data("type") || "",
-                        template : oCol.data("template") || "",
-                        format : oCol.data("format") || "",
-                        trueValue : oCol.data("trueValue") || "",
-                        falseValue : oCol.data("falseValue") || "",
-                        style : oCol.data("style") || ""
+                        label : sLabel,//{Label} string
+                        width : nWidth,//{Column-width} number
+                        textAlign: sTextAlign,//{Text-align} string
+                        property : sPath,//{Field-name) string
+                        type : oCol.data("type") || "",//{EDM-type} string
+                        scale : oCol.data("scale") ? parseInt(oCol.data("scale"), 10) : "",//{Number-Scale} number
+                        delimiter : oCol.data("delimiter") ? JSON.parse(oCol.data("delimiter")) : false,//{숫자 값에 천 단위 구분 기호를 표시 여부} boolean
+                        inputFormat  : oCol.data("inputFormat ") || "",//{문자열 형식 날짜에 대한 서식 템플릿} string
+                        template : oCol.data("template") || "",//{Formatting template that supports indexed placeholders within curly brackets} string
+                        format : oCol.data("format") || "",//{Formatting template for Date, DateTime EDM type} string
+                        trueValue : oCol.data("trueValue") || "",//{boolean type 의 true 대신 표현할 Text} string
+                        falseValue : oCol.data("falseValue") || "",//{boolean type 의 false 대신 표현할 Text} string
+                        unit : oCol.data("unit") || ""//{숫자 값 옆에 측정 단위 또는 통화로 표시 할 텍스트} string
                     });
                 }
             }.bind(this));
@@ -182,6 +186,8 @@ sap.ui.define([
                     oBindingInfo.prop = oCell.getBindingInfo("text") || "";
                     if(typeof oCell.getTextAlign === "function") {
                         oBindingInfo.align = this._convAlign(oCell.getTextAlign());
+                    } else if(typeof oCell.getHAlign === "function") {
+                        oBindingInfo.align = oCell.getHAlign();
                     }
                     
                     break;
@@ -202,7 +208,7 @@ sap.ui.define([
                     break;
                 case "sap.m.Switch" :
                     oBindingInfo.prop = oCell.getBindingInfo("state") || "";
-                    oBindingInfo.align = "End";
+                    oBindingInfo.align = "Center";
                     break;
                 default :
                     oBindingInfo.prop = "";

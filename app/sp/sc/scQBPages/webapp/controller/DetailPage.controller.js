@@ -365,8 +365,6 @@ sap.ui.define([
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                         oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
                         oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
-                        // oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , this.getDecodeString(data.value[0].nego_document_desc)) ;//decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
-                        // oView.getModel("NegoHeaders").setProperty("/note_content" , this.getDecodeString(data.value[0].note_content)) ;//decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
                         if(data.value[0].nego_document_desc !=null){
                             console.log("decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc)))======", decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))));
                             oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
@@ -383,10 +381,8 @@ sap.ui.define([
                                 elementDtl.supeval_from_date = new Date(elementDtl.supeval_from_date);
                                 elementDtl.supeval_to_date = new Date(elementDtl.supeval_to_date);
                             });
-                            
                         });
                         
-                        // oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice")[0].note_content = decodeURIComponent(escape(window.atob(data.value[0].ItemsNonPrice[0].note_content)));
                         // editable="{=${propInfo>/isEditMode}}" 
                         this.byId("reDescription").setEditable(false);
                         this.byId("reNoteToSupplier").setEditable(false);
@@ -1071,9 +1067,17 @@ sap.ui.define([
                     this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
                         materialItem = oEvent.mParameters.item;
 
-                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[5].getAggregation("items")[0].setValue(materialItem.material_code);
-                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[6].getAggregation("items")[0].setValue(materialItem.material_desc);
-                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[15].getAggregation("items")[0].setValue(materialItem.base_uom_code);
+                        var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._partnoIndex];
+                        oItem.material_code = materialItem.material_code;
+                        oItem.material_desc = materialItem.material_desc;
+                        oItem.uom_code = materialItem.base_uom_code;
+
+                        this.getView().getModel("NegoHeaders").refresh(true);
+                        // material_code, material_desc, uom_code
+
+                        // this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[5].getAggregation("items")[0].setValue(materialItem.material_code);
+                        // this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[6].getAggregation("items")[0].setValue(materialItem.material_desc);
+                        // this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[15].getAggregation("items")[0].setValue(materialItem.base_uom_code);
                         
                         console.log("materialItem : ", materialItem);
 

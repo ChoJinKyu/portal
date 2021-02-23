@@ -1,6 +1,7 @@
 sap.ui.define([
 		// "sap/ui/core/mvc/Controller",	
-        "ext/lib/controller/BaseController",					
+        "ext/lib/controller/BaseController",
+        "sap/ui/model/Sorter",						
         "sap/ui/model/Filter",						
         "sap/ui/model/FilterOperator",
         "sap/m/MessageBox",
@@ -27,7 +28,7 @@ sap.ui.define([
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,BPDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog, Text, PurOperationOrgDialog, NonPriceInf, NumberFormat, EmployeeDialog,NumberFormatter, DateFormatter) {
+	function (BaseController, Sorter, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,BPDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog, Text, PurOperationOrgDialog, NonPriceInf, NumberFormat, EmployeeDialog,NumberFormatter, DateFormatter) {
         "use strict";
         
 		return BaseController.extend("sp.sc.scQBPages.controller.DetailPage2", {
@@ -290,7 +291,8 @@ sap.ui.define([
 
                 return result;
             },
-            _onRouteMatched: function (e) {
+            _onRouteMatched: function (e) 
+            {
                 var that = this;
                 var oView = this.getView();
 
@@ -1205,10 +1207,13 @@ sap.ui.define([
                     this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
                         materialItem = oEvent.mParameters.item;
 
-                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[5].getAggregation("items")[0].setValue(materialItem.material_code);
-                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[6].getAggregation("items")[0].setValue(materialItem.material_desc);
-                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[15].getAggregation("items")[0].setValue(materialItem.base_uom_code);
-                        
+                        var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._partnoIndex];
+                        oItem.material_code = materialItem.material_code;
+                        oItem.material_desc = materialItem.material_desc;
+                        oItem.uom_code = materialItem.base_uom_code;
+
+                        this.getView().getModel("NegoHeaders").refresh(true);
+                        // material_code, material_desc, uom_code
                         console.log("materialItem : ", materialItem);
 
                     }.bind(this));

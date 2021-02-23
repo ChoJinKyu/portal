@@ -3,7 +3,7 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast",
-	"ext/lib/control/m/CodeValueHelp",
+	"ext/lib/control/ui/CodeValueHelp",
     "cm/util/control/CodePopUp",
     "cm/util/control/ui/EmployeeDialog",
 	"sap/ui/model/Filter",
