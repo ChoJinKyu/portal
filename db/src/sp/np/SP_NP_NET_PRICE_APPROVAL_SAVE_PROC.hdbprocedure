@@ -297,7 +297,7 @@ BEGIN
               ,V_NET_PRICE_DOCUMENT_TYPE_CODE
               ,V_NET_PRICE_SOURCE_CODE
               ,V_OUTCOME_CODE
-        
+            
           FROM DUMMY
         ;
 
@@ -325,7 +325,7 @@ BEGIN
     
     -- OutCome코드가 존재하는데, DB 공통코드에 존재하지 않는 코드 이면, 오류
     ELSEIF I_OUTCOME_CODE IS NOT NULL AND TRIM(I_OUTCOME_CODE) != '' AND (V_OUTCOME_CODE IS NULL OR TRIM(V_OUTCOME_CODE) = '') THEN
-        O_RETURN_MSG  = 'Outcom Code 가 유효하지 않습니다.';
+        O_RETURN_MSG  = 'Outcome Code 가 유효하지 않습니다.';
         SIGNAL V_USER_EXCEPTION;
     END IF;
 
@@ -337,11 +337,11 @@ BEGIN
     
         -- Material Code
         IF c_item.MATERIAL_CODE IS NULL OR TRIM(c_item.MATERIAL_CODE) = '' THEN
-            O_RETURN_MSG  = 'Material Code는 필수 입니다.';
+            O_RETURN_MSG  = '자재코드는 필수 입니다.';
             SIGNAL V_USER_EXCEPTION;
     
         ELSEIF c_item.DB_MATERIAL_CODE IS NULL OR TRIM(c_item.DB_MATERIAL_CODE) = '' THEN
-            O_RETURN_MSG  = '유효하지 않은 Material Code 가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은 자재코드가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
     
 
@@ -353,11 +353,11 @@ BEGIN
 
         -- Supplier Code
         ELSEIF c_item.SUPPLIER_CODE IS NULL OR TRIM(c_item.SUPPLIER_CODE) = '' THEN
-            O_RETURN_MSG  = 'Supplier Code는 필수 입니다.';
+            O_RETURN_MSG  = '공급업체코드는 필수 입니다.';
             SIGNAL V_USER_EXCEPTION;
 
         ELSEIF c_item.DB_SUPPLIER_CODE IS NULL OR TRIM(c_item.DB_SUPPLIER_CODE) = '' THEN
-            O_RETURN_MSG  = '유효하지 않은  가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은  공급업체코드가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
         
             
@@ -391,7 +391,7 @@ BEGIN
 
         -- Vendor Pool Code
         ELSEIF c_item.VENDOR_POOL_CODE IS NOT NULL AND TRIM(c_item.VENDOR_POOL_CODE) != '' AND (c_item.DB_VENDOR_POOL_CODE IS NULL OR TRIM(c_item.DB_VENDOR_POOL_CODE) = '') THEN
-            O_RETURN_MSG  = '유효하지 않은 Vendor Pool Code 가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은 협력사풀코드가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
         /*
         ELSEIF c_item.VENDOR_POOL_CODE IS NULL OR TRIM(c_item.VENDOR_POOL_CODE) = '' THEN
@@ -405,17 +405,17 @@ BEGIN
 
         -- Market Code (납선코드)
         ELSEIF c_item.MARKET_CODE IS NULL OR TRIM(c_item.MARKET_CODE) = '' THEN
-            O_RETURN_MSG  = 'Market Code는 필수 입니다.';
+            O_RETURN_MSG  = '납선코드는 필수 입니다.';
             SIGNAL V_USER_EXCEPTION;
         
         ELSEIF c_item.DB_MARKET_CODE IS NULL OR TRIM(c_item.DB_MARKET_CODE) = '' THEN
-            O_RETURN_MSG  = '유효하지 않은 Market Code 가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은 납선코드가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
 
 
         -- Net Price Approval Reason Code
         ELSEIF c_item.APPROVAL_REASON_CODE IS NOT NULL AND TRIM(c_item.APPROVAL_REASON_CODE) != '' AND (c_item.DB_APPROVAL_REASON_CODE IS NULL OR TRIM(c_item.DB_APPROVAL_REASON_CODE) = '') THEN
-            O_RETURN_MSG  = '유효하지 않은 Net Price Approval Reason Code 가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은 사유코드가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
 
         /*
@@ -431,13 +431,13 @@ BEGIN
 
         -- Maker Code
         ELSEIF c_item.MAKER_CODE IS NOT NULL AND TRIM(c_item.MAKER_CODE) != '' AND (c_item.DB_MAKER_CODE IS NULL OR TRIM(c_item.DB_MAKER_CODE) = '') THEN
-            O_RETURN_MSG  = '유효하지 않은 Maker Code 가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은 제조사코드가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
 
 
         -- Maker Code
         ELSEIF c_item.INCOTERMS IS NOT NULL AND TRIM(c_item.INCOTERMS) != '' AND (c_item.DB_INCOTERMS IS NULL OR TRIM(c_item.DB_INCOTERMS) = '') THEN
-            O_RETURN_MSG  = '유효하지 않은 Incoterms Code 가 존재합니다.';
+            O_RETURN_MSG  = '유효하지 않은 Incoterms 가 존재합니다.';
             SIGNAL V_USER_EXCEPTION;
 
         END IF;
