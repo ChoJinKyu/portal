@@ -67,7 +67,8 @@ sap.ui.define([
             this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
             //로그인 세션 작업완료시 수정
-            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            // this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.tenant_id = "L2101";
             this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
 
             oTransactionManager = new TransactionManager();
@@ -228,9 +229,9 @@ sap.ui.define([
 
             var aSearchFilters = [];
 
-            console.log(this.getModel("USER_SESSION").getSessionAttr("TENANT_ID"));
+            console.log(this.tenant_id);
 
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getModel("USER_SESSION").getSessionAttr("TENANT_ID")));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id));
 
             if (searchPartBaseKeyword != "") {
                 aSearchFilters.push(new Filter({

@@ -46,8 +46,7 @@
                                     showSecondaryValues= "true"
                                     items="{
                                         path: '/CompanyView'
-                                        
-                                        }">
+                                    }">
                                         <items>
                                             <core:ListItem
                                                 key="{company_code}"
@@ -204,6 +203,7 @@
                                     items="{
                                         path: 'util>/Code',
                                         filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                             {path: 'group_code', operator: 'EQ', value1: 'DP_ACTIVITY_DEPENDENCY'}
                                         ]}">
                                 <items>

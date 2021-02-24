@@ -20,15 +20,20 @@ sap.ui.define([
 	"sap/m/Button",
     "sap/m/ButtonType",
     "sap/m/Text",
-    "ext/lib/util/ExcelUtil"
+    "ext/lib/util/ExcelUtil",
+    "ext/lib/util/SppUserSession"
 ], function (BaseController, JSONModel, TreeListModel, DateFormatter, TablePersoController, MainListPersoService, Validator, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast,
-     LayoutType, Multilingual, ValueState, Dialog, DialogType, Button, ButtonType, Text, ExcelUtil) {
+     LayoutType, Multilingual, ValueState, Dialog, DialogType, Button, ButtonType, Text, ExcelUtil, SppUserSession) {
         "use strict";
 
         return BaseController.extend("dp.pd.partCategoryMgt.controller.MainList", {
 
             dateFormatter: DateFormatter,
             validator: new Validator(),
+            loginUserId: new String,
+            tenant_id: new String,
+            companyCode: new String,
+            language_cd: new String,
 
             /**
              * Called when the mainList controller is instantiated.
@@ -44,10 +49,18 @@ sap.ui.define([
 
                 oView.setModel(oMultilingual.getModel(), "I18N");
                 
+                var oSppUserSession = new SppUserSession();
+                this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
                 //로그인 세션 작업완료시 수정
-                this.loginUserId = "17370CHEM@lgchem.com";
-                this.tenantId = "L2101";
-                this.categoryGroupCode = "CO";
+                this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+                this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
+                this.companyCode = this.getModel("USER_SESSION").getSessionAttr("COMPANY_CODE");
+                this.language_cd = this.getModel("USER_SESSION").getSessionAttr("LANGUAGE_CODE");
+                
+                this.tenant_id = "L2101";
+                this.loginUserId = "user@lgensol.com";
+                this.companyCode = "LGESL";
                 this.language_cd = "KO";
 
                 //this._doInitTablePerso();

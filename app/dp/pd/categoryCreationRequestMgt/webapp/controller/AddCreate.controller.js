@@ -68,6 +68,10 @@ sap.ui.define([
             this.viewType = false;
             this._sLanguageCd = this.getOwnerComponent().getModel("USER_SESSION").getSessionAttr("LANGUAGE_CODE");
  
+            this.loginUserId = "TestUser";
+            this.loginUserName = "TestUser";
+            this.tenant_id = "L2101";
+
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");

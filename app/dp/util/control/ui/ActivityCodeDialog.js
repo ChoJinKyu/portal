@@ -86,31 +86,36 @@ sap.ui.define([
                     })
                 })
             ];
-        },
+        },        
 
         loadData: function(){
             var sActivityName = this.oActivityName.getValue(),
                 // aFilters = this.getProperty("items").filters || [];
+                companyCode = this.getProperty("items").companyCode,
+                orgCode = this.getProperty("items").orgCode,
+                partProjectYypeCode = this.getProperty("items").partProjectYypeCode,
                 aFilters = [];
 
-                if(this.getProperty("items").filters.length > 0){
-                    for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
-                        aFilters.push(this.getProperty("items").filters[i]);
-                    }
-                }
+                console.log(companyCode + " : " + orgCode + " : " + partProjectYypeCode);
+
+                // if(this.getProperty("items").filters.length > 0){
+                //     for(var i=0 ; i < this.getProperty("items").filters.length ; i++){
+                //         aFilters.push(this.getProperty("items").filters[i]);
+                //     }
+                // }
 
                 if(sActivityName){
                     aFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'" + sActivityName.toLowerCase().replace("'","''") + "'"));
                 }
 
-
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.partActivityService/").read("/PdSelectAnActivityView", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.partActivityService/").read("/SelectAnActivityView(company_code='" + companyCode + "',org_code='" + orgCode +"',part_project_type_code='" + partProjectYypeCode + "')/Set", {
                 filters: aFilters,
                 sorters: [
                     new Sorter("activity_code", true)
                 ],
                 success: function(oData){
                     var aRecords = oData.results;
+                    console.log(aRecords);
                     this.oDialog.setData(aRecords, false);
                 }.bind(this)
             });

@@ -72,7 +72,8 @@ sap.ui.define([
             this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
             //로그인 세션 작업완료시 수정
-            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            // this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.tenant_id = "L2101";
             this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");            
 			
 			this.setModel(new ManagedModel(), "master");

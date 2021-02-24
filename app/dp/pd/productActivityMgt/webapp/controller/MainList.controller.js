@@ -50,7 +50,8 @@ sap.ui.define([
 
 
             //세션 정보 받기
-            this._oViewData.tenant_id = this.getSessionTenantId()
+            this._oViewData.tenant_id = "L2101"
+            //this._oViewData.tenant_id = this.getSessionTenantId();
 
             this.enableMessagePopover();
             //this._doInitTablePerso();

@@ -26,10 +26,11 @@ sap.ui.define([
     "ext/lib/model/TreeListModel",
     "sap/ui/thirdparty/jquery",
     "ext/lib/core/service/ODataV2ServiceProvider",
+    "ext/lib/util/SppUserSession"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, FilterType ,NumberFormatter,
-    TreeListModel, jQuery, ODataV2ServiceProvider) {
+    TreeListModel, jQuery, ODataV2ServiceProvider, SppUserSession) {
     "use strict";
 
     var oTransactionManager;
@@ -44,6 +45,9 @@ sap.ui.define([
         loginUserId: new String,
         loginUserName: new String,
         tenant_id: new String,
+        companyCode: new String,
+        language_cd: new String,
+        employee_number: new String,
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -54,13 +58,23 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            var oSppUserSession = new SppUserSession();
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
             //로그인 세션 작업완료시 수정
-            this.loginUserId = "TestUser";
-            this.loginUserName = "TestUser";
+            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
+            this.companyCode = this.getModel("USER_SESSION").getSessionAttr("COMPANY_CODE");
+            this.language_cd = this.getModel("USER_SESSION").getSessionAttr("LANGUAGE_CODE");
+            this.employee_number = this.getModel("USER_SESSION").getSessionAttr("EMPLOYEE_NUMBER");
+            this.loginUserName = this.getModel("USER_SESSION").getSessionAttr("EMPLOYEE_NAME");
+
             this.tenant_id = "L2101";
-            this.language_cd = "KO"
+            this.loginUserId = "user@lgensol.com";
+            this.companyCode = "LGESL";
+            this.language_cd = "KO";
             this.employee_number = "9004";
+            this.loginUserName = "에너지솔루션사용자";
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -88,7 +102,7 @@ sap.ui.define([
 
         _setProcessStatus : function(){
             var aFilters = [
-                new Filter("tenant_id", "EQ", "L2101"),
+                new Filter("tenant_id", "EQ", this.tenant_id),
                 new Filter("group_code", "EQ", "DP_PD_PROGRESS_STATUS"),
                 new Filter("language_cd", "EQ", this.language_cd)
             ];
@@ -113,15 +127,15 @@ sap.ui.define([
             var oTable = this.byId("detailsTable");
             var oDetailsModel = this.getModel("details");
             oDetailsModel.addRecord({
-                "tenant_id"         : this._sTenantId,
+                "tenant_id"         : this.tenant_id,
                 "request_number"    : this._sRequestNumber,
                 "approve_sequence"  : null,
                 "approval_number"   : null,
-                "requestor_empno"   :this.employee_number,
+                "requestor_empno"   : this.employee_number,
                 "tf_flag"           : true,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
-                "update_user_id"    : "17370CHEM@lgchem.com"
+                "update_user_id"    : this.loginUserId
             }, "/PdCategoryApprovalType");
         },
 
@@ -136,7 +150,7 @@ sap.ui.define([
                 "tf_flag"           : true,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
-                "update_user_id"    : "17370CHEM@lgchem.com"
+                "update_user_id"    : this.loginUserId
             }, "/PdCategoryApprovalType");
         },
 
@@ -248,7 +262,7 @@ sap.ui.define([
            
 
             var pdMstVal = {
-                tenant_id                : oMasterData.tenant_id,
+                tenant_id                : this.tenant_id,
                 request_number           : oMasterData.request_number,
                 category_group_code      : oMasterData.category_group_code,
                 approval_number          : oMasterData.approval_number,
@@ -260,9 +274,9 @@ sap.ui.define([
                 request_desc             : oMasterData.request_desc,
                 attch_group_number       : oMasterData.attch_group_number,
                 progress_status_code     : progressCode,
-                creator_empno            : oMasterData.creator_empno,
+                creator_empno            : this.loginUserId,
                 create_category_code     : oMasterData.create_category_code,
-                update_user_id           : "17370CHEM@lgchem.com",
+                update_user_id           : this.loginUserId,
                 crud_type_code           : CUType
             };
 
@@ -278,7 +292,7 @@ sap.ui.define([
 
             for (var i = 0; i < oDetailsTable.getItems().length; i++) {
                 pdDtlVal.push({
-                    tenant_id: oDetailsData.PdCategoryApprovalType[i].tenant_id,
+                    tenant_id: this.tenant_id,
                     request_number : oDetailsData.PdCategoryApprovalType[i].request_number,
                     approve_sequence : oDetailsData.PdCategoryApprovalType[i].approve_sequence,
                     approval_number : oDetailsData.PdCategoryApprovalType[i].approval_number,
@@ -286,7 +300,7 @@ sap.ui.define([
                     tf_flag : oDetailsData.PdCategoryApprovalType[i].tf_flag,
                     approval_comment : oDetailsData.PdCategoryApprovalType[i].approval_comment,
                     approve_date_time : oDetailsData.PdCategoryApprovalType[i].approve_date_time,
-                    update_user_id : "17370CHEM@lgchem.com",
+                    update_user_id : this.loginUserId,
                     crud_type_code : CUType
                 });
             }
@@ -411,7 +425,7 @@ sap.ui.define([
             var oViewModel = this.getView().getModel("master");
             oViewModel.setData({}, "/pdPartCategoryCreationRequest");
             oViewModel.setData({
-                "tenant_id": this._sTenantId,
+                "tenant_id": this.tenant_id,
                 "request_number": this._sRequestNumber,
                 "category_group_code": this._sCategoryGroupCode,
                 "approval_number": null,
@@ -430,7 +444,7 @@ sap.ui.define([
             var oViewModel2 = this.getView().getModel("details");
             oViewModel2.setData({}, "/PdCategoryApprovalType");
             oViewModel2.setData({
-                "tenant_id"         : this._sTenantId,
+                "tenant_id"         : this.tenant_id,
                 "request_number"    : this._sRequestNumber,
                 "approve_sequence"  : null,
                 "approval_number"   : null,
@@ -438,7 +452,7 @@ sap.ui.define([
                 "tf_flag"           : null,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
-                "update_user_id"    : "17370CHEM@lgchem.com"
+                "update_user_id"    : this.loginUserId
             }, "/PdCategoryApprovalType");
         },
 
@@ -451,7 +465,7 @@ sap.ui.define([
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
 
-            this._sTenantId = oArgs.tenantId;
+            //this._sTenantId = oArgs.tenantId;
             this._sCategoryGroupCode = oArgs.categoryGroupCode;
             this._sRequestNumber = oArgs.requestNumber;
 
@@ -466,7 +480,7 @@ sap.ui.define([
                 
                 // console.log("###신규저장");
                 this._fnInitModel();
-                this._sTenantId = oArgs.tenantId;
+                //this._sTenantId = oArgs.tenantId;
                 this._sCategoryGroupCode = oArgs.categoryGroupCode;
                 this._sRequestNumber = "new";
                 this._toEditMode();
@@ -492,7 +506,7 @@ sap.ui.define([
             this.statusGloCode = "";
 
             var aFilters = [
-                new Filter("tenant_id", "EQ", this._sTenantId),
+                new Filter("tenant_id", "EQ", this.tenant_id),
                 new Filter("request_number", "EQ", this._sRequestNumber),
                 new Filter("category_group_code", "EQ", this._sCategoryGroupCode)
             ];
@@ -606,7 +620,7 @@ sap.ui.define([
 
             treeFilter.push(new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                    new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                     new Filter("category_group_code", FilterOperator.EQ, "CO")
                 ],
                 and: false

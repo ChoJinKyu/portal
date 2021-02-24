@@ -21,9 +21,10 @@ sap.ui.define([
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment",
-    "ext/lib/model/TreeListModel"
+    "ext/lib/model/TreeListModel",
+    "ext/lib/util/SppUserSession"
 ], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController,
-    MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, TreeListModel) {
+    MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, TreeListModel, SppUserSession) {
     "use strict";
 
     return BaseController.extend("dp.pd.activityStandardDayMgt.controller.MainList", {
@@ -31,6 +32,10 @@ sap.ui.define([
         formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(),
+        loginUserId: new String,
+        tenant_id: new String,
+        companyCode: new String,
+        language_cd: new String,
 
         onInit: function () {
             var oViewModel = this.getResourceBundle();
@@ -41,6 +46,7 @@ sap.ui.define([
             });
             this.setModel(oViewModel, "mainListView");
 
+            var oSppUserSession = new SppUserSession();
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new ManagedListModel(), "list");
@@ -54,6 +60,19 @@ sap.ui.define([
                     intent: "#Template-display"
                 }, true);
             }.bind(this));
+
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
+            //로그인 세션 작업완료시 수정
+            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
+            this.companyCode = this.getModel("USER_SESSION").getSessionAttr("COMPANY_CODE");
+            this.language_cd = this.getModel("USER_SESSION").getSessionAttr("LANGUAGE_CODE");
+
+            this.tenant_id = "L2101";
+            this.loginUserId = "user@lgensol.com";
+            this.companyCode = "LGESL";
+            this.language_cd = "KO";
 
             //this.byId("btn_search").firePress();
             this._doInitTablePerso();
@@ -101,8 +120,7 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTenantId = "L2101",
-                oSearchCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
+            var oSearchCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
                 oSearchAUCombo = this.getView().byId("searchAUCombo").getSelectedKey(),
                 oSearchPCField = this.getView().byId("searchPCField").getValue(),
                 oSearchPCFieldTx = this.getView().byId("searchPCInputTx").getValue(),
@@ -110,7 +128,7 @@ sap.ui.define([
                 oSearchActivity = this.getView().byId("searchActivity").getValue();
 
             var aSearchFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
             ];
 
             if(oSearchCompanyCombo && oSearchCompanyCombo.length > 0) {
@@ -125,10 +143,6 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("path_name", FilterOperator.EQ, oSearchPCField));
             }
 
-            if (oSearchPCFieldTx && oSearchPCFieldTx.length > 0) {
-                aSearchFilters.push(new Filter("category_name", FilterOperator.EQ, oSearchPCFieldTx));
-            }
-           
             if (oSearchPTCombo && oSearchPTCombo.length > 0) {
                 aSearchFilters.push(new Filter({
                     filters: [
@@ -141,8 +155,8 @@ sap.ui.define([
             if (oSearchActivity && oSearchActivity.length > 0) {
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("activity_code", FilterOperator.Contains, oSearchActivity),
-                        new Filter("activity_name", FilterOperator.Contains, oSearchActivity)
+                        new Filter("tolower(activity_code)", FilterOperator.Contains, "'" + oSearchActivity.toLowerCase().replace("'","''") + "'"),
+                        new Filter("tolower(activity_name)", FilterOperator.Contains, "'" + oSearchActivity.toLowerCase().replace("'","''") + "'")
                     ],
                     and: false
                 }));
@@ -203,7 +217,7 @@ sap.ui.define([
 
             treeFilter.push(new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                    new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                     new Filter("category_group_code", FilterOperator.EQ, "CO")
                 ],
                 and: false

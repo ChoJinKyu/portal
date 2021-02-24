@@ -22,9 +22,10 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment",
     "sap/ui/model/Sorter",
-    "sap/ui/core/syncStyleClass"
+    "sap/ui/core/syncStyleClass",
+    "ext/lib/util/SppUserSession"
 ], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, Formatter, DateFormatter, Validator, TablePersoController, MainListPersoService, Filter, FilterOperator,
-     MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, Sorter, syncStyleClass) {
+     MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment, Sorter, syncStyleClass, SppUserSession) {
     "use strict";
 
     return BaseController.extend("dp.pd.activityMappingMgt.controller.MainList", {
@@ -33,6 +34,10 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         validator: new Validator(),
         oOrgCode: null,
+        loginUserId: new String,
+        tenant_id: new String,
+        companyCode: new String,
+        language_cd: new String,
 
         onInit: function () {
             var oViewModel = this.getResourceBundle();
@@ -43,6 +48,7 @@ sap.ui.define([
             });
             this.setModel(oViewModel, "mainListView");
 
+            var oSppUserSession = new SppUserSession();
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.getView().setModel(new ManagedListModel(), "list");
@@ -56,6 +62,19 @@ sap.ui.define([
                     intent: "#Template-display"
                 }, true);
             }.bind(this));
+
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
+            //로그인 세션 작업완료시 수정
+            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
+            this.companyCode = this.getModel("USER_SESSION").getSessionAttr("COMPANY_CODE");
+            this.language_cd = this.getModel("USER_SESSION").getSessionAttr("LANGUAGE_CODE");
+
+            this.tenant_id = "L2101";
+            this.loginUserId = "user@lgensol.com";
+            this.companyCode = "LGESL";
+            this.language_cd = "KO";
 
             //this.byId("btn_search").firePress();
             //this._doInitTablePerso();
@@ -147,14 +166,13 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTenantId = "L2101",
-                sCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
+            var sCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
                 sAuCombo = this.getView().byId("searchAUCombo").getSelectedKey(),
                 sProductActivity = this.getView().byId("searchProductActivity").getValue(),
                 sActivity = this.getView().byId("searchActivity").getValue();
 
             var aSearchFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
             ];
 
             if (sCompanyCombo && sCompanyCombo.length > 0) {
@@ -217,10 +235,10 @@ sap.ui.define([
                    oTable.removeSelections(true);
                 }
             }
-
+            
             oModel.addRecord({
-                "tenant_id": "L2101",
-                "company_code": "LGESL",
+                "tenant_id": this.tenant_id,
+                "company_code": this.companyCode,
                 "org_type_code": "AU",  // AU
                 "org_code": this.byId("searchAUCombo").getSelectedKey(),
                 "activity_code": null,
@@ -229,8 +247,8 @@ sap.ui.define([
                 "active_flag": "true",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
-                "create_user_id": "17370CHEM@lgchem.com",
-                "update_user_id": "17370CHEM@lgchem.com",
+                "create_user_id": this.loginUserId,
+                "update_user_id": this.loginUserId,
                 "system_create_dtm": new Date(),
                 "system_update_dtm": new Date()
             }, "/ActivityMappingNameView", 0);
@@ -294,7 +312,6 @@ sap.ui.define([
                             this.byId("mainTableDelButton").setEnabled(false);
                             this.byId("mainTableCancButton").setEnabled(false);
                             this.byId("rTableExportButton").setEnabled(true);
-                            //this.byId("mainTablePersoButton").setEnabled(true);
 
                         }
                     }).bind(this)
@@ -320,7 +337,6 @@ sap.ui.define([
                 this.byId("mainTableDelButton").setEnabled(false);
                 this.byId("mainTableCancButton").setEnabled(false);
                 this.byId("rTableExportButton").setEnabled(true);
-                //this.byId("mainTablePersoButton").setEnabled(true);
             }
         },
 
@@ -401,15 +417,15 @@ sap.ui.define([
                     if (oData.ActivityMappingNameView[i]._row_state_ != null && oData.ActivityMappingNameView[i]._row_state_ != "") {
 
                         PdActivityMappingType.push({
-                            tenant_id: oData.ActivityMappingNameView[i].tenant_id,
-                            company_code: oData.ActivityMappingNameView[i].company_code,
+                            tenant_id: this.tenant_id,
+                            company_code: this.companyCode,
                             org_type_code: oData.ActivityMappingNameView[i].org_type_code,
                             org_code: oData.ActivityMappingNameView[i].org_code,
                             activity_code: oData.ActivityMappingNameView[i].activity_code,
                             product_activity_code: oData.ActivityMappingNameView[i].product_activity_code,
                             activity_dependency_code: oData.ActivityMappingNameView[i].activity_dependency_code,
                             active_flag: oData.ActivityMappingNameView[i].active_flag.toString(),
-                            update_user_id: "17370CHEM@lgchem.com",
+                            update_user_id: this.loginUserId,
                             system_update_dtm: now,
                             crud_type_code: oData.ActivityMappingNameView[i]._row_state_,
                             update_activity_code: oData.ActivityMappingNameView[i].activity_code_org,
@@ -449,7 +465,6 @@ sap.ui.define([
                 this.byId("mainTableDelButton").setEnabled(false);
                 this.byId("mainTableCancButton").setEnabled(false);
                 this.byId("rTableExportButton").setEnabled(true);
-                //this.byId("mainTablePersoButton").setEnabled(true);
             }
         },
 
@@ -472,8 +487,6 @@ sap.ui.define([
                 }
             }
       
-            
-
             if (oItem != null && oItem != undefined) {
                 this.byId("mainTableCancButton").setEnabled(true);
 
@@ -520,8 +533,6 @@ sap.ui.define([
                     //this.byId("mainTablePersoButton").setEnabled(true);
                 }
             }
-
-            //oTable.removeSelections(true);
         },
 
         onSearchProductActivity: function (oEvent) {

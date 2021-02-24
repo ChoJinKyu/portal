@@ -157,6 +157,7 @@
                                             items="{
                                                 path: 'common>/Code',
                                                 filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                                     {path: 'group_code', operator: 'EQ', value1: 'DP_PD_CATEGORY_GROUP'}
                                                 ]
                                             }">

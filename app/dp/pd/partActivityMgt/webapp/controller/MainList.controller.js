@@ -65,17 +65,17 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
+            this.setModel(new JSONModel([]), "prjTypeModel");
 
             this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
             //로그인 세션 작업완료시 수정
-            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            // this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.tenant_id = "L2101";
             this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");                       
 
             oTransactionManager = new TransactionManager();
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
-
-            // this.setPrjTypeFilter();
+            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);            
 
             this.enableMessagePopover();
 
@@ -180,23 +180,7 @@ sap.ui.define([
                 table: oTable,
                 data: oData
             });
-        },  
-        
-        /**
-         * 세션에서 받은 tenant_id 로 필터 걸어주기
-         */
-        setPrjTypeFilter: function () {
-            var oSelect, oBinding, aFilters;
-            oSelect = this.getView().byId('searchPrjType');
-            oBinding = oSelect.getBinding("items");
-            aFilters = [];
-            aFilters.push( new Filter("tenant_id", 'EQ', "L2101") );
-
-            //aFilters.push( new Filter("tenant_id", 'EQ', 'L2100') );
-            //aFilters.push( new Filter("tenant_id", 'EQ', 'L2600') );
-            oBinding.filter(aFilters, FilterType.Application); 
-        },
-
+        }, 
 
         /**
          * Cell 클릭 후 상세화면으로 이동
@@ -220,6 +204,21 @@ sap.ui.define([
 
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(true);
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(true);
+            var that = this;
+            var oPrjTypeModel = this.getOwnerComponent().getModel("util");
+            
+            // 콤보 셋팅 방식 테스트용
+            // oPrjTypeModel.read("/Code", {
+            //     filters: [
+            //         new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+            //         new Filter("group_code", FilterOperator.EQ, "DP_PART_PJT_TYPE")
+            //     ],
+            //     success: function (rData, reponse) {
+            //         if(rData.results.length>0){
+            //             that.getView().getModel("prjTypeModel").setData(reponse.data.results);                        
+            //         }
+            //     }
+            // });
 
             this.getModel("mainListViewModel").setProperty("/headerExpanded", false);
             // this.byId("pageSearchButton").firePress();

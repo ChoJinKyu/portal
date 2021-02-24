@@ -26,11 +26,12 @@ sap.ui.define([
     "sap/m/VBox",
     "ext/lib/util/ExcelUtil",
     "sap/m/SegmentedButtonItem",
-    "sap/ui/model/FilterType"
+    "sap/ui/model/FilterType",
+    "ext/lib/util/SppUserSession"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
     Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType,
-    Text, Label, Input, VBox, ExcelUtil, SegmentedButtonItem, FilterType) {
+    Text, Label, Input, VBox, ExcelUtil, SegmentedButtonItem, FilterType, SppUserSession) {
     "use strict";
 
     var oTransactionManager;
@@ -61,14 +62,22 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
 
-            
             //로그인 세션 작업완료시 수정
-            this.loginUserId = "TestUser";
-            this.tenant_id = "L2101";
-            this.companyCode = "LGCKR";
-            this.language_cd = "KO";
             this.categoryGroupCode = "CO";
             this.setModel(new JSONModel(), "visibleTF");
+
+            var oSppUserSession = new SppUserSession();
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
+            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
+            this.companyCode = this.getModel("USER_SESSION").getSessionAttr("COMPANY_CODE");
+            this.language_cd = this.getModel("USER_SESSION").getSessionAttr("LANGUAGE_CODE");
+
+            this.tenant_id = "L2101";
+            this.loginUserId = "user@lgensol.com";
+            this.companyCode = "LGESL";
+            this.language_cd = "KO";
 
             oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
@@ -340,23 +349,9 @@ sap.ui.define([
         },
 
         /**
-         * 코드 체크
-         */
-        onNameChk : function(e) {
-            //console.log(e);
-            var oView = this.getView();
-            //var searchIdeaManager = this.getView().byId("searchIdeaManager");
-            var searchIdeaManagerId = this.getView().byId("searchIdeaManagerId");
-            //console.log(searchIdeaManager.getValue());
-            //if(searchIdeaManager.getValue() == ""){
-                searchIdeaManagerId.setValue("");
-            //}
-        }
-
-        /**
         * DEV2 ( WANG ) 개발 시작점 
         */
-        , onAddCreate: function (oEvent) {
+        onAddCreate: function (oEvent) {
             //인자값을 받아서 넘기는 방식이므로 하드 코딩하고 가져다 붙일때는 넘겨 받은 인자값을 넣으면 됨
             this.getRouter().navTo("addCreatePage", {
                 requestNumber: "CCR2102040006"
