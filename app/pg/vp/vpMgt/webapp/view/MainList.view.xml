@@ -174,7 +174,9 @@
                                     <SearchField id="search_Dept_Name"
                                         search=".onInputWithDeptValuePress" 
                                         change="resetCode"
-                                        />
+                                        >
+                                    <SuggestionItem id="search_Dept_Name_s" text="" key="" />
+                                    </SearchField>
                                     <Input id="search_Dept_Code" placeholder="Input data" visible ="false"></Input>
                                 </HBox>                                
                                 <layoutData>
@@ -396,6 +398,13 @@
                                 </table:template>
                             </table:Column>
 
+                            <!-- <table:Column  width="10rem" filterProperty="regular_evaluation_flag" hAlign="Center" >
+                                <Label text="{I18N>/EVALUATION}" width="100%" textAlign="Center"/>
+                                <table:template>
+                                    <Text text="{list>regular_evaluation_flag}" wrapping="false" />
+                                </table:template>
+                            </table:Column>                             -->
+
                             <table:Column  width="10rem" filterProperty="inp_type_name"  >
                                 <Label text="{I18N>/MTL_ATTRIBUTE}" width="100%" textAlign="Center"/>
                                 <table:template>
@@ -493,6 +502,13 @@
                                     <Text text="{= !!${list>vendor_pool_apply_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                               
                                 </table:template>
                             </table:Column> -->
+
+                            <table:Column  width="6rem" filterProperty="regular_evaluation_flag" hAlign="Center" >
+                                <Label text="{I18N>/EVALUATION}" width="100%" textAlign="Center"/>
+                                <table:template>
+                                    <Text text="{= !!${list>regular_evaluation_flag} ? 'Y' : 'N'}" wrapping="false" />
+                                </table:template>
+                            </table:Column>                            
 
                             <table:Column label="{I18N>/SD_EXCEPTION_FLAG}" width="7rem" hAlign="Center">
                                 <table:template>

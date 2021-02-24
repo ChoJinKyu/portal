@@ -11,6 +11,7 @@ entity MI_Mat_Code_BOM_Management_View {
         supplier_local_name   : String(240)    @title : '공급업체로컬명';
         supplier_english_name : String(240)    @title : '공급업체영문명';
         base_quantity         : Decimal(28, 5) @title : '기준수량';
+        base_quantity_unit    : String(3)      @title : '기준수량단위';
         processing_cost       : Decimal(28, 5) @title : '가공비';
         pcst_currency_unit    : String(30)     @title : '가공비통화단위';
     key mi_bom_id             : String(100)    @title : '시황자재명세서ID';

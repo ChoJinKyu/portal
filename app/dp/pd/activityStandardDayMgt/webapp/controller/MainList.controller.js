@@ -105,6 +105,7 @@ sap.ui.define([
                 oSearchCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
                 oSearchAUCombo = this.getView().byId("searchAUCombo").getSelectedKey(),
                 oSearchPCField = this.getView().byId("searchPCField").getValue(),
+                oSearchPCFieldTx = this.getView().byId("searchPCInputTx").getValue(),
                 oSearchPTCombo = this.getView().byId("searchPTCombo").getSelectedKey(),
                 oSearchActivity = this.getView().byId("searchActivity").getValue();
 
@@ -121,7 +122,11 @@ sap.ui.define([
             }
 
             if (oSearchPCField && oSearchPCField.length > 0) {
-                aSearchFilters.push(new Filter("category_name", FilterOperator.EQ, oSearchPCField));
+                aSearchFilters.push(new Filter("path_name", FilterOperator.EQ, oSearchPCField));
+            }
+
+            if (oSearchPCFieldTx && oSearchPCFieldTx.length > 0) {
+                aSearchFilters.push(new Filter("category_name", FilterOperator.EQ, oSearchPCFieldTx));
             }
            
             if (oSearchPTCombo && oSearchPTCombo.length > 0) {
@@ -150,9 +155,11 @@ sap.ui.define([
             var sTableId = oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
 
-            var oTable = this.byId("mainTable");
-            var sFileName = "Activity Standard Day Management";
+            var oTable = this.byId(sTableId);
+
+            var sFileName = "Activity Standard Day Management_"+ this._getDTtype();
             var oData = this.getModel("list").getProperty("/pdActivityStdDayView");
+
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
@@ -214,14 +221,16 @@ sap.ui.define([
                             "nodes": jNodes
                         }
                     }), "tree");
+
+                    //this.onCollapseAll();
                 }).bind(this))
                 // 실패시
                 .catch(function (oError) {
                 })
                 // 모래시계해제
                 .finally((function () {
+                    this.byId("diatreeTable").collapseAll();
                 }).bind(this));
-
         },
 
         partCategoryPopupClose: function (oEvent) {
@@ -231,11 +240,30 @@ sap.ui.define([
         selectPartCategoryValue: function (oEvent) {
             var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
 
-            this.getView().byId("searchPCField").setValue(row.category_name);
+            this.getView().byId("searchPCField").setValue(row.path_name);
             this.getView().byId("searchPCInput").setValue(row.category_code);
+            this.getView().byId("searchPCInputTx").setValue(row.category_name);
 
             this.partCategoryPopupClose();
         },
+
+        _getDTtype: function (StartFlag, oDateParam) {
+            let oDate = oDateParam || new Date(),
+                iYear = oDate.getFullYear(),
+                iMonth = oDate.getMonth()+1,
+                iDate = oDate.getDate(),
+                iHours = oDate.getHours(),
+                iMinutes = oDate.getMinutes(),
+                iSeconds = oDate.getSeconds();
+ 
+            let sReturnValue = iYear + this._getPreZero(iMonth) + this._getPreZero(iDate);                      
+
+            return sReturnValue;
+        },
+
+        _getPreZero: function (iDataParam) {
+            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
+        }
 
     });
 });

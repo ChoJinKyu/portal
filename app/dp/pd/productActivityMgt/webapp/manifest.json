@@ -99,6 +99,12 @@
     "resources": {
         "css": [
             {
+                "uri": "../../../../lib/css/style.css"
+            },
+            {
+                "uri": "../../../../lib/css/layout.css"
+            },
+            {
                 "uri": "css/style.css"
             }
         ]

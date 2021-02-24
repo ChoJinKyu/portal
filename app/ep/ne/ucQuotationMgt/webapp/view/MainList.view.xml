@@ -38,14 +38,14 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="운영단위(플랜트) : " labelFor="searchOrgCode"></Label>
-                            <Input id="searchOrgCode" placeholder="플랜트" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openPlantPopup" />
+                            <Label text="{I18N>/OPERATION_UNIT} : " labelFor="searchOrgCode"></Label>
+                            <Input id="searchOrgCode" placeholder="{I18N>/OPERATION_UNIT}" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openPlantPopup" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="공사시작일자 : " labelFor="searchConstDate" required = "true"/>
+                            <Label text="{I18N>/CONST_START_DATE} : " labelFor="searchConstDate" required = "true"/>
                             <DateRangeSelection id="searchConstDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                                
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -53,15 +53,15 @@
                         </VBox>
 
                         <VBox>
-                            <Label text="공사명 : " labelFor="searchConstName"/>
-                            <Input id="searchConstName" placeholder="공사명" submit=".onPageSearchButtonPress" />                                
+                            <Label text="{I18N>/CONST_NAME} : " labelFor="searchConstName"/>
+                            <Input id="searchConstName" placeholder="{I18N>/CONST_NAME}" submit=".onPageSearchButtonPress" />                                
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="협력사명 :" labelFor="searchSupplierName"></Label>
-                            <Input id="searchSupplierName" placeholder="협력사" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openSupplierPopup" />
+                            <Label text="{I18N>/SUPPLIER_NAME} :" labelFor="searchSupplierName"></Label>
+                            <Input id="searchSupplierName" placeholder="{I18N>/SUPPLIER_NAME}" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openSupplierPopup" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -69,15 +69,15 @@
 
 
                         <VBox>
-                            <Label text="진행상태"></Label>
-                            <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
-                                <items>
+                            <Label text="{I18N>/PROGRESS_STATUS}"></Label>
+                            <SegmentedButton id="searchStatus" selectedKey="221020" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                <!-- <items>
                                     <SegmentedButtonItem text="All" key="" width="4.1rem" />
                                     <SegmentedButtonItem text="BM등록요청" key="221010" width="7rem" />
                                     <SegmentedButtonItem text="물량확정요청" key="221020" width="7rem" />
                                     <SegmentedButtonItem text="물량수정요청" key="221030" width="7rem" />
                                     <SegmentedButtonItem text="물량확정" key="221040" width="5.5rem" />
-                                </items>
+                                </items> -->
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData span="XL5 L6 M6 S12" />
@@ -86,7 +86,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="견적서번호: "
+                                text="{I18N>/CONST_QUOTATION_NUMBER}: "
                                 labelFor="searchConstQuotationNumber">
                             </Label>
                             <Input id="searchConstQuotationNumber" 
@@ -96,7 +96,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                                <Label text="요청자" labelFor="searchRequestorS"></Label>
+                                <Label text="{I18N>/BUYER}" labelFor="searchRequestorS"></Label>
                                 <lib-m:CodePicker id="searchRequestorS"
                                     placeholder="Enter a employee name"
                                     keyField="employee_number"
@@ -163,31 +163,31 @@
             </t:rowSettingsTemplate>
             <t:columns>
                 <t:Column id="mainUcConstQuotationNumber" width="8rem"  hAlign="Center">
-                <Label text="견적서번호" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONST_QUOTATION_NUMBER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>const_quotation_number}" textAlign="Center"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainUcOrgCode" width="8rem">
-                <Label text="운영단위" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/OPERATION_UNIT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>org_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainUcConstName" width="20rem">
-                <Label text="공사명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONST_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>const_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainUcSupplierCode" width="15rem">
-                <Label text="협력사명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>supplier_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainUcConstStartDate" width="8rem" hAlign="Center">
-                <Label text="공사시작일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONST_START_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'viewModel>const_start_date',
@@ -196,7 +196,7 @@
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainUcConstEndDate" width="8rem" hAlign="Center">
-                <Label text="공사종료일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONST_END_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'viewModel>const_end_date',
@@ -205,7 +205,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainUcQuotationStatusCode" width="10rem" hAlign="Center">
-                <Label text="진행상태" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PROGRESS_STATUS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>quotation_status_name}"/>
                     <tnt:InfoLabel 
@@ -218,19 +218,19 @@
                 </t:template>
                 </t:Column>              
                 <t:Column id="mainUcPrNumber" width="8rem" hAlign="Center">
-                <Label text="PR번호" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PR_NUMBER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>pr_number}"/>
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainUcConstPersonEmpno" width="6rem">
-                <Label text="물량검토자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONST_REVIEW_PERSON}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>const_person_name}"/>
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainUcBuyerEmpno" width="6rem">
-                <Label text="구매담당자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/BUYER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>buyer_name}"/>
                 </t:template>

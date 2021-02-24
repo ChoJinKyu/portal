@@ -24,9 +24,9 @@
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
-                <f:actions>
+                <!-- <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                </f:actions>
+                </f:actions> -->
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
                 </f:navigationActions>
@@ -38,28 +38,28 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="운영단위(플렌트) : " labelFor="searchOrgCode"></Label>
+                            <Label text="{I18N>/OPERATION_UNIT} : " labelFor="searchOrgCode"></Label>
                             <Input id="searchOrgCode" placeholder="플랜트" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openPlantPopup" />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="계약명 : " labelFor="searchTitle"/>
+                            <Label text="{I18N>/CONTRACT_NAME} : " labelFor="searchTitle"/>
                             <Input id="searchTitle" submit=".onPageSearchButtonPress" placeholder="" />                                
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="계약종료일자 :" labelFor="searchEndDate"></Label>
+                            <Label text="{I18N>/CONTRACT_END_DATE} :" labelFor="searchEndDate"></Label>
                             <DateRangeSelection id="searchEndDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />     
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="단가계약그룹번호 :" labelFor="searchDocumentNo"></Label>
+                            <Label text="{I18N>/NET_PRICE_CONTRACT_DOCUMENT_NO} :" labelFor="searchDocumentNo"></Label>
                             <MultiInput width="100%"
                                 id="searchDocumentNo"
                                 suggestionItems="{
@@ -82,24 +82,25 @@
                 <form:SimpleForm id="pageSearchForm2" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="계약진행상태 : " labelFor="searchStatusCode"/>
+                            <Label text="{I18N>/CONTRACT_PROGRESS_STATUS} : " labelFor="searchStatusCode"/>
                             <SegmentedButton id="searchStatusCode" class="sapUiSmallMarginBottom" selectedKey="All" width="100%">                                            
-                                <items>
+                                <!-- <items>
                                     <SegmentedButtonItem text="All" key="all" width="4rem" />
                                     <SegmentedButtonItem text="작성중" key="711010" width="5rem" />
                                     <SegmentedButtonItem text="결재진행중" key="711020" width="6rem" />
                                     <SegmentedButtonItem text="결재반려" key="711030" width="5rem" />
                                     <SegmentedButtonItem text="결재완료" key="711040" width="5rem" />
-                                </items>
+                                </items> -->
                             </SegmentedButton> 
-                            <!-- <SegmentedButton id="searchStatusCode" selectedKey="{list>/net_price_contract_status_code}" items="{
+                            <!-- <SegmentedButton id="searchStatusCode" selectedKey="all" 
+                                items="{
                                             path: 'common>/Code',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                 {path: 'group_code', operator: 'EQ', value1: 'EP_NET_PRICE_CONTRACT_STATUS'}
                                             ],
-                                            sorter: { path: 'code'}
-                                        }" class="sapUiSmallMarginBottom">
+                                            sorter: { path: 'sort_no'}
+                                        }" class="sapUiSmallMarginBottom"  width="100%">
                                 <items>
                                     <SegmentedButtonItem width="6rem" key="{common>code}" text="{common>code_name}" />
                                 </items>                                                        
@@ -109,24 +110,25 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="계약유효상태 : " labelFor="searchEffectiveStatus"/>
+                            <Label text="{I18N>/CONTRACT_EFFECTIVE_STATUS} : " labelFor="searchEffectiveStatus"/>
                             <SegmentedButton id="searchEffectiveStatus" class="sapUiSmallMarginBottom" selectedKey="All" width="100%">                                            
-                                <items>
+                                <!-- <items>
                                     <SegmentedButtonItem text="All" key="all" width="3rem"  />
                                     <SegmentedButtonItem text="유효" key="VALID" width="3rem"  />
                                     <SegmentedButtonItem text="만료" key="EXPIRE" width="3rem"  />
                                     <SegmentedButtonItem text="종료" key="INVALID" width="3rem"  />
                                     <SegmentedButtonItem text="대기" key="READY" width="3rem"  />
-                                </items>
+                                </items> -->
                             </SegmentedButton>                     
-                            <!-- <SegmentedButton id="searchEffectiveStatus" selectedKey="{list>/effective_status_name}" items="{
+                            <!-- <SegmentedButton id="searchEffectiveStatus" selectedKey="all" 
+                                items="{
                                             path: 'common>/Code',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                 {path: 'group_code', operator: 'EQ', value1: 'EP_CONTRACT_EFFECTIVE_STATUS'}
                                             ],
-                                            sorter: { path: 'code'}
-                                        }" class="sapUiSmallMarginBottom">
+                                            sorter: { path: 'sort_no'}
+                                        }" class="sapUiSmallMarginBottom" width="100%">
                                 <items>
                                     <SegmentedButtonItem width="5em" key="{common>code}" text="{common>code_name}" />
                                 </items>                                                        
@@ -136,19 +138,25 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="계약경과율(%) :" labelFor="searchDayCount"></Label>
+                            <Label text="{I18N>/CONTRACT_PROGRESS_RATE} :" labelFor="searchDayCount"></Label>
                             <Slider id="searchDayCount" enableTickmarks="true" showAdvancedTooltip="true" step="5" min="0" max="100" width="100%" />
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M12 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="협력사명 :" labelFor="searchSupplierName"></Label>
+                            <Label text="{I18N>/SUPPLIER} :" labelFor="searchSupplierName"></Label>
                             <Input id="searchSupplierName" placeholder="협력사" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openSupplierPopup" />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M12 S12" />
                             </layoutData>
-                        </VBox>                                              
+                        </VBox>    
+                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>                                                                  
                     </form:content>
                 </form:SimpleForm>                
             </f:DynamicPageHeader>
@@ -171,9 +179,9 @@
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                 <Title text="공사단가계약 {= ${viewModel>/list}.length > 0 ? '(' + ${viewModel>/list}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
-                <Button text="신규작성" id="RfqButton" press=".onAddButtonPress" type="Transparent"/>
-                <Button text="계약변경" id="supplierSelectionButton" press=".onContractModifydButtonPress" type="Transparent"/>
-                <Button text="계약종료" id="publishButton" press=".onContractEndButtonPress"   type="Transparent"/>
+                <Button text="{I18N>/NEW}" id="RfqButton" press=".onAddButtonPress" type="Transparent"/>
+                <Button text="{I18N>/CONST_CONTRACT_CHANGE}" id="supplierSelectionButton" press=".onContractModifydButtonPress" type="Transparent"/>
+                <Button text="{I18N>/CONST_CONTRACT_END}" id="publishButton" press=".onContractEndButtonPress"   type="Transparent"/>
                 <ToolbarSeparator/>
                 <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                     <layoutData>
@@ -186,37 +194,37 @@
             </t:rowSettingsTemplate>
             <t:columns>
                 <t:Column id="mainDocumentNo" width="10rem" hAlign="Center">
-                <Label text="단가계약그룹번호" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/NET_PRICE_CONTRACT_DOCUMENT_NO}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_document_no}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainDegree" width="4rem" hAlign="Center">
-                <Label text="차수" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/DEGREE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_degree}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainTitle" width="15rem">
-                <Label text="계약명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONTRACT_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_title}" />
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainItemClass" width="8rem">
-                <Label text="대분류(공종)" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONST_LARGE_CLASS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>ep_item_class_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainSupplierName" width="12rem">
-                <Label text="협력사명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>supplier_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainStartDate" width="8rem" hAlign="Center">
-                <Label text="계약시작일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONTRACT_START_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'viewModel>net_price_contract_start_date',
@@ -225,7 +233,7 @@
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainEndDate" width="8rem" hAlign="Center">
-                <Label text="계약종료일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONTRACT_END_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'viewModel>net_price_contract_end_date',
@@ -234,7 +242,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainStatusCode" width="7rem" hAlign="Center">
-                <Label text="계약진행상태" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONTRACT_PROGRESS_STATUS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_status_name}"/>
                     <tnt:InfoLabel 
@@ -246,7 +254,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainEffectiveStatusName" width="7rem" hAlign="Center">
-                <Label text="계약유효상태" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONTRACT_EFFECTIVE_STATUS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <tnt:InfoLabel 
                         text="{viewModel>effective_status_name}" 
@@ -257,7 +265,7 @@
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainDayCount" width="8rem" hAlign="Right">
-                <Label text="계약경과율" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CONTRACT_PROGRESS_RATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_day_count} %"/>
                     <!-- <Text  text="{

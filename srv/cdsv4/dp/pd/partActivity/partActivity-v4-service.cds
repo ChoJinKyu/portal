@@ -47,8 +47,9 @@ service partActivityV4Service {
     view SelectAnActivityView (
     company_code : String(40),
     org_code : String(40),
-    part_project_type_code : String(40)
-  ) as 
+    part_project_type_code : String(40),
+    activity_name : String(100)
+    ) as 
     select key pa.tenant_id,
 	       key pa.activity_code,
 	           pa.activity_name,
@@ -57,6 +58,6 @@ service partActivityV4Service {
     from   Dp_Pd_Part_Base_Activity_View pa
     where  pa.tenant_id = 'L2101'
     and	   not exists (select * from Dp_Pd_Part_Activity_Template where tenant_id = pa.tenant_id and company_code = :company_code and org_code = :org_code and part_project_type_code = :part_project_type_code and activity_code = pa.activity_code)
-    ;
+    and    pa.activity_name like '%' || :activity_name || '%';
 
 }

@@ -105,7 +105,8 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "sp.util": "../../../../sp/util"
+            "sp.util": "../../../../sp/util",
+            "ep.util": "../../../../ep/util"
         },
         "routing": {
             "config": {

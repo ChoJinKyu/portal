@@ -96,13 +96,13 @@
                         }">
                 <headerToolbar>
                         <Toolbar>
-                             <Title id="title" text="{I18N>/EVAL_ITEM} {I18N>/MANAGEMENT}({=${mainModel>/mainListTable}.length || 0})" level="H2"/> 
+                            <Title id="title" text="{I18N>/EVAL_ITEM} {I18N>/MANAGEMENT}({=${mainModel>/mainListTable}.length || 0})" level="H2"/> 
                             <ToolbarSpacer/>
                             <HBox>
                                 <Button text="{I18N>/NEW}" type="Transparent" press=".onCreateDetail"/>
                             </HBox>
                         </Toolbar>
-                    </headerToolbar>
+                </headerToolbar>
                 
                     <columns>
                         <Column>

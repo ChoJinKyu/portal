@@ -32,18 +32,18 @@ BEGIN
 
     DECLARE R_LOI_SELECTION_NUMBER NVARCHAR(50) := '';
 
-    DECLARE CURSOR curItemList FOR
-        SELECT 
-            A.TENANT_ID
-            , A.COMPANY_CODE
-            , A.LOI_WRITE_NUMBER
-            , A.LOI_ITEM_NUMBER
-            , A.OFFLINE_SELECTION_SUPPLIER_CODE
-            , A.OFFLINE_QUOTATION_AMOUNT
-            , A.OFFLINE_QUOTATION_DUE_DATE
-            , A.OFFLINE_QUOTATION_REMARK
-        FROM :I_TABLE A
-        ;
+    -- DECLARE CURSOR curItemList FOR
+    --     SELECT 
+    --         A.TENANT_ID
+    --         , A.COMPANY_CODE
+    --         , A.LOI_WRITE_NUMBER
+    --         , A.LOI_ITEM_NUMBER
+    --         , A.OFFLINE_SELECTION_SUPPLIER_CODE
+    --         , A.OFFLINE_QUOTATION_AMOUNT
+    --         , A.OFFLINE_QUOTATION_DUE_DATE
+    --         , A.OFFLINE_QUOTATION_REMARK
+    --     FROM :I_TABLE A
+    --     ;
 
     IF (COALESCE(:I_LOI_SELECTION_NUMBER,'') = '') THEN
         
@@ -119,27 +119,57 @@ BEGIN
         
     END IF;
 
-    /* 커서 시작 */
-	FOR curItem AS curItemList
-    DO
+    UPDATE EP_LI_DTL DTL
+    SET (LOI_SELECTION_NUMBER
+    , OFFLINE_SELECTION_SUPPLIER_CODE
+    , OFFLINE_QUOTATION_AMOUNT
+    , OFFLINE_QUOTATION_DUE_DATE
+    , OFFLINE_QUOTATION_REMARK
+    , LOCAL_UPDATE_DTM
+    , UPDATE_USER_ID
+    , SYSTEM_UPDATE_DTM ) = (SELECT :R_LOI_SELECTION_NUMBER
+                                    ,OFFLINE_SELECTION_SUPPLIER_CODE
+                                    ,OFFLINE_QUOTATION_AMOUNT
+                                    ,OFFLINE_QUOTATION_DUE_DATE
+                                    ,OFFLINE_QUOTATION_REMARK        
+                                    ,CURRENT_TIMESTAMP
+                                    ,:I_USER_ID
+                                    ,CURRENT_TIMESTAMP
+                                FROM :I_TABLE B
+                                WHERE DTL.TENANT_ID = B.TENANT_ID
+                                AND DTL.COMPANY_CODE = B.COMPANY_CODE
+                                AND DTL.LOI_WRITE_NUMBER = B.LOI_WRITE_NUMBER
+                                AND DTL.LOI_ITEM_NUMBER = B.LOI_ITEM_NUMBER
+                    )   
+    WHERE EXISTS ( SELECT 0 FROM :I_TABLE B
+                    WHERE DTL.TENANT_ID = B.TENANT_ID
+                    AND DTL.COMPANY_CODE = B.COMPANY_CODE
+                    AND DTL.LOI_WRITE_NUMBER = B.LOI_WRITE_NUMBER
+                    AND DTL.LOI_ITEM_NUMBER = B.LOI_ITEM_NUMBER
+                    )
+    ;    
 
-        UPDATE EP_LI_DTL 
-        SET 
-        LOI_SELECTION_NUMBER = R_LOI_SELECTION_NUMBER
-        , OFFLINE_SELECTION_SUPPLIER_CODE = curItem.OFFLINE_SELECTION_SUPPLIER_CODE
-        , OFFLINE_QUOTATION_AMOUNT = curItem.OFFLINE_QUOTATION_AMOUNT
-        , OFFLINE_QUOTATION_DUE_DATE = curItem.OFFLINE_QUOTATION_DUE_DATE
-        , OFFLINE_QUOTATION_REMARK = curItem.OFFLINE_QUOTATION_REMARK        
-        , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
-        , UPDATE_USER_ID = :I_USER_ID
-        , SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP        
-        WHERE TENANT_ID = curItem.TENANT_ID
-        AND COMPANY_CODE = curItem.COMPANY_CODE
-        AND LOI_WRITE_NUMBER = curItem.LOI_WRITE_NUMBER
-        AND LOI_ITEM_NUMBER = curItem.LOI_ITEM_NUMBER
-        ;  
+    -- /* 커서 시작 */
+	-- FOR curItem AS curItemList
+    -- DO
 
-    END FOR;
+    --     UPDATE EP_LI_DTL 
+    --     SET 
+    --     LOI_SELECTION_NUMBER = R_LOI_SELECTION_NUMBER
+    --     , OFFLINE_SELECTION_SUPPLIER_CODE = curItem.OFFLINE_SELECTION_SUPPLIER_CODE
+    --     , OFFLINE_QUOTATION_AMOUNT = curItem.OFFLINE_QUOTATION_AMOUNT
+    --     , OFFLINE_QUOTATION_DUE_DATE = curItem.OFFLINE_QUOTATION_DUE_DATE
+    --     , OFFLINE_QUOTATION_REMARK = curItem.OFFLINE_QUOTATION_REMARK        
+    --     , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
+    --     , UPDATE_USER_ID = :I_USER_ID
+    --     , SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP        
+    --     WHERE TENANT_ID = curItem.TENANT_ID
+    --     AND COMPANY_CODE = curItem.COMPANY_CODE
+    --     AND LOI_WRITE_NUMBER = curItem.LOI_WRITE_NUMBER
+    --     AND LOI_ITEM_NUMBER = curItem.LOI_ITEM_NUMBER
+    --     ;  
+
+    -- END FOR;
 
     O_TABLE_MESSAGE =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, R_LOI_SELECTION_NUMBER as savedKey from dummy;
 

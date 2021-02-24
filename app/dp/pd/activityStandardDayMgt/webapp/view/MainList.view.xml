@@ -7,6 +7,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core"     
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:lib-f="ext.lib.control.f"
     height="100%">
 
     <f:DynamicPage
@@ -15,14 +16,122 @@
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
-                    <Title text="Activity {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
-                </f:heading>
-                <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions>
-            </f:DynamicPageTitle>
+            <lib-f:CustomDynamicPageTitle>
+                <lib-f:heading>
+                    <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="Activity {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
+                    </HBox>
+                </lib-f:heading>
+                <lib-f:fixedContent>
+                    <form:SimpleForm class="searchBox"
+                    maxContainerCols="2"
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    adjustLabelSpan="false"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="2"
+                    columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/COMPANY}: " required="true"></Label>
+                                <ComboBox
+                                    required="true"
+                                    id="searchCompanyCombo"
+                                    width="100%"
+                                    selectedKey="LGESL"
+                                    showSecondaryValues= "true"
+                                    items="{
+                                        path: '/CompanyView'
+                                        
+                                        }">
+                                        <items>
+                                            <core:ListItem
+                                                key="{company_code}"
+                                                text="{company_name}"
+                                                additionalText="{company_code}"/>
+                                        </items>
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M3 S12" />
+                                    </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo" />
+                                <ComboBox
+                                    id="searchAUCombo"
+                                    width="100%"
+                                    selectedKey=""
+                                    showSecondaryValues= "true"
+                                    items="{
+                                        path: '/OrgView'
+                                    }">
+                                    <items>
+                                        <core:ListItem
+                                            key="{org_code}" 
+                                            text="{org_name}" 
+                                            additionalText="{org_code}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M3 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/PART} {I18N>/CATEGORY}: " labelFor="searchPCField"></Label>
+                                <HBox>
+                                    <SearchField id="searchPCField" search=".onSearchPartCategory" width="30em"/>
+                                    <Input id="searchPCInput" visible ="false" />
+                                    <Input id="searchPCInputTx" visible ="false" />
+                                </HBox>
+                                <layoutData>
+                                    <layout:GridData span="XL5 L5 M5 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/PROJECT_TYPE}: " labelFor="searchPTCombo"></Label>
+                                <ComboBox
+                                    id="searchPTCombo"
+                                    width="100%"
+                                    selectedKey=""
+                                    showSecondaryValues= "true"
+                                    items="{
+                                        path: 'util>/Code',
+                                        filters: [
+                                            {path: 'group_code', operator: 'EQ', value1: 'DP_PART_PJT_TYPE'}
+                                        ],
+                                        sorter: { path: 'sort_no'}
+                                    }">
+                                    <items>
+                                        <core:ListItem
+                                            key="{util>code}" 
+                                            text="{util>code_name}"
+                                            additionalText="{util>code}"/></items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M3 S12" linebreak="true" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/ACTIVITY_NAME}: " labelFor="searchActivity"></Label>
+                                <Input id="searchActivity" change=".onPageSearchButtonPress"/>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M3 S12" />
+                                </layoutData>
+                            </VBox>
+                            <FlexBox alignItems="End" justifyContent="End">
+                                <Button id="btn_search" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
+                                <layoutData>
+                                    <layout:GridData span="XL12 L12 M12 S12" />
+                                </layoutData>
+                            </FlexBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </lib-f:fixedContent>
+            </lib-f:CustomDynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
@@ -40,99 +149,6 @@
                     columnsL="2"
                     columnsM="2">
                     <form:content>
-                        <VBox>
-                            <Label text="{I18N>/COMPANY}: " required="true"></Label>
-                            <ComboBox
-                                required="true"
-                                id="searchCompanyCombo"
-                                width="100%"
-                                selectedKey="LGESL"
-                                showSecondaryValues= "true"
-                                items="{
-                                    path: '/CompanyView'
-                                    
-                                    }">
-                                    <items>
-                                        <core:ListItem
-                                            key="{company_code}"
-                                            text="{company_name}"
-                                            additionalText="{company_code}"/>
-                                    </items>
-                                </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L2 M3 S12" />
-                                </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo"></Label>
-                            <!-- 테스트 테넌트번호 L1100, 원세팅테넌트번호 2100, 2600 -->
-                            <ComboBox
-                                id="searchAUCombo"
-                                width="100%"
-                                selectedKey=""
-                                showSecondaryValues= "true"
-                                items="{
-                                    path: '/OrgView'
-                                }">
-                                <items>
-                                    <core:ListItem
-                                        key="{org_code}" 
-                                        text="{org_name}" 
-                                        additionalText="{org_code}"/>
-                                </items>
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M3 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="{I18N>/PART} {I18N>/CATEGORY}: " labelFor="searchPCField"></Label>
-                            <HBox>
-                                <SearchField id="searchPCField" search=".onSearchPartCategory" />
-                                <Input id="searchPCInput" visible ="false"></Input>
-                            </HBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="{I18N>/PROJECT_TYPE}: " labelFor="searchPTCombo"></Label>
-                            <ComboBox
-                                id="searchPTCombo"
-                                width="100%"
-                                selectedKey=""
-                                showSecondaryValues= "true"
-                                items="{
-                                    path: 'util>/Code',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'DP_PART_PJT_TYPE'}
-                                    ],
-                                    sorter: { path: 'sort_no'}
-                                }">
-                                <items>
-                                    <core:ListItem
-                                        key="{util>code}" 
-                                        text="{util>code_name}"
-                                        additionalText="{util>code}"/></items>
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M3 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="{I18N>/ACTIVITY_NAME}: " labelFor="searchActivity"></Label>
-                            <Input id="searchActivity" change=".onPageSearchButtonPress"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M3 S12" />
-                            </layoutData>
-                        </VBox>
-                        <FlexBox alignItems="End" justifyContent="End">
-                            <Button id="btn_search" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
-                            <layoutData>
-                                <layout:GridData span="XL12 L12 M12 S12" />
-                            </layoutData>
-                        </FlexBox>
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -168,10 +184,10 @@
                     <Column id="mainColumnAUName" minScreenWidth="Tablet" hAlign="Left" width="5%">
                         <Text text="{I18N>/ORG_NAME}" />
                     </Column>
-                    <Column id="mainColumnPC" minScreenWidth="Tablet" hAlign="Left" width="9%">
+                    <Column id="mainColumnPC" minScreenWidth="Tablet" hAlign="Left" >
                         <Text text="{I18N>/PART} {I18N>/CATEGORY}" />
                     </Column>
-                    <Column id="mainColumnPT" minScreenWidth="Tablet" hAlign="Left" width="8%">
+                    <Column id="mainColumnPT" minScreenWidth="Tablet" hAlign="Left" width="6%">
                         <Text text="{I18N>/PROJECT_TYPE}" />
                     </Column>
                     <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Center" width="10%">
@@ -184,24 +200,24 @@
                         <Text text="{I18N>/USE_FLAG}" />
                     </Column>
                     <Column id="mainColumnS" minScreenWidth="Tablet" hAlign="Right" width="3%">
-                        <Text text="s" />
+                        <Text text="{I18N>/S_GRADE_STANDARD_DAYS}" />
                     </Column>
                     <Column id="mainColumnA" minScreenWidth="Tablet" hAlign="Right" width="3%">
-                        <Text text="a" />
+                        <Text text="{I18N>/A_GRADE_STANDARD_DAYS}" />
                     </Column>
                     <Column id="mainColumnB" minScreenWidth="Tablet" hAlign="Right" width="3%">
-                        <Text text="b" />
+                        <Text text="{I18N>/B_GRADE_STANDARD_DAYS}" />
                     </Column>
                     <Column id="mainColumnC" minScreenWidth="Tablet" hAlign="Right" width="3%">
-                        <Text text="c" />
+                        <Text text="{I18N>/C_GRADE_STANDARD_DAYS}" />
                     </Column>
                     <Column id="mainColumnD" minScreenWidth="Tablet" hAlign="Right" width="3%">
-                        <Text text="d" />
+                        <Text text="{I18N>/D_GRADE_STANDARD_DAYS}" />
                     </Column>
                     <Column id="mainColumnUDM" minScreenWidth="Tablet" hAlign="Center" width="12%">
                         <Text text="{I18N>/LOCAL_UPDATE_DTM}" />
                     </Column>
-                    <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Center" width="6%">
+                    <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Left" width="7%">
                         <Text text="{I18N>/UPDATE_USER_ID}" />
                     </Column>
                 </columns>
@@ -211,7 +227,8 @@
                             <Text text="{list>company_code}" />
                             <Text text="{list>org_code}" />
                             <Text text="{list>org_name}" />
-                            <Text text="{list>category_name}" />
+                            <!-- <Text text="{list>category_name}" /> -->
+                            <Text text="{list>path_name}" />
                             <Text text="{list>part_project_type_name}" />
                             <Text text="{list>activity_code}" />
                             <Text text="{list>activity_name}" />

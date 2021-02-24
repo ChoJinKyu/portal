@@ -72,6 +72,7 @@ service UcContractMgtV4Service {
         remark                         : String;
         org_type_code                  : String;
         org_code                       : String;
+        net_price_change_allow_flag    : Boolean;
         local_create_dtm               : DateTime;
         local_update_dtm               : DateTime;
         create_user_id                 : String;

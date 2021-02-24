@@ -5,13 +5,13 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:t="sap.ui.table"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogContractItem" class="sapUiSmallMargin" title="단가계약품목" contentWidth="100%"  contentHeight="630px" afterClose="dialogContractItemAfterclose">
+    <Dialog id="dialogContractItem" class="sapUiSmallMargin" title="{I18N>/NET_PRICE_CONTRACT_ITEM}" contentWidth="100%"  contentHeight="630px" afterClose="dialogContractItemAfterclose">
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm id="popSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2" Height="350px">
                     <form:content>
                         <VBox>
                             <Label
-                                text="대분류(공종): "
+                                text="{I18N>/LARGE_CLASS}: "
                                 labelFor="searchPopEpItemClassCode">
                             </Label>
                             <ComboBox   
@@ -34,7 +34,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="단가운영단위(플랜트): "
+                                text="{I18N>/OPERATION_UNIT}: "
                                 labelFor="searchPopOrgCode">
                             </Label>
                             <Text id="searchPopOrgCode" />                               
@@ -44,7 +44,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="만료계약포함: "
+                                text="{I18N>/EXPIRATION_CONTRACT_INCLUDE}: "
                                 labelFor="searchRateUseflag">
                             </Label>
                             <SegmentedButton 
@@ -76,7 +76,7 @@
 
                         <VBox>
                             <Label
-                                text="품목명: "
+                                text="{I18N>/ITEM_NAME}: "
                                 labelFor="searchPopItemDesc">
                             </Label>
                             <Input id="searchPopItemDesc" 
@@ -89,7 +89,7 @@
 
                         <VBox>
                             <Label
-                                text="계약명: "
+                                text="{I18N>/CONTRACT_NAME}: "
                                 labelFor="searchPopNetPriceContractTitle">
                             </Label>
                             <Input id="searchPopNetPriceContractTitle" 
@@ -137,31 +137,31 @@
     
                             <t:columns>
                                 <t:Column id="popEpItemCode" width="8rem" hAlign="Center">
-                                <Label text="품목코드" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/ITEM_CODE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>ep_item_code}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popItemDesc" width="15rem">
-                                <Label text="품목명" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/ITEM_NAME}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>item_desc}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popSpecDesc" width="20rem">
-                                <Label text="규격" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/SPECIFICATION}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>spec_desc}" />
                                 </t:template>
                                 </t:Column> 
                                 <t:Column id="popUnit" width="4rem">
-                                <Label text="단위" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/UNIT}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>unit}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popMaterialNetPrice" width="8rem" hAlign="Right">
-                                <Label text="자재단가" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/MATERIAL_NET_PRICE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text  text="{
                                                     path: 'popUcQuotationSup>material_net_price',
@@ -170,7 +170,7 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popLaborNetPrice" width="8rem" hAlign="Right">
-                                <Label text="노무단가" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/LABOR_NET_PRICE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text  text="{
                                                 path: 'popUcQuotationSup>labor_net_price',
@@ -179,13 +179,13 @@
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="popNetPriceContractTitle" width="20rem" hAlign="Left">
-                                <Label text="계약명" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/CONTRACT_NAME}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>net_price_contract_title}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popNetPriceContractStartDate" width="12rem" hAlign="Center"> 
-                                <Label text="계약기간" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/CONTRACT_PERIOD}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popUcQuotationSup>net_price_contract_period}"/>
                                 </t:template>
@@ -235,31 +235,31 @@
     
                             <t:columns>
                                 <t:Column id="popEpItemCode2" width="8rem" hAlign="Center">
-                                <Label text="품목코드" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/ITEM_CODE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{viewModel>ep_item_code}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popItemDesc2" width="15rem">
-                                <Label text="품목명" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/ITEM_NAME}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{viewModel>item_desc}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popSpecDesc2" width="20rem">
-                                <Label text="규격" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/SPECIFICATION}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{viewModel>spec_desc}" />
                                 </t:template>
                                 </t:Column> 
                                 <t:Column id="popUnit2" width="4rem">
-                                <Label text="단위" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/UNIT}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{viewModel>unit}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popMaterialNetPrice2" width="8rem" hAlign="Right">
-                                <Label text="자재단가" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/MATERIAL_NET_PRICE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text  text="{
                                                 path: 'viewModel>material_net_price',
@@ -268,7 +268,7 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popLaborNetPrice2" width="8rem" hAlign="Right">
-                                <Label text="노무단가" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/LABOR_NET_PRICE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text  text="{
                                                 path: 'viewModel>labor_net_price',
@@ -277,13 +277,13 @@
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="popNetPriceContractTitle2" width="20rem" hAlign="Left">
-                                <Label text="계약명" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/CONTRACT_NAME}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{viewModel>net_price_contract_title}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popNetPriceContractStartDate2" width="12rem" hAlign="Center"> 
-                                <Label text="계약기간" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/CONTRACT_PERIOD}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{viewModel>net_price_contract_period}"/>
                                     <!-- <Text text="{
@@ -304,8 +304,8 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="End" justifyContent="End" >
-            <Button text="Cancel" type="Transparent"  class="sapUiSmallMargin" press=".onExitContractItem"/>
-            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onContractItemSelectionApply"/>
+            <Button text="{I18N>/CANCEL}" type="Transparent"  class="sapUiSmallMargin" press=".onExitContractItem"/>
+            <Button text="{I18N>/APPLY}" class="sapUiSmallMargin" type="Emphasized" press=".onContractItemSelectionApply"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

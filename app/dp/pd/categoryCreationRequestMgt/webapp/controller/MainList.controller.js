@@ -29,7 +29,8 @@ sap.ui.define([
     "sap/ui/model/FilterType"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,ExcelUtil,SegmentedButtonItem,FilterType) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType,
+    Text, Label, Input, VBox, ExcelUtil, SegmentedButtonItem, FilterType) {
     "use strict";
 
     var oTransactionManager;
@@ -37,9 +38,7 @@ sap.ui.define([
     return BaseController.extend("dp.pd.categoryCreationRequestMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
-
         numberFormatter: NumberFormatter,
-
         validator: new Validator(),
 
         loginUserId: new String,
@@ -74,13 +73,10 @@ sap.ui.define([
             oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-
             this.enableMessagePopover();
 
             var today = new Date();
             this._setSegmentedItem();
-            
-            //this.setComboFilter();
         },
 
         /**
@@ -198,7 +194,7 @@ sap.ui.define([
             var aSearchFilters = [];
 
             var status = this.getView().byId("searchStatusButton").getSelectedKey();
-            // console.log("status::"+status);
+            
 			if (status != "") {
 			    aSearchFilters.push(new Filter("progress_status_code", FilterOperator.EQ, status));
             }
@@ -210,14 +206,12 @@ sap.ui.define([
             return aSearchFilters;
         },
 
-
         onExportPress: function (_oEvent) {
-            // console.log("export");
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
             
             var oTable = this.byId(sTableId);
-            var sFileName = "PART CATEGORY CREATION REQUEST List";
+            var sFileName = "Part Category CreationRequest List_"+ this._getDTtype();
             var oData = this.getModel("list").getProperty("/pdPartCategoryCreationRequestView"); //binded Data
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
@@ -226,64 +220,8 @@ sap.ui.define([
             });
         },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         onRenderedFirst: function () {
-            this.byId("pageSearchButton").firePress();
+            // this.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -305,22 +243,6 @@ sap.ui.define([
             //this._oTPC.refresh();
         },
 
-
-        onTestPress: function (oEvent) {
-          //  var sPath = oEvent.getSource().getBindingContext("list").getPath(),
-          //      oRecord = this.getModel("list").getProperty(sPath);
-
-            this._sTenantId = 'L2100';
-            this._sCompanyCode = 'LGCKR';
-            this._sIdeaNumber = '2012000001';
-            this.getRouter().navTo("selectionPage", {
-                //layout: oNextUIState.layout,
-                tenantId: 'L2100',
-                companyCode: 'LGCKR',
-                ideaNumber: '2012000001'
-            }, true);
-        },
-
         onCreate: function (oEvent) {
 
             this.getRouter().navTo("selectionPage", {
@@ -329,8 +251,6 @@ sap.ui.define([
                 requestNumber: "new"
             }, true);
         },
-
-        
 
         /* =========================================================== */
         /* internal methods                                            */
@@ -343,13 +263,9 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
-            this.byId("pageSearchButton").firePress();
+            //this.byId("pageSearchButton").firePress();
         },
 
-
-        /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10T00:00:00
-         */
         _getDTtype: function (StartFlag, oDateParam) {
             let oDate = oDateParam || new Date(),
                 iYear = oDate.getFullYear(),
@@ -359,21 +275,10 @@ sap.ui.define([
                 iMinutes = oDate.getMinutes(),
                 iSeconds = oDate.getSeconds();
  
-            let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate)+"T" ;
-            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds);
-
-            if( StartFlag ) {
-                sReturnValue += "00:00:00";
-            }else {
-                sReturnValue += "23:59:59";
-            }
-
+            let sReturnValue = iYear + this._getPreZero(iMonth) + this._getPreZero(iDate);
             return sReturnValue;
         },
 
-        /**
-         * 넘겨진 Parameter가 10이하이면 숫자앞에 0을 붙여서 return
-         */
         _getPreZero: function (iDataParam) {
             return (iDataParam<10 ? "0"+iDataParam : iDataParam);
         },
@@ -410,7 +315,6 @@ sap.ui.define([
             return parseInt(sStautsCodeParam);
         },
 
-
         /**
          * Cell 클릭 후 상세화면으로 이동
          */
@@ -435,8 +339,6 @@ sap.ui.define([
             }, true);
         },
 
-
-        
         /**
          * 코드 체크
          */
@@ -451,41 +353,9 @@ sap.ui.define([
             //}
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-
-        DEV2 ( WANG ) 개발 시작점 
+        /**
+        * DEV2 ( WANG ) 개발 시작점 
         */
-        
-        
         , onAddCreate: function (oEvent) {
             //인자값을 받아서 넘기는 방식이므로 하드 코딩하고 가져다 붙일때는 넘겨 받은 인자값을 넣으면 됨
             this.getRouter().navTo("addCreatePage", {

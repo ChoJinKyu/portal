@@ -29,44 +29,97 @@ BEGIN
 	920020	신고진행중
 	920030	신고완료
 	*/			
-    DECLARE CURSOR curPoList FOR
-        SELECT PO.TENANT_ID
-                 , PO.COMPANY_CODE
-                 , PO.PO_NUMBER
-				 , PO.FOREX_DECLARE_STATUS_CODE
-				 , PO.DECLARE_SCHEDULED_DATE
-				 , PO.DECLARE_DATE
-				 , MAP(PO.FOREX_DECLARE_STATUS_CODE,'920030',CURRENT_DATE,NULL) AS PROCESSED_COMPLETE_DATE				 
-				 , PO.ATTCH_GROUP_NUMBER
-				 , PO.REMARK
-				 , PO.UPDATE_USER_ID
+    -- DECLARE CURSOR curPoList FOR
+    --     SELECT PO.TENANT_ID
+    --              , PO.COMPANY_CODE
+    --              , PO.PO_NUMBER
+	-- 			 , PO.FOREX_DECLARE_STATUS_CODE
+	-- 			 , PO.DECLARE_SCHEDULED_DATE
+	-- 			 , PO.DECLARE_DATE
+	-- 			 , MAP(PO.FOREX_DECLARE_STATUS_CODE,'920030',CURRENT_DATE,NULL) AS PROCESSED_COMPLETE_DATE				 
+	-- 			 , PO.ATTCH_GROUP_NUMBER
+	-- 			 , PO.REMARK
+	-- 			 , PO.UPDATE_USER_ID
+    --     FROM :I_TABLE PO
+    --     ;
+
+	-- FOR curPo AS curPoList DO
+
+    --     IF (curPo.TENANT_ID IS NULL OR curPo.TENANT_ID = '') THEN
+    --         checkError := 'E';
+    --     ELSE
+
+	-- 		UPDATE EP_PO_FOREX_DECLARATION
+	-- 		      SET FOREX_DECLARE_STATUS_CODE = curPo.FOREX_DECLARE_STATUS_CODE
+	-- 				, DECLARE_SCHEDULED_DATE = TO_DATE(curPo.DECLARE_SCHEDULED_DATE)
+	-- 				, DECLARE_DATE = TO_DATE(curPo.DECLARE_DATE)
+	-- 				, PROCESSED_COMPLETE_DATE = TO_DATE(curPo.PROCESSED_COMPLETE_DATE)
+	-- 				, ATTCH_GROUP_NUMBER = curPo.ATTCH_GROUP_NUMBER
+	-- 				, REMARK = curPo.REMARK
+	-- 				, LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
+	-- 				, UPDATE_USER_ID = curPo.UPDATE_USER_ID
+	-- 				, SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP
+	-- 		WHERE TENANT_ID = curPo.TENANT_ID
+	-- 		   AND COMPANY_CODE = curPo.COMPANY_CODE
+	-- 		   AND PO_NUMBER = curPo.PO_NUMBER
+	-- 		;
+			
+    --     END IF;
+		
+    -- END FOR;
+
+    curPoList = SELECT PO.TENANT_ID
+            , PO.COMPANY_CODE
+            , PO.PO_NUMBER
+                    , PO.FOREX_DECLARE_STATUS_CODE
+                    , PO.DECLARE_SCHEDULED_DATE
+                    , PO.DECLARE_DATE
+                    , MAP(PO.FOREX_DECLARE_STATUS_CODE,'920030',CURRENT_DATE,NULL) AS PROCESSED_COMPLETE_DATE				 
+                    , PO.ATTCH_GROUP_NUMBER
+                    , PO.REMARK
+                    , PO.UPDATE_USER_ID
         FROM :I_TABLE PO
         ;
-
-	FOR curPo AS curPoList DO
-
-        IF (curPo.TENANT_ID IS NULL OR curPo.TENANT_ID = '') THEN
-            checkError := 'E';
-        ELSE
-
-			UPDATE EP_PO_FOREX_DECLARATION
-			      SET FOREX_DECLARE_STATUS_CODE = curPo.FOREX_DECLARE_STATUS_CODE
-					, DECLARE_SCHEDULED_DATE = TO_DATE(curPo.DECLARE_SCHEDULED_DATE)
-					, DECLARE_DATE = TO_DATE(curPo.DECLARE_DATE)
-					, PROCESSED_COMPLETE_DATE = TO_DATE(curPo.PROCESSED_COMPLETE_DATE)
-					, ATTCH_GROUP_NUMBER = curPo.ATTCH_GROUP_NUMBER
-					, REMARK = curPo.REMARK
-					, LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
-					, UPDATE_USER_ID = curPo.UPDATE_USER_ID
-					, SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP
-			WHERE TENANT_ID = curPo.TENANT_ID
-			   AND COMPANY_CODE = curPo.COMPANY_CODE
-			   AND PO_NUMBER = curPo.PO_NUMBER
-			;
-			
-        END IF;
-		
-    END FOR;
+        
+    NULL_CHK = SELECT * 
+    FROM :curPoList curPo
+    WHERE curPo.TENANT_ID IS NULL OR curPo.TENANT_ID = '';
+    
+    IF IS_EMPTY(:NULL_CHK) THEN
+    
+    UPDATE EP_PO_FOREX_DECLARATION A
+                SET ( FOREX_DECLARE_STATUS_CODE, 
+                    DECLARE_SCHEDULED_DATE,
+                    DECLARE_DATE,
+                    PROCESSED_COMPLETE_DATE,
+                    ATTCH_GROUP_NUMBER,
+                    REMARK,
+                    LOCAL_UPDATE_DTM,
+                    UPDATE_USER_ID,
+                    SYSTEM_UPDATE_DTM) = ( SELECT B.FOREX_DECLARE_STATUS_CODE
+                                                    , TO_DATE(B.DECLARE_SCHEDULED_DATE)
+                                                    , TO_DATE(B.DECLARE_DATE)
+                                                    , TO_DATE(B.PROCESSED_COMPLETE_DATE)
+                                                    , B.ATTCH_GROUP_NUMBER
+                                                    , B.REMARK
+                                                    , CURRENT_TIMESTAMP
+                                                    , B.UPDATE_USER_ID
+                                                    , CURRENT_TIMESTAMP
+                                                FROM :curPoList B
+                                            WHERE A.TENANT_ID = B.TENANT_ID
+                                            AND A.COMPANY_CODE = B.COMPANY_CODE
+                                            AND A.PO_NUMBER = B.PO_NUMBER )
+        WHERE EXISTS ( SELECT 0 FROM :curPoList B
+                        WHERE A.TENANT_ID = B.TENANT_ID
+                        AND A.COMPANY_CODE = B.COMPANY_CODE
+                        AND A.PO_NUMBER = B.PO_NUMBER )
+                        ;
+    ELSE 
+    
+        checkError := 'E';
+        
+    END IF;    
+    
 
     IF(checkError = 'E') THEN
         ROLLBACK;

@@ -204,15 +204,27 @@ BEGIN
 
         ELSE
 
-            UPDATE DP_PD_PART_ACTIVITY_TEMPLATE
-            SET    SEQUENCE = SEQUENCE + 1
+            SELECT COUNT(*)
+            INTO   V_CNT
+            FROM   DP_PD_PART_ACTIVITY_TEMPLATE
             WHERE  TENANT_ID = V_TENANT_ID
-            AND    COMPANY_CODE = V_COMPANY_CODE
-            AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
-            AND    ORG_CODE = V_ORG_CODE
-            AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
-            AND    SEQUENCE >= V_SEQUENCE
+            AND    ACTIVITY_CODE = V_ACTIVITY_CODE
             ;
+
+            IF V_CNT > 0 THEN
+                O_MSG = SELECT 'NG' RETURN_CODE, 'You cannot Insert mapping data.' RETURN_MSG FROM DUMMY;
+                RETURN;
+            END IF;
+
+            UPDATE DP_PD_PART_ACTIVITY_TEMPLATE
+                SET    SEQUENCE = SEQUENCE + 1
+                WHERE  TENANT_ID = V_TENANT_ID
+                AND    COMPANY_CODE = V_COMPANY_CODE
+                AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
+                AND    ORG_CODE = V_ORG_CODE
+                AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+                AND    SEQUENCE >= V_SEQUENCE
+                ;
 
             INSERT INTO DP_PD_PART_ACTIVITY_TEMPLATE
                       ( TENANT_ID

@@ -6,7 +6,8 @@ sap.ui.define([
     "ext/lib/util/Validator",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
-    "ext/lib/formatter/Formatter",    
+    "ext/lib/formatter/Formatter",
+    "ext/lib/util/SppUserSession",    
     "sap/ui/table/TablePersoController",
     "./MainListPersoService",
     "sap/ui/core/Fragment",
@@ -25,10 +26,12 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/VBox",
     "ext/lib/util/ExcelUtil",
-    "sap/f/LayoutType"
+    "sap/f/LayoutType",
+    "sap/ui/model/FilterType"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
-    Formatter, TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, ExcelUtil, LayoutType) {
+    Formatter, SppUserSession, TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,
+    ExcelUtil, LayoutType, FilterType) {
     "use strict";
 
     var oTransactionManager;
@@ -44,8 +47,7 @@ sap.ui.define([
         validator: new Validator(),
 
         loginUserId: new String,
-        tenant_id: new String,
-        companyCode: new String,
+        tenant_id: new String,        
 
         processIcon: String,
         /* =========================================================== */
@@ -57,29 +59,34 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+
+            var oSppUserSession = new SppUserSession();
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
 
-            
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
             //로그인 세션 작업완료시 수정
-            this.loginUserId = "TestUser";
-            this.tenant_id = "L2101";
-            // this.companyCode = "LGCKR";            
+            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");                       
 
             oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+            // this.setPrjTypeFilter();
 
             this.enableMessagePopover();
 
             this._doInitTablePerso();
+
+           
            
         },
 
         onRenderedFirst: function () {
-            this.byId("pageSearchButton").firePress();
+            // this.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -173,7 +180,22 @@ sap.ui.define([
                 table: oTable,
                 data: oData
             });
-        },        
+        },  
+        
+        /**
+         * 세션에서 받은 tenant_id 로 필터 걸어주기
+         */
+        setPrjTypeFilter: function () {
+            var oSelect, oBinding, aFilters;
+            oSelect = this.getView().byId('searchPrjType');
+            oBinding = oSelect.getBinding("items");
+            aFilters = [];
+            aFilters.push( new Filter("tenant_id", 'EQ', "L2101") );
+
+            //aFilters.push( new Filter("tenant_id", 'EQ', 'L2100') );
+            //aFilters.push( new Filter("tenant_id", 'EQ', 'L2600') );
+            oBinding.filter(aFilters, FilterType.Application); 
+        },
 
 
         /**
@@ -199,8 +221,8 @@ sap.ui.define([
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(true);
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(true);
 
-            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
-            this.byId("pageSearchButton").firePress();
+            this.getModel("mainListViewModel").setProperty("/headerExpanded", false);
+            // this.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -233,6 +255,10 @@ sap.ui.define([
             var searchPrjType = this.getView().byId("searchPrjType").getSelectedKey();
 
             var aSearchFilters = [];
+
+            console.log(this.getModel("USER_SESSION").getSessionAttr("TENANT_ID"));
+
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getModel("USER_SESSION").getSessionAttr("TENANT_ID")));
 
             if (searchKeyword != "") {                
                 aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchKeyword.toLowerCase().replace("'","''")+"'"));

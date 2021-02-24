@@ -76,7 +76,7 @@
                         </VBox>
                         <VBox>
                             <Label text = "{I18N>/VENDOR_POOL}" design="Bold" /> 
-                                <Input id="tpop_vendor_pool_local_name" placeholder="Input data"></Input> 
+                                <Input id="tpop_vendor_pool_local_name" placeholder="Input data" change=".onDialogSearch"></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
@@ -102,9 +102,18 @@
                             <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
-                                    <Button id="popTableCreateButton"          text="{I18N>/CREATE_SAME_LEVEL}"     press=".onDialogCreateSame"     enabled="{mode>/viewFlag}" />
-                                    <Button id="popTableEditButton"            text="{I18N>/CREATE_LOWER_LEVEL}"    press=".onDialogCreatelower"     enabled="{mode>/viewFlag}" />
-                                    <Button id="popTableDelButton"            icon="sap-icon://delete" text="{I18N>/DELETE}"    press=".onDialogDel"     enabled="{mode>/viewFlag}" />
+                                    <MenuButton icon="sap-icon://create-form">
+                                        <menu>
+                                            <Menu>
+                                                <MenuItem text="{I18N>/CREATE_SAME_LEVEL}" press="onDialogCreateSame"/>
+                                                <MenuItem text="{I18N>/CREATE_LOWER_LEVEL}" press="onDialogCreatelower"/>
+                                            </Menu>
+                                        </menu>
+                                    </MenuButton>                                    
+                                    <!-- <Button id="popTableCreateButton"          text="{I18N>/CREATE_SAME_LEVEL}"     press=".onDialogCreateSame"     enabled="{mode>/viewFlag}" />
+                                    <Button id="popTableEditButton"            text="{I18N>/CREATE_LOWER_LEVEL}"    press=".onDialogCreatelower"     enabled="{mode>/viewFlag}" /> -->
+                                    <Button id="popTableDelButton"            icon="sap-icon://delete" text=""    press=".onDialogDel"     enabled="{mode>/viewFlag}" />
+                                    <!-- <Button id="popTableDelButton"            icon="sap-icon://delete" text="{I18N>/DELETE}"    press=".onDialogDel"     enabled="{mode>/viewFlag}" /> -->
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>     
@@ -217,14 +226,14 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Level Name(Local)" design="Bold" required="true"/> 
+                            <Label text = "{I18N>/LEVEL_LOCAL_NAME}" design="Bold" required="true"/> 
                                 <Input id="pop_vendor_pool_local_name" placeholder="Input data"></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Level Name(Eng)" design="Bold" required="true"/> 
+                            <Label text = "{I18N>/LEVEL_ENG_NAME}" design="Bold" required="true"/> 
                                 <Input id="pop_vendor_pool_english_name" placeholder="Input data" type="Text" liveChange=".chkReplaceChange"/>
                                 <!-- <Input id="pop_vendor_pool_english_name"  placeholder="Input data"></Input>  -->
                             <layoutData>

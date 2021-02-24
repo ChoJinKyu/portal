@@ -4,13 +4,13 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogVos" class="sapUiMediumMargin" title="" contentWidth="35%" >
+    <Dialog id="dialogVos" class="sapUiMediumMargin" title="{I18N>/VOS}" contentWidth="35%" >
         <VBox class="sapUiMediumMargin">
             <form:SimpleForm id="VosForm" editable="false" >
-                <Toolbar>
+                <!-- <Toolbar>
                     <Title text="VOS"/>
-                </Toolbar>            
-                <Label text="VOS"/>
+                </Toolbar>             -->
+                <Label text="{I18N>/VOS}"/>
                 <TextArea id="saveSupplierOpinion" value="{
                     type: 'sap.ui.model.type.String',
                     constraints: {
@@ -22,8 +22,8 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="Center" justifyContent="Center" >
-            <Button text="Cancel" class="sapUiSmallMargin" press=".onExitVos"/>
-            <Button text="Save" class="sapUiSmallMargin" type="Emphasized" press=".onSaveVos"/>
+            <Button text="{I18N>/CANCEL}" class="sapUiSmallMargin" press=".onExitVos"/>
+            <Button text="{I18N>/SAVE}" class="sapUiSmallMargin" type="Emphasized" press=".onSaveVos"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

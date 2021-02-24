@@ -95,7 +95,8 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "cm.util": "../../../../cm/util"
+            "cm.util": "../../../../cm/util",
+            "ext.cm": "../../../../cm"
         },
         "routing": {
             "config": {

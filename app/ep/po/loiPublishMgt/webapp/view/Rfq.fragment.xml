@@ -4,14 +4,14 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogRfq" class="sapUiMediumMargin" title="" contentWidth="35%" >
+    <Dialog id="dialogRfq" class="sapUiMediumMargin" title="견적번호 입력" contentWidth="35%" >
         <VBox class="sapUiMediumMargin">
             <form:SimpleForm id="RfqForm" editable="false" >
-                <form:toolbar>
+                <!-- <form:toolbar>
                     <Toolbar>
                         <Title text="견적번호 입력"/>
                     </Toolbar>
-                </form:toolbar>   
+                </form:toolbar>    -->
        
                     <Label text="견적번호"/>
                     <Input id="saveQuotationNumber" value="{

@@ -230,7 +230,8 @@ sap.ui.define([
 			if (sChain.length > 0) {
 				aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, sChain));
             }
-
+            console.log(this.mainModeFlag);
+            
             this.getView()
                 .setBusy(true)
                 .getModel("list")
@@ -245,6 +246,7 @@ sap.ui.define([
                         this.getView().setBusy(false);
                         if(oData.results == null || oData.results.length < 1){
                             MessageToast.show(this.getModel("I18N").getText("/NPG10004"));
+                            this.getModel("list").setProperty("/mainMode", "Main"); 
                         }else{
                             this.getModel("list").setProperty("/mainMode", this.mainModeFlag); 
                             //MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));

@@ -1,5 +1,5 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
+    "./BaseController",
     "sap/ui/model/Filter",
     "sap/m/MessageToast",    
     "ext/lib/util/Multilingual",

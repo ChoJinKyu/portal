@@ -190,7 +190,8 @@ public class UcContractMgtV4Service implements EventHandler {
                             .append(", LABOR_NET_PRICE                   DECIMAL ")
                             .append(", REMARK                            NVARCHAR(3000) ")
                             .append(", ORG_TYPE_CODE                     NVARCHAR(2) ")
-                            .append(", ORG_CODE                          NVARCHAR(10) ")  
+                            .append(", ORG_CODE                          NVARCHAR(10) ") 
+                            .append(", NET_PRICE_CHANGE_ALLOW_FLAG      BOOLEAN ") 
                             .append(", LOCAL_CREATE_DTM                  SECONDDATE ")
                             .append(", LOCAL_UPDATE_DTM                  SECONDDATE ")
                             .append(", CREATE_USER_ID                    NVARCHAR(255) ")
@@ -252,7 +253,7 @@ public class UcContractMgtV4Service implements EventHandler {
         String v_sql_dropableE = "DROP TABLE #LOCAL_TEMP_E";
 
         String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableS = "INSERT INTO #LOCAL_TEMP_S VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableE = "INSERT INTO #LOCAL_TEMP_E VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -344,7 +345,8 @@ public class UcContractMgtV4Service implements EventHandler {
                     v_inRow.get("labor_net_price"),                
                     v_inRow.get("remark"),                         
                     v_inRow.get("org_type_code"),                  
-                    v_inRow.get("org_code"),                       
+                    v_inRow.get("org_code"),    
+                    v_inRow.get("net_price_change_allow_flag"),                      
                     v_inRow.get("local_create_dtm"),               
                     v_inRow.get("local_update_dtm"),               
                     v_inRow.get("create_user_id"),                 
@@ -488,6 +490,7 @@ public class UcContractMgtV4Service implements EventHandler {
                 v_row.setRemark(v_rs.getString("remark"));
                 v_row.setOrgTypeCode(v_rs.getString("org_type_code"));
                 v_row.setOrgCode(v_rs.getString("org_code"));
+                v_row.setNetPriceChangeAllowFlag(v_rs.getBoolean("net_price_change_allow_flag"));
                 // v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
                 // v_row.setLocalUpdateDtm(v_rs.getDate("local_update_dtm").toInstant());
                 v_row.setLocalCreateDtm(null);

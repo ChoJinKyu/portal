@@ -6,7 +6,8 @@ sap.ui.define([
     "ext/lib/util/Validator",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
-    "ext/lib/formatter/Formatter",    
+    "ext/lib/formatter/Formatter",
+    "ext/lib/util/SppUserSession",    
     "sap/ui/table/TablePersoController",
     "./MainListPersoService",
     "sap/ui/core/Fragment",
@@ -27,7 +28,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "sap/f/LayoutType"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
-    Formatter, TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
+    Formatter, SppUserSession, TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
     Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, ExcelUtil, LayoutType) {
     "use strict";
 
@@ -44,8 +45,7 @@ sap.ui.define([
         validator: new Validator(),
 
         loginUserId: new String,
-        tenant_id: new String,
-        companyCode: new String,
+        tenant_id: new String,        
 
         processIcon: String,
         /* =========================================================== */
@@ -57,16 +57,18 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+
+            var oSppUserSession = new SppUserSession();
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
 
-            
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
             //로그인 세션 작업완료시 수정
-            this.loginUserId = "TestUser";
-            this.tenant_id = "L2101";
-            this.companyCode = "LGCKR";            
+            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");
 
             oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
@@ -79,7 +81,7 @@ sap.ui.define([
         },
 
         onRenderedFirst: function () {
-            this.byId("pageSearchButton").firePress();
+            // this.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -191,8 +193,8 @@ sap.ui.define([
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(true);
             this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(true);
             
-            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
-            this.byId("pageSearchButton").firePress();
+            this.getModel("mainListViewModel").setProperty("/headerExpanded", false);
+            // this.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -226,7 +228,9 @@ sap.ui.define([
 
             var aSearchFilters = [];
 
-            // aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id));
+            console.log(this.getModel("USER_SESSION").getSessionAttr("TENANT_ID"));
+
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getModel("USER_SESSION").getSessionAttr("TENANT_ID")));
 
             if (searchPartBaseKeyword != "") {
                 aSearchFilters.push(new Filter({
@@ -249,7 +253,7 @@ sap.ui.define([
             //     aSearchFilters.push(new Filter("tolower(description)", FilterOperator.Contains, "'"+searchDescKeyword.toLowerCase().replace("'","''")+"'"));
             // }
 
-            if(!this.isValNull(searchUseflag)){
+            if(!(searchUseflag == "")){
                     var bUseFlag = (searchUseflag === "true")?true:false;
                     aSearchFilters.push(new Filter("active_flag", FilterOperator.EQ, bUseFlag));
             }           

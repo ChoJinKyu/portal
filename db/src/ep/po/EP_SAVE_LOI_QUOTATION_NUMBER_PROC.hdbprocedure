@@ -14,32 +14,49 @@ SQL SECURITY INVOKER
 AS
 BEGIN
 
-    DECLARE CURSOR curItemList FOR
-        SELECT 
-            A.TENANT_ID
-            , A.COMPANY_CODE
-            , A.LOI_WRITE_NUMBER
-            , A.LOI_ITEM_NUMBER
-            , A.QUOTATION_NUMBER
-            , A.QUOTATION_ITEM_NUMBER
-        FROM :I_TABLE A
-        ;
+    -- DECLARE CURSOR curItemList FOR
+    --     SELECT 
+    --         A.TENANT_ID
+    --         , A.COMPANY_CODE
+    --         , A.LOI_WRITE_NUMBER
+    --         , A.LOI_ITEM_NUMBER
+    --         , A.QUOTATION_NUMBER
+    --         , A.QUOTATION_ITEM_NUMBER
+    --     FROM :I_TABLE A
+    --     ;
 	
-    /* 커서 시작 */
-	FOR curItem AS curItemList
-    DO
+    -- /* 커서 시작 */
+	-- FOR curItem AS curItemList
+    -- DO
 
-        UPDATE EP_LI_DTL 
-        SET 
-        QUOTATION_NUMBER = curItem.QUOTATION_NUMBER,
-        QUOTATION_ITEM_NUMBER = curItem.QUOTATION_ITEM_NUMBER
-        WHERE TENANT_ID = curItem.TENANT_ID
-        AND COMPANY_CODE = curItem.COMPANY_CODE
-        AND LOI_WRITE_NUMBER = curItem.LOI_WRITE_NUMBER
-        AND LOI_ITEM_NUMBER = curItem.LOI_ITEM_NUMBER
-        ;  
+    --     UPDATE EP_LI_DTL 
+    --     SET 
+    --     QUOTATION_NUMBER = curItem.QUOTATION_NUMBER,
+    --     QUOTATION_ITEM_NUMBER = curItem.QUOTATION_ITEM_NUMBER
+    --     WHERE TENANT_ID = curItem.TENANT_ID
+    --     AND COMPANY_CODE = curItem.COMPANY_CODE
+    --     AND LOI_WRITE_NUMBER = curItem.LOI_WRITE_NUMBER
+    --     AND LOI_ITEM_NUMBER = curItem.LOI_ITEM_NUMBER
+    --     ;  
 
-    END FOR;
+    -- END FOR;
+
+    UPDATE EP_LI_DTL DTL
+    SET (QUOTATION_NUMBER, QUOTATION_ITEM_NUMBER) 
+        = ( SELECT B.QUOTATION_NUMBER
+                , B.QUOTATION_ITEM_NUMBER
+            FROM :I_TABLE B
+                    WHERE DTL.TENANT_ID = B.TENANT_ID
+                    AND DTL.COMPANY_CODE = B.COMPANY_CODE
+                    AND DTL.LOI_WRITE_NUMBER = B.LOI_WRITE_NUMBER
+                    AND DTL.LOI_ITEM_NUMBER = B.LOI_ITEM_NUMBER
+            )
+    WHERE EXISTS ( SELECT 0 FROM :I_TABLE B
+                    WHERE DTL.TENANT_ID = B.TENANT_ID
+                    AND DTL.COMPANY_CODE = B.COMPANY_CODE
+                    AND DTL.LOI_WRITE_NUMBER = B.LOI_WRITE_NUMBER
+                    AND DTL.LOI_ITEM_NUMBER = B.LOI_ITEM_NUMBER
+                    );      
 
     O_TABLE_MESSAGE =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, '' as savedKey from dummy;
 

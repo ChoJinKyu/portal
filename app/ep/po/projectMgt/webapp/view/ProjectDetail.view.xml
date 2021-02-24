@@ -59,7 +59,7 @@
 		</uxap:headerContent> -->
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
@@ -77,10 +77,10 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-                <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
-                <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
-				<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />                
-				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+                <Button id="pageEditButton" text="{I18N>/EDIT}" type="Transparent" press=".onPageEditButtonPress" />
+                <Button id="pageCancelButton" text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				<Button id="pageDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPageDeleteButtonPress" />                
+				<Button id="pageSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

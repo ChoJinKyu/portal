@@ -22,10 +22,11 @@ sap.ui.define([
     "sap/m/Text",
     "sap/m/Label",
     "sap/m/Input",
-    "sap/m/VBox"
+    "sap/m/VBox",
+    "sap/m/SegmentedButtonItem"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, SegmentedButtonItem) {
     "use strict";
 
     var oTransactionManager;
@@ -114,6 +115,61 @@ sap.ui.define([
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
+        },
+
+        
+        onAfterRendering: function () {
+            this.onSetSegmentedButtonItem();
+        },
+
+        /**
+		 * 
+		 * @param 
+		 * @public
+		 */
+        onSetSegmentedButtonItem: function () {
+
+            var oStatusCodeButton = this.getView().byId("searchStatus");
+            
+            var oCommonModel = this.getModel("common");
+
+            var oFilter = [];
+            oFilter.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            oFilter.push(new Filter("group_code", FilterOperator.EQ, "EP_QUOTATION_STATUS"));
+
+            var oSorter = [];
+            oSorter.push(new Sorter("sort_no", false));
+
+            oCommonModel.read("/Code", {
+                filters: oFilter,
+                sorters: oSorter,
+                success: function (oCommonData) {
+                    console.log("oCommonData=", oCommonData);
+
+                    oStatusCodeButton.addItem(
+                        new SegmentedButtonItem({
+                            text: "All",
+                            key: "all",
+                            width: "3rem"
+                        })
+                    );
+
+                    for (let d of oCommonData.results) {
+                        console.log("oCommonData.code=", d.code);
+                        oStatusCodeButton.addItem(
+                            new SegmentedButtonItem({
+                                text: d.code_name,
+                                key: d.code,
+                                width: "7rem"
+                            })
+                        );
+                    }
+                },
+                error: function (oCommonError) {
+                    console.log("oCommonError=", oCommonError);
+                }
+            });
+
         },
 
 		/**
@@ -262,10 +318,9 @@ sap.ui.define([
                     aSearchFilters.push(new Filter(aKeywordFilters));
                 }
 
-            if (status) {
+            if (status && status != "all") {
                 aSearchFilters.push(new Filter("quotation_status_code", FilterOperator.EQ, status));
             }
-
 
             return aSearchFilters;
         },

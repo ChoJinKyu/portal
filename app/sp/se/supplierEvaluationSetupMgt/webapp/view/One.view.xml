@@ -87,6 +87,7 @@
                                                             fieldGroupIds="required"
                                                             required="true"
                                                             showSuggestion="true"
+                                                            liveChange="_onKeyLiveChange"
                                                             />
                                                             <!-- "{
                                                              path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_code',
@@ -117,6 +118,7 @@
                                                         editable="{=${DetailView>/isEditMode}}"
                                                         fieldGroupIds="required"
                                                         required="true"   
+                                                            
                                                         />
                                                     <layoutData>
                                                         <layout:GridData span="L3 M6 S12" />
@@ -395,12 +397,9 @@
                                                             editable="{= 
                                                             ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false
                                                             }"                                              
-                                                            >
+                                                            />
                                                             <!-- enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" -->
-                                                                
                                                             
-                                                            
-                                                        </Input>
                                                           <Text text="{DetailView>department_local_name}"/>     
                                                               <!-- blocked="{=
                                                                 !${DetailView>/isEditMode}
@@ -655,7 +654,7 @@
                                                             fieldGroupIds="required"
                                                             required="true"   
                                                             change="onChangeEdit"
-                                                            
+                                                            liveChange="_onKeyLiveChange"
                                                             
                                                             />
                                                             <!-- value="{
@@ -685,7 +684,7 @@
                                                             fieldGroupIds="required"
                                                             required="true"
                                                             change="onChangeEdit"
-                                                            
+                                                            liveChange="_onKeyLiveChange"
                                                             />
 
                                                             
@@ -755,8 +754,28 @@
                                                             fieldGroupIds="required"
                                                             required="true"
                                                             change="onChangeEdit"
+                                                            
                                                            
-                                                        />             
+                                                        />          
+                                                        <!-- <Input   
+                                                            width="100%" 
+                                                           value="{
+                                                             path : 'DetailView>sort_sequence',
+                                                             type : 'sap.ui.model.type.Integer',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 10
+                                                            }
+                                                            }"
+                                                            editable="{=
+                                                                ${DetailView>/isEditMode}
+                                                            }"
+                                                            fieldGroupIds="required"
+                                                            required="true"
+                                                            change="onChangeEdit"
+                                                            liveChange="_onNumberLiveChange"
+                                                           
+                                                        />       -->
                                                     </cells>
                                                 </ColumnListItem>
                                             </items>
@@ -899,12 +918,11 @@
                         <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" visible="{=${DetailView>/isEditMode}}"/>
                     </OverflowToolbar>
                     </uxap:footer>
-
-
-
                     </uxap:ObjectPageLayout>
-                        <cm-ui:EmployeeDialog id="employeeDialog" 
+
+                        <!-- <cm-ui:EmployeeDialog id="employeeDialog" 
                         title="직원 검색"
+                        closeWhenApplied="true"
                         items="{
                             filters: [
                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -912,7 +930,7 @@
                         }"
                         apply=".onEmployeeDialogApplyPress"
                         
-                    />
+                    /> -->
 
                     <!-- <cm-ui:CompanyDetailDialog id="CompanyDetailDialog" 
                         title="{I18N>/COMPANY_CODE}"

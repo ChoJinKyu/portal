@@ -1,6 +1,6 @@
 // @ts-ignore
 sap.ui.define([
-    "ext/lib/controller/BaseController",
+    "./BaseController",
     "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",    
@@ -273,7 +273,8 @@ sap.ui.define([
             }
         ,
         onPressSaveBtn : function(oEvent){
-            var oView = this.getView();            
+            var oView = this.getView();   
+            var oModel = oView.getModel("TwoView");         
             // var oRequest = oModel.getProperty("/");
             var sURLPath = "srv-api/odata/v4/sp.supEvalSetupV4Service/SaveEvaluationSetup2Proc";
             var oSaveData;
@@ -305,8 +306,9 @@ sap.ui.define([
                         data: JSON.stringify(oSaveData),
                         contentType: "application/json",
                         success: function (data) {
-                        MessageBox.success(i18nModel.getProperty("/NCM01001"), {
-                            onClose : function (sAction) {
+                        // MessageBox.success(i18nModel.getProperty("/NCM01001"), {
+                        //     onClose : function (sAction) {
+                            MessageToast.show(i18nModel.getProperty("/NCM01001"));
                             oView.setBusy(false);     
 
                             if(this.scenario_number==="New"){
@@ -338,8 +340,8 @@ sap.ui.define([
                                  }
 
                                     
-                                }.bind(this)
-                            });
+                            //     }.bind(this)
+                            // });
                         }.bind(this),
                         error: function (e) {
                                 var sDetails;
@@ -376,92 +378,92 @@ sap.ui.define([
          * 저장시 Validation 필수값 확인
          * 
          */
-         _checkValidation : function(){
-            var bValid, oView, oViewModel, oArgs, aControls;
+        //  _checkValidation : function(){
+        //     var bValid, oView, oViewModel, oArgs, aControls;
             
-            oView = this.getView();
-            oViewModel = oView.getModel("TwoView");
-            // oArgs = oViewModel.getProperty("/Args");
-            bValid = false;
+        //     oView = this.getView();
+        //     oViewModel = oView.getModel("TwoView");
+        //     // oArgs = oViewModel.getProperty("/Args");
+        //     bValid = false;
 
-            // if(this.scenario_number === "New"){
-            //     aControls = oView.getControlsByFieldGroupId("newRequired");
-            //     bValid = this._isValidControl(aControls);
-            // }else{
-                aControls = oView.getControlsByFieldGroupId("required");
-                bValid = this._isValidControl(aControls);
-            // }
+        //     // if(this.scenario_number === "New"){
+        //     //     aControls = oView.getControlsByFieldGroupId("newRequired");
+        //     //     bValid = this._isValidControl(aControls);
+        //     // }else{
+        //         aControls = oView.getControlsByFieldGroupId("required");
+        //         bValid = this._isValidControl(aControls);
+        //     // }
 
-            return bValid;
-        },
+        //     return bValid;
+        // },
          /***
          * Control 유형에 따른 필수 값 확인
          */
-        _isValidControl : function(aControls){
-            var oMessageManager = sap.ui.getCore().getMessageManager(),
-                bAllValid = false;
-                // oI18n = this.getView().getModel("I18N");
+        // _isValidControl : function(aControls){
+        //     var oMessageManager = sap.ui.getCore().getMessageManager(),
+        //         bAllValid = false;
+        //         // oI18n = this.getView().getModel("I18N");
                 
-            oMessageManager.removeAllMessages();
-            bAllValid = aControls.every(function(oControl){
-                var sEleName = oControl.getMetadata().getElementName(),
-                    sValue,oContext;
-                // var scenario_number = this.scenario_number;
+        //     oMessageManager.removeAllMessages();
+        //     bAllValid = aControls.every(function(oControl){
+        //         var sEleName = oControl.getMetadata().getElementName(),
+        //             sValue,oContext;
+        //         // var scenario_number = this.scenario_number;
                 
-                switch(sEleName){
-                    case "sap.m.Input":
-                    case "sap.m.TextArea":
-                        sValue = oControl.getValue();
-                        oContext = oControl.getBinding("value");
-                        break;
-                    case "sap.m.ComboBox":
-                        sValue = oControl.getSelectedKey();
-                        break;
-                    case "sap.m.MultiComboBox":
-                        sValue = oControl.getSelectedKeys().length;
-                        break;
-                    default:
-                        return true;
-                }
+        //         switch(sEleName){
+        //             case "sap.m.Input":
+        //             case "sap.m.TextArea":
+        //                 sValue = oControl.getValue();
+        //                 oContext = oControl.getBinding("value");
+        //                 break;
+        //             case "sap.m.ComboBox":
+        //                 sValue = oControl.getSelectedKey();
+        //                 break;
+        //             case "sap.m.MultiComboBox":
+        //                 sValue = oControl.getSelectedKeys().length;
+        //                 break;
+        //             default:
+        //                 return true;
+        //         }
                 
-                // if(!oControl.getProperty('enabled')) return true;
-                if(!oControl.getProperty('editable')) return true;
-                if(oControl.getProperty('required')){
-                    if(!sValue){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText(i18nModel.getText("/ECM01002"));
-                        oMessageManager.addMessages(new Message({
-                            message: i18nModel.getText("/ECM01002"),
-                            type: MessageType.Error
-                        }));
-                        bAllValid = false;
-                        oControl.focus();
-                        return false;
-                    }else{
-                        oControl.setValueState(ValueState.None);
-                    }
-                }
+        //         // if(!oControl.getProperty('enabled')) return true;
+        //         if(!oControl.getProperty('editable')) return true;
+        //         if(oControl.getProperty('required')){
+        //             if(!sValue){
+        //                 oControl.setValueState(ValueState.Error);
+        //                 oControl.setValueStateText(i18nModel.getText("/ECM01002"));
+        //                 oMessageManager.addMessages(new Message({
+        //                     message: i18nModel.getText("/ECM01002"),
+        //                     type: MessageType.Error
+        //                 }));
+        //                 bAllValid = false;
+        //                 oControl.focus();
+        //                 return false;
+        //             }else{
+        //                 oControl.setValueState(ValueState.None);
+        //             }
+        //         }
 
-                 if(oContext&&oContext.getType()){
-                    try{
-                        oContext.getType().validateValue(sValue);
-                    }catch(e){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText(e.message);
-                        oControl.focus();
-                        return false;
-                    }
-                    oControl.setValueState(ValueState.None);
-                }else if(sEleName === "sap.m.ComboBox"){
-                    if(!sValue && oControl.getValue()){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText("올바른 값을 선택해 주십시오.");
-                        oControl.focus();
-                        return false;
-                    }else{
-                        oControl.setValueState(ValueState.None);
-                    }
-                }
+        //          if(oContext&&oContext.getType()){
+        //             try{
+        //                 oContext.getType().validateValue(sValue);
+        //             }catch(e){
+        //                 oControl.setValueState(ValueState.Error);
+        //                 oControl.setValueStateText(e.message);
+        //                 oControl.focus();
+        //                 return false;
+        //             }
+        //             oControl.setValueState(ValueState.None);
+        //         }else if(sEleName === "sap.m.ComboBox"){
+        //             if(!sValue && oControl.getValue()){
+        //                 oControl.setValueState(ValueState.Error);
+        //                 oControl.setValueStateText("올바른 값을 선택해 주십시오.");
+        //                 oControl.focus();
+        //                 return false;
+        //             }else{
+        //                 oControl.setValueState(ValueState.None);
+        //             }
+        //         }
 
                 // if (oControl.getId() === "container-supplierEvaluationSetupMgt---detail--detailView--rate")
                 //         {   
@@ -477,32 +479,32 @@ sap.ui.define([
                 //         }
 
 
-                return true;
-            });
+        //         return true;
+        //     });
 
-            return bAllValid;
-        },
+        //     return bAllValid;
+        // },
          /**
          * ValueState 초기화
          */
-        _clearValueState : function(aControls){
-             aControls.forEach(function(oControl){
-                var sEleName = oControl.getMetadata().getElementName(),
-                    sValue;
+        // _clearValueState : function(aControls){
+        //      aControls.forEach(function(oControl){
+        //         var sEleName = oControl.getMetadata().getElementName(),
+        //             sValue;
                 
-                switch(sEleName){
-                    case "sap.m.Input":
-                    case "sap.m.TextArea":
-                    case "sap.m.ComboBox":
-                    case "sap.m.MultiComboBox":    
-                        break;
-                    default:
-                        return;
-                }
-                oControl.setValueState(ValueState.None);
-                oControl.setValueStateText();
-            });
-        },
+        //         switch(sEleName){
+        //             case "sap.m.Input":
+        //             case "sap.m.TextArea":
+        //             case "sap.m.ComboBox":
+        //             case "sap.m.MultiComboBox":    
+        //                 break;
+        //             default:
+        //                 return;
+        //         }
+        //         oControl.setValueState(ValueState.None);
+        //         oControl.setValueStateText();
+        //     });
+        // },
 
 
         _getSaveData : function(sTransactionCode){

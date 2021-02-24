@@ -11,7 +11,7 @@
 
         <form:SimpleForm id="requestForm1Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="요청명" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/REQUEST_TITLE}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{master>/loi_request_title}" width="100%"/>
             </VBox>
         </form:SimpleForm>
@@ -19,7 +19,7 @@
         <form:SimpleForm id="requestForm2Show" editable="false">
         
             <VBox alignContent="Center">
-                <Label text="목적"  design="Bold" class="sapMLabelNoText" />
+                <Label text="{I18N>/PURPOSE}"  design="Bold" class="sapMLabelNoText" />
                 <Text text="{master>/loi_publish_purpose_desc}" />  
             </VBox>      
 
@@ -27,7 +27,7 @@
 
         <form:SimpleForm id="requestForm3Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="특기사항" 
+                <Label  text="{I18N>/SPECIAL_NOTE}" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
                 <richtexteditor:RichTextEditor

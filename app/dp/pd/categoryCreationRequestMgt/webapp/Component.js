@@ -3,8 +3,9 @@ sap.ui.define([
 	"ext/lib/UIComponent",
 	"sap/ui/model/json/JSONModel",
     "sap/ui/core/routing/HashChanger",
-	"sap/f/FlexibleColumnLayoutSemanticHelper"
-], function (jQuery, UIComponent, JSONModel, HashChanger, FlexibleColumnLayoutSemanticHelper) {
+    "sap/f/FlexibleColumnLayoutSemanticHelper",
+    "ext/lib/util/SppUserSession"
+], function (jQuery, UIComponent, JSONModel, HashChanger, FlexibleColumnLayoutSemanticHelper, SppUserSession) {
 	"use strict";
 
 	return UIComponent.extend("dp.pd.categoryCreationRequestMgt.Component", {
@@ -20,6 +21,8 @@ sap.ui.define([
 		 * @override
 		 */
 		init : function () {
+            var oSppUserSession = new SppUserSession();
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
             HashChanger.getInstance().replaceHash("");
 
 			// call the base component's init function

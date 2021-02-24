@@ -25,6 +25,7 @@ entity MI_Material_Code_Bom_Mngt_Header {
     key material_code      : String(40) not null  @title : '자재코드';
     key supplier_code      : String(15) not null  @title : '공급업체코드';
         base_quantity      : Decimal              @title : '기준수량';
+        base_quantity_unit : String(3)            @title : '기준수량단위';
         processing_cost    : Decimal              @title : '가공비';
         pcst_currency_unit : String(30)           @title : '가공비통화단위';
     key mi_bom_id          : String(100) not null @title : '시황자재명세서ID';

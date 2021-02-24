@@ -291,7 +291,36 @@ sap.ui.define([
 
 		},
 		
-		
+        checkMidOrg: function () {
+
+            // debugger
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
+
+            // var aSearchFilters = [];
+            var aSelectedOrg = [];
+
+            var pselectedOrg ;
+            var pselectedUnit ;
+
+
+
+            if (sSurffix === "S") {
+                pselectedOrg = this.getView().byId("mid_Tree_Operation_ORG_S").getSelectedKey();
+                pselectedUnit = this.getView().byId("mid_Tree_Operation_UNIT_S").getSelectedKey();
+                this.getView().byId("mid_Tree_Operation_ORG_E").setSelectedKey(pselectedOrg);
+                this.getView().byId("mid_Tree_Operation_UNIT_E").setSelectedKey(pselectedUnit);
+            }
+            else if (sSurffix === "E") {
+
+                pselectedOrg = this.getView().byId("mid_Tree_Operation_ORG_E").getSelectedKey();
+                pselectedUnit = this.getView().byId("mid_Tree_Operation_UNIT_E").getSelectedKey();
+                this.getView().byId("mid_Tree_Operation_ORG_S").setSelectedKey(pselectedOrg);
+                this.getView().byId("mid_Tree_Operation_UNIT_S").setSelectedKey(pselectedUnit);
+
+            }    
+
+            
+        },		
 		/**
 		 * Event handler for cancel page editing
 		 * @public

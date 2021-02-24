@@ -23,6 +23,7 @@ entity Uc_Approval_Dtl_Detail_View {
         remark                         : String(3000);
         org_type_code                  : String(2);
         org_code                       : String(10);
+        net_price_change_allow_flag    : Boolean;
 }
 
 extend Uc_Approval_Dtl_Detail_View with util.Managed;

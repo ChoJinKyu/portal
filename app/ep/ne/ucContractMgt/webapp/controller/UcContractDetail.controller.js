@@ -20,10 +20,10 @@ sap.ui.define([
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel",
-    "cm/util/control/ui/CmDialogHelp",
+    "cm/util/control/ui/PlantDialog",
     "ep/util/control/ui/UcItemDialog"
 ], function (BaseController, JSONModel, ManagedListModel, Validator, Formatter, DateFormatter, Sorter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, CmDialogHelp, UcItemDialog) {
+    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, PlantDialog, UcItemDialog) {
     "use strict";
 
     return BaseController.extend("ep.ne.ucContractMgt.controller.UcContractDetail", {
@@ -31,13 +31,6 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         validator: new Validator(),
         formatter: Formatter,
-        // formatter: (function () {
-        //     return {
-        //         toYesNo: function (oData) {
-        //             return oData === true ? "YES" : "NO"
-        //         },
-        //     }
-        // })(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -48,12 +41,8 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            //this.setModel(new JSONModel(), "viewModel");
-            // this.setModel(new JSONModel(), "mst");
-            //this.setModel(new ManagedListModel(), "dtlList");
-            // this.setModel(new JSONModel(), "dtl");
-            // this.setModel(new JSONModel(), "supplier");
-            // this.setModel(new JSONModel(), "extra");
+            this.setModel(new JSONModel(), "viewModelOrg");
+
             //화면설정
             //this.setModel(new JSONModel(), "viewSet");
             var viewModel = this.getModel("viewModel");
@@ -62,20 +51,6 @@ sap.ui.define([
             this.enableMessagePopover();
 
             JSONModel.prototype.setProperty = function (sPath, oValue, oContext, bAsyncUpdate) {
-
-                // console.log("##ViewModel setProperty Call##");
-                // console.log("##sPath=##", sPath);
-                // console.log("##oValue=##", oValue);
-                // console.log("##oContext=##", oContext);
-                // // console.log("##oContext.getObject(sPath)=##", oContext.getObject(sPath));
-                // console.log("##bAsyncUpdate=##", bAsyncUpdate);
-
-                // if(oContext) {
-                //     if(oContext.getObject(sPath) != oValue) {
-                //         console.log("###################oContext.getObject(sPath)=##", oContext.getObject(sPath));
-                //         // oContext.getObject.row_state = "U";
-                //     }
-                // }
 
                 if (!!oContext) {
                     var _oRecord = this.getObject(oContext.getPath());
@@ -113,15 +88,7 @@ sap.ui.define([
 
         },
 
-        onRenderedFirst: function () {
-
-            // console.log("onRenderedFirst====");
-        },
-
         onAfterRendering: function () {
-
-            // console.log("onAfterRendering====");
-            // this.byId("supplierTable");
 
         },
 
@@ -239,12 +206,12 @@ sap.ui.define([
             var extraData = oViewModel.getProperty("/extra");
 
             if (supplierData.length == 0) {
-                MessageToast.show("협력사를 1개이상 입력해주세요~");
+                MessageToast.show(this.getModel("I18N").getText("/NCM02003", this.getModel("I18N").getText("/SUPPLIER")));
                 return;
             }
 
             if (dtlData.length == 0) {
-                MessageToast.show("품목을 1개이상 입력해주세요~");
+                MessageToast.show(this.getModel("I18N").getText("/EEP00001"));
                 return;
             }
 
@@ -253,12 +220,21 @@ sap.ui.define([
             mstData["net_price_contract_status_code"] = statusCode;
             delete mstData["__metadata"];
 
+            var distrbRateTotal = 0;
+
             supplierData.map(d => {
+                if (d["distrb_rate"]) distrbRateTotal += parseInt(d["distrb_rate"]);
                 d["distrb_rate"] = (d["distrb_rate"] ? parseInt(d["distrb_rate"]) : null);
                 d["net_price_contract_degree"] = (d["net_price_contract_degree"] || !isNaN(d["net_price_contract_degree"]) ? parseInt(d["net_price_contract_degree"]) : null);
                 delete d["__metadata"];
                 return d;
             });
+
+            console.log("distrbRateTotal==", distrbRateTotal);
+            if (distrbRateTotal != 100) {
+                MessageToast.show(this.getModel("I18N").getText("/NEP00005"));
+                return;
+            }
 
             var afterDelCnt = 0;
 
@@ -369,7 +345,8 @@ sap.ui.define([
 		 */
         onPageCancelEditButtonPress: function () {
 
-            // var oViewModel = this.getModel("viewModel"),
+            var oViewModel = this.getModel("viewModel"),
+                oViewModelOrg = this.getModel("viewModelOrg");
 
             // var dtlData = oViewModel.getProperty("/dtl");
             // var supplierData = oViewModel.getProperty("/supplier");
@@ -387,6 +364,18 @@ sap.ui.define([
                 this.onPageNavBackButtonPress.call(this);
             } else {
                 if (this.getModel("viewSet").getProperty("/isEditMode") == true) {
+                    var mstOrgData = oViewModelOrg.getProperty("/mstOrg");
+                    console.log("mstOrgData=", mstOrgData);
+                    var dtlOrgData = oViewModelOrg.getProperty("/dtlOrg");
+                    console.log("dtlOrgData=", dtlOrgData);
+                    var supplierOrgData = oViewModelOrg.getProperty("/supplierOrg");
+                    console.log("supplierOrgData=", supplierOrgData);
+                    var extraOrgData = oViewModelOrg.getProperty("/extraOrg");
+                    console.log("extraOrgData=", extraOrgData);
+                    // oViewModel.setProperty("/mst", mstOrgData);
+                    // oViewModel.setProperty("/dtl", dtlOrgData);
+                    // oViewModel.setProperty("/supplier", supplierOrgData);
+                    // oViewModel.setProperty("/extra", extraOrgData);                    
                     this._toShowMode();
                 } else {
                     this.onPageNavBackButtonPress.call(this);
@@ -724,6 +713,7 @@ sap.ui.define([
                 oView = this.getView(),
                 oRootModel = this.getModel(),
                 oViewModel = this.getModel("viewModel"),
+                oViewModelOrg = this.getModel("viewModelOrg"),
                 that = this;
             this._tenantId = "L2100";
             this._companyCode = "LGCKR";
@@ -853,6 +843,7 @@ sap.ui.define([
 
                     console.log("mstData====", mstData.results[0]);
                     oViewModel.setProperty("/mst", mstData.results[0]);
+                    oViewModelOrg.setProperty("/mstOrg", mstData.results[0]);
 
                     supplierDataLoading.then(function (supplierData) {
 
@@ -862,6 +853,7 @@ sap.ui.define([
                             return d;
                         });
                         oViewModel.setProperty("/supplier", supplierData.results);
+                        oViewModelOrg.setProperty("/supplierOrg", supplierData.results);
 
                         dtlDataLoading.then(function (dtlData) {
 
@@ -873,6 +865,7 @@ sap.ui.define([
                                 return d;
                             });
                             oViewModel.setProperty("/dtl", dtlData.results);
+                            oViewModelOrg.setProperty("/dtlOrg", dtlData.results);
 
                             extraDataLoading.then(function (extraData) {
 
@@ -882,6 +875,7 @@ sap.ui.define([
                                     return d;
                                 });
                                 oViewModel.setProperty("/extra", extraData.results);
+                                oViewModelOrg.setProperty("/extraOrg", extraData.results);
 
                                 oViewModel.getProperty("/extra").forEach(function (d, idx) {
 
@@ -1073,39 +1067,59 @@ sap.ui.define([
             }
         },
 
-        openPlantPopup: function () {
-            if (!this.oCmDialogHelp) {
-                this.oCmDialogHelp = new CmDialogHelp({
-                    title: "{I18N>/PLANT_NAME}",
-                    keyFieldLabel: "{I18N>/PLANT_CODE}",
-                    textFieldLabel: "{I18N>/PLANT_NAME}",
-                    keyField: "plant_code",
-                    textField: "plant_name",
-                    items: {
-                        sorters: [
-                            new Sorter("plant_name", false)
-                        ],
-                        serviceName: "cm.util.OrgService",
-                        entityName: "Plant"
-                    }
-                });
-                this.oCmDialogHelp.attachEvent("apply", function (oEvent) {
-                    this.byId("savePlantCode").setValue(oEvent.getParameter("item").plant_code);
-                    this.byId("savePlantName").setValue(oEvent.getParameter("item").plant_name);
-                }.bind(this));
-            }
-            this.oCmDialogHelp.open();
+        // openPlantPopup: function () {
+        //     if (!this.oCmDialogHelp) {
+        //         this.oCmDialogHelp = new CmDialogHelp({
+        //             title: "{I18N>/PLANT_NAME}",
+        //             keyFieldLabel: "{I18N>/PLANT_CODE}",
+        //             textFieldLabel: "{I18N>/PLANT_NAME}",
+        //             keyField: "plant_code",
+        //             textField: "plant_name",
+        //             items: {
+        //                 sorters: [
+        //                     new Sorter("plant_name", false)
+        //                 ],
+        //                 serviceName: "cm.util.OrgService",
+        //                 entityName: "Plant"
+        //             }
+        //         });
+        //         this.oCmDialogHelp.attachEvent("apply", function (oEvent) {
+        //             this.byId("savePlantCode").setValue(oEvent.getParameter("item").plant_code);
+        //             this.byId("savePlantName").setValue(oEvent.getParameter("item").plant_name);
+        //         }.bind(this));
+        //     }
+        //     this.oCmDialogHelp.open();
+        // },
+
+        openPlantPopup: function (oEvent) {
+
+            // var oViewModel = this.getModel("viewModel");
+            var that = this;
+
+            this.oPlantDialog = new PlantDialog({
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, that._tenantId),
+                        new Filter("company_code", FilterOperator.EQ, that._companyCode)
+                    ],
+                    sorters: [
+                        new Sorter("plant_name")
+                    ]
+                }
+            });
+
+            this.oPlantDialog.open();
+
+            this.oPlantDialog.attachEvent("apply", function (oEvent) {
+
+                console.log("plant_code ::: ", oEvent.getParameter("item").plant_code);
+                console.log("plant_name ::: ", oEvent.getParameter("item").plant_name);
+                that.byId("savePlantCode").setValue(oEvent.getParameter("item").plant_code);
+                that.byId("savePlantName").setValue(oEvent.getParameter("item").plant_name);
+
+            }.bind(this));
+
         },
-
-        // onInputWithEmployeeValuePress: function () {
-        //     this.byId("employeeDialog").open();
-        // },
-
-        // onEmployeeDialogApplyPress: function (oEvent) {
-        //     // console.log("empl===", oEvent.getParameter("item"));
-        //     this.byId("saveBuyerName").setValue(oEvent.getParameter("item").user_local_name);
-        //     this.byId("saveBuyerEmpno").setValue(oEvent.getParameter("item").employee_number);
-        // },
 
         openSupplierPopupInTable: function (oEvent) {
 
@@ -1159,6 +1173,9 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingInfo('value').binding.getContext().getPath();
             var index = sPath.substr(sPath.length - 1);
 
+            var materialNetPriceInput = oEvent.getSource().getParent().getParent().getCells()[9].mAggregations.items[0];
+            var laborNetPriceInput = oEvent.getSource().getParent().getParent().getCells()[10].mAggregations.items[0];
+
             // console.log("sPath=", sPath);
             // console.log("index=", index);
 
@@ -1177,10 +1194,16 @@ sap.ui.define([
                 oViewModel.setProperty("/dtl/" + index + "/unit", oEvent.getParameter("item").unit);
                 oViewModel.setProperty("/dtl/" + index + "/material_apply_flag", oEvent.getParameter("item").material_apply_yn);
                 oViewModel.setProperty("/dtl/" + index + "/labor_apply_flag", oEvent.getParameter("item").labor_apply_yn);
+                oViewModel.setProperty("/dtl/" + index + "/net_price_change_allow_flag", oEvent.getParameter("item").net_price_change_allow_flag);
+                // var changeAllowFlag = (oEvent.getParameter("item").net_price_change_allow_flag ? true : false);
+
+                // materialNetPriceInput.setEnabled(changeAllowFlag);
+                // laborNetPriceInput.setEnabled(changeAllowFlag);
 
                 console.log("material_apply_yn==", oEvent.getParameter("item").material_apply_yn);
                 console.log("labor_apply_yn==", oEvent.getParameter("item").labor_apply_yn);
                 console.log("openItemPopupInTable Model==", oViewModel.getProperty("/dtl/" + index));
+                // console.log("changeAllowFlag==", changeAllowFlag);
 
                 if (!oViewModel.getProperty("/dtl/" + index + "/row_state")) {
                     oViewModel.setProperty("/dtl/" + index + "/row_state", "U");

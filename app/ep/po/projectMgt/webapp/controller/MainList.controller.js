@@ -42,31 +42,11 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-            // oMultilingual.attachEvent("ready", function(oEvent){
-            //     var oi18nModel = oEvent.getParameter("model");
-            //     console.log("###ready====", oi18nModel.getText("/CHAIN"));
-            // 	this.addHistoryEntry({
-            // 		title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),   //메시지관리
-            // 		icon: "sap-icon://table-view",
-            // 		intent: "#Template-display"
-            // 	}, true);
-            // }.bind(this));
-
             // Model used to manipulate control states
             oViewModel = new JSONModel({
-                headerExpanded: true,
-                mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
-                tableNoDataText: oResourceBundle.getText("tableNoDataText")
+                headerExpanded: true
             });
             this.setModel(oViewModel, "mainListView");
-
-            // Add the mainList page to the flp routing history
-            this.addHistoryEntry({
-                title: oResourceBundle.getText("mainListViewTitle"),
-                icon: "sap-icon://table-view",
-                intent: "#Template-display"
-            }, true);
-
             this.setModel(new ManagedListModel(), "list");
 
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
@@ -76,34 +56,6 @@ sap.ui.define([
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
-        },
-
-        /* =========================================================== */
-        /* event handlers                                              */
-        /* =========================================================== */
-
-		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
-		 * @public
-		 */
-        onMainTableUpdateFinished: function (oEvent) {
-            // update the mainList's object counter after the table update
-            var sTitle,
-                oTable = oEvent.getSource(),
-                iTotalItems = oEvent.getParameter("total");
-            // only update the counter if the length is final and
-            // the table is not empty
-            if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-                sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-            } else {
-                sTitle = this.getResourceBundle().getText("mainListTableTitle");
-            }
-            this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
         },
 
 		/**
@@ -156,7 +108,6 @@ sap.ui.define([
                 var aSearchFilters = this._getSearchStates();
                 this._applySearch(aSearchFilters);
             }
-            console.log("###message====", this.getModel("I18N").getText("/CHAIN"));
         },
 
 		/**
@@ -169,10 +120,10 @@ sap.ui.define([
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
             //console.log("####", this.getOwnerComponent().getHelper().getNextUIState(3));  
-            console.log("oNextUIState.layou======", oNextUIState.layou);
-            console.log("oRecord.tenant_id======", oRecord.tenant_id);
-            console.log("oRecord.company_code======", oRecord.company_code);
-            console.log("oRecord.ep_project_number======", oRecord.ep_project_number);
+            // console.log("oNextUIState.layou======", oNextUIState.layou);
+            // console.log("oRecord.tenant_id======", oRecord.tenant_id);
+            // console.log("oRecord.company_code======", oRecord.company_code);
+            // console.log("oRecord.ep_project_number======", oRecord.ep_project_number);
             this.getRouter().navTo("detailPage", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,

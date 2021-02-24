@@ -19,14 +19,15 @@ sap.ui.define([
     "sap/m/Text",
     "sap/m/Label",
     "sap/m/Input",
+    "sap/m/SegmentedButtonItem",
     "sap/m/VBox",
-    "cm/util/control/ui/CmDialogHelp",
+    "cm/util/control/ui/PlantDialog",
     "sp/util/control/ui/SupplierDialog",
     "ep/util/controller/EpBaseController"
     // "ep/util/model/ViewModel"
 ], function (BaseController, Validator, JSONModel, DateFormatter, TablePersoController, UcContractListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,
-    CmDialogHelp, SupplierDialog, EpBaseController) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, SegmentedButtonItem, VBox,
+    PlantDialog, SupplierDialog, EpBaseController) {
     "use strict";
 
     return BaseController.extend("ep.ne.ucContractMgt.controller.UcContractList", {
@@ -45,12 +46,6 @@ sap.ui.define([
 		 */
         onInit: function () {
 
-            // this.setModel(new ViewModel(), "viewModel");
-
-            // JSONModel.prototype.setProperty =  function(sPath, oValue, oContext, bAsyncUpdate) {
-            //     console.log("##ViewModel setProperty Call##");
-            // }
-
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._oTPC = new TablePersoController({
@@ -60,8 +55,6 @@ sap.ui.define([
 
             this.enableMessagePopover();
 
-            //console.log("aaaaaaaaaaaa==", epBaseController.test1());
-
             var today = new Date();
             this.getView().byId("searchEndDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             this.getView().byId("searchEndDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 365));
@@ -69,23 +62,95 @@ sap.ui.define([
         },
 
         onStatusColor: function (statusColor) {
-            if(!statusColor) return 1;
+            if (!statusColor) return 1;
             return parseInt(statusColor);
         },
 
-        // onRenderedFirst: function () {
-        //     console.log("onRenderedFirst========");
-        //     this.byId("pageSearchButton").firePress();
-        // },
-
         onAfterRendering: function () {
-            // var oSegmentedButton = this.getView().byId("searchStatusCode");
-            // oSegmentedButton.addItem(new sap.m.SegmentedButtonItem({
-            //     text: "All",
-            //     key: "All",
-            //     width: "4rem"
-            // }));
-            //console.log("oSegmentedButton==", oSegmentedButton.getItems());
+            this.onSetSegmentedButtonItem();
+        },
+
+		/**
+		 * 
+		 * @param 
+		 * @public
+		 */
+        onSetSegmentedButtonItem: function () {
+
+            var oStatusCodeButton = this.getView().byId("searchStatusCode");
+            var oEffectiveStatusButton = this.getView().byId("searchEffectiveStatus");
+
+            var oCommonModel = this.getModel("common");
+
+            var oFilter = [];
+            oFilter.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            oFilter.push(new Filter("group_code", FilterOperator.EQ, "EP_NET_PRICE_CONTRACT_STATUS"));
+
+            var oSorter = [];
+            oSorter.push(new Sorter("sort_no", false));
+
+            oCommonModel.read("/Code", {
+                filters: oFilter,
+                sorters: oSorter,
+                success: function (oCommonData) {
+                    oStatusCodeButton.addItem(
+                        new SegmentedButtonItem({
+                            text: "All",
+                            key: "all",
+                            width: "3rem"
+                        })
+                    );
+
+                    for (let d of oCommonData.results) {
+                        //console.log("oCommonData.code=", d.code);
+                        oStatusCodeButton.addItem(
+                            new SegmentedButtonItem({
+                                text: d.code_name,
+                                key: d.code,
+                                width: "6rem"
+                            })
+                        );
+                    }
+                },
+                error: function (oCommonError) {
+                    console.log("oCommonError=", oCommonError);
+                }
+            });
+
+            oFilter = [];
+            oFilter.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            oFilter.push(new Filter("group_code", FilterOperator.EQ, "EP_CONTRACT_EFFECTIVE_STATUS"));            
+
+            oCommonModel.read("/Code", {
+                filters: oFilter,
+                sorters: oSorter,
+                success: function (oCommonData) {
+                    // console.log("oCommonData=", oCommonData);
+
+                    oEffectiveStatusButton.addItem(
+                        new SegmentedButtonItem({
+                            text: "All",
+                            key: "all",
+                            width: "3rem"
+                        })
+                    );
+
+                    for (let d of oCommonData.results) {
+                        // console.log("oCommonData.code=", d.code);
+                        oEffectiveStatusButton.addItem(
+                            new SegmentedButtonItem({
+                                text: d.code_name,
+                                key: d.code,
+                                width: "3rem"
+                            })
+                        );
+                    }
+                },
+                error: function (oCommonError) {
+                    console.log("oCommonError=", oCommonError);
+                }
+            });
+
         },
 
 		/**
@@ -114,10 +179,6 @@ sap.ui.define([
 		 */
         onPageSearchButtonPress: function (oEvent) {
             if (oEvent.getParameters().refreshButtonPressed) {
-                // Search field's 'refresh' button has been pressed.
-                // This is visible if you select any master list item.
-                // In this case no new search is triggered, we only
-                // refresh the list binding.
                 this.onRefresh();
             } else {
                 var aSearchFilters = this._getSearchStates();
@@ -136,7 +197,6 @@ sap.ui.define([
 		 * @private
 		 */
         _onRoutedThisPage: function () {
-            //this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
             this.byId("pageSearchButton").firePress();
         },
 
@@ -213,7 +273,7 @@ sap.ui.define([
                             data: JSON.stringify(contractEndModel),
                             contentType: "application/json",
                             success: function (data) {
-                                console.log("#########Success#####", data.value);
+                                console.log("onSaveContractEnd Succes==", data.value);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.validator.clearValueState(that.byId("dialogContractEnd"));
                                 that.onExitContractEnd();
@@ -252,7 +312,8 @@ sap.ui.define([
             var oTable = this.byId("mainTable"),
                 oViewModel = this.getModel("viewModel"),
                 oViewData = oViewModel.getProperty("/list"),
-                oSelected = oTable.getSelectedIndices();
+                oSelected = oTable.getSelectedIndices(),
+                that = this;
 
             // console.log("oViewData=", oViewData);
 
@@ -261,15 +322,12 @@ sap.ui.define([
             if (oSelected.length > 0) {
                 oSelected.some(function (chkIdx, index) {
 
-                    /*
-                        향후 견적테이블이 생성되면 1번로직 주석 2번 로직 주석해제
-                    */
-                    console.log("net_price_contract_document_no========", oViewData[chkIdx].net_price_contract_document_no);
-                    console.log("net_price_contract_degree========", oViewData[chkIdx].net_price_contract_degree);
-                    console.log("net_price_contract_chg_type_cd========", oViewData[chkIdx].net_price_contract_chg_type_cd);
+                    // console.log("net_price_contract_document_no========", oViewData[chkIdx].net_price_contract_document_no);
+                    // console.log("net_price_contract_degree========", oViewData[chkIdx].net_price_contract_degree);
+                    // console.log("net_price_contract_chg_type_cd========", oViewData[chkIdx].net_price_contract_chg_type_cd);
 
                     if (oViewData[chkIdx].net_price_contract_chg_type_cd == "D") {
-                        MessageToast.show("계약종료건이 있습니다.");
+                        MessageToast.show(that.getModel("I18N").getText("/NEP00003"));
                         canSelect = false;
                         return true;
                     }
@@ -277,7 +335,7 @@ sap.ui.define([
                 });
             } else {
                 canSelect = false;
-                MessageToast.show("한개이상 선택해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NEP00002"));
             }
 
             // console.log("canSelect=", canSelect);
@@ -359,7 +417,7 @@ sap.ui.define([
                 filters: aSearchFilters,
                 sorters: aSorter,
                 success: function (oData) {
-                    console.log("oData111====", oData);
+                    // console.log("oData111====", oData);
                     //oView.getModel("list").setData(oData.results);
                     oViewModel.setProperty("/list", oData.results);
                     // console.log("list====333", oViewModel.getProperty("/list"));
@@ -466,28 +524,54 @@ sap.ui.define([
             return aSorter;
         },
 
-        openPlantPopup: function () {
-            if (!this.oCmDialogHelp) {
-                this.oCmDialogHelp = new CmDialogHelp({
-                    title: "{I18N>/PLANT_NAME}",
-                    keyFieldLabel: "{I18N>/PLANT_CODE}",
-                    textFieldLabel: "{I18N>/PLANT_NAME}",
-                    keyField: "bizdivision_code",
-                    textField: "bizdivision_name",
-                    items: {
-                        sorters: [
-                            new Sorter("bizdivision_name", false)
-                        ],
-                        serviceName: "cm.util.OrgService",
-                        entityName: "Division"
-                    }
-                });
-                this.oCmDialogHelp.attachEvent("apply", function (oEvent) {
-                    // console.log("1111==", oEvent.getParameter("item"));
-                    this.byId("searchOrgCode").setValue("(" + oEvent.getParameter("item").bizdivision_code + ")" + oEvent.getParameter("item").bizdivision_name);
-                }.bind(this));
-            }
-            this.oCmDialogHelp.open();
+        // openPlantPopup: function () {
+        //     if (!this.oCmDialogHelp) {
+        //         this.oCmDialogHelp = new CmDialogHelp({
+        //             title: "{I18N>/PLANT_NAME}",
+        //             keyFieldLabel: "{I18N>/PLANT_CODE}",
+        //             textFieldLabel: "{I18N>/PLANT_NAME}",
+        //             keyField: "bizdivision_code",
+        //             textField: "bizdivision_name",
+        //             items: {
+        //                 sorters: [
+        //                     new Sorter("bizdivision_name", false)
+        //                 ],
+        //                 serviceName: "cm.util.OrgService",
+        //                 entityName: "Division"
+        //             }
+        //         });
+        //         this.oCmDialogHelp.attachEvent("apply", function (oEvent) {
+        //             // console.log("1111==", oEvent.getParameter("item"));
+        //             this.byId("searchOrgCode").setValue("(" + oEvent.getParameter("item").bizdivision_code + ")" + oEvent.getParameter("item").bizdivision_name);
+        //         }.bind(this));
+        //     }
+        //     this.oCmDialogHelp.open();
+        // },
+
+        openPlantPopup: function (oEvent) {
+
+            var that = this;
+
+            this.oPlantDialog = new PlantDialog({
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                        new Filter("company_code", FilterOperator.EQ, "LGCKR")
+                    ],
+                    sorters: [
+                        new Sorter("plant_name")
+                    ]
+                }
+            });
+
+            this.oPlantDialog.open();
+
+            this.oPlantDialog.attachEvent("apply", function (oEvent) {
+
+                that.byId("searchOrgCode").setValue("(" + oEvent.getParameter("item").plant_code + ")" + oEvent.getParameter("item").plant_name);
+
+            }.bind(this));
+
         },
 
         openSupplierPopup: function () {

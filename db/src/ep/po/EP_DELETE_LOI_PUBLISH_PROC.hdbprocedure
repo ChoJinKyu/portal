@@ -16,14 +16,14 @@ SQL SECURITY INVOKER
 AS
 BEGIN
 
-    DECLARE CURSOR curItemList FOR
-        SELECT 
-            A.TENANT_ID
-            , A.COMPANY_CODE
-            , A.LOI_WRITE_NUMBER
-            , A.LOI_ITEM_NUMBER
-        FROM :I_TABLE A
-        ;
+    -- DECLARE CURSOR curItemList FOR
+    --     SELECT 
+    --         A.TENANT_ID
+    --         , A.COMPANY_CODE
+    --         , A.LOI_WRITE_NUMBER
+    --         , A.LOI_ITEM_NUMBER
+    --     FROM :I_TABLE A
+    --     ;
 
     DELETE FROM EP_LI_PUBLISH
     WHERE TENANT_ID = :I_TENANT_ID
@@ -31,23 +31,36 @@ BEGIN
     AND LOI_PUBLISH_NUMBER = :I_LOI_PUBLISH_NUMBER
     ;  
 
-    /* 커서 시작 */
-	FOR curItem AS curItemList
-    DO
+    UPDATE EP_LI_DTL A
+    SET 
+    LOI_PUBLISH_NUMBER = NULL
+    , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
+    , UPDATE_USER_ID = :I_USER_ID
+    , SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP        
+    WHERE LOI_PUBLISH_NUMBER = :I_LOI_PUBLISH_NUMBER
+    AND EXISTS ( SELECT 0 FROM :I_TABLE B
+                    WHERE B.TENANT_ID = A.TENANT_ID
+                    AND B.COMPANY_CODE = A.COMPANY_CODE
+                    AND B.LOI_WRITE_NUMBER = A.LOI_WRITE_NUMBER )
+    ;      
 
-        UPDATE EP_LI_DTL 
-        SET 
-        LOI_PUBLISH_NUMBER = NULL
-        , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
-        , UPDATE_USER_ID = :I_USER_ID
-        , SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP        
-        WHERE TENANT_ID = curItem.TENANT_ID
-        AND COMPANY_CODE = curItem.COMPANY_CODE
-        AND LOI_WRITE_NUMBER = curItem.LOI_WRITE_NUMBER
-        AND LOI_PUBLISH_NUMBER = :I_LOI_PUBLISH_NUMBER
-        ;  
+    -- /* 커서 시작 */
+	-- FOR curItem AS curItemList
+    -- DO
 
-    END FOR;
+    --     UPDATE EP_LI_DTL 
+    --     SET 
+    --     LOI_PUBLISH_NUMBER = NULL
+    --     , LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
+    --     , UPDATE_USER_ID = :I_USER_ID
+    --     , SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP        
+    --     WHERE TENANT_ID = curItem.TENANT_ID
+    --     AND COMPANY_CODE = curItem.COMPANY_CODE
+    --     AND LOI_WRITE_NUMBER = curItem.LOI_WRITE_NUMBER
+    --     AND LOI_PUBLISH_NUMBER = :I_LOI_PUBLISH_NUMBER
+    --     ;  
+
+    -- END FOR;
 
     O_TABLE_MESSAGE =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, '' as savedKey from dummy;
 

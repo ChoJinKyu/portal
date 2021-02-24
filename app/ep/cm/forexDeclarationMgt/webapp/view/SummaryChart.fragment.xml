@@ -5,7 +5,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:microchart="sap.suite.ui.microchart"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogForexChart" class="sapUiSmallMargin" title="외화신고대상 차트" contentWidth="45%" afterClose="dialogChartAfterclose">
+    <Dialog id="dialogForexChart" class="sapUiSmallMargin" title="{I18N>/FOREX_PROGRESS_CURST}" contentWidth="45%" afterClose="dialogChartAfterclose">
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm
                 editable="false"
@@ -24,7 +24,7 @@
                     
                     <form:content>
                         <VBox>
-                            <Label text = "PO일자 :" required="true"/> 
+                            <Label text = "{I18N>/PO_DATE} :" required="true"/> 
                             <DateRangeSelection id="searchChartPoDate" width="100%" change="creationDateChange"/>
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
@@ -59,28 +59,28 @@
                             >
                          <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="조회결과" level="H2"/>
+                            <Title text="{I18N>/DISPLAY_RESULT}" level="H2"/>
                             <ToolbarSpacer/>
                         </OverflowToolbar>
                     </headerToolbar> 
                         <columns>
                             <Column id="modelItem_modelPartNo1" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="구분" />
+                                <Text text="{I18N>/APPLY_TYPE}" />
                             </Column>
                             <Column id="modelItem_modelPartNo2" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="작성대상" />
+                                <Text text="{I18N>/FOREX_DECLARE_TODO}" />
                             </Column> 
                             <Column id="modelItem_modelPartNo3" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="작성대기" />
+                                <Text text="{I18N>/FOREX_DECLARE_STANDBY}" />
                             </Column>
                             <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="신고진행중" />
+                                <Text text="{I18N>/FOREX_DECLARE_ONGOING}" />
                             </Column>
                             <Column id="modelItem_seq" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="신고완료" />
+                                <Text text="{I18N>/FOREX_DECLARE_COMPLETE}" />
                             </Column>
                             <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="진행현황" />
+                                <Text text="{I18N>/PROGRESS_CURST}" />
                             </Column> 
                             <!-- <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="chart" />

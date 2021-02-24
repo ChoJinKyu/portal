@@ -31,7 +31,8 @@
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                         ],
                                         sorter: { path: 'operation_org_code'}
-                                    }">
+                                        }"
+                                        change="checkMidOrg">
                                         <items>
                                             <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
@@ -50,7 +51,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
-                                    >
+                                    change="checkMidOrg">
                                                                     
                                         <items>
                                             <core:Item key="{util>code}" text="{util>code_name}" />
@@ -73,7 +74,8 @@
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                         ],
                                         sorter: { path: 'operation_org_code'}
-                                    }">
+                                        }"
+                                        change="checkMidOrg">
                                         <items>
                                             <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
@@ -92,6 +94,7 @@
                                                             {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
+                                    change="checkMidOrg"                                                    
                                     >
                                         <items>
                                             <core:Item key="{util>code}" text="{util>code_name}" />
@@ -119,7 +122,7 @@
                             <VBox>
                                 <Label text="{I18N>/VENDOR_POOL}" labelFor="mid_Tree_Vp_Name"></Label>
                                 <HBox>
-                                    <Input id="mid_Tree_Vp_Name" placeholder="Input data"></Input>
+                                    <Input id="mid_Tree_Vp_Name" placeholder="Input data" change=".onMidTreeSearchButtonPress"></Input>
                                 </HBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />

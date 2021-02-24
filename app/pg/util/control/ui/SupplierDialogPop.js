@@ -18,6 +18,7 @@ sap.ui.define([
 ], function (Parent, SppUserSessionUtil, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ComboBox, Item, SearchField) {
     "use strict";
     var that;
+    var tokenSize; 
     var supplierDialogPop = Parent.extend("pg.util.control.ui.SupplierDialogPop", {
 
         metadata: {
@@ -32,8 +33,10 @@ sap.ui.define([
 
         createSearchFilters: function () {
             that = this;
-            this.oSupplierCodePop = new Input({ placeholder: this.getModel("I18N").getText("/SUPPLIER_CODE") });
-            this.oSupplierNamePop = new Input({ placeholder: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") });
+            this.oSupplierCodePop = new Input({ placeholder: this.getModel("I18N").getText("/SUPPLIER_CODE"), 
+                change: function (oEvent) {that.loadData(); }.bind(this)});
+            this.oSupplierNamePop = new Input({ placeholder: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME"), 
+                change: function (oEvent) {that.loadData(); }.bind(this)});
 
             return [
                 new VBox({
@@ -151,6 +154,8 @@ sap.ui.define([
             //     this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
             // }
 
+           
+            this.loadData();
             this.oDialog.open();
         }
     });

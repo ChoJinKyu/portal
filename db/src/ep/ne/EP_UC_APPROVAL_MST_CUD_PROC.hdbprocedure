@@ -51,6 +51,7 @@ PROCEDURE EP_UC_APPROVAL_MST_CUD_PROC (
         , REMARK                            NVARCHAR(3000)
         , ORG_TYPE_CODE                     NVARCHAR(2)
         , ORG_CODE                          NVARCHAR(10)  
+        , NET_PRICE_CHANGE_ALLOW_FLAG       BOOLEAN
         , LOCAL_CREATE_DTM                  SECONDDATE
         , LOCAL_UPDATE_DTM                  SECONDDATE
         , CREATE_USER_ID                    NVARCHAR(255)
@@ -152,6 +153,7 @@ PROCEDURE EP_UC_APPROVAL_MST_CUD_PROC (
         , REMARK                            NVARCHAR(3000)
         , ORG_TYPE_CODE                     NVARCHAR(2)
         , ORG_CODE                          NVARCHAR(10)  
+        , NET_PRICE_CHANGE_ALLOW_FLAG       BOOLEAN
         , LOCAL_CREATE_DTM                  SECONDDATE
         , LOCAL_UPDATE_DTM                  SECONDDATE
         , CREATE_USER_ID                    NVARCHAR(255)
@@ -439,7 +441,8 @@ BEGIN
             , LABOR_NET_PRICE                   
             , REMARK                            
             , ORG_TYPE_CODE                     
-            , ORG_CODE                            
+            , ORG_CODE     
+            , NET_PRICE_CHANGE_ALLOW_FLAG                       
             , LOCAL_UPDATE_DTM                  
             , UPDATE_USER_ID                    
             , SYSTEM_UPDATE_DTM    
@@ -458,7 +461,8 @@ BEGIN
             , LABOR_NET_PRICE                   
             , REMARK                            
             , ORG_TYPE_CODE                     
-            , ORG_CODE                            
+            , ORG_CODE     
+            , NET_PRICE_CHANGE_ALLOW_FLAG                       
             , CURRENT_TIMESTAMP                  
             , UPDATE_USER_ID                    
             , CURRENT_TIMESTAMP  
@@ -501,7 +505,8 @@ BEGIN
             , LABOR_NET_PRICE                   
             , REMARK                            
             , ORG_TYPE_CODE                     
-            , ORG_CODE     
+            , ORG_CODE    
+            , NET_PRICE_CHANGE_ALLOW_FLAG 
             , USE_FLAG
             , LOCAL_CREATE_DTM                  
             , LOCAL_UPDATE_DTM                  
@@ -529,7 +534,8 @@ BEGIN
             , LABOR_NET_PRICE                   
             , REMARK                            
             , ORG_TYPE_CODE                     
-            , ORG_CODE     
+            , ORG_CODE   
+            , NET_PRICE_CHANGE_ALLOW_FLAG  
             , TRUE  
             , CURRENT_TIMESTAMP                  
             , CURRENT_TIMESTAMP                  

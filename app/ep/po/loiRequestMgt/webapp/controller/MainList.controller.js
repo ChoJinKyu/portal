@@ -22,10 +22,11 @@ sap.ui.define([
     "sap/m/Text",
     "sap/m/Label",
     "sap/m/Input",
-    "sap/m/VBox"
+    "sap/m/VBox",
+    "sap/m/SegmentedButtonItem"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, SegmentedButtonItem) {
     "use strict";
 
     var oTransactionManager;
@@ -120,6 +121,60 @@ sap.ui.define([
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
+        },
+
+        onAfterRendering: function () {
+            this.onSetSegmentedButtonItem();
+        },
+
+        /**
+		 * 
+		 * @param 
+		 * @public
+		 */
+        onSetSegmentedButtonItem: function () {
+
+            var oStatusCodeButton = this.getView().byId("searchStatus");
+            
+            var oCommonModel = this.getModel("common");
+
+            var oFilter = [];
+            oFilter.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            oFilter.push(new Filter("group_code", FilterOperator.EQ, "EP_LOI_REQUEST_STATUS"));
+
+            var oSorter = [];
+            oSorter.push(new Sorter("sort_no", false));
+
+            oCommonModel.read("/Code", {
+                filters: oFilter,
+                sorters: oSorter,
+                success: function (oCommonData) {
+                    console.log("oCommonData=", oCommonData);
+
+                    oStatusCodeButton.addItem(
+                        new SegmentedButtonItem({
+                            text: "All",
+                            key: "all",
+                            width: "3rem"
+                        })
+                    );
+
+                    for (let d of oCommonData.results) {
+                        console.log("oCommonData.code=", d.code);
+                        oStatusCodeButton.addItem(
+                            new SegmentedButtonItem({
+                                text: d.code_name,
+                                key: d.code,
+                                width: "6rem"
+                            })
+                        );
+                    }
+                },
+                error: function (oCommonError) {
+                    console.log("oCommonError=", oCommonError);
+                }
+            });
+
         },
 
 		/**
@@ -311,7 +366,7 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sLoiNumber));
             }
 
-            if (status) {
+            if (status && status != "all") {
                 aSearchFilters.push(new Filter("loi_request_status_code", FilterOperator.EQ, status));
             }
 
@@ -324,7 +379,33 @@ sap.ui.define([
             aSorter.push(new Sorter("const_quotation_number", true));
             //var aSorter = new Sorter("system_create_dtm", true);    
             return aSorter;
+        },
+
+        getFormatDate : function (date) {
+
+            if(!date){
+                return '';
+            }
+
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
+
+        creationDateChange: function (oEvent) {
+            
+            // this.sFrom="";
+            // this.sTo = ""
+            this.sFrom = this.getFormatDate(oEvent.getParameter("from"));
+            this.sTo = this.getFormatDate(oEvent.getParameter("to"));
+
+            console.log("this.getFormatDate(sFrom) :: ", this.sFrom);
+            console.log("this.getFormatDate(to) :: ", this.sTo);
         }
+
 
     });
 });

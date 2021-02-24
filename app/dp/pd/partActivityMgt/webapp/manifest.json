@@ -102,6 +102,19 @@
                 }
             }
         },
+        "resources": {
+            "css": [
+                {
+                    "uri": "../../../../lib/css/style.css"
+                },
+                {
+                    "uri": "../../../../lib/css/layout.css"
+                },
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },        
         "resourceRoots": {
             "ext.lib": "../../../../lib",
             "dp": "../../../../dp"

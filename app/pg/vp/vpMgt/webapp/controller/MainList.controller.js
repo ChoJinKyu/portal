@@ -699,7 +699,8 @@ sap.ui.define([
                     oBundle = this.getView().getModel("i18n").getResourceBundle(),
                     sMsg,
                     v_returnModel,
-                    urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
+                    // urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";  
+                    urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingMngProc";
 
                 var inputInfo = {},
                     vpMstList = []
@@ -757,36 +758,55 @@ sap.ui.define([
                         that.onDialogSearch();
                     },
                     error: function (e) {
+
                         var eMessage = "callProcError",
                             errorType,
-                            eMessageDetail;
+                            eMessageDetail,
+                            eMessageParam;  
+
 
                         v_returnModel = oView.getModel("returnModel").getData().data;
+
                         console.log('v_returnModel_e:', v_returnModel);
+
+                        console.log('return_error:', e);
+
                         v_returnModel.return_code = 'error';
+
                         v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
 
-
                         //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
-                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+
+                        if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
+
                             eMessage = "callProcError";
                             eMessageDetail = "callProcError";
-                        } else {
+                            eMessageParam = "callProcError";
+
+                        }else{
+
                             eMessage = e.responseJSON.error.message.substring(0, 8);
                             eMessageDetail = e.responseJSON.error.message.substring(9);
                             errorType = e.responseJSON.error.message.substring(0, 1);
+                            eMessageParam = eMessageDetail.substring(0, eMessageDetail.indexOf('-@-'));
                             console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                            console.log('eMessageParam:',eMessageParam);
 
                             //MessageToast.show(eMessageDetail);
-                        }
-                        sMsg = oBundle.getText(eMessage, ['']);
-                        // sMsg = oBundle.getText(eMessage);
-                        if (errorType === 'E') {
-                            // alert(sMsg);
-                        } else {
-                            MessageToast.show(eMessageDetail);
+
                         }
 
+                        sMsg = oBundle.getText(eMessage, [eMessageParam]);
+
+                        if(errorType === 'E'){
+
+                            //alert(sMsg);                   
+
+                        }else{
+
+                            //alert(eMessageDetail);                   
+
+                        }
 
                         MessageToast.show(sMsg);
                     }
@@ -1031,7 +1051,8 @@ sap.ui.define([
                 sCLeaf,
                 sLevel,
                 v_returnModel,
-                urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
+                // urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
+                urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingMngProc";
 
             var inputInfo = {},
                 vpMstList = []
@@ -1131,20 +1152,32 @@ sap.ui.define([
                     console.log('v_returnModel:', v_returnModel);
                     v_returnModel.return_code = data.value[0].return_code;
                     v_returnModel.return_msg = data.value[0].return_msg.substring(0, 8);
-                    v_returnModel.return_vendor_pool_code =  data.value[0].return_msg.substring(9, 23);
-                    v_returnModel.return_leaf_yn =  data.value[0].return_msg.substring(23, 24);
-                    v_returnModel.return_child_leaf_yn =  data.value[0].return_msg.substring(24, 25);
-                    v_returnModel.return_node_level =  data.value[0].return_msg.substring(25, 26);                    
+                    v_returnModel.return_vendor_pool_code =  data.value[0].return_vp_obj[0].vendor_pool_code;
+                    v_returnModel.return_leaf_yn =  data.value[0].return_vp_obj[0].leaf_yn;
+                    v_returnModel.return_child_leaf_yn =  data.value[0].return_vp_obj[0].child_leaf_yn;
+                    v_returnModel.return_node_level =  data.value[0].return_vp_obj[0].hierarchy_level;
+                    v_returnModel.return_higher_path =  data.value[0].return_vp_obj[0].higher_level_path_name;                    
+                    // v_returnModel.return_vendor_pool_code =  data.value[0].return_msg.substring(9, 23);
+                    // v_returnModel.return_leaf_yn =  data.value[0].return_msg.substring(23, 24);
+                    // v_returnModel.return_child_leaf_yn =  data.value[0].return_msg.substring(24, 25);
+                    // v_returnModel.return_node_level =  data.value[0].return_msg.substring(25, 26);                    
                     oView.getModel("returnModel").updateBindings(true);
 
                     //MessageToast.show(data.value[0].return_msg);
                     console.log(data.value[0].return_msg.substring(0, 8));
                     //sMsg = oBundle.getText("returnMsg", [data.value[0].return_msg]);
                     sMsg = oBundle.getText(data.value[0].return_msg.substring(0, 8));
-                    sVendorPoolCode = oBundle.getText(data.value[0].return_msg.substring(9, 23));
-                    sLeaf = oBundle.getText(data.value[0].return_msg.substring(23, 24));
-                    sCLeaf = oBundle.getText(data.value[0].return_msg.substring(24, 25));
-                    sLevel = oBundle.getText(data.value[0].return_msg.substring(25, 26));                    
+                    sVendorPoolCode = v_returnModel.return_vendor_pool_code;
+                    sLeaf  = v_returnModel.return_leaf_yn;
+                    sCLeaf = v_returnModel.return_child_leaf_yn;
+                    sLevel = v_returnModel.return_node_level;                    
+
+
+                    // Proc 변경 
+                    // sVendorPoolCode = oBundle.getText(data.value[0].return_msg.substring(9, 23));
+                    // sLeaf = oBundle.getText(data.value[0].return_msg.substring(23, 24));
+                    // sCLeaf = oBundle.getText(data.value[0].return_msg.substring(24, 25));
+                    // sLevel = oBundle.getText(data.value[0].return_msg.substring(25, 26));                    
                     //MessageToast.show(sMsg);
                     console.log(data.value[0].return_msg);
                     // alert(sMsg);
@@ -1304,40 +1337,51 @@ sap.ui.define([
                     // that.resetValue();
                 },
                 error: function (e) {
-                    var eMessage = "callProcError",
-                        errorType,
-                        eMessageDetail;
-
-                    v_returnModel = oView.getModel("returnModel").getData().data;
-                    console.log('v_returnModel_e:', v_returnModel);
-                    v_returnModel.return_code = 'error';
-                    v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
+                        var eMessage = "callProcError",
+                            errorType,
+                            eMessageDetail,
+                            eMessageParam;  
 
 
-                    //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
-                    if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
-                        eMessage = "callProcError";
-                        eMessageDetail = "callProcError";
-                    } else {
-                        eMessage = e.responseJSON.error.message.substring(0, 8);
-                        eMessageDetail = e.responseJSON.error.message.substring(9);
-                        errorType = e.responseJSON.error.message.substring(0, 1);
-                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                        v_returnModel = oView.getModel("returnModel").getData().data;
+                        console.log('v_returnModel_e:', v_returnModel);
+                        console.log('return_error:', e);
+                        v_returnModel.return_code = 'error';
+                        v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
+                        //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
 
-                        //MessageToast.show(eMessageDetail);
-                    }
-                    sMsg = oBundle.getText(eMessage, ['']);
-                    // sMsg = oBundle.getText(eMessage);
-                    if (errorType === 'E') {
-                        // MessageToast.show(eMessageDetail);
-                        // alert(sMsg);
-                    } else {
-                        MessageToast.show(eMessageDetail);
-                        // alert(eMessageDetail);
-                    }
+                        if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
 
+                            eMessage = "callProcError";
+                            eMessageDetail = "callProcError";
+                            eMessageParam = "callProcError";
 
-                    MessageToast.show(sMsg);
+                        }else{
+
+                            eMessage = e.responseJSON.error.message.substring(0, 8);
+                            eMessageDetail = e.responseJSON.error.message.substring(9);
+                            errorType = e.responseJSON.error.message.substring(0, 1);
+                            eMessageParam = eMessageDetail.substring(0, eMessageDetail.indexOf('-@-'));
+                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                            console.log('eMessageParam:',eMessageParam);
+
+                            //MessageToast.show(eMessageDetail);
+
+                        }
+
+                        sMsg = oBundle.getText(eMessage, [eMessageParam]);
+
+                        if(errorType === 'E'){
+
+                            //alert(sMsg);                   
+
+                        }else{
+
+                            //alert(eMessageDetail);                   
+
+                        }
+
+                        MessageToast.show(sMsg);
                 }
             });
 
@@ -1692,20 +1736,35 @@ sap.ui.define([
             // 	var oMasterView = this.oRouter.getView("pg.vp.vpMgt.view.MainList");
             // 	this.getView().byId("fcl").removeBeginColumnPage(oMasterView);
             // }
+            if(rowData.leaf_yn == "Y"){
+                var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+                this.getRouter().navTo("midPage", {
+                    // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+                    layout: sap.f.LayoutType.OneColumn,
+                    tenantId: pTenantId,
+                    vendorPool: pVendorPool,
+                    orgCode: pOrg_code,
+                    operationUnitCode: pOperation_unit_code,
+                    temptype: pTemp_type,
+                    drill: pDrill_state,
+                    target: "NEXT"
+                });
+            }else{
+                MessageToast.show("Vendor Pool Tree 추가 생성 작업이 필요합니다.");
+            }
 
-
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            this.getRouter().navTo("midPage", {
-                // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
-                layout: sap.f.LayoutType.OneColumn,
-                tenantId: pTenantId,
-                vendorPool: pVendorPool,
-                orgCode: pOrg_code,
-                operationUnitCode: pOperation_unit_code,
-                temptype: pTemp_type,
-                drill: pDrill_state,
-                target: "NEXT"
-            });
+            // var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            // this.getRouter().navTo("midPage", {
+            //     // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+            //     layout: sap.f.LayoutType.OneColumn,
+            //     tenantId: pTenantId,
+            //     vendorPool: pVendorPool,
+            //     orgCode: pOrg_code,
+            //     operationUnitCode: pOperation_unit_code,
+            //     temptype: pTemp_type,
+            //     drill: pDrill_state,
+            //     target: "NEXT"
+            // });
             // this.oRouter.navTo("midPage", {layout: LayoutType.OneColumn, tenantId: pTenantId, vendorPool: pVendorPool});         
 
 
@@ -1738,25 +1797,33 @@ sap.ui.define([
             pOperation_unit_code = oData.operation_unit_code;
             pTemp_type = oData.temp_type;
 
+
+
+
+
             if(oData.leaf_yn == "Y"){
                 pDrill_state = "leaf";
             }else{
                 pDrill_state = "expanded";
             }
 
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            this.getRouter().navTo("midPage", {
-                // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
-                layout: sap.f.LayoutType.OneColumn,
-                tenantId: pTenantId,
-                vendorPool: pVendorPool,
-                orgCode: pOrg_code,
-                operationUnitCode: pOperation_unit_code,
-                temptype: pTemp_type,
-                drill: pDrill_state,
-                target: "NEXT"
-            });
-
+            if(oData.leaf_yn == "Y"){
+                
+                var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+                this.getRouter().navTo("midPage", {
+                    // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+                    layout: sap.f.LayoutType.OneColumn,
+                    tenantId: pTenantId,
+                    vendorPool: pVendorPool,
+                    orgCode: pOrg_code,
+                    operationUnitCode: pOperation_unit_code,
+                    temptype: pTemp_type,
+                    drill: pDrill_state,
+                    target: "NEXT"
+                });
+            }else{
+                MessageToast.show("Vendor Pool Tree 추가 생성 작업이 필요합니다.");
+            }
 
         },
 
@@ -2301,7 +2368,8 @@ sap.ui.define([
             }.bind(this));
         },
 
-        onInputWithDeptValuePress: function(){
+        onInputWithDeptValuePress: function(oEvent){
+
              this.oDeptDialog = new DepartmentDialog({
                 // id:"employeeDialog" ,
                 title:"부서 검색",
@@ -2321,6 +2389,8 @@ sap.ui.define([
                 // that.oSupplierCode.setValue(null);
                 that.byId("search_Dept_Name").setValue(oEvent.mParameters.item.department_local_name);
                 that.byId("search_Dept_Code").setValue(oEvent.mParameters.item.department_id);
+                that.byId("search_Dept_Name_s").setText(oEvent.mParameters.item.department_local_name);
+                // that.byId("search_Dept_Name").setKey(oEvent.mParameters.item.department_id);
             }.bind(this));
         },
         //PG Util Supplier PopUp Call
@@ -2418,13 +2488,15 @@ sap.ui.define([
             if (sSurffix === "S") {
                 pselectedOrg = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
                 pselectedUnit = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
-
-
+                this.getView().byId("search_Operation_ORG_E").setSelectedKey(pselectedOrg);
+                this.getView().byId("search_Operation_UNIT_E").setSelectedKey(pselectedUnit);
             }
             else if (sSurffix === "E") {
 
                 pselectedOrg = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
                 pselectedUnit = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+                this.getView().byId("search_Operation_ORG_S").setSelectedKey(pselectedOrg);
+                this.getView().byId("search_Operation_UNIT_S").setSelectedKey(pselectedUnit);
 
             }    
 

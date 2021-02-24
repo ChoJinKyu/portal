@@ -91,6 +91,8 @@ sap.ui.define([
             this.enableMessagePopover();
             //this.onAfterRendering();
 
+            
+
         },
 
         /* =========================================================== */
@@ -245,8 +247,9 @@ sap.ui.define([
 
             if (flag != "R" && flag != "B" && master.getData()["_state_"] != "U") {
                 if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-                    MessageBox.alert("변경사항이 없습니다.");
-                    return;
+                    //MessageBox.alert("변경된 데이터가 없습니다.");
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+				    return;
                 }
             }
 
@@ -851,9 +854,36 @@ sap.ui.define([
                     ],
 
                     success: function (oData) {
-                        //console.log(" LOIRequestDetailView ::: ", oData);
+                        // console.log(" LOIRequestDetailView ::: ", oData);
+                        console.log(" LOIRequestDetailView ::: ", oView.getModel("details").getData());
+
+              
+
+                        oData.results.forEach(function (item, index) {
+                            
+                            
+                           
+                           
+
+                           oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/currency_code", oData.results[index]["currency_code"]);
+
+                           //oData.results[index]["currency_code"] = (!oData.results[index]["currency_code"] ? "" : oData.results[index]["currency_code"]);
+
+                            console.log("currency_code : " , oData.results[index]["currency_code"]);
+                            // oData.results[index]["material_net_price"] = (!oData.results[index]["material_net_price"] ? 0 : parseFloat(oData.results[index]["material_net_price"]));
+                            // oData.results[index]["labor_net_price"] = (!oData.results[index]["labor_net_price"] ? 0 : parseFloat(oData.results[index]["labor_net_price"]));
+                            // //oData.results[index]["material_amount"] = (!oData.results[index]["material_amount"] ? 0 : parseFloat(oData.results[index]["material_amount"]));
+                            // //oData.results[index]["labor_amount"] = (!oData.results[index]["labor_amount"] ? 0 : parseFloat(oData.results[index]["labor_amount"]));
+
+                            // console.log("allow : " , oData.results[index]["net_price_change_allow_flag"]);
+                            // console.log("meterial : " , oData.results[index]["material_apply_flag"]);
+                            // console.log("labor : " , oData.results[index]["labor_apply_flag"]);
+                            
+                        });
+                        //oView.getModel("details").updateBindings(true);
                         oView.setBusy(false);
                         that._toShowMode();
+                        that.onAfterRendering();
                     }
 
                 });
@@ -1160,7 +1190,7 @@ sap.ui.define([
             console.log("_onLiveChange -->" , oEvent);
             var _oInput = oEvent.getSource();
             var val = _oInput.getValue();
-                val = val.replace(/[^\d]/g, '');
+            //    val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val);
 
             var sPath = oEvent.getSource().getBindingContext("details").getPath();
@@ -1397,6 +1427,16 @@ sap.ui.define([
         //     this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
         // },
 
+         onAfterRendering: function () {
+
+             console.log("onAfterRendering====");
+            this.codebox = this.byId("GenderBox");
+
+            // console.log("codebox====" , codebox);
+             //codebox.setSelectedKey("");
+
+        },
+
         // onAfterRendering: function () {
         //     var that = this,
         //         sHtmlValue = "";
@@ -1449,7 +1489,7 @@ sap.ui.define([
                 }.bind(this));
             }
             this.oCmDialogHelp.open();
-        },
+        }
 
     });
 });

@@ -18,7 +18,7 @@ entity Pd_Part_Category_Creation_Request {
     creator_empno : String(30)   @title: '생성자사번' ;	
     create_category_code : String(40)   @title: '생성카테고리코드' ;	
 }	
-extend Pd_Part_Category_Creation_Request with util.Managed;	
+extend Pd_Part_Category_Creation_Request with util.Managed;
 
 @cds.persistence.exists
 entity Pd_Part_Category_Creation_Request_View {
@@ -34,6 +34,7 @@ entity Pd_Part_Category_Creation_Request_View {
         requestor_empno                      : String;
         requestor                            : String;
         request_date_time                    : DateTime;
+        request_desc                         : LargeString;
         attch_group_number                   : String;
         progress_status_code                 : String;
         progress_status_name                 : String;

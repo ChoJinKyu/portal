@@ -8,7 +8,7 @@
     xmlns:sc="sap.suite.ui.commons"
 	xmlns:core="sap.ui.core"
     xmlns:richtexteditor="sap.ui.richtexteditor"
-    xmlns:sp-ui="sp.util.control.ui"
+    xmlns:ep-ui="ep.util.control.ui"
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
@@ -46,18 +46,18 @@
 			<FlexBox wrap="Wrap" visible="true">
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="LOI 번호: "
+                        title="{I18N>/LOI_NUMBER} "
                         text="{midObjectViewModel>/viewLoiNumber}"/>
                     <ObjectStatus
                         id="createUser"         
-                        title="작성자"
+                        title="{I18N>/WRITER} "
                         text="{master>/buyer_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus 
                         id="createDate"
-                        title="작성일자"
+                        title="{I18N>/WRITE_DATE} "
                         text="{
                                 path: 'master>/supplier_selection_date',
                                 formatter: '.dateFormatter.toUTCDateString'
@@ -65,12 +65,12 @@
 
                     <ObjectStatus
                         id="createDepartment"
-                        title="작성부서"
+                        title="{I18N>/WRITE_DEPARTMENT} "
                         text="{master>/purchasing_department_name}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <Label text="Status :"/>
+                        <Label text="{I18N>/PROGRESS_STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{master>/loi_selection_status_name}"
@@ -101,7 +101,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/APPROVAL_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
                     <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
@@ -118,7 +118,7 @@
                                 }
                             }" class="sapMLabelNoText" required="{midObjectViewModel>/isEditMode}" width="98%" editable="{midObjectViewModel>/isEditMode}"/> -->
                    
-                            <Label  text="품의명" 
+                            <Label  text="{I18N>/APPROVAL_TITLE}" 
                                     required="true"
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{midObjectViewModel>/isEditMode}"/>
@@ -129,12 +129,12 @@
                                     maxLength: 50
                                 }
                             }" class="sapMLabelNoText" required="true" width="70%" visible="{midObjectViewModel>/isEditMode}"/>
-                            <Label  text="품의명" 
+                            <Label  text="{I18N>/APPROVAL_TITLE}" 
                                     design="Bold" 
                                     class="sapUiSmallMarginBottom" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>                            
                             <Text text="{master>/loi_selection_title}" class="sapMLabelNoText" width="98%" visible="{= ${midObjectViewModel>/isEditMode} === true ? false : true }"/>
 
-                            <Label  text="업체선정결과" 
+                            <Label  text="{I18N>/SUPPLIER_SELECTION_RESULT}" 
                                     design="Bold" 
                                     class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
                             <t:Table id="mainTable"
@@ -169,49 +169,49 @@
                             </t:extension> -->
                             <t:columns>
                                 <t:Column id="mainLoiNumber" width="5rem" hAlign="Center">
-                                <Label text="Line No." textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/LINE_NO}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>item_sequence}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainItemSequence" width="5rem">
-                                <Label text="플랜트" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/PLANT}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>plant_name}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLoiRequestTitle" width="12rem">
-                                <Label text="품명" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/ITEM_NAME}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>item_desc}" />
                                 </t:template>
                                 </t:Column> 
                                 <t:Column id="mainItemDesc" width="7rem">
-                                <Label text="규격" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/SPECIFICATION}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>spec_desc}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainSupplierName" width="4rem" hAlign="Center">
-                                <Label text="단위" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/UNIT}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>unit}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainPublishDate" width="6rem" hAlign="Right">
-                                <Label text="수량" textAlign="Center" width="100%" />
+                                <Label text="{I18N>/QUANTITY}" textAlign="Center" width="100%" />
                                 <t:template>
                                     <Text text="{details>request_quantity}" textAlign="Right"/>
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="mainDeliveryRequestDate" width="4rem" hAlign="Center">
-                                <Label text="통화" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>currency_code}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainRequestQuantity" width="6rem" hAlign="Right">
-                                <Label text="요청금액" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/REQUEST_AMOUNT}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{
                                                     path: 'details>request_amount',
@@ -220,13 +220,13 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainCurrencyCode" width="6rem" hAlign="Left">
-                                <Label text="선정결과" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/SELECTION_RESULT}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>selection_result}"/>
                                 </t:template>
                                 </t:Column> 
                                 <t:Column id="mainRequestAmount" width="14rem" hAlign="Left">
-                                <Label text="참여업체" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/PARTICIPATE_SUPPLIER}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <HBox justifyContent="Center">
                                         <Text text="{details>supplier_name}" visible="{= ${details>offline_flag} === true ? false : true }"/>
@@ -247,7 +247,7 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLoiSelectionStatusCode" width="8rem" hAlign="Right">
-                                <Label text="환산견적금액" textAlign="Center" width="100%" tooltip="환산견적금액"/>
+                                <Label text="{I18N>/CONVERSION_QUOTATION_AMOUNT}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <HBox justifyContent="End">
                                         <Text text="{details>quotation_amount}" textAlign="Right" visible="{= ${details>offline_flag} === true ? false : true }"/>
@@ -269,13 +269,13 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLoiPublishStatusCode" width="7rem" hAlign="Center">
-                                <Label text="요청납기일자" textAlign="Center" width="100%" tooltip="요청납기일자"/>
+                                <Label text="{I18N>/REQUEST_DUE_DATE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>delivery_request_date}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column> 
                                 <t:Column id="mainPoStatusCode" width="10rem" hAlign="Center">
-                                <Label text="견적납기일자" textAlign="Center" width="100%" tooltip="발주상태"/>
+                                <Label text="{I18N>/QUOTATION_DUE_DATE}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <HBox justifyContent="Center">
                                         <Text text="{details>quotation_due_date}" visible="{= ${details>offline_flag} === true ? false : true }"/>
@@ -290,7 +290,7 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainRequestDepartmentName" width="12rem">
-                                <Label text="견적비고" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/QUOTATION_REMARK}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <HBox>
                                         <Text text="{details>quotation_remark}" visible="{= ${details>offline_flag} === true ? false : true }"/>
@@ -306,8 +306,8 @@
                                     </HBox>                 
                                 </t:template>
                                 </t:Column>
-                                <t:Column id="mainRequestorName" width="7rem">
-                                <Label text="견적번호" textAlign="Center" width="100%"/>
+                                <t:Column id="mainRequestorName" width="8rem">
+                                <Label text="{I18N>/CONST_QUOTATION_NUMBER}" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{= ${details>offline_flag} === true ? '' : '12345678' }"/>
                                 </t:template>
@@ -315,7 +315,7 @@
                             </t:columns>
                             </t:Table>
 
-                            <Label  text="특기사항" 
+                            <Label  text="{I18N>/SPECIAL_NOTE}" 
                                         design="Bold" 
                                         class="sapUiMediumMarginTop sapUiTinyMarginBottom"/>
                             <richtexteditor:RichTextEditor
@@ -336,7 +336,7 @@
 			</uxap:ObjectPageSection>
 
             <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -365,7 +365,7 @@
             <!-- 첨부파일 끝 -->
 
             <!-- 결재라인 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/APPROVAL_LINE}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -392,19 +392,18 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-                <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
-                <Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('D')" />
-                <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
-                <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
-                <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
-                <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
+                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
+                <Button id="pageSaveButton" type="Emphasized" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('D')" />
+                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
+                <Button id="pageRequestButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
+                <Button id="pageByPassButton" type="Emphasized" text="{I18N>/BYPASS}" press=".onPageSaveButtonPress('B')" />
 				
 			</OverflowToolbar>
 		</uxap:footer>
     </uxap:ObjectPageLayout>
 
-    <sp-ui:SupplierWithOrgDialog id="supplierWithOrgDialog" 
-        title="협력사 검색"
+    <ep-ui:SupplierDialog id="supplierWithOrgDialog" 
         items="{
             filters: [
                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}

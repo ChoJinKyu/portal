@@ -120,11 +120,17 @@
       }
     },
     "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
+        "css": [
+            {
+                "uri": "../../../../lib/css/style.css"
+            },
+            {
+                "uri": "../../../../lib/css/layout.css"
+            },
+            {
+                "uri": "css/style.css"
+            }
+        ]
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib",

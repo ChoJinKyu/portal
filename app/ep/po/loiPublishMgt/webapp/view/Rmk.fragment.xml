@@ -4,15 +4,15 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogRmk" class="sapUiMediumMargin" title="" contentWidth="35%" >
+    <Dialog id="dialogRmk" class="sapUiMediumMargin" title="{I18N>/REMARK}" contentWidth="35%" >
         <VBox class="sapUiMediumMargin">
             <form:SimpleForm id="RmkForm" editable="false" >
-                <form:toolbar>
+                <!-- <form:toolbar>
                     <Toolbar>
                         <Title text="비고"/>
                     </Toolbar>
-                </form:toolbar>             
-                <Label text="비고"/>
+                </form:toolbar>              -->
+                <Label text="{I18N>/REMARK}"/>
                 <TextArea id="saveRemark" value="{
                     type: 'sap.ui.model.type.String',
                     constraints: {
@@ -24,8 +24,8 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="Center" justifyContent="Center" >
-            <Button text="Cancel" class="sapUiSmallMargin" press=".onExitRmk"/>
-            <Button text="Save" class="sapUiSmallMargin" type="Emphasized" press=".onSaveRmk"/>
+            <Button text="{I18N>/CANCEL}" class="sapUiSmallMargin" press=".onExitRmk"/>
+            <Button text="{I18N>/SAVE}" class="sapUiSmallMargin" type="Emphasized" press=".onSaveRmk"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

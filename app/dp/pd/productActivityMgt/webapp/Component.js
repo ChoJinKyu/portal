@@ -46,7 +46,11 @@ sap.ui.define([
 				};
 
 			return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
-		}
+        },
+        
+        // getContentDensityClass : function() {
+		// 	return "sapUiSizeCozy";
+		// }
 
 	});
 

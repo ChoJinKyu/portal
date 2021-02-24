@@ -38,7 +38,7 @@
                 <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="LOI 번호" labelFor="searchLoiNumberS" ></Label>
+                                <Label text="{I18N>/LOI_NUMBER}" labelFor="searchLoiNumberS" ></Label>
                                 <MultiInput width="100%"
                                     id="searchLoiNumberS"
                                     suggestionItems="{
@@ -59,14 +59,14 @@
 
                             </VBox>
                             <VBox>
-                                <Label text="요청일자" labelFor="searchRequestDateS"></Label>
+                                <Label text="{I18N>/REQUEST_DATE}" labelFor="searchRequestDateS"></Label>
                                     <DateRangeSelection id="searchRequestDateS" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="요청부서" labelFor="searchRequestDepartmentS"></Label>
+                                <Label text="{I18N>/REQUEST_DEPARTMENT}" labelFor="searchRequestDepartmentS"></Label>
                                 <lib-m:CodePicker id="searchRequestDepartmentS"
                                     placeholder="Enter a department name"
                                     keyField="department_id"
@@ -87,7 +87,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="요청자" labelFor="searchRequestorS"></Label>
+                                <Label text="{I18N>/REQUESTOR}" labelFor="searchRequestorS"></Label>
                                 <lib-m:CodePicker id="searchRequestorS"
                                     placeholder="Enter a employee name"
                                     keyField="employee_number"
@@ -108,15 +108,15 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="진행상태"></Label>
-                                <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
-                                    <items>
+                                <Label text="{I18N>/PROGRESS_STATUS}"></Label>
+                                <SegmentedButton id="searchStatus" selectedKey="All" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <!-- <items>
                                         <SegmentedButtonItem text="All" key="" width="4.1rem" />
                                         <SegmentedButtonItem text="작성중" key="121010" width="4.1rem" />
                                         <SegmentedButtonItem text="결재진행중" key="121020" width="6rem" />
                                         <SegmentedButtonItem text="결재반려" key="121030" width="5.5rem" />
                                         <SegmentedButtonItem text="요청완료" key="121040" width="5.5rem" />
-                                    </items>
+                                    </items> -->
                                 </SegmentedButton>
                                 <layoutData>
                                     <layout:GridData span="XL6 L6 M12 S12" />
@@ -169,26 +169,26 @@
             </t:rowSettingsTemplate>
             <t:columns>
                 <t:Column id="mainLoiNumber" width="10rem"  hAlign="Center">
-                <Label text="LOI번호" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/LOI_NUMBER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>loi_number}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainRequestDepartmentCode" width="15rem">
-                <Label text="요청부서" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REQUEST_DEPARTMENT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>request_department_name}"/>
                 </t:template>
                 </t:Column>
 
                 <t:Column id="mainRequestorEmpno" width="6rem">
-                <Label text="요청자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REQUESTOR}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>requestor_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainRequestDate" width="8rem" hAlign="Center">
-                <Label text="요청일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REQUEST_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'listModel>request_date',
@@ -197,13 +197,13 @@
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainLoiRequestTitle" width="20rem">
-                <Label text="요청명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/REQUEST_TITLE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>loi_request_title}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainLoiRequestStatusCode" width="10rem"  hAlign="Center">
-                <Label text="진행상태" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PROGRESS_STATUS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <!-- <Text text="{listModel>loi_request_status_name}"/> -->
                         <tnt:InfoLabel 
@@ -223,13 +223,13 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainBuyerEmpno" width="6rem">
-                <Label text="구매담당자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/BUYER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>buyer_name}"/>
                 </t:template>
                 </t:Column>    
                 <t:Column id="mainPublishDate" width="8rem"  hAlign="Center">
-                <Label text="발행일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PUBLISH_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                      <Text text="{
                                 path: 'listModel>publish_date',
@@ -238,7 +238,7 @@
                 </t:template>
                 </t:Column>   
                 <t:Column id="mainVendorPoolCode" width="12rem">
-                <Label text="협력사" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{listModel>supplier_name}"/>
                 </t:template>

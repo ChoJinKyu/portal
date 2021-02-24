@@ -1,7 +1,7 @@
 using { dp as PartActivityTemplateView } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE_VIEW-model';
 using { dp as partActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE-model';
 using { dp as activityMapping} from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_MAPPING-model';
-using { dp as partBaseActivity} from '../../../../../db/cds/dp/pd/DP_PD_PART_BASE_ACTIVITY-model';
+using { dp as partBaseActivityView} from '../../../../../db/cds/dp/pd/DP_PD_PART_BASE_ACTIVITY_VIEW-model';
 
 // 공통코드  ( group_code = 'DP_PART_PJT_TYPE' )
 using { cm as Code } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
@@ -17,7 +17,7 @@ service PartActivityService {
     entity PdPartActivityTemplate as projection on partActivityTemplate.Pd_Part_Activity_Template;
     entity PdSelectAnActivityView as projection on partActivityTemplate.Pd_Select_An_Activity_View;
     entity pdActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
-    entity PdPartBaseActivity as projection on partBaseActivity.Pd_Select_An_Activity_View;
+    entity PdPartBaseActivityView as projection on partBaseActivityView.Pd_Part_Base_Activity_View;
     entity cmOrgCompany as projection on CmOrgCompany.Org_Company;
     entity cmPurOrgTypeMapping as projection on CmPurOrgTypeMapping.Pur_Org_Type_Mapping;
     entity cmPurOperationOrg as projection on CmPurOperationOrg.Pur_Operation_Org;
@@ -46,6 +46,22 @@ service PartActivityService {
                                 where tenant_id = 'L2101'
                                 and process_type_code = 'DP02'
                                 and use_flag = true)
+    ;
+
+    view SelectAnActivityView (
+        company_code : String(40),
+        org_code : String(40),
+        part_project_type_code : String(40)
+  ) as 
+    select key pa.tenant_id,
+	       key pa.activity_code,
+	           pa.activity_name,
+	           pa.active_flag,
+	           pa.active_flag_val,
+               pa.sequence
+    from   PdPartBaseActivityView pa
+    where  pa.tenant_id = 'L2101'
+    and	   not exists (select * from PdPartActivityTemplate where tenant_id = pa.tenant_id and company_code = :company_code and org_code = :org_code and part_project_type_code = :part_project_type_code and activity_code = pa.activity_code)
     ;
 
 

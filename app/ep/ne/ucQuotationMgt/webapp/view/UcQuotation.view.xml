@@ -40,18 +40,18 @@
 			<FlexBox wrap="Wrap" visible="true">
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="견적서번호 "
+                        title="{I18N>/CONST_QUOTATION_NUMBER} "
                         text="{midObjectViewModel>/viewConstQuotationNumber}"/>
                     <ObjectStatus
                         id="createUser"         
-                        title="공사업체 " 
+                        title="{I18N>/SUPPLIER_NAME} " 
                         text="{viewModel>/ucmaster/supplier_name} {viewModel>/ucmaster/supplier_person_id}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus 
                         id="createDate"
-                        title="작성일자 "
+                        title="{I18N>/WRITE_DATE} "
                         text="{
                                 path: 'viewModel>/ucmaster/quotation_write_date',
                                 formatter: '.dateFormatter.toUTCDateString'
@@ -59,12 +59,12 @@
 
                     <ObjectStatus
                         id="createDepartment"
-                        title="단가운영단위(플랜트) "
+                        title="{I18N>/OPERATION_UNIT} "
                         text="{viewModel>/ucmaster/org_name}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <Label text="Status :"/>
+                        <Label text="{I18N>/PROGRESS_STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{viewModel>/ucmaster/quotation_status_name}"
@@ -74,16 +74,16 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-            <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
+            <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
                 <uxap:subSections>
                     <uxap:ObjectPageSubSection>
                         <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <!-- 기본정보 영역 -->
-                                <core:Title text="기본정보" />    
+                                <core:Title text="{I18N>/BASIC_INFO}" />    
 
                                 <VBox alignContent="Center"> 
-                                    <Label text="공사명" design="Bold" class="sapMLabelNoText"/>
+                                    <Label text="{I18N>/CONST_NAME}" design="Bold" class="sapMLabelNoText"/>
                                     <Text text="{viewModel>/ucmaster/const_name}" width="70%"/>
                                     <layoutData>
                                         <layout:GridData span="XL12 L12 M12 S12" />
@@ -91,7 +91,7 @@
                                 </VBox>
 
                                 <VBox alignContent="Center">
-                                    <Label text="대분류(공종)" textAlign="left" design="Bold" class="sapMLabelNoText" />
+                                    <Label text="{I18N>/LARGE_CLASS}" textAlign="left" design="Bold" class="sapMLabelNoText" />
                                     <Text text="{viewModel>/ucmaster/ep_item_name}" />
                                     <layoutData>
                                         <layout:GridData span="XL4 L4 M4 S12" />
@@ -99,7 +99,7 @@
                                 </VBox>      
 
                                 <VBox alignContent="Center">
-                                    <Label text="공사기간" design="Bold" class="sapUiTinyMarginEnd"/>
+                                    <Label text="{I18N>/CONST_PERIOD}" design="Bold" class="sapUiTinyMarginEnd"/>
                                     <HBox>
                                         <Text text="{
                                                                 path: 'viewModel>/ucmaster/const_start_date',
@@ -125,7 +125,7 @@
                                     </layoutData>     
                                 </VBox> 
                                 <VBox alignContent="Center">
-                                    <Label text="통화" design="Bold" class="sapMLabelNoText"/>
+                                    <Label text="{I18N>/CONST_QUOTATION_CURRENCY}" design="Bold" class="sapMLabelNoText"/>
                                     <Text text="{viewModel>/ucmaster/const_person_name}" />  
                                     <layoutData>
                                         <layout:GridData span="XL4 L4 M4 S12" />
@@ -133,7 +133,7 @@
                                 </VBox>
 
                                 <VBox alignContent="Center">
-                                    <Label text="물량검토자" design="Bold" class="sapMLabelNoText"/>
+                                    <Label text="{I18N>/CONST_REVIEW_PERSON}" design="Bold" class="sapMLabelNoText"/>
                                     <Text text="{viewModel>/ucmaster/const_person_name}" />  
                                     <layoutData>
                                         <layout:GridData span="XL4 L4 M4 S12" />
@@ -141,7 +141,7 @@
                                 </VBox>
                                 
                                 <VBox alignContent="Center">
-                                    <Label text="구매담당자" design="Bold" class="sapMLabelNoText"/>
+                                    <Label text="{I18N>/BUYER}" design="Bold" class="sapMLabelNoText"/>
                                     <Text text="{viewModel>/ucmaster/buyer_name}" />  
                                     <layoutData>
                                         <layout:GridData span="XL8 L8 M8 S12" />
@@ -152,7 +152,7 @@
                                 <!-- <core:Title text="구매정보" />     -->
 
                                 <VBox alignContent="Center">
-                                    <Label text="구매요청번호" design="Bold" class="sapMLabelNoText"/>
+                                    <Label text="{I18N>/PR_NUMBER}" design="Bold" class="sapMLabelNoText"/>
                                     <Text text="{viewModel>/ucmaster/pr_number}" />  
                                     <layoutData>
                                         <layout:GridData span="XL4 L4 M4 S12" />
@@ -160,7 +160,7 @@
                                 </VBox>
                                 
                                 <VBox alignContent="Center">
-                                    <Label text="품목납품일" design="Bold" class="sapMLabelNoText"/>
+                                    <Label text="{I18N>/DELIVERY_REQUEST_DATE}" design="Bold" class="sapMLabelNoText"/>
                                     <Text text="{viewModel>/ucmaster/delivery_request_date}" />  
                                     <layoutData>
                                         <layout:GridData span="XL8 L8 M8 S12" />
@@ -202,7 +202,7 @@
                 </uxap:ObjectPageSection> -->
                 <!-- 첨부파일 끝 -->
 
-                <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+                <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
                     <uxap:subSections>
                         <uxap:ObjectPageSubSection>
                             <uxap:blocks>
@@ -216,7 +216,7 @@
                     </uxap:subSections>
                 </uxap:ObjectPageSection>
                     
-                <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="품목정보">
+                <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="{I18N>/ITEM_INFO}">
 				    <uxap:subSections>
                         <uxap:ObjectPageSubSection id="pageSubSection2">
                             <form:SimpleForm id="midObjectForm" editable="false">                    
@@ -246,38 +246,38 @@
                                             </t:template>
                                         </t:Column> -->
                                         <t:Column id="mainItemSequence" width="6rem" hAlign="Center">
-                                        <Label text="품목순번" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/LINE_NO}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>item_sequence}"/>
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainEpItemCode" width="8rem" hAlign="Center">
-                                        <Label text="품목코드" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/ITEM_CODE}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>ep_item_code}"/>
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainItemDesc" width="20rem"  hAlign="Left">
-                                        <Label text="품목명" textAlign="Left" width="100%"/>
+                                        <Label text="{I18N>/ITEM_NAME}" textAlign="Left" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>item_desc}" />
                                         </t:template>
                                         </t:Column> 
                                         <t:Column id="mainSpecDesc" width="20rem"  hAlign="Left">
-                                        <Label text="규격" textAlign="Left" width="100%"/>
+                                        <Label text="{I18N>/SPECIFICATION}" textAlign="Left" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>spec_desc}"/>
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainUnit" width="4rem" hAlign="Center">
-                                        <Label text="단위" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/UNIT}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>unit}"/>
                                         </t:template>
                                         </t:Column>
                                         
                                         <t:Column id="mainQuotationQuantity" width="4rem" hAlign="Center">
-                                        <Label text="수량" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/QUANTITY}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text  text="{
                                                             path: 'viewModel>quotation_quantity',
@@ -288,19 +288,19 @@
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainExtraRate" width="4rem" hAlign="Center">
-                                        <Label text="할증" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/EXTRA_RATE}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>extra_rate_count} > 0 ? true : false }" />                
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainCurrencyName" width="4rem" hAlign="Center">
-                                        <Label text="통화" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>currency_name}"/>
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainMaterialNetPrice" width="8rem" hAlign="Right">
-                                        <Label text="자재단가" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/MATERIAL_NET_PRICE}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text  text="{
                                                             path: 'viewModel>material_net_price',
@@ -311,7 +311,7 @@
                                         </t:template>
                                         </t:Column>  
                                         <t:Column id="mainMaterialAmount" width="8rem" hAlign="Right">
-                                        <Label text="자재금액" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/MATERIAL_NET_AMOUNT}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text  text="{
                                                             path: 'viewModel>material_amount',
@@ -321,7 +321,7 @@
                                         </t:template>
                                         </t:Column>  
                                         <t:Column id="mainLaborNetPrice" width="8rem" hAlign="Right">
-                                        <Label text="노무단가" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/LABOR_NET_PRICE}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text  text="{
                                                             path: 'viewModel>labor_net_price',
@@ -332,7 +332,7 @@
                                         </t:template>
                                         </t:Column>
                                         <t:Column id="mainLaborAmount" width="8rem" hAlign="Right">
-                                        <Label text="노무금액" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/LABOR_NET_AMOUNT}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text  text="{
                                                             path: 'viewModel>labor_amount',
@@ -343,7 +343,7 @@
                                         </t:template>
                                         </t:Column>  
                                         <t:Column id="mainSumAmount" width="8rem" hAlign="Right">
-                                        <Label text="합계금액" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/SUM}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text  text="{
                                                             path: 'viewModel>sum_amount',
@@ -353,21 +353,21 @@
                                         </t:template>
                                         </t:Column>  
                                         <t:Column id="mainRemark" width="10rem" hAlign="Left">
-                                        <Label text="비고" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/REMARK}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>remark}"/>          
                                         </t:template>
                                         </t:Column> 
                                         
                                         <t:Column id="mainLoiPublishStatusCode" width="10rem" hAlign="Center">
-                                        <Label text="단가계약그룹번호" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/NET_PRICE_CONTRACT_DOCUMENT_NO}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>net_price_contract_document_no}"/>
                                         </t:template>
                                         </t:Column> 
 
                                         <t:Column id="mainNetPriceContractTitle" width="20rem" hAlign="Left">
-                                        <Label text="계약명" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/CONTRACT_NAME}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Text text="{viewModel>net_price_contract_title}"/>
                                         </t:template>
@@ -405,7 +405,7 @@
                 <!-- 원가내역 끝 -->
 
             <!-- 준공정보 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="준공정보">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/COMPLETION_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -413,7 +413,7 @@
     
                                     <form:SimpleForm id="completionForm1Show" editable="false"> 
                                         <VBox alignContent="Center" alignItems="Stretch"> 
-                                            <Label  text="준공일자" 
+                                            <Label  text="{I18N>/COMPLETION_DATE}" 
                                                         design="Bold" 
                                                         class="sapUiSmallMarginBottom"/>
                                             <HBox>
@@ -434,7 +434,7 @@
                                             </HBox> 
                                         </VBox>
                                         <VBox alignContent="Center" alignItems="Stretch"> 
-                                            <Label  text="시설담당자" 
+                                            <Label  text="{I18N>/FACILITY_PERSON}" 
                                                         design="Bold" 
                                                         class="sapUiSmallMarginBottom"/>
                                             <HBox>
@@ -515,10 +515,10 @@
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <!-- <Button id="pageEditButton" type="Transparent" text="물량수정요청" press=".onPageEditButtonPress" /> -->
-                <Button id="pageSaveButton" type="Transparent" text="물량수정요청" press=".onPageSaveButtonPress('D')" />
+                <Button id="pageSaveButton" type="Transparent" text="{I18N>/BM_UPDATE_REQUEST}" press=".onPageSaveButtonPress('D')" />
                 <!-- <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/> -->
                 <!-- <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                 -->
-                <Button id="pageRequestButton" type="Emphasized" text="물량확정" press=".onPageSaveButtonPress('R')" />
+                <Button id="pageRequestButton" type="Emphasized" text="{I18N>/BM_CONFIRMED}" press=".onPageSaveButtonPress('R')" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

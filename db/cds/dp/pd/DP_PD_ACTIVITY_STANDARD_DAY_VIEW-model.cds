@@ -12,6 +12,7 @@ entity Pd_Activity_Standard_Day_View {
       activity_code           : String(40)          @title: '부품활동코드' ;	
       org_name                : String(240)         @title: '조직명' ;
       category_name           : String(240)         @title: '카테고리명' ;
+      path_name               : String(240)         @title: '카테고리 PATH명' ;
 	  part_project_type_name  : String(240)         @title: '부품PJT유형' ;
       activity_name           : String(240)         @title: '활동명' ;
       actual_role             : String(240)         @title: '역할코드' ;

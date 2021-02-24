@@ -31,16 +31,15 @@ sap.ui.define([
     return BaseController.extend("ep.po.projectMgt.controller.ProjectDetail", {
 
         dateFormatter: DateFormatter,
-
         validator: new Validator(),
 
-        formatter: (function () {
-            return {
-                toYesNo: function (oData) {
-                    return oData === true ? "YES" : "NO"
-                },
-            }
-        })(),
+        // formatter: (function () {
+        //     return {
+        //         toYesNo: function (oData) {
+        //             return oData === true ? "YES" : "NO"
+        //         },
+        //     }
+        // })(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -60,8 +59,6 @@ sap.ui.define([
             });
             this.getRouter().getRoute("detailPage").attachPatternMatched(this._onRoutedThisPage, this);
             this.setModel(oViewModel, "midObjectView");
-
-            console.log("Detail 실행");
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -296,11 +293,20 @@ sap.ui.define([
         onPageCancelEditButtonPress: function () {
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("midObjectForm2Edit"));
+            // if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
+            //     this.onPageNavBackButtonPress.call(this);
+            // } else {
+            //     this._toShowMode();
+            // }
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
                 this.onPageNavBackButtonPress.call(this);
             } else {
-                this._toShowMode();
-            }
+                if (this.getModel("midObjectView").getProperty("/isEditMode") == true) {
+                    this._toShowMode();
+                } else {
+                    this.onPageNavBackButtonPress.call(this);
+                }
+            }            
         },
 
         /* =========================================================== */
@@ -332,7 +338,7 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
-            console.log("oArgs=", oArgs);
+            // console.log("oArgs=", oArgs);
             this._sTenantId = oArgs.tenantId;
             this._sCompanyCode = oArgs.companyCode;
             this._sEpProjectNumber = oArgs.epProjectNumber;
@@ -340,7 +346,6 @@ sap.ui.define([
             if (oArgs.tenantId == "L2100" && oArgs.companyCode == "LGCKR" && oArgs.epProjectNumber == "new") {
                 //It comes Add button pressed from the before page.
                 this.getModel("midObjectView").setProperty("/isAddedMode", true);
-                //this.getModel("midObjectView").setProperty("/isAddedMode", true);
 
                 var oMasterModel = this.getModel("master");
                 oMasterModel.setData({
@@ -352,7 +357,7 @@ sap.ui.define([
 
                 this._toEditMode();
             } else {
-                this.getModel("midObjectView").setProperty("/isAddedMode", true);
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
                 var sObjectPath = "/ProjectView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
                 var oMasterModel = this.getModel("master");
@@ -398,80 +403,35 @@ sap.ui.define([
         },
 
         _toEditMode: function () {
-            console.log("#===Edit==", this.getModel("master").getData());
+
+            this.getModel("midObjectView").setProperty("/isEditMode", true);
             this._showFormFragment('ProjectDetail_Edit');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
-            this.byId("pageNavBackButton").setEnabled(false);
-            this.byId("pageSaveButton").setEnabled(true);
-            this.byId("pageCancelButton").setEnabled(true);
+            // this.byId("pageNavBackButton").setEnabled(false);
+            this.byId("pageSaveButton").setVisible(true);
+            // this.byId("pageSaveButton").setEnabled(true);
+            this.byId("pageCancelButton").setVisible(true);
 
-            // this.byId("midTableAddButton").setEnabled(!FALSE);
-            // this.byId("midTableDeleteButton").setEnabled(!FALSE);
-            // this.byId("midTableSearchField").setEnabled(FALSE);
-            // this.byId("midTableApplyFilterButton").setEnabled(FALSE);
-            // this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
-            //this._bindMidTable(this.oEditableTemplate, "Edit");
         },
 
         _toShowMode: function () {
 
-            // var oMasterModel = this.getModel("master");
-            // var tenantId = oMasterModel.getData().tenant_id;
-            // var companyCode = oMasterModel.getData().company_code;
-            // var epProjectNumber = oMasterModel.getData().ep_project_number;
-
-            // console.log("tenantId", tenantId);
-            // console.log("companyCode", companyCode);
-            // console.log("epProjectNumber", epProjectNumber);
-
-            // oView.setBusy(true);
-            // var oDetailsModel = this.getModel("details");
-            // oDetailsModel.setTransactionModel(this.getModel());
-            // oDetailsModel.read("/Project", {
-            // 	filters: [
-            //         new Filter("tenant_id", FilterOperator.EQ, tenantId),
-            //         new Filter("company_code", FilterOperator.EQ, companyCode)
-            //     ],
-            //     sorters: [
-            //         new Sorter("ep_project_number", true)
-            //     ],
-            // 	success: function(oData){
-            // 		oView.setBusy(false);
-            // 	}
-            // })
-
-            // //조회용
-            // var sViewObjectPath = "/ProjectView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',ep_project_number='" + this._sEpProjectNumber + "')";
-            // var oMasterViewModel = this.getModel("masterView");
-            // oView.setBusy(true);
-            // oMasterViewModel.setTransactionModel(this.getModel());
-            // oMasterViewModel.read(sViewObjectPath, {
-            //     success: function (oData) {
-            //         console.log("oData=", oData);
-            //         oView.setBusy(false);
-            //     }
-            // });
-
+            this.getModel("midObjectView").setProperty("/isEditMode", false);
             this._showFormFragment('ProjectDetail_Show');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(true);
             this.byId("pageDeleteButton").setVisible(true);
-            this.byId("pageEditButton").setEnabled(true);
-            this.byId("pageDeleteButton").setEnabled(true);
-            this.byId("pageNavBackButton").setEnabled(true);
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageCancelButton").setEnabled(true);
+            // this.byId("pageEditButton").setEnabled(true);
+            // this.byId("pageDeleteButton").setEnabled(true);
+            // this.byId("pageNavBackButton").setEnabled(true);
+            this.byId("pageSaveButton").setVisible(false);
+            // this.byId("pageSaveButton").setEnabled(false);
+            this.byId("pageCancelButton").setVisible(true);
 
-            // this.byId("midTableAddButton").setEnabled(!TRUE);
-            // this.byId("midTableDeleteButton").setEnabled(!TRUE);
-            // this.byId("midTableSearchField").setEnabled(TRUE);
-            // this.byId("midTableApplyFilterButton").setEnabled(TRUE);
-            // this.byId("midTable").setMode(sap.m.ListMode.None);
-            //this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
         },
 
         _initTableTemplates: function () {

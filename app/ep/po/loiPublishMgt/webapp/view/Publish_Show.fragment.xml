@@ -10,7 +10,7 @@
 
         <form:SimpleForm id="publishForm1Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="품의명" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/APPROVAL_TITLE}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{master>/loi_publish_title}" width="100%"/>
             </VBox>
         </form:SimpleForm>
@@ -18,15 +18,15 @@
         <form:SimpleForm id="publishForm2Show" editable="false">
         
             <VBox alignContent="Center">
-                <Label text="협력사명" textAlign="left" design="Bold" class="sapMLabelNoText" />
-                <Text text="{master>/supplier_name}" />
+                <Label text="{I18N>/SUPPLIER}" textAlign="left" design="Bold" class="sapMLabelNoText" />
+                <Text text="{master>/supplier_name}" class="sapUiSmallMarginBottom" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>    
             </VBox>      
 
             <VBox alignContent="Center">
-                <Label text="계약서식" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONTRACT}{I18N>/FORMAT}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{= ${master>/contract_format_id} === 'K' ? '구매의향서(국문)' : '구매의향서(영문)' }" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
@@ -34,7 +34,7 @@
             </VBox> 
 
             <VBox alignContent="Center">
-                <Label text="계약일자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONTRACT}{I18N>/DATE}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{master>/contract_date}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
@@ -42,7 +42,7 @@
             </VBox>
             
             <VBox alignContent="Center">
-                <Label text="서명방식" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/SIGNATURE}{I18N>/MODE}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{= ${master>/offline_flag} === true ? '오프라인' : '온라인' }" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
@@ -53,7 +53,7 @@
 
         <form:SimpleForm id="publishForm3Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="부대조건" 
+                <Label  text="{I18N>/ADDITIONAL_CONDITION}" 
                             design="Bold" 
                             class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
                 <Text text="{master>/additional_condition_desc}" />            
@@ -62,7 +62,7 @@
 
         <form:SimpleForm id="publishForm4Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="특기사항" 
+                <Label  text="{I18N>/SPECIAL_NOTE}" 
                             design="Bold" 
                             class="sapUiSmallMarginTop sapUiTinyMarginBottom"/>
                 <richtexteditor:RichTextEditor

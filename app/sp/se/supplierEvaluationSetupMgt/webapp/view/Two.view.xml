@@ -109,6 +109,7 @@
 
                                                         fieldGroupIds="required"
                                                         required="true"
+                                                        liveChange="_onKeyLiveChange"
                                                         
                                                         />      
                                                 <!--  평가 비율 -->

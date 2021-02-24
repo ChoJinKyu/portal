@@ -24,10 +24,11 @@ sap.ui.define([
     "sap/m/Label", 
     "sap/m/Input",
     "sap/m/VBox",
-    "sap/ui/core/mvc/Controller"
+    "sap/ui/core/mvc/Controller",
+    "sap/m/SegmentedButtonItem"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, Controller) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, Controller,SegmentedButtonItem) {
     "use strict";
 
     var oTransactionManager;
@@ -77,6 +78,61 @@ sap.ui.define([
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
+        },
+
+        onAfterRendering: function () {
+            this.byId("pageSearchButton").firePress();
+            this.onSetSegmentedButtonItem();
+        },
+
+        /**
+		 * 
+		 * @param 
+		 * @public
+		 */
+        onSetSegmentedButtonItem: function () {
+
+            var oStatusCodeButton = this.getView().byId("searchStatus");
+            
+            var oCommonModel = this.getModel("common");
+
+            var oFilter = [];
+            oFilter.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            oFilter.push(new Filter("group_code", FilterOperator.EQ, "EP_DECLARE_STATUS"));
+
+            var oSorter = [];
+            oSorter.push(new Sorter("sort_no", false));
+
+            oCommonModel.read("/Code", {
+                filters: oFilter,
+                sorters: oSorter,
+                success: function (oCommonData) {
+                    console.log("oCommonData=", oCommonData);
+
+                    oStatusCodeButton.addItem(
+                        new SegmentedButtonItem({
+                            text: "All",
+                            key: "all",
+                            width: "3rem"
+                        })
+                    );
+
+                    for (let d of oCommonData.results) {
+                        console.log("oCommonData.code=", d.code);
+                        oStatusCodeButton.addItem(
+                            new SegmentedButtonItem({
+                                text: d.code_name,
+                                key: d.code,
+                                width: "6rem"
+                            })
+                        );
+                    }
+                },
+                error: function (oCommonError) {
+                    console.log("oCommonError=", oCommonError);
+                }
+            });
+
         },
 
 		/**
@@ -206,7 +262,7 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("tolower(buyer_empno)", FilterOperator.Contains, "'"+sRequestor.toLowerCase()+"'"));
             }
 
-            if (status) {
+            if (status && status != "all") {
                 aSearchFilters.push(new Filter("forex_declare_status_code", FilterOperator.EQ, status));
             }
 
@@ -248,17 +304,17 @@ sap.ui.define([
          * Table 의 선택된 index 를 리턴
          * @param {object} _oTable
          */
-        _getSelectedIndex: function(_oTable) {
-            if(!_oTable) { alert("invalid Table!"); }
+        // _getSelectedIndex: function(_oTable) {
+        //     if(!_oTable) { alert("invalid Table!"); }
             
-            var iIdx = _oTable.getSelectedIndex();
+        //     var iIdx = _oTable.getSelectedIndex();
             
-            if(iIdx < 0) {
-                MessageBox.alert("데이터가 선택되지 않았습니다.");
-                return -1;
-            }
-            return iIdx;
-        },
+        //     if(iIdx < 0) {
+        //         MessageBox.alert("데이터가 선택되지 않았습니다.");
+        //         return -1;
+        //     }
+        //     return iIdx;
+        // },
 
 
         /**
@@ -312,8 +368,8 @@ sap.ui.define([
             // oView.byId("searchChartPoDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
 
-            var sDate = "2010-01-01";
-            var eDate = "2020-12-31";
+            var sDate = "";
+            var eDate = "";
 
             if(this.sFrom != "" && this.sTo != ""){
                 sDate = this.sFrom;

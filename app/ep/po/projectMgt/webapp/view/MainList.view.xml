@@ -21,9 +21,9 @@
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
-                <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
-                </f:actions>
+                <!-- <f:actions>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions> -->
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
                 </f:navigationActions>
@@ -35,7 +35,7 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="사업본부" labelFor="searchChain" required="true"></Label>
+                            <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
                             <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                     path: 'org>/Org_Unit',
                                     filters: [
@@ -51,14 +51,14 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="프로젝트명:" labelFor="searchKeyword"></Label>
+                            <Label text="{I18N>/PROJECT}:" labelFor="searchKeyword"></Label>
                             <Input id="searchKeyword" placeholder="Search" submit="onPageSearchButtonPress"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="구매유형:" labelFor="searchUsageSegmentButton"></Label>
+                            <Label text="{I18N>/PURCHASING_TYPE}:" labelFor="searchUsageSegmentButton"></Label>
                             <!-- <SegmentedButton id="searchUsageSegmentButton" items="{
                                                 path: 'common>/Code',
                                                 filters: [
@@ -81,6 +81,12 @@
                                 <layout:GridData span="XL6 L6 M12 S12" />
                             </layoutData>
                         </VBox>
+                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>                             
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -93,7 +99,6 @@
                         growing="true"
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
-                        updateFinished=".onMainTableUpdateFinished"
                         items="{
                             path: 'list>/ProjectView',
                             sorter: { 
@@ -107,7 +112,7 @@
                         <OverflowToolbar>
                             <Title text="Project {= ${list>/ProjectView}.length > 0 ? '(' + ${list>/ProjectView}.length + ')' : ''}" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Create" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -118,54 +123,26 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnBizunitCode" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="사업본부" />
+                            <Text text="{I18N>/BUSINESS_UNIT}" />
                         </Column>
                         <Column id="mainColumnBizdivisionCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="사업부" />
+                            <Text text="{I18N>/BUSINESS_DIVISION}" />
                         </Column>
                         <Column id="mainColumnProjectName" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="프로젝트명" />
+                            <Text text="{I18N>/PROJECT}" />
                         </Column>
                         <Column id="mainColumnPlantCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="플랜트" />
+                            <Text text="{I18N>/PLANT}" />
                         </Column>
                         <Column id="mainColumnEpPurchasingTypeCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="구매유형" />
+                            <Text text="{I18N>/PURCHASING_TYPE}" />
                         </Column>
                         <Column id="mainColumnCreateUserId" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="작성자" />
+                            <Text text="{I18N>/WRITER}" />
                         </Column>     
                         <Column id="mainColumnSystemCreateDtm" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="작성일자" />
+                            <Text text="{I18N>/WRITE_DATE}" />
                         </Column>                                
-
-                        <!-- <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="Code" />
-                        </Column>
-                        <Column id="mainColumnName" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="Name" />
-                        </Column>
-                        <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Start Date" />
-                        </Column>
-                        <Column id="mainColumnEndDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="End Date" />
-                        </Column>
-                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Site" />
-                        </Column>
-                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Company" />
-                        </Column>
-                        <Column id="mainColumnRoleFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Role" />
-                        </Column>
-                        <Column id="mainColumnOrganizationFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Org." />
-                        </Column>
-                        <Column id="mainColumnUserFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="User" />
-                        </Column> -->
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
@@ -187,12 +164,12 @@
             </VBox>
         </f:content>
         <!-- DynamicPage Footer -->
-        <f:footer>
+        <!-- <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
 				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
 				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
             </OverflowToolbar>
-        </f:footer>
+        </f:footer> -->
     </f:DynamicPage>
 </mvc:View>

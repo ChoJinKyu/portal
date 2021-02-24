@@ -12,10 +12,11 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/model/Sorter",
-    "ext/lib/util/ExcelUtil"
+    "ext/lib/util/ExcelUtil",
+    "ext/lib/util/SppUserSession"
 ], function (BaseController, Multilingual, ManagedListModel, TransactionManager, JSONModel, DateFormatter, 
         TablePersoController, MainListPersoService, 
-        Filter, FilterOperator, MessageBox, MessageToast, Sorter, ExcelUtil) {
+        Filter, FilterOperator, MessageBox, MessageToast, Sorter, ExcelUtil, SppUserSession) {
 	        "use strict";
             var oTransactionManager;
 
@@ -37,7 +38,9 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			var oMultilingual = new Multilingual();
+            var oMultilingual = new Multilingual(),
+                oSppUserSession = new SppUserSession();
+            
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
@@ -46,12 +49,13 @@ sap.ui.define([
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 
-            //세션에서 tenant_id 받기 전 하드코딩 코드수정 필요
-            //this._oViewData.tenant_id = this.getSessionTenantId()
-            this._oViewData.tenant_id = "L2101";
+            //세션 정보 받기
+            this._oViewData.tenant_id = this.getSessionTenantId()
 
             this.enableMessagePopover();
             //this._doInitTablePerso();
+
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
         },
 		
@@ -139,15 +143,13 @@ sap.ui.define([
 		onMainTableItemPress: function(oEvent) {
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oEvent.getParameters("rowIndices").rowContext.sPath,
-                oRecord = this.getModel("list").getProperty(sPath);
+				activityCode = oEvent.getParameter('rowBindingContext').getObject().product_activity_code;
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: this._oViewData.tenant_id,
-				controlOptionCode: oRecord.product_activity_code
+				controlOptionCode: activityCode
 			}, true);
-
             
         },
         
@@ -189,7 +191,7 @@ sap.ui.define([
             this.byId("localUpdateDtmColumn").setVisible(true);
             this.byId("updateUserIdColumn").setVisible(true);
 
-            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+            this.getModel("mainListViewModel").setProperty("/headerExpanded", false);
 		},
 
 		/**
@@ -218,7 +220,7 @@ sap.ui.define([
 			var sSearchProductActivity = this.byId("searchProductActivity").getValue(),
 				sStatus = this.getView().byId("searchStatusSegmentButton").getSelectedKey();
 			
-            var aSearchFilters = [];
+            var aSearchFilters = [new Filter("tenant_id", FilterOperator.EQ, this._oViewData.tenant_id)];
 
             if (sSearchProductActivity) {
                 aSearchFilters.push(new Filter({

@@ -113,16 +113,6 @@
           "useBatch": true
         }
       },
-      "util": {
-        "dataSource": "commonUtilService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
        "multiLoi": {
         "dataSource": "multiService",
         "preload": true,
@@ -143,6 +133,16 @@
           "useBatch": true
         }
       },
+      "common": {
+            "dataSource": "commonUtilService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        },
       "": {
         "dataSource": "mainService",
         "preload": true,

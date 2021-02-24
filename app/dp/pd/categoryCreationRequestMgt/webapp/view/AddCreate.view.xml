@@ -65,10 +65,10 @@
                                         id="groupCategoryCombo"
                                         selectedKey="{master>/category_group_code}"
                                         editable="false" 
+                                        visible="{viewModel>/editMode}" 
                                         items="{
                                             path: 'common>/Code',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                                 {path: 'group_code', operator: 'EQ', value1: 'DP_PD_CATEGORY_GROUP'}
                                             ]
                                         }">
@@ -76,6 +76,7 @@
                                             <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
                                         </items>
                                     </ComboBox>
+                                    <Text id="groupCategoryComboTxt" width="80%" textAlign="Left"  text="{master>/category_group_code}" visible="{viewModel>/showMode}"/>  
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/PARENT_CATEGORY_CODE}: " labelFor="pGroupCategory"   required="true"></Label>
@@ -86,7 +87,7 @@
                                     <Input id="pGroupCategory"  width="250px"   visible="{viewModel>/editMode}"  required="true"
                                         showValueHelp="true" valueHelpRequest=".onSearchPartCategory(1)"
                                         placeholder=" " value="{PdPartCategoryModel>/parent_category_code}"/>
-                                        
+                                    <Text id="pGroupCategoryTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/parent_category_code}" visible="{viewModel>/showMode}"/>    
 
                                     <!-- <Input id="pGroupCategory"  width="80%"   visible="{viewModel>/editMode}"  required="true"
                                         placeholder="{I18N>/PARENT_CATEGORY_CODE} {I18N>/NAME}" value="{PdPartCategoryModel>/parent_category_code}"/>
@@ -94,7 +95,8 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/SEQUENCE}: " labelFor="sequence"  ></Label>
-                                    <Input id="sequence"  width="10%"   enabled="false" value="{PdPartCategoryModel>/sequence}"/>
+                                    <Input id="sequence"  width="10%"   enabled="false"  visible="{viewModel>/editMode}" value="{PdPartCategoryModel>/sequence}"/>
+                                    <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/sequence}" visible="{viewModel>/showMode}"/>
                                     <!-- <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="10%"   enabled="false"
                                         placeholder="{I18N>/SEQUENCE}" value="{PdPartCategoryModel>/sequence}"/> -->
                                     <!-- <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/sequence}" visible="{viewModel>/showMode}"/> -->
@@ -137,7 +139,7 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<ToolbarSpacer/>
-                                    <Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Emphasized" press=".onAdd" 
+                                    <Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onAdd" 
                                         visible="{viewModel>/editMode}"/>
 									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDelete"
                                         visible="{viewModel>/editMode}"/>
@@ -170,7 +172,6 @@
                                                 items="{
                                                     path: 'common>/Code',
                                                     filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                                     {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                                     ],
                                                     templateShareable:true

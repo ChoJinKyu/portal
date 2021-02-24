@@ -149,6 +149,12 @@
         "resources": {
             "css": [
                 {
+                    "uri": "../../../../lib/css/style.css"
+                },
+                {
+                    "uri": "../../../../lib/css/layout.css"
+                },
+                {
                     "uri": "css/style.css"
                 }
             ]
@@ -195,7 +201,7 @@
                     ]
                 },
                 {
-                    "pattern": "addCreateObject/{requestNumber}",
+                    "pattern": "addCreateObject/{requestNumber}/{categoryGroupCode}",
                     "name": "addCreatePage",
                     "target": [
                         "addCreateObject"

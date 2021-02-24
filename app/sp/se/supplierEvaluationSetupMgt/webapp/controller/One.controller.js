@@ -1,5 +1,5 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
+    "./BaseController",
     "sap/ui/core/routing/History",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
@@ -11,20 +11,25 @@ sap.ui.define([
     "sap/ui/core/message/Message",
     "sap/ui/core/MessageType",
     "sap/m/SegmentedButtonItem",
-    "sap/ui/model/Sorter"
+    "sap/ui/model/Sorter",
+    "ext/cm/util/control/ui/EmployeeDialog",
+    "ext/lib/formatter/NumberFormatter"
 
 ], function (BaseController, History, MessageBox, MessageToast, Filter,JSONModel, 
-    Multilingual, Item, ValueState, Message, MessageType , SegmentedButtonItem , Sorter
+    Multilingual, Item, ValueState, Message, MessageType , SegmentedButtonItem , Sorter , EmployeeDialog
+    , NumberFormatter
     ) {
     "use strict";
 
 
     var i18nModel; //i18n 모델
     return BaseController.extend("sp.se.supplierEvaluationSetupMgt.controller.One", {
-
+        numberFormatter: NumberFormatter,
         onInit: function () {
             var oView, oViewModel, oMultilingual, oOwnerComponent;
             oView = this.getView();
+
+            
 
             // I18N 모델 
             oMultilingual = new Multilingual();
@@ -415,7 +420,7 @@ sap.ui.define([
                     if(sAction === MessageBox.Action.CANCEL){
                         return;
                     }
-                    if(!this._checkValidation()){
+                    if(!this._checkValidation(oModel)){
                         return;
                     }
                     if(this.scenario_number === "New")
@@ -430,8 +435,12 @@ sap.ui.define([
                         data: JSON.stringify(oSaveData),
                         contentType: "application/json",
                         success: function (data) {
-                            MessageBox.success(i18nModel.getProperty("/NCM01001"), {
-                            onClose : function (sAction) {
+                            MessageToast.show(i18nModel.getProperty("/NCM01001"));
+
+
+                            // 2021.02.22 Box-> Toast 수정
+                            // MessageBox.success(i18nModel.getProperty("/NCM01001"), {
+                            // onClose : function (sAction) {
                             oView.setBusy(false);     
                             
                             if(this.scenario_number==="New"){
@@ -442,8 +451,9 @@ sap.ui.define([
                                 this._readAll();
                                  }
 
-                             }.bind(this)
-                            });
+                            //  }.bind(this)
+                            // });
+
                         }.bind(this),
                         error: function (e) {
                                 var sDetails;
@@ -479,122 +489,122 @@ sap.ui.define([
          * 저장시 Validation 필수값 확인
          * 
          */
-         _checkValidation : function(){
-            var bValid, oView, oViewModel, oArgs, aControls;
+        //  _checkValidation : function(){
+        //     var bValid, oView, oViewModel, oArgs, aControls;
             
-            oView = this.getView();
-            oViewModel = oView.getModel("DetailView");
-            // oArgs = oViewModel.getProperty("/Args");
-            bValid = false;
+        //     oView = this.getView();
+        //     oViewModel = oView.getModel("DetailView");
+        //     // oArgs = oViewModel.getProperty("/Args");
+        //     bValid = false;
 
-            // if(this.scenario_number === "New"){
-            //     aControls = oView.getControlsByFieldGroupId("newRequired");
-            //     bValid = this._isValidControl(aControls);
-            // }else{
-                aControls = oView.getControlsByFieldGroupId("required");
-                bValid = this._isValidControl(aControls);
-            // }
+        //     // if(this.scenario_number === "New"){
+        //     //     aControls = oView.getControlsByFieldGroupId("newRequired");
+        //     //     bValid = this._isValidControl(aControls);
+        //     // }else{
+        //         aControls = oView.getControlsByFieldGroupId("required");
+        //         bValid = this._isValidControl(aControls);
+        //     // }
 
-            return bValid;
-        },
+        //     return bValid;
+        // }
 
          /***
          * Control 유형에 따른 필수 값 확인
          */
-        _isValidControl : function(aControls){
-            var oMessageManager = sap.ui.getCore().getMessageManager(),
-                bAllValid = false;
+        // _isValidControl : function(aControls){
+        //     var oMessageManager = sap.ui.getCore().getMessageManager(),
+        //         bAllValid = false;
                 
-                // oI18n = this.getView().getModel("I18N");
+        //         // oI18n = this.getView().getModel("I18N");
                 
                 
-            oMessageManager.removeAllMessages();
-            bAllValid = aControls.every(function(oControl){
-                var sEleName = oControl.getMetadata().getElementName(),
-                    sValue,oContext;
+        //     oMessageManager.removeAllMessages();
+        //     bAllValid = aControls.every(function(oControl){
+        //         var sEleName = oControl.getMetadata().getElementName(),
+        //             sValue,oContext;
                 
-                switch(sEleName){
-                    case "sap.m.Input":
-                    case "sap.m.TextArea":
-                        sValue = oControl.getValue();
-                        oContext = oControl.getBinding("value");
-                        break;
-                    case "sap.m.ComboBox":
-                        sValue = oControl.getSelectedKey();
-                        break;
-                    case "sap.m.MultiComboBox":
-                        sValue = oControl.getSelectedKeys().length;
-                        break;
-                    default:
-                        return true;
-                }
+        //         switch(sEleName){
+        //             case "sap.m.Input":
+        //             case "sap.m.TextArea":
+        //                 sValue = oControl.getValue();
+        //                 oContext = oControl.getBinding("value");
+        //                 break;
+        //             case "sap.m.ComboBox":
+        //                 sValue = oControl.getSelectedKey();
+        //                 break;
+        //             case "sap.m.MultiComboBox":
+        //                 sValue = oControl.getSelectedKeys().length;
+        //                 break;
+        //             default:
+        //                 return true;
+        //         }
                 
                 // if(!oControl.getProperty('enabled')) return true;
-                if(!oControl.getProperty('editable')) return true;
-                if(oControl.getProperty('required')){
-                    if(!sValue){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText(i18nModel.getText("/ECM01002"));
-                        oMessageManager.addMessages(new Message({
-                            message: i18nModel.getText("/ECM01002"),
-                            type: MessageType.Error
-                        }));
-                        bAllValid = false;
-                        oControl.focus();
-                        return false;
-                    }else{
-                        oControl.setValueState(ValueState.None);
-                    }
-                }
+        //         if(!oControl.getProperty('editable')) return true;
+        //         if(oControl.getProperty('required')){
+        //             if(!sValue){
+        //                 oControl.setValueState(ValueState.Error);
+        //                 oControl.setValueStateText(i18nModel.getText("/ECM01002"));
+        //                 oMessageManager.addMessages(new Message({
+        //                     message: i18nModel.getText("/ECM01002"),
+        //                     type: MessageType.Error
+        //                 }));
+        //                 bAllValid = false;
+        //                 oControl.focus();
+        //                 return false;
+        //             }else{
+        //                 oControl.setValueState(ValueState.None);
+        //             }
+        //         }
 
 
-                if(oContext&&oContext.getType()){
-                    try{
-                        oContext.getType().validateValue(sValue);
-                    }catch(e){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText(e.message);
-                        oControl.focus();
-                        return false;
-                    }
-                    oControl.setValueState(ValueState.None);
-                }else if(sEleName === "sap.m.ComboBox"){
-                    if(!sValue && oControl.getValue()){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText("올바른 값을 선택해 주십시오.");
-                        oControl.focus();
-                        return false;
-                    }else{
-                        oControl.setValueState(ValueState.None);
-                    }
-                }
+        //         if(oContext&&oContext.getType()){
+        //             try{
+        //                 oContext.getType().validateValue(sValue);
+        //             }catch(e){
+        //                 oControl.setValueState(ValueState.Error);
+        //                 oControl.setValueStateText(e.message);
+        //                 oControl.focus();
+        //                 return false;
+        //             }
+        //             oControl.setValueState(ValueState.None);
+        //         }else if(sEleName === "sap.m.ComboBox"){
+        //             if(!sValue && oControl.getValue()){
+        //                 oControl.setValueState(ValueState.Error);
+        //                 oControl.setValueStateText("올바른 값을 선택해 주십시오.");
+        //                 oControl.focus();
+        //                 return false;
+        //             }else{
+        //                 oControl.setValueState(ValueState.None);
+        //             }
+        //         }
 
-                return true;
-            });
+        //         return true;
+        //     });
 
-            return bAllValid;
-        },
+        //     return bAllValid;
+        // },
          /**
          * ValueState 초기화
          */
-        _clearValueState : function(aControls){
-             aControls.forEach(function(oControl){
-                var sEleName = oControl.getMetadata().getElementName(),
-                    sValue;
+        // _clearValueState : function(aControls){
+        //      aControls.forEach(function(oControl){
+        //         var sEleName = oControl.getMetadata().getElementName(),
+        //             sValue;
                 
-                switch(sEleName){
-                    case "sap.m.Input":
-                    case "sap.m.TextArea":
-                    case "sap.m.ComboBox":
-                    case "sap.m.MultiComboBox":    
-                        break;
-                    default:
-                        return;
-                }
-                oControl.setValueState(ValueState.None);
-                oControl.setValueStateText();
-            });
-        },
+        //         switch(sEleName){
+        //             case "sap.m.Input":
+        //             case "sap.m.TextArea":
+        //             case "sap.m.ComboBox":
+        //             case "sap.m.MultiComboBox":    
+        //                 break;
+        //             default:
+        //                 return;
+        //         }
+        //         oControl.setValueState(ValueState.None);
+        //         oControl.setValueStateText();
+        //     });
+        // },
 
 
         /**
@@ -1064,17 +1074,21 @@ sap.ui.define([
                 
                 if(this.scenario_number==="New"){
 
-                    MessageBox.confirm(i18nModel.getText("/NSP00002"), {
-                    actions: [MessageBox.Action.OK],
-                    emphasizedAction: MessageBox.Action.OK,
-                    onClose: function (sAction) {
-                        if (sAction === MessageBox.Action.OK) {
 
-                            return;
-                        }
+                    MessageToast.show(i18nModel.getText("/NSP00002"));
 
-                     }
-                    });
+                    return;
+                    // MessageBox.confirm(i18nModel.getText("/NSP00002"), {
+                    // actions: [MessageBox.Action.OK],
+                    // emphasizedAction: MessageBox.Action.OK,
+                    // onClose: function (sAction) {
+                    //     if (sAction === MessageBox.Action.OK) {
+
+                    //         return;
+                    //     }
+
+                    //  }
+                    // });
 
                     
                 }else{
@@ -1089,9 +1103,9 @@ sap.ui.define([
                         evaluation_type_code :" ",
                         use_flag : this.use_flag
                         
-                    });
+                       });
                     
-                }
+                     }
 
                 }
 
@@ -1123,30 +1137,59 @@ sap.ui.define([
          * 
          */
         onInputWithEmployeeValuePress: function(oEvent){
-            this.byId("employeeDialog").open();
+
+            var sPath = oEvent.getSource().getBindingContext("DetailView").getPath();
+
+            // this.byId("employeeDialog").open();
+
             // this.byId("managerTable").mAggregations.rows[0].mAggregations.cells[1].setProperty("value","test123");
             // oEvent.getSource().setValue("12343");
             //고유한아이디를 customdate에 넣어놓고 
             //oEvent.getSource().getId
-            this.byId("employeeDialog").data("inputWithEmployeeValueHelp",oEvent.getSource());
-        },
-         onEmployeeDialogApplyPress: function(oEvent){
 
-            var oParameter = oEvent.getParameter("item");
-            var oSelectedItem = this.byId("employeeDialog").data("inputWithEmployeeValueHelp");
+            // this.byId("employeeDialog").data("inputWithEmployeeValueHelp",oEvent.getSource());
 
-            oSelectedItem.setValue(oParameter.user_local_name);
+            this.oDetailEmployeeDialog = new EmployeeDialog({
+                title:"직원 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                        new Filter("tenant_id", "EQ", this.tenant_id)
+                    ]
+                }
 
-            // var employee_number = oParameter.employee_number;
-            var department_local_name = oParameter.department_local_name;
-            var employee_number = oParameter.employee_number;
+            });
+            this.oDetailEmployeeDialog.open();
 
-            var oTableCon = oSelectedItem.getBindingContext("DetailView");
+            this.oDetailEmployeeDialog.attachEvent("apply", function (oEvent) {
+            
+            var sModel = this.getModel("DetailView");
 
-            oTableCon.getModel().setProperty(oTableCon.getPath()+"/department_local_name",department_local_name);
-            oTableCon.getModel().setProperty(oTableCon.getPath()+"/evaluation_op_unt_person_empno",employee_number);
+            sModel.setProperty(sPath+"/user_local_name",oEvent.mParameters.item.user_local_name);
+            
+            sModel.setProperty(sPath+"/department_local_name",oEvent.mParameters.item.department_local_name);
+            sModel.setProperty(sPath+"/evaluation_op_unt_person_empno",oEvent.mParameters.item.employee_number);   
+
+            }.bind(this));
             
         },
+        //  onEmployeeDialogApplyPress: function(oEvent){
+
+        //     var oParameter = oEvent.getParameter("item");
+        //     var oSelectedItem = this.byId("employeeDialog").data("inputWithEmployeeValueHelp");
+
+        //     // oSelectedItem.setValue(oParameter.user_local_name);
+
+        //     // var employee_number = oParameter.employee_number;
+        //     var department_local_name = oParameter.department_local_name;
+        //     var employee_number = oParameter.employee_number;
+
+        //     var oTableCon = oSelectedItem.getBindingContext("DetailView");
+            
+        //     oTableCon.getModel().setProperty(oTableCon.getPath()+"/department_local_name",department_local_name);
+        //     oTableCon.getModel().setProperty(oTableCon.getPath()+"/evaluation_op_unt_person_empno",employee_number);
+            
+        // },
 
         // onUIEmployeeDialogApplyPress: function(oEvent){
         //     // this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
@@ -1506,11 +1549,6 @@ sap.ui.define([
             _toEditMode: function () {
                 this.getModel("DetailView").setProperty("/isEditMode", true);                
                 
-            },
-
-            // onSorter: function(a,b){
-                
-            //     return parseInt(a)-parseInt(b);
-            // }
+            }
     });
 });

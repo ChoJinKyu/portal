@@ -47,7 +47,14 @@
           "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
-      }
+      },
+        "commonService": {
+            "uri": "srv-api/odata/v2/cm.util.CommonService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
+        }
     }
   },
   "sap.cloud": {
@@ -97,6 +104,16 @@
           "bundleName": "ep.cm.forexDeclarationMgt.i18n.i18n"
         }
       },
+    "common": {
+            "dataSource": "commonService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        },
       "": {
         "dataSource": "mainService",
         "preload": true,

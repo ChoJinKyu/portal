@@ -8,6 +8,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/formatter/Formatter",
+    "ext/lib/util/SppUserSession",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -23,7 +24,7 @@ sap.ui.define([
     "sap/f/LayoutType",
     "dp/util/control/ui/ActivityCodeDialog"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
-	Formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	Formatter, SppUserSession, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType, ActivityCodeDialog) {
 		
 	"use strict";
@@ -50,12 +51,9 @@ sap.ui.define([
 		 * Called when the midObject controller is instantiated.
 		 * @public
 		 */
-		onInit : function () {
-
-            //로그인 세션 작업완료시 수정
-            this.tenant_id = "L2101";
-            this.loginUserId = "TestUser";
-            this.loginUserName = "TestUser";            
+		onInit : function () {            
+            
+            var oSppUserSession = new SppUserSession();
 
             var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
@@ -69,7 +67,13 @@ sap.ui.define([
                     screen: ""                    
 				});
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
-			this.setModel(oViewModel, "midObjectView");
+            this.setModel(oViewModel, "midObjectView");
+            
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
+            //로그인 세션 작업완료시 수정
+            this.tenant_id = this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
+            this.loginUserId = this.getModel("USER_SESSION").getSessionAttr("USER_ID");            
 			
 			this.setModel(new ManagedModel(), "master");
             // this.setModel(new ManagedListModel(), "languages");            
@@ -81,22 +85,7 @@ sap.ui.define([
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
             
             this.enableMessagePopover();
-        }, 
-
-        formattericon: function(sState){
-            switch(sState){
-                case "D":
-                    return "sap-icon://decline";
-                break;
-                case "U": 
-                    return "sap-icon://accept";
-                break;
-                case "C": 
-                    return "sap-icon://add";
-                break;
-            }
-            return "";
-        },
+        },        
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -189,13 +178,17 @@ sap.ui.define([
                 title: "Select Activity",
                 multiSelection: false,
                 items: {
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, "L2101"),
-                        new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
-                        new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
-                        new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
-                    ]
-                }                    
+                    // filters: [
+                    //     new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                    //     new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
+                    //     new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
+                    //     new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
+                    // ]
+                    companyCode : this.byId("searchCompanyCombo").getSelectedKey(),
+                    orgCode : this.byId("searchOrgCombo").getSelectedKey(),
+                    partProjectYypeCode : this.byId("searchPartProjectCombo").getSelectedKey()
+                },
+                
             });
             
             this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
@@ -265,9 +258,9 @@ sap.ui.define([
             this.byId("searchActivityName").setValue("");            
             this.byId("searchSequence").setValue("");
 
-            if(!(this.isValNull(this.byId("searchCompanyCombo").getValue())) && 
-            !(this.isValNull(this.byId("searchOrgCombo").getValue())) && 
-            !(this.isValNull(this.byId("searchPartProjectCombo").getValue()))){
+            if(!(this.byId("searchCompanyCombo").getValue() == "") && 
+            !(this.byId("searchOrgCombo").getValue() == "") && 
+            !(this.byId("searchPartProjectCombo").getValue() == "")){
                 this.byId("searchActivityInput").setEditable(true);
             } else {                
                 this.byId("searchActivityInput").setEditable(false);
@@ -659,11 +652,8 @@ sap.ui.define([
 			this.byId("pageEditButton").setVisible(false);			
             this.byId("pageSaveButton").setVisible(true);
             this.byId("pageCancelButton").setVisible(true);
-            if(this._sActivityCode === "new"){
-                this.byId("pageDeleteButton").setVisible(false);
-            } else {
-                this.byId("pageDeleteButton").setVisible(true);
-            }
+            this.byId("pageDeleteButton").setVisible(false);
+            
 			// this.byId("lngTableAddButton").setEnabled(true);
             // this.byId("lngTableDeleteButton").setEnabled(true);                      
             
@@ -677,7 +667,13 @@ sap.ui.define([
 			this.byId("pageEditButton").setVisible(true);			
             this.byId("pageSaveButton").setVisible(false);
             this.byId("pageCancelButton").setVisible(false);
-            this.byId("pageDeleteButton").setVisible(false);
+            // this.byId("pageDeleteButton").setVisible(false);
+
+            if(this._sActivityCode === "new"){
+                this.byId("pageDeleteButton").setVisible(false);
+            } else {
+                this.byId("pageDeleteButton").setVisible(true);
+            }
 			// this.byId("lngTableAddButton").setEnabled(false);
             // this.byId("lngTableDeleteButton").setEnabled(false);           
 

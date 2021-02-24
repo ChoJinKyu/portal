@@ -58,7 +58,7 @@ sap.ui.define([
 
         renderer: Renderer,
         
-        // 검색조건 필터 화면
+        // 검색조건필터 생성
         createSearchFilters: function () {
             that = this;
 
@@ -178,24 +178,33 @@ sap.ui.define([
                 showValueHelp : true,
                 valueHelpOnly : true,
                 valueHelpRequest: function (oEvent) {
-                    this.oSupplierDialogPop = new SupplierDialogPop({
+                        this.oSupplierDialogPop = new SupplierDialogPop({
                         multiSelection: true,
                         keyField: "supplier_code",
                         textField: "supplier_local_name"
                     });
 
-                    // Pop 내부에 값을 올려주기 위해 구성
-                    this.oSupplierDialogPop.setContentWidth("300px");
+
+
+                    //공급업체코드 검색조건 필터설정
                     var sSearchObj = {};
                     //sSearchObj.tanentId = "L2100"; // 세션임시값
                     //sSearchObj.languageCd = "KO";  // 세션임시값
-                    sSearchObj.companyCode = that.oCompany.getValue();
-                    sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
+                    
+                    /*  필수조건 */
+                    if(!!that.oCompany.getSelectedKey()){
+                        sSearchObj.companyCode = that.oCompany.getValue();
+                    }
+
+                    if(!!that.oOperationOrgComb.getSelectedKey()){
+                        sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
+                    }
 
                     if(!!that.oOperationUnitComb.getSelectedKey()){
                         sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey();
                     }
 
+                    // valueHelpOnly가 false인 경우 getValue
                     if(!!that.oSupplierCode.getValue()) {
                          sSearchObj.supplierCode = that.oSupplierCode.getValue();
                     }
@@ -208,10 +217,28 @@ sap.ui.define([
                     //     that.oSupplierCode.setValue(oEvent.mParameters.item.supplier_code);
                     // }.bind(this));
 
+                    // Pop 내부에 값을 올려주기 위해 구성
+                    var aInitTokens = this.getTokens();
+                    var aRowIndex = this.oSupplierDialogPop.oDialog.oTable.getSelectedIndices();
+
+                    // 적용버튼시 토큰값 적용
                     this.oSupplierDialogPop.attachEvent("apply", function(oEvent){
                         that.oSupplierCode.setTokens(oEvent.getSource().getTokens());
                     }.bind(this));
                     this.oSupplierDialogPop.setTokens(that.oSupplierCode.getTokens());
+
+                    // // 취소버튼시 값 원복
+                    // this.oSupplierDialogPop.attachEvent("cancel", function(oEvent){
+                    //     // this.oSupplierDialogPop.oDialog.oTable.setSelectedIndex();
+                    //     // if(aRowIndex.length > 0) {
+                    //     //     for(var i = 0; i<aRowIndex.length; i++) {
+                    //     //          this.oSupplierDialogPop.oDialog.oTable.setSelectedIndex(aRowIndex[i]);
+                    //     //     }
+                    //     // } else {
+                    //     //      this.oSupplierDialogPop.oDialog.oTable.setSelectedIndex();
+                    //     // }
+                    //     this.oSupplierDialogPop.setTokens(that.oSupplierCode.getTokens());
+  
                 }
             });
 
@@ -222,10 +249,11 @@ sap.ui.define([
                 valueHelpOnly : true,
                 valueHelpRequest: function (oEvent) {
                     this.oMaterialDialogPop = new MaterialDialogPop({
-                        multiSelection: true,
-                        keyField: "material_code",
-                        textField: "material_desc",
+                    multiSelection: true,
+                    keyField: "material_code",
+                    textField: "material_desc",
                     });
+                    
 
                     this.oMaterialDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
@@ -382,7 +410,7 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                         this.oSupplierCode
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S12" }),
+                    layoutData: new GridData({ span: "XL12 L12 M12 S12" }),
                 }),
 
                 new VBox({
@@ -390,7 +418,7 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE") }),
                         this.oMaterialCode
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
+                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
                 }),
 
                 new VBox({
@@ -398,7 +426,7 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/MANAGER") }),
                         this.oEmployeeCode
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
+                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
                 }),
 
                 new VBox({
@@ -406,7 +434,7 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/DEPARTMENT") }),
                         this.oDepartmentCode
                     ],
-                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
+                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
                 })
             ]
         },
@@ -416,62 +444,65 @@ sap.ui.define([
             return [
                 new Column({
                     width: "8rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT")}),
+                    label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT"), textAlign: "Center", width: "100%"}),
                     template: new Text({ text: "{operation_unit_name}" , textAlign : "Left"})
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "1" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "1", textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{vendor_pool_level1_name}" })
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "2" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "2", textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{vendor_pool_level2_name}" })
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "3" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "3" , textAlign: "Center", width: "100%"}),
                     template: new Text({ text: "{vendor_pool_level3_name}" })
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "4" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "4", textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{vendor_pool_level4_name}" })
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "5" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "5", textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{vendor_pool_level5_name}" })
                 }),
                 new Column({
                     width: "8rem",
+                    hAlign : "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
                 new Column({
                     width: "15rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_local_name}" })
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_REG_TYPE") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_REG_TYPE"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{supplier_register_status_name}" })
                 }),
                 new Column({
-                    width: "10rem",
+                    width: "7rem",
+                    hAlign : "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_FLAG") }),
                     template: new Text({ text: "{supplier_flag}" })
                 }),
                 new Column({
-                    width: "10rem",
+                    width: "7rem",
+                    hAlign : "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/MAKER_FLAG") }),
                     template: new Text({ text: "{maker_flag}" })
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_SELECTION_STATUS") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_SELECTION_STATUS"), textAlign: "Center", width: "100%" }),
                     template: new Text({ text: "{inactive_status_name}" })
                 })
             ];
@@ -531,7 +562,7 @@ sap.ui.define([
         loadOperationChange: function() {
             if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
                 
-                this.oDialog.oTable.getModel().setData(null);
+                //this.oDialog.oTable.getModel().setData(null);
                 var aFilters = [],
                     aColumnData = [];
 
@@ -836,7 +867,8 @@ sap.ui.define([
             }
             
             // 초기화면 설정 (기본레벨3)
-            this.oDialog.oTable.getModel().setData(null);
+            
+            
             var aColumnData = this.oDialog.oTable.getColumns();
             aColumnData[4].setVisible(false);
             aColumnData[5].setVisible(false);
@@ -851,6 +883,7 @@ sap.ui.define([
             // }
 
             // 데이터 load
+            this.loadData();
             this.loadTenantCode();
             this.loadOperationOrgData();
             this.loadOperationUnitData();

@@ -10,7 +10,7 @@
 
         <form:SimpleForm id="ucUcQuotationSupForm1Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="공사명" required="true" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONST_NAME}" required="true" design="Bold" class="sapMLabelNoText"/>
                 <Input value="{
                     path: 'viewModel>/ucmaster/const_name',
                     type: 'sap.ui.model.type.String',
@@ -24,7 +24,7 @@
         <form:SimpleForm id="ucUcQuotationSupForm2Edit" editable="true">
 
             <VBox alignContent="Center">
-                <Label text="대분류(공종)" required="true" design="Bold" class="sapMLabelNoText" />
+                <Label text="{I18N>/LARGE_CLASS}" required="true" design="Bold" class="sapMLabelNoText" />
                 <ComboBox   
                                 id="searchEpItemCode"
                                 placeholder="All"
@@ -45,7 +45,7 @@
             </VBox>        
 
             <VBox alignContent="Center">
-                <Label text="공사기간" required="true" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONST_PERIOD}" required="true" design="Bold" class="sapMLabelNoText"/>
                 <!-- <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/> -->
                 <HBox>
                     <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/const_start_date}" required="true" placeholder="Date" width="100%"/>
@@ -57,7 +57,7 @@
                 </layoutData>     
             </VBox> 
             <VBox alignContent="Center">
-                <Label text="견적통화" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONST_QUOTATION_CURRENCY}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/currency_code}" />  
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />
@@ -69,7 +69,7 @@
         <form:SimpleForm id="ucUcQuotationSupForm3Edit" editable="true">
 
             <VBox alignContent="Center">
-                <Label text="물량검토자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONST_REVIEW_PERSON}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/const_person_name}" />  
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />
@@ -77,7 +77,7 @@
             </VBox>
             
             <VBox alignContent="Center">
-                <Label text="구매담당자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/BUYER}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/buyer_name}" />  
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />
@@ -94,7 +94,7 @@
 
         <form:SimpleForm id="ucUcQuotationSupForm4Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="비고" 
+                <Label  text="{I18N>/REMARK}" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
                 <TextArea value="{viewModel>/ucmaster/remark}" rows="8" width="100%" />            

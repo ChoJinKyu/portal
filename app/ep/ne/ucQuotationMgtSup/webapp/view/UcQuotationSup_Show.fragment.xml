@@ -10,7 +10,7 @@
 
         <form:SimpleForm id="ucUcQuotationSupForm1Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="공사명" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONST_NAME}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/const_name}" width="100%"/>
             </VBox>
         </form:SimpleForm>
@@ -18,7 +18,7 @@
         <form:SimpleForm id="ucUcQuotationSupForm2Show" editable="false">
         
             <VBox alignContent="Center">
-                <Label text="대분류(공종)" textAlign="left" design="Bold" class="sapMLabelNoText" />
+                <Label text="{I18N>/LARGE_CLASS}" textAlign="left" design="Bold" class="sapMLabelNoText" />
                 <Text text="{viewModel>/ucmaster/ep_item_name}" />
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />
@@ -26,10 +26,7 @@
             </VBox>      
 
             <VBox alignContent="Center">
-                <Label text="공사기간" design="Bold" class="sapUiTinyMarginEnd"/>
-                <!-- <Text text="{master>/const_start_date}" />
-                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                <Text text="{master>/const_end_date}" /> -->
+                <Label text="{I18N>/CONST_PERIOD}" design="Bold" class="sapUiTinyMarginEnd"/>
                 <HBox>
                     <Text text="{viewModel>/ucmaster/const_start_date}" class="sapUiTinyMarginBegin"/> 
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
@@ -40,7 +37,7 @@
                 </layoutData>     
             </VBox> 
             <VBox alignContent="Center">
-                <Label text="견적통화" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONST_QUOTATION_CURRENCY}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/currency_code}" />  
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />
@@ -52,7 +49,7 @@
         <form:SimpleForm id="ucUcQuotationSupForm3Show" editable="false">
         
             <VBox alignContent="Center">
-                <Label text="물량검토자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/CONST_REVIEW_PERSON}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/const_person_name}" />  
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />
@@ -60,7 +57,7 @@
             </VBox>
             
             <VBox alignContent="Center">
-                <Label text="구매담당자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="{I18N>/BUYER}" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/buyer_name}" />  
                 <layoutData>
                     <layout:GridData span="XL8 L8 M8 S12" />
@@ -78,7 +75,7 @@
 
         <form:SimpleForm id="ucUcQuotationSupForm4Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="비고" 
+                <Label  text="{I18N>/REMARK}" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
                 <Text text="{viewModel>/ucmaster/remark}" />            

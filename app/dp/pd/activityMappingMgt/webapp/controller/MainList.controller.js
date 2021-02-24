@@ -168,8 +168,8 @@ sap.ui.define([
             if (sProductActivity && sProductActivity.length > 0) {
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("product_activity_code", FilterOperator.Contains, sProductActivity),
-                        new Filter("product_activity_name", FilterOperator.Contains, sProductActivity)
+                        new Filter("tolower(product_activity_code)", FilterOperator.Contains, "'" + sProductActivity.toLowerCase().replace("'","''") + "'"),
+                        new Filter("tolower(product_activity_name)", FilterOperator.Contains, "'" +  sProductActivity.toLowerCase().replace("'","''") + "'")
                     ],
                     and: false
                 }));
@@ -178,8 +178,8 @@ sap.ui.define([
             if (sActivity && sActivity.length > 0) {
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("activity_code", FilterOperator.Contains, sActivity),
-                        new Filter("activity_name", FilterOperator.Contains, sActivity)
+                        new Filter("tolower(activity_code)", FilterOperator.Contains, "'" +  sActivity.toLowerCase().replace("'","''") + "'"),
+                        new Filter("tolower(activity_name)", FilterOperator.Contains, "'" +  sActivity.toLowerCase().replace("'","''") + "'")
                     ],
                     and: false
                 }));
@@ -190,10 +190,11 @@ sap.ui.define([
         onExportPress: function (oEvent) {
             var sTableId = oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
+            var oTable = this.byId(sTableId);
 
-            var oTable = this.byId("mainTable");
-            var sFileName = "Activity Mapping Management";
+            var sFileName = "Activity Mapping Management_"+ this._getDTtype();
             var oData = this.getModel("list").getProperty("/ActivityMappingNameView");
+            
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
@@ -630,6 +631,24 @@ sap.ui.define([
 				hasGrouping: true
 			}).activate();
         },
+
+        _getDTtype: function (StartFlag, oDateParam) {
+            let oDate = oDateParam || new Date(),
+                iYear = oDate.getFullYear(),
+                iMonth = oDate.getMonth()+1,
+                iDate = oDate.getDate(),
+                iHours = oDate.getHours(),
+                iMinutes = oDate.getMinutes(),
+                iSeconds = oDate.getSeconds();
+ 
+            let sReturnValue = iYear + this._getPreZero(iMonth) + this._getPreZero(iDate);                      
+
+            return sReturnValue;
+        },
+
+        _getPreZero: function (iDataParam) {
+            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
+        }
 
     });
 });

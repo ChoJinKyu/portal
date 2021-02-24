@@ -265,7 +265,7 @@
                 
                 <Button visible="{= !${midObjectViewModel>/editMode} }" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditeButton" />							
                 <Button visible="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButton"/>
-                <Button visible="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? false : true : false }" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
+                <Button visible="{= ${midObjectViewModel>/editMode} ? false : true }" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
                 <Button visible="{midObjectViewModel>/editMode}" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButton" />
 			</OverflowToolbar>
 		</uxap:footer>

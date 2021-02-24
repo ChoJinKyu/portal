@@ -369,7 +369,7 @@
                                         <Text text="{suplist>supplier_english_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Supplier Name(Eng)" hAlign="Center" width="0em" filterProperty="supplier_company_code">
+                                <table:Column label="Company Code" hAlign="Center" width="0em" filterProperty="supplier_company_code">
                                     <table:template>
                                         <Text text="{suplist>supplier_company_code}" wrapping="false" />
                                     </table:template>
@@ -421,6 +421,7 @@
                                             }" 
                                      displayFormat="yyyy-MM-dd"
                                      valueFormat="yyyy-MM-dd"
+                                     change=".fnChkEndDate"
                                      />
                                         <!-- <Text text="{suplist>supeval_control_start_date}" wrapping="false" /> -->
                                     </table:template>
@@ -442,6 +443,7 @@
                                             }" 
                                      displayFormat="yyyy-MM-dd"
                                      valueFormat="yyyy-MM-dd"
+                                     change=".fnChkEndDate"
                                      />
                                         
                                     </table:template>
@@ -488,11 +490,11 @@
                                         <Text  text="{path: 'suplist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="" width="0em" hAlign="Center" filterProperty="approval_number">
+                                <!-- <table:Column label="" width="0em" hAlign="Center" filterProperty="approval_number">
                                     <table:template>
                                         <Text text="{suplist>approval_number}" wrapping="false" />
                                     </table:template>
-                                </table:Column>
+                                </table:Column> -->
                             </table:columns>
                         </table:Table>                     
                     </VBox>
@@ -560,11 +562,11 @@
                                         <Text text="{matlist>material_desc}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Use Flag" hAlign="Center" width="0em" filterProperty="vendor_pool_mapping_use_flag">
+                                <!-- <table:Column label="Use Flag" hAlign="Center" width="0em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
                                         <Text text="{matlist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
-                                </table:Column>
+                                </table:Column> -->
                                 <!-- <table:Column label="{I18N>/REGISTER_REASON}" width="15%" filterProperty="register_reason">
                                     <table:template>
                                         <Text text="{matlist>register_reason}" wrapping="false" />
@@ -581,11 +583,11 @@
                                         <!-- <Text text="{matlist>local_update_dtm}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="" width="0em" hAlign="Center" filterProperty="approval_number">
+                                <!-- <table:Column label="" width="0em" hAlign="Center" filterProperty="approval_number">
                                     <table:template>
                                         <Text text="{matlist>approval_number}" wrapping="false" />
                                     </table:template>
-                                </table:Column>
+                                </table:Column> -->
                             </table:columns>
                         </table:Table>
                         <!--20201223 : table end -->

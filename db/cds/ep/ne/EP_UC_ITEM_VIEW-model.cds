@@ -18,8 +18,9 @@ entity Uc_Item_View {
         small_class_name            : String(100);
         spec_desc                   : String(1000);
         unit                        : String(3);
-        material_apply_yn         : String(1);
-        labor_apply_yn            : String(1);
+        material_apply_yn           : String(1);
+        labor_apply_yn              : String(1);
+        net_price_change_allow_flag : Boolean;
 }
 
 extend Uc_Item_View with util.Managed;

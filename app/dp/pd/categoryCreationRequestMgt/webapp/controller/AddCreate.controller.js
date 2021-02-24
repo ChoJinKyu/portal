@@ -38,9 +38,7 @@ sap.ui.define([
 
         dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
-
         validator: new Validator(),
-
         loginUserId: new String,
         loginUserName: new String,
         tenant_id: new String,
@@ -48,7 +46,9 @@ sap.ui.define([
         category_group_code: new String,
         request_category_name: new String,
         similar_category_code: new String,
+        _sLanguageCd: new String,
         pdPartCategoryLngArr: new Array,
+        viewType: false,
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -58,13 +58,16 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-
-            //로그인 세션 작업완료시 수정
-            this.loginUserId = "TestUser";
-            this.loginUserName = "TestUser";
-            this.tenant_id = "L2101";
+            // var oSppUserSession = new SppUserSession();
+            // this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+            //세션 셋팅 구간 세션 향후 변화 대비해서 변수화함
+            // console.log( this.getOwnerComponent().getModel("USER_SESSION"));
+            this.loginUserId = this.getOwnerComponent().getModel("USER_SESSION").getSessionAttr("USER_ID");
+            this.loginUserName = this.getOwnerComponent().getModel("USER_SESSION").getSessionAttr("EMPLOYEE_NAME");
+            this.tenant_id = this.getOwnerComponent().getModel("USER_SESSION").getSessionAttr("TENANT_ID");
             this.viewType = false;
-
+            this._sLanguageCd = this.getOwnerComponent().getModel("USER_SESSION").getSessionAttr("LANGUAGE_CODE");
+ 
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -74,14 +77,11 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "pdActivityStdDayView");
 
 			var oViewModel = new JSONModel({
-                    showMode: true,                    
+                    showMode: true,
                     editMode: false
 				});
 
             this.setModel(oViewModel, "viewModel");
-            
-
-            
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("PdPartCategoryModel"));
@@ -89,10 +89,6 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("pdActivityStdDayView"));
 
             this.getRouter().getRoute("addCreatePage").attachPatternMatched(this._onRoutedThisPage, this);
-
-            this.enableMessagePopover();
-
-            
 
         },
 
@@ -107,12 +103,8 @@ sap.ui.define([
                 
             this._sRequestNumber = oArgs.requestNumber;
             
-            //세션에서 받아서 넣어 주어야 함
-            this._sLanguageCd = "KO";
             //테스트용
             // this.category_code = "PC2012300001";
-
-
             var oMasterModel = this.getModel("master");
             oMasterModel.setProperty("/pdPartCategoryCreationRequestView", {});
 
@@ -122,10 +114,15 @@ sap.ui.define([
 
             
             this.validator.clearValueState(this.byId("midObjectForm"));
-            this.onSearch(oArgs.requestNumber);
+            this.onSearch(oArgs.requestNumber, oArgs.categoryGroupCode);
         },
 
         
+
+        onAfterRendering: function () {
+            this.getModel("USER_SESSION").refresh();
+
+        },
 
         
 
@@ -133,10 +130,11 @@ sap.ui.define([
 		 * 조회
 		 * @public
 		 */
-        onSearch: function (requestNumber) {
+        onSearch: function (requestNumber, categoryGroupCode) {
             var oView = this.getView();
+            // var sObjectPath = "/pdPartCategoryCreationRequestView(tenant_id='" + this.tenant_id + "',request_number='" + requestNumber + "')";
+            var sObjectPath = "/pdPartCategoryCreationRequestView";
 
-            var sObjectPath = "/pdPartCategoryCreationRequestView(tenant_id='" + this.tenant_id + "',request_number='" + requestNumber + "')";
             var oMasterModel = this.getModel("master");
             var v_this = this;            
             var oPdPartCategory = this.getModel("PdPartCategoryModel");
@@ -150,19 +148,29 @@ sap.ui.define([
             //테스트 에러로 
             //oView.setBusy(true);
             oMasterModel.setTransactionModel(this.getModel());
-            oMasterModel.read(sObjectPath, {
-                success: function (oData) {
-                    // console.log("master");
-                    // console.log(oData);
-                    v_this.category_group_code = oData.category_group_code;
-                    v_this.request_category_name = oData.request_category_name;
-                    v_this.similar_category_code = oData.similar_category_code;
 
-                    if(oData.create_category_code == null || oData.create_category_code == ""  ){
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id));
+            aFilters.push(new Filter("request_number", FilterOperator.EQ, requestNumber));
+
+                    console.log(aFilters);
+            oMasterModel.read("/pdPartCategoryCreationRequestView", {
+                filters: aFilters,
+                success: function (oData) {
+                    console.log("master");
+                    console.log(oData);
+                    v_this.category_group_code = oData.results[0].category_group_code;
+                    v_this.request_category_name = oData.results[0].request_category_name;
+                    v_this.similar_category_code = oData.results[0].similar_category_code;
+                    
+                    v_this.getModel("master").setData(oData.results[0]);
+                    
+
+                    if(oData.results[0].create_category_code == null || oData.results[0].create_category_code == ""  ){
                         v_this.category_code = "new";
                         v_this.viewType = false;
                     }else{
-                        v_this.category_code = oData.create_category_code;
+                        v_this.category_code = oData.results[0].create_category_code;
                         v_this.viewType = true;
                     }
                     v_this.onSearchAfter(v_this.category_code);
@@ -281,8 +289,8 @@ sap.ui.define([
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.activityStdDayService/").read("/pdActivityStdDayView", {
                 filters: aFilters3,
                 success: function (oData) {
-                    console.log(oData);
-                    console.log("pdActivityStdDayView End");
+                    // console.log(oData);
+                    // console.log("pdActivityStdDayView End");
                     this.getModel("pdActivityStdDayView").setData(oData.results);
             
                     this.toTop();
@@ -291,8 +299,9 @@ sap.ui.define([
             });
             this.toTop();
         },
+
         /**
-         * 리스트 레코드 추가
+         * 화면 상위 이동
          * @public
          */
         toTop: function () {
@@ -304,9 +313,10 @@ sap.ui.define([
 
         
         /**
-         * 리스트 레코드 추가
+         * 언어 리스트 레코드 추가
          * @public
          */
+        //언어 행추가
         onAdd: function () {
             this.pdPartCategoryLngArr.push({
                 "tenant_id": this.tenant_id,
@@ -325,6 +335,7 @@ sap.ui.define([
             
         },
 
+        //언어 행삭제
         onDelete: function () {
             var oTable = this.byId("midTable2"),
                 oModel = this.getModel("pdPartCategoryLng"),
@@ -464,7 +475,7 @@ sap.ui.define([
 
             var url = "srv-api/odata/v4/dp.partCategoryV4Service/PdPartCategorySaveProc";
             
-            console.log(input);
+            // console.log(input);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -510,9 +521,12 @@ sap.ui.define([
             this.byId("page").setProperty("showFooter", true);
             
             this.byId("pageNavBackButton").setVisible(true);
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageCancelButton").setEnabled(false);
-            this.byId("pageListButton").setEnabled(true);
+            this.byId("pageSaveButton").setVisible(false);
+            this.byId("pageCancelButton").setVisible(false);
+            this.byId("pageListButton").setVisible(true);
+            // this.byId("pageSaveButton").setEnabled(false);
+            // this.byId("pageCancelButton").setEnabled(false);
+            // this.byId("pageListButton").setEnabled(true);
         },
         
         _toEditMode: function () {
@@ -521,9 +535,14 @@ sap.ui.define([
             var oMasterModel = this.getModel("master")
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageNavBackButton").setVisible(false);
-            this.byId("pageSaveButton").setEnabled(true);
-            this.byId("pageCancelButton").setEnabled(true);
-            this.byId("pageListButton").setEnabled(false);
+            this.byId("pageSaveButton").setVisible(true);
+            this.byId("pageCancelButton").setVisible(true);
+            this.byId("pageListButton").setVisible(false);
+
+
+            // this.byId("pageSaveButton").setEnabled(true);
+            // this.byId("pageCancelButton").setEnabled(true);
+            // this.byId("pageListButton").setEnabled(false);
         },
 
         
@@ -576,46 +595,6 @@ sap.ui.define([
                 }
             }
             return "";
-        },
-
-
-        
-        /**
-         * function : 아이디어 관리자 팝업 Call 함수
-         * date : 2021/01/14
-         */
-        onIdeaManagerDialogPress : function(){
-            
-            if(!this.oSearchIdeaManagerDialog){
-                this.oSearchIdeaManagerDialog = new IdeaManagerDialog({
-                    title: this.getModel("I18N").getText("/SEARCH_IDEA_MANAGER"),
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
-                        ]
-                    }
-                });
-                this.oSearchIdeaManagerDialog.attachEvent("apply", function(oEvent){ 
-                    this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name);
-                    // this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name+"("+oEvent.getParameter("item").idea_manager_empno+")");
-                    this.byId("ideaManagerId").setValue(oEvent.getParameter("item").idea_manager_empno);
-                    
-                }.bind(this));
-                }
-            this.oSearchIdeaManagerDialog.open();
-
-        }
-
-
-
-
-        , onMilestoneButtonPress: function (oEvent) {
-            if(oEvent.getSource().getPressed() ){
-                oEvent.getSource().setText("No");
-            }else{
-                oEvent.getSource().setText("Yes");
-            }
         }
 
 
@@ -652,8 +631,8 @@ sap.ui.define([
 
             treeFilter.push(new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101"),
-                    new Filter("category_group_code", FilterOperator.EQ, "CO")
+                    new Filter("tenant_id", FilterOperator.EQ, this.loginUserId),
+                    new Filter("category_group_code", FilterOperator.EQ, this.category_group_code)
                 ],
                 and: false
             }));
@@ -675,7 +654,9 @@ sap.ui.define([
                 .catch(function (oError) {
                 })
                 // 모래시계해제
+
                 .finally((function () {
+                    this.byId("diatreeTable").collapseAll();
                 }).bind(this));
 
         }

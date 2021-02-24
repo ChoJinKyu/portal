@@ -234,8 +234,7 @@
                                                     items="{
                                                         path: 'util>/Code',
                                                         templateShareable:true,
-                                                        filters: [
-                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
+                                                        filters: [                                                                                                    
                                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                                         ]
                                                     }" editable="{= ${languages>_row_state_} === 'C' }" required="true"> 

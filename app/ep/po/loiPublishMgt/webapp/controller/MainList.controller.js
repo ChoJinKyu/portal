@@ -472,7 +472,7 @@ sap.ui.define([
                     var loiNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_number;
                     // console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
                     if (index > 0 && !loiNumberArr.includes(loiNumber)) {
-                        MessageToast.show("LOI번호가 동일하지 않습니다.");
+                        MessageToast.show(this.getModel("I18N").getText("/NEP00006", this.getModel("I18N").getText("/LOI_NUMBER")));
                         canSelect = false;
                         return true;
                     }
@@ -482,7 +482,7 @@ sap.ui.define([
                 });
             } else {
                 canSelect = false;
-                MessageToast.show("한개이상 선택해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NEP00002"));
             }
 
             console.log("canSelect=", canSelect);
@@ -621,7 +621,7 @@ sap.ui.define([
 
                     //업체선정번호가 있으면 링크불가
                     if (sLoiSelectionNumber) {
-                        MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 업체선정진행상태 항목을 클릭해 주세요.");
+                        MessageToast.show(that.getModel("I18N").getText("/NEP00008"));
                         canSelect = false;
                         return true;
                     }
@@ -664,7 +664,7 @@ sap.ui.define([
                     var loiNumber = oModel.getData().LOIPublishItemView[chkIdx].loi_number;
                     console.log("notSameloiNumber=", !loiNumberArr.includes(loiNumber))
                     if (index > 0 && !loiNumberArr.includes(loiNumber)) {
-                        MessageToast.show("LOI번호가 동일하지 않습니다.");
+                        MessageToast.show(that.getModel("I18N").getText("/NEP00006", that.getModel("I18N").getText("/LOI_NUMBER")));
                         canSelect = false;
                         return true;
                     }
@@ -675,27 +675,19 @@ sap.ui.define([
 
             } else {
                 canSelect = false;
-                MessageToast.show("한개이상 선택해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NEP00002"));
             }
-
-            // if(!existRfq) {
-            //     if(confirm(this.getModel("I18N").getText("/NEP00004"))) {
-            //         canSelect = true;
-            //     }else {
-            //         canSelect = false;
-            //     }
-            // }
 
             //업체선정번호가 없으면 신규저장모드
             if (!sLoiSelectionNumber) {
                 sLoiSelectionNumber = "new";
             }
 
-            if (!sQuotationNumber || sQuotationNumber == 0) {
+            if (!sQuotationNumber || sQuotationNumber == 0 || sQuotationNumber.indexOf("0,") > -1) {
                 sQuotationNumber = "new";
             }
 
-            if (!sQuotationItemNumber || sQuotationItemNumber == 0) {
+            if (!sQuotationItemNumber || sQuotationItemNumber == 0 || sQuotationItemNumber.indexOf("0,") > -1) {
                 sQuotationItemNumber = "new";
             }
 
@@ -777,7 +769,8 @@ sap.ui.define([
 
             var oTable = this.byId("mainTable"),
                 oModel = this.getView().getModel("list"),
-                oSelected = oTable.getSelectedIndices();
+                oSelected = oTable.getSelectedIndices(),
+                that = this;
             console.log("oSelected=", oSelected);
             console.log("oModel=", oModel.getData());
 
@@ -813,7 +806,7 @@ sap.ui.define([
 
                     //발행번호가 있으면 링크불가
                     if (sLoiPublishNumber) {
-                        MessageToast.show("이미 등록된 건입니다. 조회 또는 수정하시려면 LOI발행상태 항목을 클릭해 주세요.");
+                        MessageToast.show(that.getModel("I18N").getText("/NEP00008"));
                         canSelect = false;
                         return true;
                     }
@@ -824,14 +817,14 @@ sap.ui.define([
                          업체선정완료가 아니면 링크불가
                     */
                     if (sLoiSelectionStatusCode != "122060") {
-                        MessageToast.show("업체선정완료된 항목만 선택해주세요.");
+                        MessageToast.show(that.getModel("I18N").getText("/NEP00007", that.getModel("I18N").getText("/SUPPLIER_SELECTION_COMPLETE")));
                         canSelect = false;
                         return true;
                     }
 
                     //업체선정번호가 동일한지 체크
                     if (index > 0 && !loiSelectionNumberrArr.includes(sLoiSelectionNumber)) {
-                        MessageToast.show("업체선정번호가 동일하지 않습니다.");
+                        MessageToast.show(that.getModel("I18N").getText("/NEP00006", that.getModel("I18N").getText("/SUPPLIER_SELECTION_APPROVAL_NO")));
                         canSelect = false;
                         return true;
                     }
@@ -840,7 +833,7 @@ sap.ui.define([
                 });
             } else {
                 canSelect = false;
-                MessageToast.show("한개이상 선택해주세요.");
+                MessageToast.show(this.getModel("I18N").getText("/NEP00002"));
             }
 
             //업체선정번호가 없으면 신규저장모드

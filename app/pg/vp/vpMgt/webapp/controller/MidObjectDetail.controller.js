@@ -459,7 +459,8 @@ sap.ui.define([
                 oBundle = this.getView().getModel("i18n").getResourceBundle(),                
                 sMsg,
                 v_returnModel,
-                urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
+                // urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingChangeTestProc";
+                urlInfo = "srv-api/odata/v4/pg.VpMappingV4Service/VpMappingMngProc";
 
             var inputInfo = {},
                 vpMstList = [],
@@ -602,7 +603,7 @@ sap.ui.define([
                         // ,supplier_base_portion_rate: parseFloat(this.currnetSppObj[i].supplier_base_portion_rate)
                         // ,vendor_pool_mapping_use_flag: this.currnetSppObj[i].vendor_pool_mapping_use_flag
                         // ,register_reason: this.currnetSppObj[i].register_reason
-                        ,approval_number: this.currnetSppObj[i].approval_number
+                        // ,approval_number: this.currnetSppObj[i].approval_number
                         ,crud_type_code : this.currnetSppObj[i]._row_state_   
                         
                     })
@@ -623,7 +624,7 @@ sap.ui.define([
                             , vendor_pool_code: generaloDataRst.vendor_pool_code
                             , material_code: this.currnetMetObj[i].material_code
                             // , register_reason: this.currnetMetObj[i].register_reason
-                            , approval_number: this.currnetMetObj[i].approval_number
+                            // , approval_number: this.currnetMetObj[i].approval_number
                             , crud_type_code : this.currnetMetObj[i]._row_state_
                     })
                 }
@@ -641,9 +642,9 @@ sap.ui.define([
                             , org_type_code: generaloDataRst.org_type_code
                             , org_code: generaloDataRst.org_code
                             , vendor_pool_code: generaloDataRst.vendor_pool_code
-                            , material_code: this.currnetManObj[i].material_code
+                            // , material_code: this.currnetManObj[i].material_code
                             , register_reason: this.currnetManObj[i].register_reason
-                            , approval_number: this.currnetManObj[i].approval_number
+                            // , approval_number: this.currnetManObj[i].approval_number
                             , vendor_pool_person_empno: this.currnetManObj[i].vendor_pool_person_empno
                             // , vendor_pool_person_role_text: this.currnetManObj[i].vendor_pool_person_role_text
                             //, approval_number: ''  //안보냄    
@@ -693,37 +694,50 @@ sap.ui.define([
                 },
                 error: function (e) {
                     var eMessage = "callProcError",
-                        errorType,
-                        eMessageDetail;
+                            errorType,
+                            eMessageDetail,
+                            eMessageParam;  
+
 
                     v_returnModel = oView.getModel("returnModel").getData().data;
                     console.log('v_returnModel_e:', v_returnModel);
+                    console.log('return_error:', e);
                     v_returnModel.return_code = 'error';
                     v_returnModel.return_msg = e.responseJSON.error.message.substring(0, 8);
-
-                    
                     //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
+
                     if(e.responseJSON.error.message == undefined || e.responseJSON.error.message == null){
+
                         eMessage = "callProcError";
                         eMessageDetail = "callProcError";
+                        eMessageParam = "callProcError";
+
                     }else{
+
                         eMessage = e.responseJSON.error.message.substring(0, 8);
                         eMessageDetail = e.responseJSON.error.message.substring(9);
                         errorType = e.responseJSON.error.message.substring(0, 1);
+                        eMessageParam = eMessageDetail.substring(0, eMessageDetail.indexOf('-@-'));
                         console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
-                        
+                        console.log('eMessageParam:',eMessageParam);
+
                         //MessageToast.show(eMessageDetail);
+
                     }
-                    sMsg = oBundle.getText(eMessage, ['']);
-                    // sMsg = oBundle.getText(eMessage);
+
+                    sMsg = oBundle.getText(eMessage, [eMessageParam]);
+
                     if(errorType === 'E'){
-                        // alert(sMsg);                    
+
+                        //alert(sMsg);                   
+
                     }else{
-                        // alert(eMessageDetail);                    
+
+                        //alert(eMessageDetail);                   
+
                     }
-                    
-                    
-                    MessageToast.show(sMsg);                    
+
+                    MessageToast.show(sMsg);                  
                 }
             });
 
@@ -1370,7 +1384,14 @@ sap.ui.define([
             });
 
         },
-
+        fnChkEndDate: function (oEvent) {
+            var supplierModel = this.getModel("suplist");
+            that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+            if (new Date(supplierModel.getProperty(that.sPath + "/supeval_control_start_date")) > new Date(supplierModel.getProperty(that.sPath + "/supeval_control_end_date"))) {
+                supplierModel.setProperty(that.sPath + "/supeval_control_end_date", null);
+                MessageToast.show("유효 종료일자가 적합하지 않습니다.");
+            }
+        },
         _managerSearch: function(aFilter) {
             var oView = this.getView(),
 				oModel = this.getModel("manlist");

@@ -15,7 +15,10 @@ service PartCategoryService {
     entity pdPartParentCategoryView as projection on PartCategory.Pd_Part_Parent_Category_View ;
     entity PdPartCategory as projection on PartCategory.Pd_Part_Category;
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
+    entity CmCodeView as projection on Code.Code_View;
     entity pdActivityStdDayView as projection on activityStdDayView.Pd_Activity_Standard_Day_View;
     entity pdPartCategoryCreationRequestView as projection on creationRequest.Pd_Part_Category_Creation_Request_View ;
 
-}
+};
+
+

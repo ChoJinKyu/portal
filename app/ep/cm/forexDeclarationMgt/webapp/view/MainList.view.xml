@@ -24,9 +24,9 @@
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
-                <f:actions>
+                <!-- <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                </f:actions>
+                </f:actions> -->
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
@@ -35,7 +35,7 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="PO번호:" labelFor="searchPoNumber"></Label>
+                            <Label text="{I18N>/PO_NUMBER}:" labelFor="searchPoNumber"></Label>
                             <MultiInput width="100%"
                                     id="searchPoNumber"
                                     suggestionItems="{
@@ -45,21 +45,21 @@
                                     <core:Item key="{po_number}" text="{po_number}" />
                                 </MultiInput>                          
                             <layoutData>
-                                <layout:GridData span="XL3 L4 M12 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                                 
                             </layoutData>
                         </VBox>
                         <VBox>
-                                <Label text="PO일자" labelFor="searchPoDate"></Label>
+                                <Label text="{I18N>/PO_DATE}" labelFor="searchPoDate"></Label>
                                     <DateRangeSelection id="searchPoDate" width="100%" change="creationDateChange"/>
                                 <layoutData>
-                                    <layout:GridData span="XL3 L2 M6 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                         <VBox>
-                            <Label text="담당부서 :" labelFor="searchPurchasingDepartmentName"></Label>
+                            <Label text="{I18N>/PURCHASING_DEPARTMENT}" labelFor="searchPurchasingDepartmentName"></Label>
                             <lib-m:CodePicker id="searchPurchasingDepartmentName"
-                                placeholder="Enter a department name"
+                                placeholder="Enter a Department name"
                                 keyField="department_id"
                                 textField="department_local_name"
                                 suggestionItems="{
@@ -74,11 +74,11 @@
                                     keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
                             </lib-m:CodePicker>
                             <layoutData>
-                                <layout:GridData span="XL3 L2 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="담당자 :" labelFor="searchBuyerName"></Label>
+                            <Label text="{I18N>/BUYER} :" labelFor="searchBuyerName"></Label>
                             <lib-m:CodePicker id="searchBuyerName"
                                 placeholder="Enter a Employee name"
                                 keyField="employee_number"
@@ -95,7 +95,7 @@
                                     keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
                             </lib-m:CodePicker>
                             <layoutData>
-                                <layout:GridData span="XL3 L4 M6 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>    
                                                                  
@@ -104,48 +104,60 @@
                 <form:SimpleForm id="pageSearchForm2" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Status : "></Label>
-                            <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
-                                <items>
+                            <Label text="{I18N>/PROGRESS_STATUS} : "></Label>
+                            <SegmentedButton id="searchStatus" selectedKey="All" class="sapUiSmallMarginBottom" width="100%">
+                                <!-- <items>
                                     <SegmentedButtonItem text="All" key="" width="4.1rem" />
                                     <SegmentedButtonItem text="작성대기" key="920010" width="5.5rem" />
                                     <SegmentedButtonItem text="신고진행중" key="920020" width="6rem" />
                                     <SegmentedButtonItem text="신고완료" key="920030" width="5.5rem" />
-                                </items>
+                                </items> -->
                             </SegmentedButton>
                             <layoutData>
-                                <layout:GridData span="XL3 L4 M12 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="관리대상여부 : "></Label>
+                            <Label text="{I18N>/MANAGEMENT_TARGET_FLAG} : "></Label>
                             <HBox>
-                                <CheckBox id="selectManagementTargetFlag" text="대상" selected="true"/>
+                                <CheckBox id="selectManagementTargetFlag" text="{I18N>/TARGET}" selected="true"/>
                                 <Text text=" " class="sapUiTinyMarginEnd" />
-                                <CheckBox id="selectManagementTargetFlag2" text="비대상" />
+                                <CheckBox id="selectManagementTargetFlag2" text="{I18N>/NON_TARGET}" />
                             </HBox>
                             <layoutData>
-                                <layout:GridData span="XL3 L2 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="신고대상여부 : "></Label>
+                            <Label text="{I18N>/DECLARE_TARGET_FLAG} : "></Label>
                             <HBox>
-                                <CheckBox id="selectDeclareTargetFlag" text="대상" selected="true" />
+                                <CheckBox id="selectDeclareTargetFlag" text="{I18N>/TARGET}" selected="true" />
                                 <Text text=" " class="sapUiTinyMarginEnd" />
-                                <CheckBox id="selectDeclareTargetFlag2" text="비대상" />
+                                <CheckBox id="selectDeclareTargetFlag2" text="{I18N>/NON_TARGET}" />
                             </HBox>
                             <layoutData>
-                                <layout:GridData span="XL3 L2 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="PO명 :" labelFor="searchPoName"></Label>
+                            <Label text="{I18N>/PO_NAME} :" labelFor="searchPoName"></Label>
                             <Input id="searchPoName" placeholder=""></Input>
                             <layoutData>
-                                <layout:GridData span="XL3 L4 M12 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
-                        </VBox>    
+                        </VBox> 
+                        
+                        <FlexBox
+                            alignItems="Start"
+                            justifyContent="End">
+                            
+                            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                            <layoutData>
+                                <!-- <layout:GridData
+                                    span="XL4 L6 M12 S12" /> -->
+                                    <layout:GridData span="XL1 L1 M1 S12" /> 
+                            </layoutData>
+                        </FlexBox>       
                                                                    
                     </form:content>
                 </form:SimpleForm>                
@@ -180,31 +192,31 @@
             </t:rowSettingsTemplate>
             <t:columns>
                 <t:Column id="mainPoNumber" width="6rem" >
-                <Label text="PO번호" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PO_NUMBER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_number}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainPoName" width="20rem">
-                <Label text="PO명" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PO_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainPlantName" width="5rem">
-                <Label text="플랜트" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PLANT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>plant_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainCurrencyName" width="4rem" hAlign="Center">
-                <Label text="통화" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>currency_name}"/>
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainPoAmount" width="5rem" hAlign="Right">
-                <Label text="PO금액" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PO_AMOUNT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <!-- <Text text="{list>po_amount}"/> -->
                     <Text  text="{
@@ -214,7 +226,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainPrepayAmount" width="5rem" hAlign="Right">
-                <Label text="선급금액" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PREPAYMENTS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <!-- <Text text="{list>prepay_amount}"/> -->
                     <Text  text="{
@@ -224,13 +236,13 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainSupplierName" width="8rem">
-                <Label text="협력사" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>supplier_name}"/>
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainPoDate" width="8rem" hAlign="Center">
-                <Label text="PO일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PO_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>po_date',
@@ -239,7 +251,7 @@
                 </t:template>
                 </t:Column>  
                 <t:Column id="mainReceiptScheduledDate" width="8rem" hAlign="Center">
-                <Label text="입고예정일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/RECEIPT_SCHEDULED_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>receipt_scheduled_date',
@@ -248,7 +260,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainReceiptDate" width="8rem" hAlign="Center">
-                <Label text="입고일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/RECEIPT_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>receipt_date',
@@ -257,7 +269,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainDeclareScheduledDate" width="8rem" hAlign="Center">
-                <Label text="신고예정일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/DECLARE_SCHEDULED_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>declare_scheduled_date',
@@ -266,7 +278,7 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainDeclareDate" width="8rem" hAlign="Center">
-                <Label text="신고일자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/DECLARE_DATE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
                                 path: 'list>declare_date',
@@ -275,19 +287,19 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainManagementTargetFlag" width="6.5rem"  hAlign="Center">
-                <Label text="관리대상여부" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/MANAGEMENT_TARGET_FLAG}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{= ${list>management_target_flag} === true ? 'Y' : 'N'}"/> 
                 </t:template>
                 </t:Column>
                 <t:Column id="mainDeclareTargetFlag" width="6.5rem"  hAlign="Center">
-                <Label text="신고대상여부" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/DECLARE_TARGET_FLAG}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{= ${list>declare_target_flag} === true ? 'Y' : 'N'}"/> 
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainForexDeclareStatusName" width="8rem" hAlign="Center">
-                <Label text="진행상태" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/PROGRESS_STATUS}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>forex_declare_status_name}"/>
                     <tnt:InfoLabel 
@@ -300,13 +312,13 @@
                 </t:template>
                 </t:Column>
                 <t:Column id="mainPurchasingDepartmentName" width="12rem">
-                <Label text="구매담당부서" textAlign="Center" width="100%" tooltip="구매담당부서"/>
+                <Label text="{I18N>/PURCHASING_DEPARTMENT}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>purchasing_department_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainBuyerName" width="6rem">
-                <Label text="구매담당자" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/BUYER}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>buyer_name}"/>
                 </t:template>
@@ -319,8 +331,8 @@
         <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				<Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

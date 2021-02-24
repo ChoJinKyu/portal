@@ -55,7 +55,7 @@ sap.ui.define([
             },
 
             onAfterRendering: function() {
-                this.onSearch();
+                //this.onSearch();
             },
 
             onSelectionChange: function(event) {
@@ -183,13 +183,13 @@ sap.ui.define([
             onExportPress: function (_oEvent) {
                 var oTable = this.byId("treeTable");
                 var aTreeData;
-                var sFileName = "Part Category List";
+                var sFileName = "Part Category List_"+ this._getDTtype();
                 
                 var oData = this.getModel("tree").getProperty("/pdPartCategoryView"); //binded Data
                 aTreeData = oData.list.results;
 
                 ExcelUtil.fnExportExcel({
-                    fileName: sFileName,
+                    fileName: sFileName || "SpreadSheet",
                     table   : oTable,
                     data    : aTreeData
                 });
@@ -211,7 +211,25 @@ sap.ui.define([
                     persoService: MainListPersoService,
                     hasGrouping: true
                 }).activate();
-            }
+            },
+            
+            _getDTtype: function (StartFlag, oDateParam) {
+            let oDate = oDateParam || new Date(),
+                iYear = oDate.getFullYear(),
+                iMonth = oDate.getMonth()+1,
+                iDate = oDate.getDate(),
+                iHours = oDate.getHours(),
+                iMinutes = oDate.getMinutes(),
+                iSeconds = oDate.getSeconds();
+ 
+            let sReturnValue = iYear + this._getPreZero(iMonth) + this._getPreZero(iDate);                      
+
+            return sReturnValue;
+        },
+
+        _getPreZero: function (iDataParam) {
+            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
+        }
 
 
         });

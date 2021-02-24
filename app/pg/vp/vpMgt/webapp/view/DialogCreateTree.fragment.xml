@@ -60,7 +60,7 @@
                         <VBox>
 
                             <Label text = "Vendor Pool" design="Bold" /> 
-                            <Input id="treepop_vendor_pool_local_name" placeholder="Input data"></Input> 
+                            <Input id="treepop_vendor_pool_local_name" placeholder="Input data" change=".onDialogTreeSearch"></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
