@@ -24,8 +24,8 @@ History      : 2021-02-03 - 최초적성
 AS
 
 BEGIN
-    DECLARE v_sql_rowcnt INT = 0;
-    DECLARE v_sequence INT = 0;
+    DECLARE v_sql_rowcnt INT := 0;
+    DECLARE v_sequence INT := 0;
 
     -- Cursor 선언
     DECLARE CURSOR c_data FOR

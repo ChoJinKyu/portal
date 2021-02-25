@@ -27,6 +27,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: true },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em" },
                 keyField: { type: "string", group: "Misc", defaultValue: "maker_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "maker_code" },
@@ -142,20 +143,20 @@ sap.ui.define([
 
         loadMakerData: function (oThis) {
             var that = oThis,
-                cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
+                sTenantId = "L2100";//SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+            var cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
             that.oDialog.setModel(new ManagedModel(), "MAKERVIEW");
 
-            //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierStatus")){
+
             oServiceModel.read("/MakerStatusView", {
                 filters: cFilters,
-                sorters: [new Sorter("code", true)],
+                sorters: [new Sorter("code")],
                 success: function (oData) {
                     var aRecords = oData.results;
                     aRecords.unshift({ code: "", code_name: that.getModel("I18N").getText("/ALL") });
                     that.oDialog.getModel("MAKERVIEW").setProperty("/makerStatus", aRecords);
                 }.bind(this)
             })
-            //}
 
 
             that.oDialog.setBusy(false);
@@ -164,37 +165,57 @@ sap.ui.define([
         },
 
         loadData: function () {
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
-                aSorters = [new Sorter("maker_code", true)],
-                sMakerCode = this.oMakerCode.getValue(),
-                sMakerName = this.oMakerName.getValue(),
-                sTaxId = this.oTaxId.getValue(),
-                sStatus = this.oStatus.getSelectedKey();
+            if (!this.oDialog.getModel("MAKERVIEW")) {
+                this.getMetadata().getPropertyDefaults().loadWhenOpen = false;
+                this.oDialog.setBusy(true);
+                this.loadMakerData(this);
+            } else {
+                var sTenantId = "L2100";//SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+                var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
+                    aSorters = [new Sorter("maker_code")],
+                    sMakerCode = this.oMakerCode.getValue(),
+                    sMakerName = this.oMakerName.getValue(),
+                    sTaxId = this.oTaxId.getValue(),
+                    sStatus = this.oStatus.getSelectedKey();
 
-            if (sMakerCode) {
-                sMakerCode = sMakerCode.toUpperCase();
-                this.oMakerCode.setValue(sMakerCode);
-                aFilters.push(new Filter("maker_code", FilterOperator.Contains, sMakerCode));
+                if (sMakerCode) {
+                    sMakerCode = sMakerCode.toUpperCase();
+                    this.oMakerCode.setValue(sMakerCode);
+                    aFilters.push(new Filter("maker_code", FilterOperator.Contains, sMakerCode));
+                }
+                if (sMakerName) {
+                    aFilters.push(
+                        new Filter({
+                            filters: [
+                                new Filter("maker_local_name", FilterOperator.Contains, sMakerName),
+                                new Filter("maker_english_name", FilterOperator.Contains, sMakerName)
+                            ],
+                            and: false
+                        })
+                    )
+                }
+                if (sTaxId) aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
+                if (sStatus) aFilters.push(new Filter("maker_status_code", FilterOperator.EQ, sStatus));
+
+                this.oDialog.setBusy(true);
+
+                oServiceModel.read("/MakerView", {
+                    filters: aFilters,
+                    sorters: aSorters,
+                    success: function (oData) {
+                        var aRecords = oData.results;
+                        this.oDialog.setData(aRecords, false);
+                        this.oDialog.setBusy(false);
+                    }.bind(this)
+                });
             }
-            if (sMakerName) aFilters.push(new Filter("maker_local_name", FilterOperator.Contains, sMakerName));
-            if (sTaxId) aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
-            if (sStatus) aFilters.push(new Filter("maker_status_code", FilterOperator.EQ, sStatus));
 
-            this.oDialog.setBusy(true);
-
-            oServiceModel.read("/MakerView", {
-                filters: aFilters,
-                sorters: aSorters,
-                success: function (oData) {
-                    var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
-                    this.oDialog.setBusy(false);
-                    if (!this.oDialog.getModel("MAKERVIEW")) {
-                        this.oDialog.setBusy(true);
-                        this.loadMakerData(this);
-                    }
-                }.bind(this)
-            });
+        },
+        onExit: function () {
+            for (var sFragmentName in this._oFragments) {
+                this._oFragments[sFragmentName].destroy();
+                delete this._oFragments[sFragmentName];
+            }
         }
 
     });

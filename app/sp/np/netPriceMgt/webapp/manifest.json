@@ -225,6 +225,11 @@
                     "pattern": "NetPriceMgtDetail/{pMode}/{pAppNum}",
                     "name": "NetPriceMgtDetail",
                     "target": "NetPriceMgtDetail"
+                },
+                {
+                    "pattern": "NetPriceMgtBasePriceCreate/{pMode}/{pAppNum}",
+                    "name": "NetPriceMgtBasePriceCreate",
+                    "target": "NetPriceMgtBasePriceCreate"
                 }
             ],
             "targets": {
@@ -235,6 +240,10 @@
                 "NetPriceMgtDetail": {
                     "viewId": "NetPriceMgtDetail",
                     "viewName": "NetPriceMgtDetail"
+                },
+                "NetPriceMgtBasePriceCreate": {
+                    "viewId": "NetPriceMgtBasePriceCreate",
+                    "viewName": "NetPriceMgtBasePriceCreate"
                 }
             }
         }

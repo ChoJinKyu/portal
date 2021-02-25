@@ -79,13 +79,59 @@ sap.ui.define([
 
             return oUserInfo;
         }
+        , onValidationTest : function(oEvent){
+            var oControl;
+
+            oControl = oEvent.getSource();
+            
+            var sEleName = oControl.getMetadata().getElementName(),
+                sValue, oContext;
+            
+            switch(sEleName){
+                case "sap.m.Input":
+                case "sap.m.TextArea":
+                    sValue = oControl.getValue();
+                    oContext = oControl.getBinding("value");
+                    break;
+                case "sap.m.ComboBox":
+                    sValue = oControl.getSelectedKey();
+                    break;
+                default:
+                    return true;
+            }
+
+            if(sEleName === "sap.m.ComboBox"){
+                if(!sValue && oControl.getValue()){
+                    oControl.setValueState(ValueState.Error);
+                    oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
+                    oControl.focus();
+                    return false;
+                }
+            }else if(oContext && oContext.getType()){
+                if(oContext.getType().getMetadata().getName() === "sap.ui.model.odata.type.Decimal"){
+                    sValue = sValue.replace(/,/gi, "");
+                }
+                try{
+                    oContext.getType().validateValue(sValue);
+                }catch(e){
+                    oControl.setValueState(ValueState.Error);
+                    oControl.setValueStateText(e.message);
+                    oControl.focus();
+                    return false;
+                }
+            }
+            
+            oControl.setValueState(ValueState.None);
+        }
         /***
          * Control 유형에 따른 필수 값 확인
          */
+        
         , _isValidControl : function(aControls){
             var oMessageManager = sap.ui.getCore().getMessageManager(),
                 bAllValid = false,
                 oI18n = this.getView().getModel("I18N");
+                
                 
             oMessageManager.removeAllMessages();
             bAllValid = aControls.every(function(oControl){
@@ -104,8 +150,7 @@ sap.ui.define([
                     default:
                         return true;
                 }
-                
-                // if(!oControl.getProperty('enabled')) return true;
+
                 if(!oControl.getProperty('editable')) return true;
                 if(oControl.getProperty('required')){
                     if(!sValue){
@@ -118,12 +163,20 @@ sap.ui.define([
                         bAllValid = false;
                         oControl.focus();
                         return false;
-                    }else{
-                        oControl.setValueState(ValueState.None);
                     }
                 }
                 
-                if(oContext && oContext.getType()){
+                if(sEleName === "sap.m.ComboBox"){
+                    if(!sValue && oControl.getValue()){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
+                        oControl.focus();
+                        return false;
+                    }
+                }else if(oContext && oContext.getType()){
+                    if(oContext.getType().getMetadata().getName() === "sap.ui.model.odata.type.Decimal"){
+                        sValue = sValue.replace(/,/gi, "");
+                    }
                     try{
                         oContext.getType().validateValue(sValue);
                     }catch(e){
@@ -132,17 +185,9 @@ sap.ui.define([
                         oControl.focus();
                         return false;
                     }
-                    oControl.setValueState(ValueState.None);
-                }else if(sEleName === "sap.m.ComboBox"){
-                    if(!sValue && oControl.getValue()){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
-                        oControl.focus();
-                        return false;
-                    }else{
-                        oControl.setValueState(ValueState.None);
-                    }
                 }
+                
+                oControl.setValueState(ValueState.None);
 
                 return true;
             });
@@ -379,7 +424,9 @@ sap.ui.define([
             oRowData.crudFlg = "U";
             oRowData.transaction_code = "U";
 
-            oBingModel.setProperty(oBindContxtPath, oRowData)
+            oBingModel.setProperty(oBindContxtPath, oRowData);
+
+            this.onValidationTest(oEvent);
         }
 	});
 });

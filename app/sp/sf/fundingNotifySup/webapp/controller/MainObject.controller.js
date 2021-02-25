@@ -272,7 +272,7 @@ sap.ui.define([
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                         new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber),
                     ],
-                    success: function (oData) {                        
+                    success: function (oData) {
                         if(new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_start_date )) > sToday || new Date(new Intl.DateTimeFormat("ko-KR").format(oData.results[0].funding_notify_end_date )) < sToday){
                             oData.results[0].btnCreate = false;
                         }else{
@@ -280,7 +280,8 @@ sap.ui.define([
                         }
                         
                         this.getModel("master").setData(oData.results[0]);
-                        oView.setBusy(false);
+                        this._fileUpload(oData.results[0].attch_group_number);
+                        
                     }.bind(this)
                 });
                 
@@ -306,6 +307,37 @@ sap.ui.define([
                 success: function (oData) {
                     oView.setBusy(false);
                 }
+            });
+        },
+
+        _fileUpload : function(iFileGroupId) {
+            var that = this;
+            var oFragmentController = sap.ui.controller("ext.lib.fragment.controller/UploadCollection");
+            
+            that.getView().byId("fileContent").removeAllBlocks();
+
+            sap.ui.require(["sap/ui/core/Fragment"], function(Fragment){
+                Fragment.load({
+                    id:that.getView().createId("test"),
+                    name: "ext.lib.fragment/UploadCollection",
+                    controller: oFragmentController
+                }).then(function(oFragmentUploadCollection){
+                    that.getView().byId("fileContent").addBlock(oFragmentUploadCollection);
+                    
+                    var initParam = {
+                        /* fileGroupId : UUID.randomUUID(),  // 신규일경우 */
+                        fileGroupId : iFileGroupId, /* 기 저장된 데이터가 있을 경우 */
+                        oUploadCollection : oFragmentUploadCollection
+                    };
+
+                    oFragmentController.onInit(initParam);
+
+                    /*
+                    * 해당 UploadCollection과 Controller의 핸들링이 필요한 경우에만 정의하여 사용
+                    */
+                    that._oFragmentUploadCollection = oFragmentUploadCollection;
+                    that._oFragmentController = oFragmentController;
+                });
             });
         },
 

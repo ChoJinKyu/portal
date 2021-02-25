@@ -139,28 +139,8 @@
 			<!-- 파일 첨부 -->
 			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="첨부파일">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-						<form:SimpleForm>
-                            <form:content>
-                                <VBox>
-                                    <!-- File Upload 시작-->
-                                    <UploadCollection
-                                        id="UploadCollection"
-                                        maximumFilenameLength="55"
-                                        maximumFileSize="10"
-                                        multiple="true"
-                                        noDataDescription=" "
-                                        sameFilenameAllowed="true"
-                                        instantUpload="false"
-                                        uploadButtonInvisible="true"
-                                        />
-                                    <layoutData>
-                                        <layout:GridData span="XL12 L12 M12 S12" />
-                                    </layoutData>
-                                    <!-- File Upload 끝-->
-                                </VBox>
-                            </form:content>
-						</form:SimpleForm>
+					<uxap:ObjectPageSubSection id="fileContent">
+						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

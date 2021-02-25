@@ -7,9 +7,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:core="sap.ui.core"
     height="100%">
-    <App>
         <Page id="page" title="{I18N>/MIMASTER_TITLE}" showHeader="false">
-            <content>
                 <uxap:ObjectPageLayout                    
                     toggleHeaderOnTitleClick="true"
                     alwaysShowContentHeader="true"
@@ -19,13 +17,16 @@
                     upperCaseAnchorBar="false"
                     showTitleInHeaderContent="true"
                     showEditHeaderButton="true"
-                    showFooter="false">
+                    showFooter="true">
                     <uxap:headerTitle>
                         <uxap:ObjectPageDynamicHeaderTitle>
+                            
                             <uxap:expandedHeading>
                                 <Title text="{I18N>/MIMASTER_TITLE}" wrapping="true"/>
                             </uxap:expandedHeading>
-
+                            <uxap:snappedHeading>
+                                <Title text="{I18N>/MIMASTER_TITLE}" wrapping="true"/>
+                            </uxap:snappedHeading>
                             <uxap:navigationActions>
                                 <OverflowToolbarButton
                                     id="pageNavBackButton"
@@ -73,7 +74,7 @@
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
                                             <Label  text="{I18N>/MI_MATERIAL_CODE} :" 
                                                 design="Bold" 
-                                                class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
+                                                required="{oUi>/createMode}"/>
                                             <Text  
                                                 visible="{=!${oUi>/createMode}}"
                                                 text="{oUiData>/mi_material_code}" 
@@ -98,7 +99,7 @@
                                         </FlexBox>
                                 <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                     <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                        <Label  text="{I18N>/CATEGORY} :" design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
+                                        <Label  text="{I18N>/CATEGORY} :" design="Bold" required="{oUi>/createMode}" />
                                         <Text   id="textcategoryName" 
                                                                 text="{oUiData>/category_name}" 
                                                                 class="sapMLabelNoText"
@@ -110,6 +111,7 @@
                                             visible="{oUi>/createMode}"
                                             placeholder="{I18N>/OPTION}"                                            
                                             width="200px"
+                                            change=".onChangeCombobox"
                                             items="{path:'/MICategoryHierarchyStructureView',
                                                     sorter: {
                                                         path: 'parent_category_code',
@@ -128,8 +130,7 @@
                                 <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                     <layout:VerticalLayout class="sapUiLargeMarginEnd">
                                         <Label  text="{I18N>/USE_FLAG} :" 
-                                                design="Bold" 
-                                                class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
+                                                design="Bold" />
                                         <Text   id="textUseflag" 
                                                 text="{= ${oUiData>/use_flag} ? 'Yes':'No'}" 
                                                 visible="{oUi>/readMode}"
@@ -199,9 +200,9 @@
                                                             <Label text="{I18N>/LANGUAGE_CODE}"/>
                                                         </header>
                                                     </Column>
-                                                    <Column hAlign="Center">
+                                                    <Column hAlign="Center" >
                                                         <header>
-                                                            <Label text="{I18N>/MATERIAL}"/>
+                                                            <Label text="{I18N>/MI_MATERIAL_NAME}" required="{=!${oUi>/readMode}}"/>
                                                         </header>
                                                     </Column>
                                                 </columns>
@@ -244,33 +245,30 @@
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>
                         </uxap:ObjectPageSection>
-                    </uxap:sections>             
+                    </uxap:sections>  
+                     <uxap:footer>
+                        <OverflowToolbar id="overflowToolbar">
+                            <ToolbarSpacer />
+                                <HBox visible="{oUi>/readMode}">
+                                    <Button type="Transparent" text="{I18N>/CANCEL}" enabled="false" visible="false"/>  
+                                    <Button type="Transparent" text="{I18N>/UPDATE}" enabled="true" press=".onEdit"/>
+                                    <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" />
+                                    <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="false" visible="false" />
+                                </HBox>
+                                <HBox visible="{oUi>/editMode}">
+                                    <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>                                                
+                                    <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false" visible="false"/>
+                                    <Button type="Transparent" text="{I18N>/DELETE}" enabled="true" press=".onDeleteAction"/>                    
+                                    <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="true" press=".onSaveAction"/>
+                                </HBox>
+                                <HBox visible="{oUi>/createMode}">
+                                <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>  
+                                    <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false" visible="false"/>
+                                    <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" visible="false"/>
+                                    <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
+                                </HBox>
+                        </OverflowToolbar>
+                    </uxap:footer>           
                 </uxap:ObjectPageLayout>                        
-            </content>
-            <footer>
-                <OverflowToolbar id="overflowToolbar">
-                    <ToolbarSpacer/>
-                        <HBox visible="{oUi>/readMode}">
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="false"/>  
-                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="true" press=".onEdit"/>
-                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" />
-                            <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="false"  />
-                        </HBox>
-                        <HBox visible="{oUi>/editMode}">
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>                                                
-                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
-                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="true" press=".onDeleteAction"/>                    
-                            <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="true" press=".onSaveAction"/>
-                        </HBox>
-                        <HBox visible="{oUi>/createMode}">
-                           <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>  
-                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
-                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false"/>
-                            <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
-                        </HBox>
-                </OverflowToolbar>
-            </footer>
         </Page>
-    </App>
-
 </mvc:View>                                            

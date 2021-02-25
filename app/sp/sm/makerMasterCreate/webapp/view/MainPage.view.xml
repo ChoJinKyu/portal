@@ -19,27 +19,12 @@
             titleLevel="H2"
             showNavButton="true" navButtonType="{mainPageView>/navButtonType}"
             navButtonPress=".onNavigationBackPress"> 
-            <content>
-            <html:style>
-             .sapUiSizeCompact .sapUiFormEdit .forMakerMasterMessageStrip .sapMText  {
-                min-height: 1rem !important;
-                padding-top: 0rem;
-                padding-bottom: 0rem;
-                line-height: 1rem;
-            }
-
-            .forMakerMasterSimpleForm .sapUiFormResGrid>div {
-                padding: 0 0 0!important;
-            }
-            .sapUiSizeCompact .sapMBtn.forChkBizNoBtn {
-                padding-bottom: 0rem !important;
-            }
-            </html:style> 
                 <uxap:ObjectPageLayout 
                     id="page"
                     showTitleInHeaderContent="false"
                     showEditHeaderButton="true" 
                     upperCaseAnchorBar="false"
+                    showAnchorBarPopover="false"
                     showFooter="true"
                     editHeaderButtonPress="handleEditBtnPress" >
                    <uxap:headerTitle>
@@ -66,7 +51,7 @@
                     <uxap:headerContent>
                     </uxap:headerContent>
 
-                    <uxap:sections id="pss">
+                    <uxap:sections>
                         <!-- Business No Check  시작 -->
                         <uxap:ObjectPageSection titleUppercase="false"  title="{I18N>/BUSINESS_NO_CHECK}" visible="{mainPageView>/visible/section_bizno_chk}">
                             <uxap:subSections>
@@ -86,7 +71,7 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="" />
-                                                <Button id="btn_check" text="{I18N>/CHECK}" class="forChkBizNoBtn" type="Emphasized" 
+                                                <Button id="btn_check" text="{I18N>/CHECK}"  type="Emphasized" 
                                                     enabled ="{mainPageView>/enabled/btn_check}" press=".onCheckBizNoButtonPress" />
                                                 <layoutData>
                                                     <layout:GridData span="XL2 L2 M6 S6" />
@@ -94,7 +79,7 @@
                                             </VBox>
                                             <VBox>
                                                 <MessageStrip
-                                                    class="forMakerMasterMessageStrip sapUiMediumMarginBottom sapUiTinyMarginTop"
+                                                    class="sapUiMediumMarginBottom sapUiTinyMarginTop"
                                                     visible="{mainPageView>/visible/message_strip_biz_chk_info}"
                                                     text="{I18N>/NSP00101}"
                                                     showIcon="true"
@@ -151,7 +136,7 @@
                                                 <MessageStrip
                                                     visible="{mainPageView>/visible/message_strip_biz_chk}"
                                                     type="{writeModel>/businessNoCheckList/0/messageStripType}"
-                                                    class="forMakerMasterMessageStrip sapUiMediumMarginBottom sapUiTinyMarginTop"
+                                                    class="sapUiMediumMarginBottom sapUiTinyMarginTop"
                                                     text="{writeModel>/businessNoCheckList/0/message}"
                                                     showIcon="true"
                                                     showCloseButton="false"/>
@@ -172,7 +157,6 @@
                             <uxap:subSections titleUppercase="false">
                             <uxap:ObjectPageSubSection>
                                     <form:SimpleForm
-                                        class="forMakerMasterSimpleForm"
                                         maxContainerCols="1"
                                         editable="true"
                                         layout="ResponsiveGridLayout"
@@ -180,7 +164,7 @@
                                         <form:content>
                                             <VBox class="sapUiSmallMarginBottom">
                                                 <MessageStrip 
-                                                class="forMakerMasterMessageStrip" visible="{mainPageView>/visible/message_strip}"
+                                                visible="{mainPageView>/visible/message_strip}"
                                                 text="{I18N>/NSP00102}"
                                                 type="Warning"
                                                 showIcon="true"
@@ -310,11 +294,11 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/STATUS}" required="{mainPageView>/required/basic}"/>
-                                                <ComboBox id="combobox_maker_status_code" width="100%"  change=".onChangeCombobox" visible="{mainPageView>/visible/isEditable}"
+                                                <!-- <ComboBox id="combobox_maker_status_code" width="100%"  change=".onChangeCombobox" visible="{mainPageView>/visible/isEditable}"
                                                         placeholder=" "  required="{mainPageView>/required/basic}"
                                                         selectedKey="{writeModel>/generalInfo/maker_status_code}" 
                                                         items="{
-                                                        path: '/BusinessPartnerStatusView',
+                                                        path: '/MakerStatusView',
                                                         filters: [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                                         ]}"
@@ -322,7 +306,21 @@
                                                     <items>
                                                         <core:Item key="{code}" text="{code_name}"/>
                                                     </items>
-                                                </ComboBox>
+                                                </ComboBox> -->
+                                                <SegmentedButton id="segmentbtn_maker_status_code" 
+                                                    visible="{mainPageView>/visible/isEditable}"
+                                                    selectedKey="{writeModel>/generalInfo/maker_status_code}"
+                                                    items="{
+                                                        path: '/MakerStatusView',
+                                                        filters: [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                                                        ]
+                                                    }"
+                                                    >
+                                                    <items>
+                                                        <SegmentedButtonItem key="{code}" text="{code_name}" />
+                                                    </items>
+                                                </SegmentedButton>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_status_name',
                                                         type:'sap.ui.model.odata.type.String'
@@ -780,16 +778,15 @@
                     <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer />
-                            <Button type="Transparent" id="btn_list"  visible="{mainPageView>/visible/btn_list}" text="{I18N>/LIST}"   press=".onNavigationBackPress" />  
                             <Button type="Transparent" id="btn_cancel"  visible="{mainPageView>/visible/btn_cancel}" text="{I18N>/CANCEL}"   press=".onNavigationCancelPress" />  
                             <Button type="Emphasized"  id="btn_edit" visible="{mainPageView>/visible/btn_edit}" enabled="{mainPageView>/enabled/btn_edit}" text="{I18N>/EDIT}"  press=".onEditButtonPress"/>
                             <Button type="Emphasized" id="btn_reject"  visible="{mainPageView>/visible/btn_reject}" enabled="{mainPageView>/enabled/btn_reject}" text="{I18N>/REJECT}"   press=".onRejectButtonPress" />
                             <Button type="Emphasized" id="btn_request"  visible="{mainPageView>/visible/btn_request}" enabled="{mainPageView>/enabled/btn_request}" text="{I18N>/REQUEST}"   press=".onRequestButtonPress" />
-                            
+                            <Button type="Transparent" id="btn_list"  visible="{mainPageView>/visible/btn_list}" text="{I18N>/LIST}"   press=".onNavigationBackPress" /> 
                         </OverflowToolbar>
                     </uxap:footer>
                 </uxap:ObjectPageLayout>
-             </content>
+         
         </Page> 
     </App>
 </mvc:View>

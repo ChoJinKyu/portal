@@ -7,8 +7,9 @@
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
     xmlns:cm-ui="cm.util.control.ui"
-    height="100%">
-
+    xmlns:op="op.util.control"
+    height="100%"
+>
     <f:DynamicPage id="page"
         headerExpanded="{mainListViewModel>/headerExpanded}" 
         toggleHeaderOnTitleClick="true">
@@ -69,7 +70,7 @@
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100' },
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'session>/tenant_id'},
                                         {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
                                     ]
                                 }"
@@ -80,10 +81,14 @@
                             </MultiComboBox>
                             <!-- 구매요청 생성자 -->
                             <Label text="{I18N>/REQUESTOR}"/>
-                            <MultiInput 
-                                id="requestorEmpno"
+                            <!-- <op:tokens>
+                                <Token key="{session>/employee_number}" text="{session>/employee_name}" />
+                            </op:tokens> -->
+                            <op:MultiInput 
+                                keys="{jSearch>/requestor_empno/values}"
                                 showValueHelp="true" 
-                                valueHelpRequest=".onValueHelpRequest($event, 'requestor_empno', 'jSearch', {})"
+                                submit="onValueHelpRequest($event, 'requestor_empno', 'jSearch', {})"
+                                valueHelpRequest="onValueHelpRequest($event, 'requestor_empno', 'jSearch', {})"
                             />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -113,7 +118,7 @@
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'session>/tenant_id'},
                                         {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
                                     ]
                                 }">
@@ -123,10 +128,11 @@
                             </MultiComboBox>
                             <!-- 구매요청자 부서 -->
                             <Label text="{I18N>/REQUESTOR_DEPARTMENT}"/>
-                            <MultiInput 
-                                id="requestorDepartmentCode"
+                            <op:MultiInput
+                                keys="{jSearch>/requestor_department_code/values}"
                                 showValueHelp="true" 
-                                valueHelpRequest=".onValueHelpRequest($event, 'requestor_department_code', 'jSearch', {})" 
+                                submit="onValueHelpRequest($event, 'requestor_department_code', 'jSearch', {})" 
+                                valueHelpRequest="onValueHelpRequest($event, 'requestor_department_code', 'jSearch', {})" 
                             />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -135,17 +141,23 @@
                         <VBox>
                             <!-- 구매요청 번호 -->
                             <Label text="{I18N>/PR_NUMBER}"/>
-                            <Input value="{path: 'jSearch>/pr_number/values/0'}"/>
+                            <Input value="{path: 'jSearch>/pr_number/values/0'}" submit="onSearch($event)"/>
                             <!-- 구매요청 품명 -->
                             <Label text="{I18N>/PR_ITEM_NAME}"/>
-                            <Input value="{path: 'jSearch>/pr_desc/values/0'}"/>
+                            <Input value="{path: 'jSearch>/pr_desc/values/0'}" submit="onSearch($event)"/>
                             <!-- 구매담당자 -->
                             <Label text="{I18N>/BUYER}"/>
-                            <MultiInput 
-                                id="buyerEmpno"
+                            <op:Input 
+                                code="{jSearch>/buyer_empno}"
+                                inits="{
+                                    parts: [
+                                        {path: 'session>/employee_number'}, 
+                                        {path: 'session>/employee_name'}
+                                    ]
+                                }"
                                 showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'buyer_empno', 'jSearch', {})"
-                            />
+                                submit="onValueHelpRequest($event, 'buyer_empno', 'jSearch', {})"
+                                valueHelpRequest="onValueHelpRequest($event, 'buyer_empno', 'jSearch', {})"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -153,27 +165,30 @@
                         <VBox>
                             <!-- 조직코드 -->
                             <Label text="{I18N>/ORG_CODE}"/>
-                            <MultiInput 
-                                id="orgCode"
+                            <op:MultiInput 
+                                keys="{jSearch>/org_code/values}"
                                 showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'org_code', 'jSearch', {})"
+                                submit="onValueHelpRequest($event, 'org_code', 'jSearch', {})"
+                                valueHelpRequest="onValueHelpRequest($event, 'org_code', 'jSearch', {})"
                             />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                             <!-- 자재코드 -->
                             <Label text="{I18N>/MATERIAL_CODE}"/>
-                            <MultiInput 
-                                id="materialCode"
+                            <op:MultiInput 
+                                keys="{jSearch>/material_code/values}"
                                 showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
+                                submit="onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
+                                valueHelpRequest="onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
                             />
                             <!-- 구매담당자 부서 -->
                             <Label text="{I18N>/BUYER_DEPARTMENT}" labelFor="searchRequestDepartmentS"/>
-                            <MultiInput 
-                                id="buyerDepartmentCode"
+                            <op:MultiInput 
+                                keys="{jSearch>/buyer_department_code/values}"
                                 showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'buyer_department_code', 'jSearch', {})" 
+                                submit="onValueHelpRequest($event, 'buyer_department_code', 'jSearch', {})" 
+                                valueHelpRequest="onValueHelpRequest($event, 'buyer_department_code', 'jSearch', {})" 
                             />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -210,7 +225,7 @@
                             <Button 
                                 text="{I18N>/RFQ_WRITE}"
                                 type="Transparent"
-                                press=".onButtonPress($event, 'service', {
+                                press="onButtonPress($event, 'service', {
                                     action: 'RFQ',
                                     service: 'op.prReviewMgtV4Service',
                                     entry: 'CallPrReviewSaveProc',
@@ -220,7 +235,7 @@
                             <Button 
                                 text="{I18N>/BIDDING_WRITE}"
                                 type="Transparent"
-                                press=".onButtonPress($event, 'service', {
+                                press="onButtonPress($event, 'service', {
                                     action: 'BIDDING',
                                     service: 'op.prReviewMgtV4Service',
                                     entry: 'CallPrReviewSaveProc',
@@ -230,7 +245,7 @@
                             <Button 
                                 text="{I18N>/REWRITE_REQUEST}"
                                 type="Transparent"
-                                press=".onButtonPress($event, 'service', {
+                                press="onButtonPress($event, 'service', {
                                     action: 'REWRITE',
                                     service: 'op.prReviewMgtV4Service',
                                     entry: 'CallPrReviewSaveProc',
@@ -240,7 +255,7 @@
                             <Button 
                                 text="{I18N>/PR_REVIEW_CLOSING}"
                                 type="Transparent"
-                                press=".onButtonPress($event, 'service', {
+                                press="onButtonPress($event, 'service', {
                                     action: 'CLOSING',
                                     service: 'op.prReviewMgtV4Service',
                                     entry: 'CallPrReviewSaveProc',
@@ -250,7 +265,7 @@
                             <Button 
                                 text="{I18N>/BUYER_CHANGE}"
                                 type="Transparent"
-                                press=".onButtonPress($event, 'service', {
+                                press="onButtonPress($event, 'service', {
                                     action: 'CHANGE',
                                     service: 'op.prReviewMgtV4Service',
                                     entry: 'CallPrReviewSaveProc',
@@ -263,14 +278,18 @@
                                 press="onExcel($event, 'Download', ${list>/Pr_ReviewListView}, {
                                     tId: 'mainTable', 
                                     fileName: 'PR Review List',
-                                    numbers: ['pr_quantity', 'remain_quantity', 'estimated_price']
+                                    conv: [
+                                        {field: 'pr_quantity', formatter: 'numberFormatter.toNumberString'},
+                                        {field: 'remain_quantity', formatter: 'numberFormatter.toNumberString'},
+                                        {field: 'estimated_price', formatter: 'numberFormatter.toNumberString'}
+                                    ]
                                 })"
                             >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
                             </Button>
-                            <!-- <Button icon="sap-icon://action-settings" press=".onButtonPress($event, 'personalize', {})">
+                            <!-- <Button icon="sap-icon://action-settings" press="onButtonPress($event, 'personalize', {})">
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -358,7 +377,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
+                        <ColumnListItem type="Navigation" press="onColumnListItemPress($event, 'navigation', 'list', {})">
                             <cells>
                                 <!-- 구매요청 유형 -->
                                 <Text text="{list>pr_type_name}"/>
@@ -371,14 +390,14 @@
                                 <!-- 조직 -->
                                 <Text text="{list>org_name}"/>
                                 <!-- 자재코드 -->
-                                <Text text="{list>material_code}" width="10em"/>
+                                <Text text="{list>material_code}"/>
                                 <!-- 구매요청 품명 -->                            
                                 <Text text="{list>pr_desc}"/>
                                 <!-- 요청수량 -->
                                 <Text text="{
                                     path: 'list>pr_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" width="5em"/>
+                                }"/>
                                 <!-- 잔여수량 -->
                                 <Text text="{
                                     path: 'list>remain_quantity', 

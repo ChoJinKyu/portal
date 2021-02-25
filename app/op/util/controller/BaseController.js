@@ -13,7 +13,7 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
 
-    "op/util/library/Aop",
+    "op/util/library/Aop"
 ], function (Controller, SppUserSession, Multilingual, DateFormatter, NumberFormatter, ExcelUtil, MessageBox, JSONModel, Filter, FilterOperator, Fragment, Aop) {
     "use strict";
 	return Controller.extend("op.util.controller.BaseController", {
@@ -54,6 +54,7 @@ sap.ui.define([
             Aop.addFuncForButtonPress(this);
             Aop.addFuncForNavigation(this);
             Aop.addFuncForOnColumnListItemPress(this);
+            Aop.addFuncForXml(this, this.$session);
         },
         /////////////////////////////////////////////////////////////
         // Util
@@ -61,57 +62,6 @@ sap.ui.define([
         // Formatter
         dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
-        get: function(ns) {
-            return this.getOwnerComponent()[ns];
-        },
-        // Token to Bind
-        convTokenToBind: function(model, path, tokens) {
-            this.getModel(model).setProperty(path,
-                tokens.reduce((acc, t) => {
-                    return [...acc, t.getKey()];
-                }, [], this)
-            );
-        },
-        before: function() {
-
-            var [pointcut, ...args] = arguments;
-            var [fn, ...keys] = args.slice().reverse();
-            keys = keys.reverse().filter(e => typeof e == "string").join("");
-
-            Aop.around(pointcut, function(f) {
-
-                var args = f.arguments = Array.prototype.slice.call(f.arguments);
-                args = args.filter(e => typeof e == "string").join("");
-
-                keys == args
-                &&
-                fn.call(this);
-               
-                return Aop.next.call(this, f);
-
-            }, this);
-        },
-        after: function() {
-
-            var [pointcut, ...args] = arguments;
-            var [fn, ...keys] = args.slice().reverse();
-            keys = keys.reverse().filter(e => typeof e == "string").join("");
-
-            Aop.around(pointcut, function(f) {
-
-                var args = f.arguments = Array.prototype.slice.call(f.arguments);
-                args = args.filter(e => typeof e == "string").join("");
-
-                setTimeout((function() {
-                    keys == args
-                    &&
-                    fn.call(this);
-                }).bind(this), 0);
-               
-                return Aop.next.call(this, f);
-
-            }, this);
-        },
         // Filter
         generateFilters: function(model, filters) {
             // model Object
@@ -226,22 +176,20 @@ sap.ui.define([
             return mDeferred.promise();
         },
         // dialog
-        dialog: function(Dialog, callback, control) {
+        dialog: function(Dialog, callback) {
             // 저장 (strict mode)
             var key = (new Date()).getTime().toString();
             this.dialog[key] = Dialog;
             // 해제
             var release = (function() {
                 setTimeout(() => {
-
                     Dialog.close();
                     Dialog.destroy();
                     this.dialog[key] && delete this.dialog[key];
                 }, 0);
                 return arguments;
             }).bind(this);
-            // Deferred
-            var mDeferred = $.Deferred();
+            
             Dialog
                 .attachEvent("apply", function (e) {
                     !!callback 
@@ -249,21 +197,14 @@ sap.ui.define([
                     typeof callback == "function"
                     &&
                     callback.call(this, e);
-                    mDeferred.resolve(release(e));
+                    release(e);
                 }, this)
                 .attachEvent("cancel", function () {
-                    mDeferred.reject(release());
+                    release();
                 }, this)
                 .open();
 
-            // Token
-            control 
-            && 
-            setTimeout(() => {
-                Dialog.setTokens(control.getTokens());
-            }, 0); 
-
-            return mDeferred.promise();
+            return this;
         },
         /////////////////////////////////////////////////////////////
         // Service
@@ -277,6 +218,7 @@ sap.ui.define([
                 var oDeferred = $.Deferred();
                 $.ajax({
                     url: [
+                        // "/op/pu/prReviewMgt"
                         "/", this.getMetadata().getNamespace().split(".controller")[0].replace(/\./g, "/"), 
                         "/webapp/srv-api/odata/v4/", service, "/", entry
                     ].join(""),
@@ -373,7 +315,7 @@ sap.ui.define([
         onButtonPress: function () {},
         onExcel: function () {
             var [event, action, items, ...args] = arguments;
-            var { numbers } = args[args.length-1];
+            var { conv } = args[args.length-1];
             if (action == "Download") {
                 var today = new Date();
                 var stamp = [
@@ -391,9 +333,8 @@ sap.ui.define([
                     })(args.slice().reverse())) + "_" + stamp,
                     table: this.byId(args[args.length-1]["tId"]),
                     data: items.map(e => {
-                        // Trailing Zero
-                        (numbers||[]).forEach(n => {
-                            e[n] = (+e[n] || 0);
+                        (conv||[]).forEach(n => {
+                            e[n.field] = n.formatter.split('.').reduce((acc, e) => acc[e], this)(e[n.field]);
                         });
                         return e;
                     })
@@ -401,6 +342,59 @@ sap.ui.define([
             }
             else /*if (action == "Upload")*/ {
             }
+        },
+        // accessor
+        get: function(ns) {
+            return this.getOwnerComponent()[ns];
+        },
+        // Token to Bind
+        convTokenToBind: function(model, path, tokens) {
+            this.getModel(model).setProperty(path,
+                tokens.reduce((acc, t) => {
+                    return [...acc, t.getKey()];
+                }, [], this)
+            );
+        },
+        // filter
+        before: function() {
+
+            var [pointcut, ...args] = arguments;
+            var [fn, ...keys] = args.slice().reverse();
+            keys = keys.reverse().filter(e => typeof e == "string").join("");
+
+            Aop.around(pointcut, function(f) {
+
+                var args = f.arguments = Array.prototype.slice.call(f.arguments);
+                args = args.filter(e => typeof e == "string").join("");
+
+                keys == args
+                &&
+                fn.call(this);
+               
+                return Aop.next.call(this, f);
+
+            }, this);
+        },
+        after: function() {
+
+            var [pointcut, ...args] = arguments;
+            var [fn, ...keys] = args.slice().reverse();
+            keys = keys.reverse().filter(e => typeof e == "string").join("");
+
+            Aop.around(pointcut, function(f) {
+
+                var args = f.arguments = Array.prototype.slice.call(f.arguments);
+                args = args.filter(e => typeof e == "string").join("");
+
+                setTimeout((function() {
+                    keys == args
+                    &&
+                    fn.call(this);
+                }).bind(this), 0);
+               
+                return Aop.next.call(this, f);
+
+            }, this);
         }
 	});
 });

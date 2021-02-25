@@ -2,33 +2,32 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core" 
     xmlns:form="sap.ui.layout.form"
+    xmlns:op="op.util.control"
 >
     <Dialog id="reason" class="sapUiSmallMargin" title="{fragment>/reason/title}"  afterOpen=".onAfterOpen($event, 'default', {})">
         <VBox>
             <form:SimpleForm>
                 <Label text="{I18N>/BUYER}" visible="{= ${fragment>/reason/action} === 'CHANGE'}"/>
-                <MultiInput 
+                <op:Input 
+                    code="{fragment>/reason/buyerEmpno}"
                     visible="{= ${fragment>/reason/action} === 'CHANGE'}"
                     showValueHelp="true"
-                    valueHelpRequest=".onValueHelpRequest($event, 'fragment', {
-                        action: 'input',
-                        model: 'jSearch', 
-                        path: 'buyer_empno'
-                    })"
+                    submit=".onValueHelpRequest($event, 'fragment', {})"
+                    valueHelpRequest=".onValueHelpRequest($event, 'fragment', {})"
                 />
-                <Label text="{I18N>/REASON}"/>
+                <Label text="{I18N>/REASON}" required="true" />
                 <TextArea value="{fragment>/reason/processedReason}" rows="3"/>
             </form:SimpleForm>
         </VBox>
         <ToolbarSpacer/>
         <VBox>
             <HBox alignItems="End" justifyContent="End">
-                <Button text="Cancel" class="sapUiSmallMarginEnd" 
+                <Button text="{I18N>/CANCEL}" class="sapUiSmallMarginEnd" 
                     press=".onCancel($event, 'default', {
                         settled: 'reject'
                     })"
                 />
-                <Button text="Apply" class="sapUiSmallMarginEnd" type="Emphasized" 
+                <Button text="{I18N>/APPLY}" class="sapUiSmallMarginEnd" type="Emphasized" 
                     press=".onCommit($event, 'default', ${fragment>/reason}, {
                         settled: 'resolve'
                     })"

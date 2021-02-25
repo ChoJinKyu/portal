@@ -6,7 +6,7 @@ PROCEDURE OP_PU_PR_REVIEW_VLDT_PROC (
                                                            ,PR_NUMBER NVARCHAR(50)
                                                            ,PR_ITEM_NUMBER NVARCHAR(10)
                                                            )
-                                    ,IN I_EMPLOYEE_NUMBER NVARCHAR(30)  -- 처리자(session)
+                                    ,IN I_EMPLOYEE_NUMBER NVARCHAR(30)  -- 처리자(session)  -- 화면에서 없애자....
                                     ,OUT O_MSG_TBL TABLE(
                                                          RETURN_CODE NVARCHAR(2)
                                                         ,RETURN_MSG NVARCHAR(1000)
@@ -24,15 +24,23 @@ History      : 2021-02-09 - 최초적성
 AS
 
 BEGIN
-    DECLARE v_sql_rowcnt INT = 0;
+    DECLARE v_sql_rowcnt INT := 0;
 
-    DECLARE v_tenant_id NVARCHAR(5);
-	DECLARE v_user_department_code NVARCHAR(50);
-	DECLARE v_buyer_department_code NVARCHAR(50);
-    DECLARE v_remain_quantity DECIMAL = 0;
+    DECLARE v_remain_quantity DECIMAL := 0;
 
 	DECLARE v_pr_number NVARCHAR(50);
 	DECLARE v_pr_item_number NVARCHAR(10);
+
+    /* Session 변수 - Start */
+    DECLARE v_ss_user_id              NVARCHAR(256);
+    DECLARE v_ss_tenant_id            NVARCHAR(256);
+    DECLARE v_ss_company_code         NVARCHAR(256);
+    DECLARE v_ss_employee_number      NVARCHAR(256);
+    DECLARE v_ss_language_code        NVARCHAR(256);
+    DECLARE v_ss_timezone_code        NVARCHAR(256);
+    DECLARE v_ss_applicationuser      NVARCHAR(256);
+	DECLARE v_ss_user_department_code NVARCHAR(256);
+    /* Session 변수 - End */
 
     -- Cursor 선언
     DECLARE CURSOR c_pr_item FOR
@@ -50,32 +58,65 @@ BEGIN
         BEGIN
             --ROLLBACK;
             --O_MSG_TBL = SELECT 'NG' AS RETURN_CODE, ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE AS RETURN_MSG FROM DUMMY;
-            O_MSG_TBL = SELECT 'NG' AS RETURN_CODE, ::SQL_ERROR_MESSAGE || '(PR:' || :v_pr_number || ', Item:' || :v_pr_item_number || ')' AS RETURN_MSG FROM DUMMY;
+            --O_MSG_TBL = SELECT 'NG' AS RETURN_CODE, ::SQL_ERROR_MESSAGE || '(PR:' || :v_pr_number || ', Item:' || :v_pr_item_number || ')' AS RETURN_MSG FROM DUMMY;
+            --O_MSG_TBL = SELECT 'NG' AS RETURN_CODE, CM_GET_MESSAGE_FUNC(:v_ss_tenant_id, ::SQL_ERROR_MESSAGE, :v_ss_language_code) || '(PR:' || :v_pr_number || ', Item:' || :v_pr_item_number || ')' AS RETURN_MSG FROM DUMMY;
+            O_MSG_TBL = SELECT 'NG' AS RETURN_CODE
+                              ,CM.MESSAGE_CONTENTS || '(PR:' || :v_pr_number || ', Item:' || :v_pr_item_number || ')' AS RETURN_MSG
+                        FROM   CM_MESSAGE CM
+                        WHERE  CM.TENANT_ID     = :v_ss_tenant_id
+                        AND    CM.MESSAGE_CODE  = ::SQL_ERROR_MESSAGE
+                        AND    CM.LANGUAGE_CODE = :v_ss_language_code
+                        ;
         END;
 
+
+
+
     /**** Check Input Value - Start ****/
+
     -- Job Type별 Check - 재작성요청(REWRITE), 마감(CLOSING), 마감취소(CLOSING_CANCEL), 구매담당자변경(CHANGE), RFQ작성(RFQ), 입찰작성(BIDDING)
 
-    v_tenant_id = :I_PR_ITEM_TBL.TENANT_ID[1];
-
-    -- Employee Number Check
-    IF IFNULL(:I_EMPLOYEE_NUMBER, '-1') = '-1' OR TRIM(' ' FROM :I_EMPLOYEE_NUMBER ) = '' THEN
-        SELECT IFNULL(:I_EMPLOYEE_NUMBER, '100000')  -- 임시 by dokim
-        INTO   I_EMPLOYEE_NUMBER
-        FROM   DUMMY
-        ;
-    END IF;
-
-    -- I_EMPLOYEE_NUMBER로 v_user_department_code 조회
-    SELECT HR.DEPARTMENT_CODE
-    INTO   v_user_department_code
-    FROM   CM_HR_EMPLOYEE HR
-    WHERE  HR.TENANT_ID        = :v_tenant_id
-    AND    HR.USER_STATUS_CODE = 'C'
-    AND    HR.EMPLOYEE_NUMBER  = :I_EMPLOYEE_NUMBER
+    /* Session 및 Default 설정 - Start */
+    /*
+    SELECT SV.USER_ID
+          ,SV.TENANT_ID
+          ,SV.COMPANY_CODE
+          ,SV.EMPLOYEE_NUMBER
+          ,SV.LANGUAGE_CODE
+          ,SV.TIMEZONE_CODE
+          ,SV.APPLICATIONUSER
+          ,HR.DEPARTMENT_CODE  -- Session에 부서코드 컬럼 추가될것이다. 나중에 CM_HR_EMPLOYEE의 JOIN을 삭제하자.
+    INTO   v_ss_user_id
+          ,v_ss_tenant_id
+          ,v_ss_company_code
+          ,v_ss_employee_number
+          ,v_ss_language_code
+          ,v_ss_timezone_code
+          ,v_ss_applicationuser
+          ,v_ss_user_department_code
+    FROM  CM_SPP_USER_SESSION_VIEW SV
+    INNER JOIN CM_HR_EMPLOYEE HR
+    ON    HR.TENANT_ID = SV.TENANT_ID
+    AND   HR.EMPLOYEE_NUMBER = SV.EMPLOYEE_NUMBER
+    AND   HR.USER_STATUS_CODE = 'C'
     ;
+    */
+
+    -- Session이 없을때 임시로 설정
+    --IF ::ROWCOUNT = 0 THEN
+        v_ss_tenant_id := 'L2100';
+        v_ss_company_code := 'LGCKR';
+        v_ss_employee_number := '100000';
+        v_ss_language_code := 'KO';
+        v_ss_timezone_code := 'AS054';
+        v_ss_user_department_code = '50013558';
+        --SIGNAL param_error SET MESSAGE_TEXT = '세션을 찾을 수 없습니다.';
+    --END IF;
+    /* Session 및 Default 설정 - End */
 
     /**** Check Input Value - End ****/
+
+
 
 
     /**** Business Logic - Start ****/
@@ -97,7 +138,7 @@ BEGIN
         ;
 
         IF v_sql_rowcnt > 0 THEN
-            SIGNAL status_check SET MESSAGE_TEXT = '결재완료, 생성완료 상태만 진행 할 수 있습니다.';  -- NOP00018
+            SIGNAL status_check SET MESSAGE_TEXT = 'NOP00018';  -- '결재완료, 생성완료 상태만 진행 할 수 있습니다.';  -- NOP00018
         END IF;
 
         /* 구매담당자 본인꺼만 작업 진행이 가능하지만 구매담당자변경(CHANGE))과 RFQ작성(RFQ), 입찰작성(BIDDING) (자동으로 본인을 담당자로 변경 후 진행)은 제외 */
@@ -108,11 +149,11 @@ BEGIN
         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
         AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-        AND    PD.BUYER_EMPNO    = :I_EMPLOYEE_NUMBER
+        AND    PD.BUYER_EMPNO    = :v_ss_employee_number
         ;
 
         IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' AND :I_JOB_TYPE != 'RFQ' AND :I_JOB_TYPE != 'BIDDING') THEN
-            SIGNAL status_check SET MESSAGE_TEXT = '자신의 담당 품목이 아닙니다. 구매담당자 변경(지정) 후 진행해주세요.';  -- NOP00024
+            SIGNAL status_check SET MESSAGE_TEXT = 'NOP00024';  -- '자신의 담당 품목이 아닙니다. 구매담당자 변경(지정) 후 진행해주세요.';  -- NOP00024
         END IF;
 
         /* 마감된 구매요청건은 마감취소 외 다른 작업을 못한다. */
@@ -127,7 +168,7 @@ BEGIN
         ;
 
         IF v_sql_rowcnt > 0 AND :I_JOB_TYPE != 'CLOSING_CANCEL' THEN
-            SIGNAL status_check SET MESSAGE_TEXT = '마감된 구매요청건은 진행 할 수 없습니다.';  -- NOP00020
+            SIGNAL status_check SET MESSAGE_TEXT = 'NOP00020';  -- '마감된 구매요청건은 진행 할 수 없습니다.';  -- NOP00020
         END IF;
         /* 공통 Check - End */
 
@@ -146,7 +187,7 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '다른 진행중인 요청건이 존재해서 재작성 요청을 할 수 없습니다.';  -- NOP00019
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00019';  -- '다른 진행중인 요청건이 존재해서 재작성 요청을 할 수 없습니다.';  -- NOP00019
                     END IF;
 
 
@@ -164,7 +205,7 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '마감된 구매요청건이 존재합니다.';  -- NOP00021
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00021';  -- '마감된 구매요청건이 존재합니다.';  -- NOP00021
                     END IF;
 
                 ELSEIF (:I_JOB_TYPE = 'CLOSING_CANCEL') THEN
@@ -181,7 +222,7 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '마감된 상태만 취소 가능합니다.';  -- NOP00022
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00022';  -- '마감된 상태만 취소 가능합니다.';  -- NOP00022
                     END IF;
 
                 ELSEIF (:I_JOB_TYPE = 'CHANGE') THEN
@@ -198,7 +239,7 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '진행중인 구매요청건은 구매담당자 변경을 할 수 없습니다.';  -- NOP00028
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00028';  -- '진행중인 구매요청건은 구매담당자 변경을 할 수 없습니다.';  -- NOP00028
                     END IF;
 
                     /* 본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능 - 무조건 변경 할 수 있도록 요청함.
@@ -209,11 +250,11 @@ BEGIN
                     AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                     AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                     AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                    AND    (PD.BUYER_EMPNO = :I_EMPLOYEE_NUMBER OR PD.BUYER_DEPARTMENT_CODE = :v_user_department_code OR NULLIF(PD.BUYER_EMPNO, '') IS NULL)
+                    AND    (PD.BUYER_EMPNO = :v_ss_employee_number OR PD.BUYER_DEPARTMENT_CODE = :v_ss_user_department_code OR NULLIF(PD.BUYER_EMPNO, '') IS NULL)
                     ;
 
                     IF v_sql_rowcnt = 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능합니다.';  -- NOP00023
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00023';  -- '본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능합니다.';  -- NOP00023
                     END IF;
                     */
 
@@ -231,7 +272,7 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '진행중인 구매요청건은 RFQ작성을 할 수 없습니다.';  -- NOP00027
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00027';  -- '진행중인 구매요청건은 RFQ작성을 할 수 없습니다.';  -- NOP00027
                     END IF;
 
                     /* 잔량이 없는 구매요청건은 진행이 불가능하다 - 화면에서 체크하고 있다. */
@@ -245,7 +286,7 @@ BEGIN
                     ;
 
                     IF v_remain_quantity = 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '잔량이 없는 구매요청건은 RFQ작성을 진행 할 수 없습니다.';  -- NOP00025
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00025';  -- '잔량이 없는 구매요청건은 RFQ작성을 진행 할 수 없습니다.';  -- NOP00025
                     END IF;
 
                 ELSEIF (:I_JOB_TYPE = 'BIDDING') THEN
@@ -262,8 +303,8 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)PR Review status check.(I cannot write an BIDDING.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '진행중인 구매요청건은 입찰작성을 할 수 없습니다.';  -- NOP00030
+                        --SIGNAL status_check SET MESSAGE_TEXT = 'NOP00030';  -- '(메세지)PR Review status check.(I cannot write an BIDDING.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00030';  -- '진행중인 구매요청건은 입찰작성을 할 수 없습니다.';  -- NOP00030
                     END IF;
 
                     /* 잔량이 없는 구매요청건은 진행이 불가능하다 - 화면에서 체크하고 있다. */
@@ -277,11 +318,11 @@ BEGIN
                     ;
 
                     IF v_remain_quantity = 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '잔량이 없는 구매요청건은 입찰작성을 진행 할 수 없습니다.';  -- NOP00026
+                        SIGNAL status_check SET MESSAGE_TEXT = 'NOP00026';  -- '잔량이 없는 구매요청건은 입찰작성을 진행 할 수 없습니다.';  -- NOP00026
                     END IF;
 
                 ELSE
-                    SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Processing error.(Please Check Job Type)';  -- NOP00037
+                    SIGNAL param_error SET MESSAGE_TEXT = 'NOP00037';  -- '구매요청 검토 프로세스 오류.(작업유형을 확인하세요.)';  -- NOP00037
                 END IF;
 
         --END IF;
@@ -290,7 +331,17 @@ BEGIN
 
     /**** Business Logic - End ****/
 
-    --COMMIT;
-    O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, 'It has been processed successfully.' AS RETURN_MSG FROM DUMMY;  -- NOP00038
 
+
+
+    --COMMIT;
+    --O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, '진행 가능한 상태입니다.' AS RETURN_MSG FROM DUMMY;  -- NOP00040
+    --O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, CM_GET_MESSAGE_FUNC(:v_ss_tenant_id, 'NOP00040', :v_ss_language_code) AS RETURN_MSG FROM DUMMY;
+    O_MSG_TBL = SELECT 'OK' AS RETURN_CODE
+                      ,CM.MESSAGE_CONTENTS AS RETURN_MSG
+                FROM   CM_MESSAGE CM
+                WHERE  CM.TENANT_ID     = :v_ss_tenant_id
+                AND    CM.MESSAGE_CODE  = 'NOP00040'
+                AND    CM.LANGUAGE_CODE = :v_ss_language_code
+                ;
 END;

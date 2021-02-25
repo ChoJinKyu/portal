@@ -1,11 +1,14 @@
 sap.ui.define([
     "sap/f/LayoutType",
-], function (LayoutType) {
+    "ext/lib/util/SppUserSession",
+    "sap/ui/model/odata/v2/ODataModel"
+], function (LayoutType, SppUserSession, ODataModel) {
 	"use strict";
 
 	var Aop = {
         around: function(pointcut, advice, context, isHandler = false) {
-            for (var member in (context = isHandler ? context.__proto__ : context)) {
+            //for (var member in (context = isHandler ? context.__proto__ : context)) {
+            for (var member in (context = isHandler ? Object.getPrototypeOf(context) : context)) {
                 if(typeof context[member] == 'function' && member.match(pointcut)) {
                     let target = context[member];
                     context[member] = function() {
@@ -22,6 +25,47 @@ sap.ui.define([
     return {
         ...Aop,
         
+        addFuncForXml: function(context, oSession) {
+            // keys
+            var session = oSession || (new SppUserSession()).getModel().getData();
+            // filter
+            !Aop.addFuncForXmlCalled
+            &&
+            Aop.around("read", function(f) {
+                // Declare
+                var urlParameters;
+                // Parsing
+                f.arguments[1] 
+                && 
+                f.arguments[1].urlParameters 
+                && 
+                (f.arguments[1].urlParameters instanceof Array)
+                && 
+                (urlParameters = (f.arguments[1].urlParameters).reduce((acc, e) => {
+                    return [ 
+                        ...acc, 
+                        e.indexOf("$filter=") < 0
+                        ? e
+                        : "$filter=" + encodeURIComponent(
+                            Object
+                                .keys(session)
+                                .reduce((acc, key) => {
+                                    return acc
+                                            .replaceAll(["session>/", key].join("").toLowerCase(), session[key])
+                                            .replaceAll(["session>/", key].join("").toUpperCase(), session[key]);
+                                }, decodeURIComponent(e.split("$filter=")[1]))
+                        )
+                    ];
+                }, []));
+                // Set
+                urlParameters && (f.arguments[1].urlParameters = urlParameters);
+                // Target
+                return Aop.next.call(this, f);
+            }, ODataModel.prototype);
+
+            Aop.addFuncForXmlCalled = true;
+        },
+
         // Button Action - press
         addFuncForButtonPress: function(context) {
 

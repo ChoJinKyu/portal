@@ -13,8 +13,10 @@ sap.ui.define([
     "sap/m/CheckBox",
     "sap/ui/core/ValueState",
 	"sap/ui/core/message/Message",
-    "sap/ui/core/MessageType"
-], function (BaseController, Multilingual, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, jQuery, CheckBox, ValueState, Message, MessageType) {
+    "sap/ui/core/MessageType",
+    "ext/lib/util/UUID"
+], function (BaseController, Multilingual, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast
+            , jQuery, CheckBox, ValueState, Message, MessageType, UUID) {
 
     "use strict";
 
@@ -39,6 +41,7 @@ sap.ui.define([
             this.setModel(new JSONModel(), "applicationSup");
             this.setModel(new JSONModel(), "transactionDivision");
             this.setModel(new JSONModel(), "contModel");
+            this.setModel(new JSONModel({}), "contState");
 
             this.getView().setModel(oViewTableModel, "localModel");
 
@@ -58,7 +61,6 @@ sap.ui.define([
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("mainList", {}, true);
         },
-
         //투자계획 상세 list 추가
         onInvestmentDtlAddButtonPress: function () {
 
@@ -78,6 +80,28 @@ sap.ui.define([
             oModel.setProperty("/popUpInvestPlanDtl", dtlModel);
         },
 
+        //신청서 삭제
+        onPageDeleteButtonPress :function (oEvent) {
+            var procDeleteTemp = {},
+                oPramDataModel = this.getModel("applicationSup");
+
+                
+            procDeleteTemp = {
+                funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
+            };
+
+            this._ajaxCall("ProcDelAppl", procDeleteTemp);
+        },
+
+        //신청서 삭제 성공
+        onAfterProcDelAppl : function () {
+            var urlPram = this.getModel("contModel").getProperty("/oArgs"),
+                oI18n = this.getView().getModel("I18N");
+            
+            this.getOwnerComponent().getRouter().navTo("mainList", {}, true);
+            MessageToast.show("삭제 성공");
+        },
+
         //신청서 임시저장
         onPageSaveButtonPress: function (oEvent) {
             var procSaveTemp = {},
@@ -89,10 +113,22 @@ sap.ui.define([
                 oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
                 ofunding_status_code=oPramDataModel.getProperty("/funding_status_code"),
                 aControls = this.getView().getControlsByFieldGroupId("newAppl"),
-                bValid = this._isValidControl(aControls);//
+                bControls = this.getView().getControlsByFieldGroupId("status");
 
+            // if(!this._statusErroCheack(bControls)){
+            //     return;
+            // };
 
-            if(!bValid){
+            var status = this.getModel("contState").getProperty("/");
+            for (var key in status){
+                if(status[key] === "Error"){ 
+                    this.byId(key).focus();
+                    return; 
+                };   
+            };
+            
+
+            if(!this._isValidControl(aControls)){
                 return;
             };
 
@@ -123,7 +159,7 @@ sap.ui.define([
                 hopeYyyyMm = null;
             }else{
                 hopeYyyyMm = String(hopeYyyyMm).replace("-", "");
-            }
+            };
             
             procSaveTemp = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
@@ -145,13 +181,13 @@ sap.ui.define([
                 , funding_reason_code: oPramCheackValue.toString()
                 , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
                 , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
-                , collateral_attch_group_number: ""
+                , collateral_attch_group_number: oPramDataModel.getProperty("/collateral_attch_group_number")
             };
 
             if(!ofunding_status_code || ofunding_status_code=="110"){
                 this._ajaxCall("ProcSaveTemp", procSaveTemp);    
             }else{
-                MessageBox.alert("지금 진행 상태에서는 임시저장이 불가 합니다.");
+                MessageToast.show("지금 진행 상태에서는 임시저장이 불가 합니다.");
             }
             
         },
@@ -180,8 +216,7 @@ sap.ui.define([
                 oPramDataModel = this.getModel("applicationSup"),
                 oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
                 ofunding_status_code = oPramDataModel.getProperty("/funding_status_code"),
-                aControls = this.getView().getControlsByFieldGroupId("newRequest"),
-                bValid = this._isValidControl(aControls);//newRequest
+                aControls = this.getView().getControlsByFieldGroupId("newRequest");//newRequest
             
             for(var i = 0; i<oPramCheack.length; i++){
                 if(oPramCheack[i]){
@@ -201,7 +236,7 @@ sap.ui.define([
                 return;
             };
             
-            if(!bValid){
+            if(!this._isValidControl(aControls)){
                 return;
             };
 
@@ -235,7 +270,7 @@ sap.ui.define([
                 , funding_reason_code: oPramCheackValue.toString()
                 , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
                 , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
-                , collateral_attch_group_number: ""
+                , collateral_attch_group_number: oPramDataModel.getProperty("/collateral_attch_group_number")
                 , funding_status_code : ofunding_status_code
             };
 
@@ -271,10 +306,17 @@ sap.ui.define([
                 oView= this.byId("investmentPlanDetails"),
                 oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),
                 oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl"),
-                aControls = oView.getControlsByFieldGroupId("newInvestmentPlan"),
-                bValid = this._isValidControl(aControls);
+                aControls = oView.getControlsByFieldGroupId("newInvestmentPlan");
 
-            if(!bValid){
+            var status = this.getModel("contState").getProperty("/");
+            for (var key in status){
+                if(status[key] === "Error"){ 
+                    this.byId(key).focus();
+                    return; 
+                };   
+            };
+
+            if(!this._isValidControl(aControls)){
                 return;
             }
 
@@ -354,6 +396,11 @@ sap.ui.define([
                 that=this,
                 bFilters=[];
 
+            if(!this.byId("idProductsTable").getSelectedItems().length){
+                MessageToast.show("삭제대상이 없습니다.")
+                return;
+            }
+
             for(var i = 0; i < checkRow.length; i++){
                 invPlanDtl.push({
                     funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")//자금지원신청번호	
@@ -425,10 +472,10 @@ sap.ui.define([
 
                 
                 if(oEvent){
-                    rowPath = oEvent.getSource().getParent().getBindingContext("applicationSup").getPath()
-                    sInvestment_plan_sequence = this.getModel("applicationSup").getProperty(rowPath + "/investment_plan_sequence")
+                    rowPath = oEvent.getSource().getParent().getBindingContext("applicationSup").getPath();
+                    sInvestment_plan_sequence = this.getModel("applicationSup").getProperty(rowPath + "/investment_plan_sequence");
                 }else{
-                    sInvestment_plan_sequence = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst").investment_plan_sequence
+                    sInvestment_plan_sequence = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst").investment_plan_sequence;
                 }
 
             if (!this.pDialog) {
@@ -525,6 +572,7 @@ sap.ui.define([
         //투자계획 팝업 닫기
         onCreatePopupClose: function () {
             this._fnInvestmentPlanTableReflash();
+            this.byId("investmentPlanDetails").close();
         },
 
         //투자계획 상세 계산
@@ -533,7 +581,7 @@ sap.ui.define([
             var rowBindingContext = oEvent.oSource.getParent().getBindingContext("applicationSup"),
                 rowInvestmentPurchasingPrice = rowBindingContext.getObject().investment_item_purchasing_price,
                 rowInvestmentPurchasingQty = rowBindingContext.getObject().investment_item_purchasing_qty,
-                rowInvestmentPurchasingAmt = rowInvestmentPurchasingPrice * rowInvestmentPurchasingQty,
+                rowInvestmentPurchasingAmt = parseInt(rowInvestmentPurchasingPrice) * parseInt(rowInvestmentPurchasingQty),
                 dtlLength = rowBindingContext.getModel().getProperty("/popUpInvestPlanDtl").length,
                 investmentPurchasingAmtSum = 0;
 
@@ -558,7 +606,7 @@ sap.ui.define([
                 sChain_code = "SP",
                 aFilters = [];
 
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
+            // aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, sGroup_code));
             aFilters.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
 
@@ -644,7 +692,8 @@ sap.ui.define([
             var oView = this.getView(),
                 oModel = this.getModel("fundingApp"),
                 that = this,
-                bFilters = [];
+                bFilters = [],
+                groupId = UUID.randomUUID();
             
             //신청서 마스터 조회
             oModel.read("/FundingApplDataView", {
@@ -654,26 +703,34 @@ sap.ui.define([
                     var aArr = [];
                     var aCheckedData = that.getModel("contModel").getProperty("/detail/checkModel") || [];
                     that.byId("search_repayment_method_code").setSelectedKey("A");
+                    
                     if (!!oRetrievedResult.results[0]) {
                         that.getModel("applicationSup").setData(oRetrievedResult.results[0]);
-                        var statusCode = that.getModel("applicationSup").getProperty("/funding_status_code")
+                        var statusCode = that.getModel("applicationSup").getProperty("/funding_status_code"),
+                            attachGroupNumber = oRetrievedResult.results[0].collateral_attch_group_number;
 
-                        if(statusCode=="110" || statusCode=="230"){
-                            // that.byId("productsTableToolbar").setVisible(true);
-                            that.byId("pageSubmissionButton").setEnabled(true);
+                        if(attachGroupNumber==="" && !attachGroupNumber){
+                            that.getModel("applicationSup").setProperty("/collateral_attch_group_number", groupId);
+                            that._fileUpload(groupId);
+                        }else{
+                            that._fileUpload(attachGroupNumber);
                         };
                         
-                        if( !statusCode || statusCode=="110"){
+                        // that._fileUpload(UUID.randomUUID());
+                        if(statusCode=="110" || statusCode=="230"){
+                            that.byId("pageSubmissionButton").setVisible(true);
+                        };
+                        
+                        if( statusCode=="110"){
                             that.byId("pageSaveButton").setEnabled(true);
                         }else{
                             that.byId("pageSaveButton").setEnabled(false);
                         };
 
                         if(statusCode=="120"){
-                            that.byId("pageSubmissionButton").setEnabled(false);
-                            that.byId("addRow").setEnabled(false);
-                            that.byId("deleteRow").setEnabled(false);
-                            // that.byId("popupSaveButton").setEnabled(false);
+                            that.byId("pageSubmissionButton").setVisible(false);
+                            that.byId("addRow").setVisible(false);
+                            that.byId("deleteRow").setVisible(false);
                         }
                         
                         var aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
@@ -696,20 +753,20 @@ sap.ui.define([
                         });
 
                     } else {
-                        // that.byId("productsTableToolbar").setVisible(false);
-                        that.byId("pageSubmissionButton").setEnabled(false);
-                        that.byId("pageSaveButton").setEnabled(true);
-                        
+                        that._fileUpload(groupId);
+                        that.getModel("applicationSup").setProperty("/collateral_attch_group_number", groupId);
+                        that.byId("pageDeleteButton").setVisible(false);
+                        that.byId("pageSubmissionButton").setVisible(false);
+                        that.byId("pageSaveButton").setVisible(true);
                         that.byId("pageSaveButton").setProperty("type", "Emphasized");
-                        that.byId("pageSubmissionButton").setProperty("type", "Transparent");
                         aArr = aCheckedData.map(function (item) {
                             return false;
                         });
                     }
-                    that.getModel("contModel").setProperty("/detail/checkModel", aArr);
-                    //that.getModel("checkModel").setData(aArr);
 
-                    // }
+
+                    that.getModel("contModel").setProperty("/detail/checkModel", aArr);
+                    
                 },
                 error: function(oError){
                     MessageBox.alert("error가 발생 하였습니다.");
@@ -730,7 +787,7 @@ sap.ui.define([
             }else if(procUrl==="ProcRequest"){
                 messageContent="제출 후 수정이 불가 합니다. 제출 하시겠습니까?";
                 messageTitle = "제출";
-            }else if(procUrl==="ProcDelInvPlan" || procUrl==="ProcDelInvPlanDtl" ){
+            }else if(procUrl==="ProcDelInvPlan" || procUrl==="ProcDelInvPlanDtl" || procUrl==="ProcDelAppl" ){
                 messageContent="삭제 하시겠습니까?";
                 messageTitle = "삭제";
             };
@@ -746,21 +803,25 @@ sap.ui.define([
                             data: JSON.stringify(parmData),
                             contentType: "application/json",
                             success: function (oData) {
-                                if(procUrl=="ProcSaveTemp"){
+                                if(procUrl==="ProcSaveTemp"){
                                     that.onAfterProcSaveTemp(oData);
                                 };
-                                if(procUrl=="ProcRequest"){
+                                if(procUrl==="ProcRequest"){
                                     that.onAfterProcRequest(oData);
                                 };
-                                if(procUrl=="ProcSaveInvPlan"){
+                                if(procUrl==="ProcSaveInvPlan"){
                                     that.onAfterProcSaveInvPlan(oData);
                                 };
-                                if(procUrl=="ProcDelInvPlan"){
+                                if(procUrl==="ProcDelInvPlan"){
                                     that.onAfterProcDelInvPlan(oData);
                                 };
-                                if(procUrl=="ProcDelInvPlanDtl"){
+                                if(procUrl==="ProcDelInvPlanDtl"){
                                     that.onAfterProcDelInvPlanDtl(oData);
                                 };
+                                if(procUrl==="ProcDelAppl"){
+                                    that.onAfterProcDelAppl(oData);
+                                };
+                                
                             },
                             error: function(oError){
                                 MessageBox.alert("error가 발생 하였습니다.");
@@ -776,8 +837,6 @@ sap.ui.define([
             var oModel = this.getModel("fundingApp"),
                 bFilters = [],
                 that = this;
-
-            this.byId("investmentPlanDetails").close();
 
             bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
 
@@ -901,7 +960,6 @@ sap.ui.define([
                 sValue,
                 oContext;
                 
-                
                 switch(sEleName){
                     case "sap.m.DatePicker":
                     case "sap.m.Input":
@@ -932,6 +990,29 @@ sap.ui.define([
                         oControl.setValueState(ValueState.None);
                     }
                 }
+                return true;
+            });
+
+            return bAllValid;
+        },
+
+        _statusErroCheack : function(aControls){
+            var bAllValid = false;
+
+            bAllValid = aControls.every(function(oControl){
+
+            var sEleName = oControl.getMetadata().getElementName(),
+                sValue,
+                oContext;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                        sValue = oControl.getValue();
+                        oContext = oControl.getBinding("value");
+                        break;
+                    default:
+                        return true;
+                }
 
                 if(oContext && oContext.getType()){
                     try{
@@ -943,15 +1024,6 @@ sap.ui.define([
                         return false;
                     }
                     oControl.setValueState(ValueState.None);
-                }else if(sEleName === "sap.m.ComboBox"){
-                    if(!sValue && oControl.getValue()){
-                        oControl.setValueState(ValueState.Error);
-                        oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
-                        oControl.focus();
-                        return false;
-                    }else{
-                        oControl.setValueState(ValueState.None);
-                    }
                 }
                 return true;
             });
@@ -977,6 +1049,36 @@ sap.ui.define([
                 }
                 oControl.setValueState(ValueState.None);
                 oControl.setValueStateText();
+            });
+        },
+
+        _fileUpload : function(iFileGroupId) {
+            var that = this;
+            var oFragmentController = sap.ui.controller("ext.lib.fragment.controller/UploadCollection");
+            
+            that.getView().byId("fileContent").removeAllItems();
+
+            sap.ui.require(["sap/ui/core/Fragment"], function(Fragment){
+                Fragment.load({
+                    name: "ext.lib.fragment/UploadCollection",
+                    controller: oFragmentController
+                }).then(function(oFragmentUploadCollection){
+                    that.getView().byId("fileContent").addItem(oFragmentUploadCollection);
+                    
+                    var initParam = {
+                        /* fileGroupId : UUID.randomUUID(),  // 신규일경우 */
+                        fileGroupId : iFileGroupId, /* 기 저장된 데이터가 있을 경우 */
+                        oUploadCollection : oFragmentUploadCollection
+                    };
+
+                    oFragmentController.onInit(initParam);
+
+                    /*
+                    * 해당 UploadCollection과 Controller의 핸들링이 필요한 경우에만 정의하여 사용
+                    */
+                    that._oFragmentUploadCollection = oFragmentUploadCollection;
+                    that._oFragmentController = oFragmentController;
+                });
             });
         }
     })

@@ -1,0 +1,87 @@
+<core:FragmentDefinition 
+    xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" 
+    xmlns:html="http://www.w3.org/1999/xhtml" 
+    xmlns:smartmultiedit="sap.ui.comp.smartmultiedit" xmlns:sf="sap.ui.comp.smartform"
+    xmlns:form="sap.ui.layout.form"
+    class="sapUiSizeCompact"  
+    displayBlock="true">
+	<Dialog title="Compatible Part Information" resizable="false" draggable="true" contentWidth="30rem" contentHeight="40rem">
+        <t:Table id="basePriceCreatePopTable" 
+            rows="{basePriceCreatePopList>/GeneralView}"
+            selectionMode="MultiToggle">
+            <t:extension>
+                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                    <ToolbarSpacer/>
+                    <Button text="{I18N>/ROW_ADD}" press=".onBasePriceCreateAddPress"  type="Transparent"/>
+                    <Button text="{I18N>/DELETE}" press=".onBasePriceCreateDelPress"   type="Transparent"/>
+                    <ToolbarSeparator/>
+                </OverflowToolbar>
+            </t:extension>
+            <t:columns>
+                <t:Column headerSpan="1" hAlign="Center">
+                    <t:multiLabels>
+                        <Label text="헤더" textAlign="Center" width="100%"/>
+                        <Label text="오알지코드" textAlign="Center" width="100%"/>
+                    </t:multiLabels>
+                    <t:template>
+                        <ComboBox width="100%"
+                            items="{
+                                        path: 'org>/Org_Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ]
+                                    }" >
+                            <items>
+                                <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                            </items>
+                        </ComboBox>
+                    </t:template>
+                </t:Column>
+                <t:Column headerSpan="1" hAlign="Center">
+                    <t:multiLabels>
+                        <Label text="헤더" textAlign="Center" width="100%"/>
+                        <Label text="오알지코드" textAlign="Center" width="100%"/>
+                    </t:multiLabels>
+                    <t:template>
+                        <ComboBox width="100%"
+                            items="{
+                                        path: 'org>/Org_Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ]
+                                    }" >
+                            <items>
+                                <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                            </items>
+                        </ComboBox>
+                    </t:template>
+                </t:Column>
+                <t:Column headerSpan="1" hAlign="Center">
+                    <t:multiLabels>
+                        <Label text="헤더" textAlign="Center" width="100%"/>
+                        <Label text="오알지코드" textAlign="Center" width="100%"/>
+                    </t:multiLabels>
+                    <t:template>
+                        <ComboBox width="100%"
+                            items="{
+                                        path: 'org>/Org_Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ]
+                                    }" >
+                            <items>
+                                <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                            </items>
+                        </ComboBox>
+                    </t:template>
+                </t:Column>
+            </t:columns>
+        </t:Table>
+        <beginButton>
+			<Button text="{I18N>/CANCEL}" press=".onPressBasePriceCreateDialogClose"/>
+	    </beginButton>
+        <endButton>
+            <Button text="{I18N>/APPLY}" type="Emphasized" press=".onPressBasePriceCreateDialogSave" />
+        </endButton>
+	</Dialog>
+</core:FragmentDefinition>

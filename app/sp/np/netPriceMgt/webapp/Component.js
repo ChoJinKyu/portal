@@ -56,23 +56,7 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
-
             
-
-            // Currency 데이터 조회 시작
-            var oCurrencyModel = this.getModel("currency");
-            oCurrencyModel.setSizeLimit(200);
-            oCurrencyModel.read("/Currency", {
-                filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
-                success: function (data) {
-                    if (data && data.results) {
-                        oCurrencyModel.setProperty("/currency", data.results);
-                    }
-                },
-                error: function (data) {
-                    console.log("error", data);
-                }
-            });
         },
 
         /**

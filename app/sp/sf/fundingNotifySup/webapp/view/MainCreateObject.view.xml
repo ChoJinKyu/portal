@@ -22,18 +22,12 @@
 		<uxap:headerTitle>
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="자금지원 신청" wrapping="true" />
-				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					<Title text="자금지원 신청" wrapping="true" />
-				</uxap:snappedHeading>
-				<uxap:snappedTitleOnMobile>
-					<Title text="자금지원 신청" />
-				</uxap:snappedTitleOnMobile>
-                <uxap:navigationActions>
-                    <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-                </uxap:navigationActions>
+                <uxap:heading>
+                    <Toolbar style="Clear" width="100%">
+                        <Button icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"/>
+                        <Title text="자금지원 신청" level="H2" wrapping="true"/>                        
+                    </Toolbar>
+                </uxap:heading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -106,16 +100,32 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="전년도매출액(백만원) :" required="true"/>
-                                    <Input 
-                                        type="Number"
-                                        fieldGroupIds="newRequest"
-                                        required="true" 
-                                        value="{
-                                            path: 'applicationSup>/pyear_sales_amount', 
-                                            type: 'sap.ui.model.type.Integer'
-                                        }"
-                                    />
+                                    <Label text="전년도매출액:" required="true"/>
+                                    <HBox>
+                                        <Input 
+                                            fieldGroupIds="newRequest,status"
+                                            required="true" 
+                                            value="{
+                                                path: 'applicationSup>/pyear_sales_amount', 
+                                                type: 'sap.ui.model.odata.type.Decimal',
+                                                constraints: {
+                                                    minimum: '0'
+                                                }
+                                            }"
+                                            id="pyearSalesAmount"
+                                            valueState="{contState>/pyearSalesAmount}"
+                                        >
+                                            <layoutData>
+                                                <FlexItemData baseSize="0" growFactor="3"/>
+                                            </layoutData>
+                                        
+                                        </Input>
+                                        <Text text="백만원">
+                                            <layoutData>
+                                                <FlexItemData baseSize="0" growFactor="1" styleClass="sapUiTinyMarginBegin"/>
+                                            </layoutData>
+                                        </Text>
+                                    </HBox>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
@@ -137,17 +147,31 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="신청금액(원) :" required="true"/>
-                                    <Input 
-                                        id="inputFundingApplAmount"
-                                        type="Number"
-                                        editable="false"
-                                        fieldGroupIds="newRequest"
-                                        required="true"
-                                        value="{
-                                            path: 'applicationSup>/funding_appl_amount', 
-                                            type: 'sap.ui.model.type.Integer'
-                                        }" />
+                                    <Label text="신청금액 :" required="true"/>
+                                    <HBox>
+                                        <Input 
+                                            id="inputFundingApplAmount"
+                                            editable="false"
+                                            fieldGroupIds="newRequest"
+                                            required="true"
+                                            value="{
+                                                path: 'applicationSup>/funding_appl_amount', 
+                                                type: 'sap.ui.model.odata.type.Decimal',
+                                                constraints: {
+                                                    minimum: '0'
+                                                }
+                                        }" >
+                                            <layoutData>
+                                                <FlexItemData baseSize="0" growFactor="5"/>
+                                            </layoutData>
+                                        
+                                        </Input>
+                                        <Text text="원">
+                                            <layoutData>
+                                                <FlexItemData baseSize="0" growFactor="1" styleClass="sapUiTinyMarginBegin"/>
+                                            </layoutData>
+                                        </Text>
+                                    </HBox>
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
                                     </layoutData>
@@ -173,13 +197,12 @@
                                         editable="false"
                                         width="100%"
                                         items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_REPAYMENT_METHOD_CODE'}
-                                                    ]
-                                                }"
-
+                                                path : 'util>/Code',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_REPAYMENT_METHOD_CODE'}
+                                                ]
+                                            }"
                                         selectedKey="{applicationSup>/repayment_method_code}"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_name}" />
@@ -210,6 +233,7 @@
                                         fieldGroupIds="newRequest"
                                         required="true"
                                         change="onCheckPhone"
+                                        placeholder="xxx-xxxx-xxxx"
                                         value="{
                                             path: 'applicationSup>/appl_user_tel_number',
                                             type: 'sap.ui.model.type.String',
@@ -300,7 +324,7 @@
                                     <footer>
                                         <Text text="총 신청금액 : {
                                             path: 'applicationSup>/funding_appl_amount', 
-                                            type: 'sap.ui.model.type.Integer'}" />
+                                            type: 'sap.ui.model.odata.type.Decimal'}" />
                                     </footer>
                                 </Column>
                             </columns>
@@ -310,7 +334,14 @@
                                         <Link text="{applicationSup>investment_project_name}" press=".onOpenInvestmentDtl"/>
                                         <Text text="{applicationSup>investment_desc}"/>
                                         <Text text="{applicationSup>execution_yyyymm}"/>
-                                        <Text text="{applicationSup>appl_amount}"/>
+                                        <Text 
+                                            text="{
+                                                path: 'applicationSup>appl_amount', 
+                                                type: 'sap.ui.model.odata.type.Decimal',
+                                                constraints: {
+                                                    minimum: '0'
+                                                }
+                                            }"/>
                                         <Text text="{applicationSup>apply_model_name}"/>
                                         <Text text="{applicationSup>investment_place}"/>
                                     </cells>
@@ -337,13 +368,12 @@
                                         required="true"
                                         width="100%"
                                         items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_COLLATERAL_TYPE_CODE'}
-                                                    ]
-                                                }"
-
+                                                path : 'util>/Code',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_COLLATERAL_TYPE_CODE'}
+                                                ]
+                                            }"
                                         selectedKey="{applicationSup>/collateral_type_code}"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_name}" />
@@ -353,23 +383,40 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="담보금액(원) :" required="true"/>
-                                    <Input 
-                                        type="Number"
-                                        fieldGroupIds="newRequest"
-                                        required="true"
-                                        value="{
-                                            path: 'applicationSup>/collateral_amount', 
-                                            type: 'sap.ui.model.type.Integer'
-                                        }" 
-                                    />
+                                    <Label text="담보금액 :" required="true"/>
+                                    <HBox>
+                                        <Input 
+                                            fieldGroupIds="newRequest,status"
+                                            required="true"
+                                            value="{
+                                                path: 'applicationSup>/collateral_amount', 
+                                                type: 'sap.ui.model.odata.type.Decimal',
+                                                constraints: {
+                                                    minimum: '0'
+                                                }
+                                            }"
+                                            id="collateralAmount"
+                                            valueState="{contState>/collateralAmount}"
+                                        >
+                                            <layoutData>
+                                                <FlexItemData baseSize="0" growFactor="7"/>
+                                            </layoutData>
+                                        
+                                        </Input>
+                                        <Text text="원">
+                                            <layoutData>
+                                                <FlexItemData baseSize="0" growFactor="1" styleClass="sapUiTinyMarginBegin"/>
+                                            </layoutData>
+                                        </Text>
+                                    </HBox>
+                                    
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>
+                                <VBox id="fileContent">
                                     <!-- File Upload 시작-->
-                                    <UploadCollection
+                                    <!-- <UploadCollection
                                         id="UploadCollection"
                                         maximumFilenameLength="55"
                                         maximumFileSize="10"
@@ -383,7 +430,7 @@
                                         fileSizeExceed="onFileSizeExceed"
                                         typeMissmatch="onTypeMissmatch"
                                         uploadComplete="onUploadComplete"
-                                        beforeUploadStarts="onBeforeUploadStarts" />
+                                        beforeUploadStarts="onBeforeUploadStarts" /> -->
                                     <layoutData>
                                         <layout:GridData span="XL12 L12 M12 S12" />
                                     </layoutData>
@@ -406,8 +453,9 @@
                     press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
                 <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
-                <Button id="pageSaveButton" enabled="false" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
-                <Button id="pageSubmissionButton" enabled="false" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
+                <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButtonPress" />
+                <Button id="pageSaveButton" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
+                <Button id="pageSubmissionButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

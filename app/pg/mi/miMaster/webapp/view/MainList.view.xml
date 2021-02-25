@@ -10,7 +10,6 @@
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:sv="sap.ui.comp.smartvariants"
-    xmlns:micro="sap.suite.ui.microchart"
     xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
     xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
     height="100%">
@@ -103,7 +102,8 @@
                           <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="{I18N>/USE_FLAG}" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="{I18N>/OPTION}">
+                                        <ComboBox id="combobox_use_flag" items="{path: '/UseYNView', templateShareable:true
+                                           , filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" placeholder="{I18N>/OPTION}">
                                         <core:Item key="{code}" text="{code_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -120,12 +120,13 @@
 
         <!-- DynamicPage Content -->
         <f:content>
+            <ScrollContainer  width="100%" horizontal="true" vertical="true" focusable="true">
                 <!-- Smart Table -->
                 <smartTable:SmartTable
                     width="100%"
                     height="100%"
-                    id="smartTable_MainTable_ResponsiveTable"
-                    smartVariant="pageVariantId"                    
+                    smartVariant="pageVariantId"    
+                    id="smartTable_MainTable_ResponsiveTable"                
                     entitySet="MIMatListView"
                     tableBindingPath="{/MIMatListView}"
                     noData="{I18N>/NCM01004}"
@@ -140,13 +141,14 @@
                     showTablePersonalisation="false"
                     header="시황자재 Master List"
                     showRowCount="true"
-                    editable="false"                    
+                    editTogglable="false"                 
                     persistencyKey="SmartTableAnalytical_Explored"
-                    enableAutoBinding="false"                     
-                    class="sapUiResponsiveContentPadding"                    
+                    class="sapUiResponsiveContentPadding"   
                     demandPopin="true"
-                    initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code,system_update_dtm"
-                    >
+                    enableAutoBinding="false"                     
+                    showFullScreenButton="false"     
+                    ignoreFromPersonalisation="tenant_id"
+                    initiallyVisibleFields="mi_material_code,mi_material_name,category_code, category_name">
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
@@ -180,75 +182,158 @@
                                    inset="false"   
                                    >
                                  <columns>  
-                                       <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
+                                       <Column minScreenWidth ="" popinDisplay="WithoutHeader" demandPopin="false" importance="High"  hAlign="Center">
                                         <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 1}'/>
                                         </customData>
                                             <Text text="{I18N>/MI_MATERIAL_CODE}"></Text>
                                         </Column>
-
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 2}'/>
                                         </customData>
                                              <Text text="{I18N>/MI_MATERIAL_NAME}"></Text>
                                         </Column>
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                        <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 3}'/>
+                                        </customData>
+                                            <Text text="{I18N>/CATEGORY_CODE}"></Text>
+                                        </Column>
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 3}'/>
+                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 4}'/>
                                         </customData>
                                              <Text text="{I18N>/CATEGORY_NAME}"></Text>
                                         </Column>
-
-                                        <Column minScreenWidth ="" demandPopin="true">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="Low" hAlign="Center">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 4}'/>
+                                        value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "type": "boolean", "columnIndex": 5}'/>
                                         </customData>
                                              <Text text="{I18N>/USE_FLAG}"></Text>                                                                             
                                         </Column>
-
-                                        <Column width="0px">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "columnIndex": -100}'/>
-                                        </customData>
-                                             <Text visible="false" text="{I18N>/CATEGORY_CODE}"></Text>                                                                             
-                                        </Column>
-
-                                        <Column visible="false" width="0px">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "tenant_id", "leadingProperty": "tenant_id", "columnIndex": -101}'/>
-                                        </customData>
-                                             <Text visible="false" text="{I18N>/TENANT_ID}"></Text>                                                                             
-                                        </Column>
-
-                                        <Column visible="false" width="0px">
+                                        <Column visible="false">
                                           <customData>
                                         <core:CustomData  key="p13nData"
-                                        value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
+                                        value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm", "type": "datetime", "columnIndex": 6}'/>
                                         </customData>
-                                             <Text text="system_update_dtm"></Text>                                                                             
+                                             <Text text="{I18N>/LOCAL_CREATE_DTM}"></Text>                                                                             
+                                        </Column>
+                                        <Column visible="false">
+                                          <customData>
+                                        <core:CustomData  key="p13nData"
+                                        value='\{"columnKey": "system_create_dtm", "leadingProperty": "system_create_dtm", "sortProperty": "system_create_dtm", "filterProperty": "system_create_dtm", "type": "datetime", "columnIndex": 7}'/>
+                                        </customData>
+                                             <Text text="{I18N>/SYSTEM_CREATE_DATE_TIME}"></Text>                                                                             
+                                        </Column>
+                                        <Column visible="false">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "create_user_id", "leadingProperty": "create_user_id", "sortProperty": "create_user_id", "filterProperty": "create_user_id", "columnIndex": 8}'/>
+                                        </customData>
+                                             <Text text="{I18N>/CREATE_USER_ID}"></Text>
+                                        </Column>
+                                       <Column  visible="false">
+                                          <customData>
+                                        <core:CustomData  key="p13nData"
+                                        value='\{"columnKey": "local_update_dtm", "leadingProperty": "local_update_dtm", "sortProperty": "local_update_dtm", "filterProperty": "local_update_dtm", "type": "datetime", "columnIndex": 9}'/>
+                                        </customData>
+                                             <Text text="{I18N>/LOCAL_CHANGE_DTM}"></Text>                                                                             
+                                        </Column>
+                                        <Column visible="false">
+                                          <customData>
+                                        <core:CustomData  key="p13nData"
+                                        value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "type": "datetime", "columnIndex": 10}'/>
+                                        </customData>
+                                             <Text text="{I18N>/SYSTEM_CHANGE_DATE_TIME}"></Text>                                                                             
+                                        </Column>
+                                        <Column visible="false">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "update_user_id", "leadingProperty": "update_user_id", "sortProperty": "update_user_id", "filterProperty": "update_user_id", "columnIndex": 11}'/>
+                                        </customData>
+                                             <Text text="{I18N>/UPDATE_USER_ID}"></Text>
                                         </Column>
                                     </columns>
                                     <items>
                                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                                             <Text textAlign="Center" text="{mi_material_code}"></Text>
-                                             <Text textAlign="Center" text="{mi_material_name}"></Text>
-                                             <Text textAlign="Center" text="{category_name}"></Text>
-                                             <Text textAlign="Center" text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
-                                             <Text visible="false"  text="{category_code}"></Text>
-                                             <Text visible="false"  text="{tenant_id}"></Text>
-                                             <Text visible="false" text="{system_update_dtm}"></Text>
+                                             <Text textAlign="Center" text="{mi_material_code}"/>
+                                             <FlexBox
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text textAlign="Center" text="{mi_material_name}"/>
+                                            </FlexBox>
+                                            <Text textAlign="Center" text="{category_code}"/>
+                                            <FlexBox
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text textAlign="Center" text="{category_name}"></Text>
+                                            </FlexBox>
+                                             <Text textAlign="Center" text="{= ${use_flag} ? 'Yes':'No'}"/>  
+                                             <FlexBox
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text text="{ 
+                                                    path: 'local_create_dtm', 
+                                                    type: 'sap.ui.model.type.DateTime',
+                                                    formatOptions: {
+                                                        pattern: 'yyyy-MM-dd HH:mm:ss'
+                                                    }
+                                                }"/>
+                                            </FlexBox>
+                                            <FlexBox 
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text text="{ 
+                                                    path: 'system_create_dtm', 
+                                                    type: 'sap.ui.model.type.DateTime',
+                                                    formatOptions: {
+                                                        pattern: 'yyyy-MM-dd HH:mm:ss'
+                                                    }
+                                                }"/>
+                                            </FlexBox>
+                                            <FlexBox 
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text textAlign="Center" text="{create_user_id}"/>
+                                            </FlexBox>
+                                            <FlexBox 
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text text="{ 
+                                                    path: 'local_update_dtm', 
+                                                    type: 'sap.ui.model.type.DateTime',
+                                                    formatOptions: {
+                                                        pattern: 'yyyy-MM-dd HH:mm:ss'
+                                                    }
+                                                }"/>
+                                            </FlexBox>
+                                            <FlexBox 
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text text="{ 
+                                                    path: 'system_update_dtm', 
+                                                    type: 'sap.ui.model.type.DateTime',
+                                                    formatOptions: {
+                                                        pattern: 'yyyy-MM-dd HH:mm:ss'
+                                                    }
+                                                }"/>
+                                            </FlexBox> 
+                                            <FlexBox 
+                                                alignItems="Start"
+                                                justifyContent="Start">
+                                                <Text textAlign="Center" text="{update_user_id}"/>
+                                            </FlexBox>
                                         </ColumnListItem>
                                     </items> 
                                 </Table>
                 </smartTable:SmartTable>
-        
+             </ScrollContainer>
         </f:content>
         <!-- DynamicPage Footer -->
         <f:footer>

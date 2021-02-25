@@ -100,7 +100,8 @@ sap.ui.define([
             bEditable = oCallByAppModel.getProperty("/isEditable"),
             sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode"),
-            sProgress = oCallByAppModel.getProperty("/progressCode");
+            sProgress = oCallByAppModel.getProperty("/progressCode"),
+            bBuyer = this.getModel("USER_SESSION").getProperty("/USER_TYPE_CODE") === "B";
 
             
             oModel.setProperty("/navButtonType", sGubun !== "MA" ? "Back" : "Unstyled");//Transparent , Default
@@ -115,7 +116,7 @@ sap.ui.define([
             oModel.setProperty("/visible", {
                 vbox_maker_code : true,
                 vbox_vat_number : true, //false : visible 처리할때...단, false로 할경우 영역을 없앨수없다.
-                maker_code : sGubun === "MA", //타모듈일 경우만 input visible
+                maker_code : false,// sGubun === "MA" 02-24 변경요청, //타모듈일 경우만 input visible
                 tax_id : sGubun === "MA", //타모듈일 경우만 input visible
                 country_code : bEditable && (sMode === "C") || (sGubun === "MR" && sProgress === "REQUEST" && bEditable), //생성일때만 
                 isEditable :  bEditable && sMode !== "R", //R이고 U가 아닐때는 input.비활성화
@@ -123,7 +124,7 @@ sap.ui.define([
                 btn_cancel : (sGubun !== "MR" && sMode !== "R") || (sProgress === "REQUEST" && sGubun === "MR"), 
                 btn_request : (sGubun !== "MR" && sMode !== "R") || (sProgress === "REQUEST" && sGubun === "MR"), 
                 btn_reject : sProgress === "REQUEST" && sGubun === "MR", 
-                btn_edit : sMode === "R" && sGubun !== "MR", // "MR"에서 오는 경우는 edit 기능 없음.
+                btn_edit : sMode === "R" && sGubun !== "MR" && bBuyer, // "MR"에서 오는 경우는 edit 기능 없음.
                 section_bizno_chk : (sGubun === "MM" && sMode === "C") || (sGubun === "MR" && sProgress === "REQUEST"),
                 section_approval_line : sGubun !== "MA" && sMode !== "R",
                 section_change_history : sMode === "R",
@@ -225,10 +226,19 @@ sap.ui.define([
             //var sGubun = oEvent.getSource().getBindingPath("value").indexOf("local") > -1 ? "local" : "english";
             
             if(oEvent.getSource().getBindingPath("value").indexOf("local") > -1 ){ //local
-                sFullAddress = oGeneralInfo["maker_local_city"]  + " " + oGeneralInfo["maker_local_region"] + " "+oGeneralInfo["maker_local_address"];
+                sFullAddress = 
+                    oGeneralInfo["maker_local_city"]  + 
+                    oGeneralInfo["maker_local_region"] !=="" ? " " : "" + 
+                    oGeneralInfo["maker_local_region"] + 
+                    oGeneralInfo["maker_local_address"] !=="" ? " " : "" +
+                    oGeneralInfo["maker_local_address"];
                 oWriteModel.setProperty("/generalInfo/maker_local_full_address", sFullAddress);
             }else{ //english
-                sFullAddress = oGeneralInfo["maker_english_address"]  + " " + oGeneralInfo["maker_english_region"] + " "+oGeneralInfo["maker_english_city"];
+                sFullAddress = oGeneralInfo["maker_english_address"]  + 
+                    oGeneralInfo["maker_english_region"] !=="" ? " " : "" + 
+                    oGeneralInfo["maker_english_region"] + 
+                    oGeneralInfo["maker_english_city"] !=="" ? " " : "" + 
+                    oGeneralInfo["maker_english_city"];
                 oWriteModel.setProperty("/generalInfo/maker_english_full_address", sFullAddress);
             }
             
@@ -239,15 +249,19 @@ sap.ui.define([
             var oGeneralInfo = oWriteModel.getProperty("/generalInfo");
             var sPath = oEvent.getSource().getBindingPath("selectedKey");
             var oSelectedItem = oEvent.getSource().getSelectedItemId();
+            
+            if(!oEvent.mParameters.itemPressed && oEvent.getSource().getSelectedItemId() === "")oEvent.getSource().setValue(""); //콤보 리스트에 없는 값은 초기화
+            else{
                 oSelectedItem = oSelectedItem !== "" ? sap.ui.getCore().byId(oSelectedItem).getBindingContext().getObject() : oSelectedItem;
 
-            if(sPath.indexOf("country_code") > -1){
-                oWriteModel.setProperty("/generalInfo/country_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["country_name"]);
-                this._setVisiableVatNumber(oSelectedItem["eu_flag"]);
-            }else if(sPath.indexOf("maker_status_code") > -1){
-                oWriteModel.setProperty("/generalInfo/maker_status_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["code_name"]);
-            }else if(sPath.indexOf("company_class_code") > -1){
-                oWriteModel.setProperty("/generalInfo/company_class_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["code_name"]);
+                if(sPath.indexOf("country_code") > -1){
+                    oWriteModel.setProperty("/generalInfo/country_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["country_name"]);
+                    this._setVisiableVatNumber(oSelectedItem["eu_flag"]);
+                }else if(sPath.indexOf("maker_status_code") > -1){
+                    oWriteModel.setProperty("/generalInfo/maker_status_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["code_name"]);
+                }else if(sPath.indexOf("company_class_code") > -1){
+                    oWriteModel.setProperty("/generalInfo/company_class_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["code_name"]);
+                }
             }
         },
 
@@ -298,11 +312,12 @@ sap.ui.define([
             sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode");
 
+            this.validator.clearValueState(this.byId("mainPage"));
             if(sGubun === "MM"){
                 if(sMode === "U" && oEvent){
                     oCallByAppModel.setProperty("/mode", "R");
                     this._setTitle("R");
-                    this._initControlData(false);
+                    this._initControlData(true);
                     this._fnGetMasterData();
                 }else{
                     this.onNavigationBackPress();
@@ -363,14 +378,14 @@ sap.ui.define([
                             english_address_3: oGeneralInfo["maker_english_address"],              	
                             english_full_address: oGeneralInfo["maker_english_full_address"],           	
                             affiliate_code: oGeneralInfo["affiliate_code"],                 	
-                            affiliate_code_name: oGeneralInfo["affiliate_name"],            	
+                            //affiliate_code_name: oGeneralInfo["affiliate_name"],            	
                             company_class_code: oGeneralInfo["company_class_code"],             	
-                            company_class_name: oGeneralInfo["company_class_name"],             	
+                            //company_class_name: oGeneralInfo["company_class_name"],             	
                             repre_name: oGeneralInfo["represent_name"],                    	
                             tel_number: oGeneralInfo["company_tel_number"],                    	
                             email_address: oGeneralInfo["company_email_address"],                	
                             supplier_status_code: oGeneralInfo["maker_status_code"],          	
-                            supplier_status_name: oGeneralInfo["maker_status_name"],          	
+                            //supplier_status_name: oGeneralInfo["maker_status_name"],          	
                             biz_certi_attch_number: null,       	
                             attch_number_2: null,               	
                             attch_number_3: null,               	
@@ -464,6 +479,8 @@ sap.ui.define([
             bSupplierRole = checkResult.supplier_role === "Y",
             bMakerRole = checkResult.maker_role === "Y",
             sTypeCode = oCallByAppModel.getProperty("/typeCode"),
+            sGubun = oCallByAppModel.getProperty("/gubun"),
+            sMode = oCallByAppModel.getProperty("/mode"),
             that = this;
 
             var oServiceModel = this.getModel();
@@ -537,7 +554,7 @@ sap.ui.define([
 
                         //체크가 화면에서 가능한 경우는 마스터 조회후 체크 초기화
                         if(oModel.getProperty("/visible/section_bizno_chk") && oModel.getProperty("/enabled/btn_check"))
-                        oCallByAppModel.setProperty("/bizNoCheck", false);
+                        oCallByAppModel.setProperty("/bizNoCheck", sGubun === "MM" && sMode === "R"); //maker master에서 조회모드로 온경우는 bizcheck한번만 하면 된다.
                     
                         that._setVisiableVatNumber(oResultData.eu_flag);
 
@@ -783,13 +800,7 @@ sap.ui.define([
                     callback(e);
                 }
             });
-        },
-
-       
-       
-
-
-      
+        }
 
 	});
 });

@@ -28,6 +28,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: true },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
@@ -38,7 +39,6 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-
             this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/SELECT_SUPPLIER"));
 
             //this.oSearchField = new sap.m.SearchField({ placeholder: "검색"});
@@ -149,14 +149,14 @@ sap.ui.define([
 
          loadSupplierData : function(oThis){
             var that = oThis,
-            sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+            sTenantId = "L2100";//SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
             var cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
             that.oDialog.setModel(new ManagedModel(), "SUPPLIERVIEW");
 
             //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierStatus")){
                 oServiceModel.read("/supplierStatusView", {
                     filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
-                    sorters: [new Sorter("code", true)],
+                    sorters: [new Sorter("code")],
                     success: function(oData){
                         var aRecords = oData.results;
                         aRecords.unshift({code:"", code_name: that.getModel("I18N").getText("/ALL")});
@@ -172,54 +172,64 @@ sap.ui.define([
         },
 
         loadData: function(){
-            var sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
-                aSorters = [new Sorter("supplier_code", true)],
-                sSupplierCode = this.oSupplierCode.getValue(),
-                sSupplierName = this.oSupplierName.getValue(),
-                sTaxId = this.oTaxId.getValue(),
-                sOldSupplierCode = this.oOldSupplierCode.getValue(),
-                sStatus = this.oStatus.getSelectedKey();
+            if(!this.oDialog.getModel("SUPPLIERVIEW")){
+                this.getMetadata().getPropertyDefaults().loadWhenOpen = false;
+                this.oDialog.setBusy(true);
+                this.loadSupplierData(this);
+            }else{
+                var sTenantId = "L2100";//SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+                var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
+                    aSorters = [new Sorter("supplier_code")],
+                    sSupplierCode = this.oSupplierCode.getValue(),
+                    sSupplierName = this.oSupplierName.getValue(),
+                    sTaxId = this.oTaxId.getValue(),
+                    sOldSupplierCode = this.oOldSupplierCode.getValue(),
+                    sStatus = this.oStatus.getSelectedKey();
 
-            if(sSupplierCode){
-                sSupplierCode = sSupplierCode.toUpperCase();
-                this.oSupplierCode.setValue(sSupplierCode);
-                aFilters.push(new Filter("supplier_code", FilterOperator.Contains, sSupplierCode));
-            }
-            if(sSupplierName){
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("supplier_local_name", FilterOperator.Contains, sSupplierName ),
-                            new Filter("supplier_english_name", FilterOperator.Contains, sSupplierName )
-                        ],
-                        and: false
-                    })
-                )
-            }
-            if(sTaxId)aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
-            if(sOldSupplierCode){
-                sOldSupplierCode = sOldSupplierCode.toUpperCase();
-                this.oOldSupplierCode.setValue(sOldSupplierCode);
-                aFilters.push(new Filter("old_supplier_code", FilterOperator.Contains, sOldSupplierCode));
-            }
-            if(sStatus)aFilters.push(new Filter("supplier_status_code", FilterOperator.EQ, sStatus));
+                if(sSupplierCode){
+                    sSupplierCode = sSupplierCode.toUpperCase();
+                    this.oSupplierCode.setValue(sSupplierCode);
+                    aFilters.push(new Filter("supplier_code", FilterOperator.Contains, sSupplierCode));
+                }
+                if(sSupplierName){
+                    aFilters.push(
+                        new Filter({
+                            filters: [
+                                new Filter("supplier_local_name", FilterOperator.Contains, sSupplierName ),
+                                new Filter("supplier_english_name", FilterOperator.Contains, sSupplierName )
+                            ],
+                            and: false
+                        })
+                    )
+                }
+                if(sTaxId)aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
+                if(sOldSupplierCode){
+                    sOldSupplierCode = sOldSupplierCode.toUpperCase();
+                    this.oOldSupplierCode.setValue(sOldSupplierCode);
+                    aFilters.push(new Filter("old_supplier_code", FilterOperator.Contains, sOldSupplierCode));
+                }
+                if(sStatus)aFilters.push(new Filter("supplier_status_code", FilterOperator.EQ, sStatus));
 
-            this.oDialog.setBusy(true);
+                this.oDialog.setBusy(true);
 
-            oServiceModel.read("/supplierWithoutOrgView", {
-                filters: aFilters,
-                sorters: aSorters,
-                success: function(oData){
-                    var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
-                    this.oDialog.setBusy(false);
-                    if(!this.oDialog.getModel("SUPPLIERVIEW")){
-                        this.oDialog.setBusy(true);
-                        this.loadSupplierData(this);
-                    }
-                }.bind(this)
-            });
+                oServiceModel.read("/supplierWithoutOrgView", {
+                    filters: aFilters,
+                    sorters: aSorters,
+                    success: function(oData){
+                        var aRecords = oData.results;
+                        this.oDialog.setData(aRecords, false);
+                        this.oDialog.setBusy(false);
+                    }.bind(this)
+                });
+
+            }
+        },
+
+        onExit: function(){
+            for(var sFragmentName in this._oFragments){
+                this._oFragments[sFragmentName].destroy();
+                delete this._oFragments[sFragmentName];
+            }
         }
 
     });

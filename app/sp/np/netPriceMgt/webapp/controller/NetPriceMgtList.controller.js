@@ -65,8 +65,8 @@ sap.ui.define([
              */
             fnSearch: function () {
 
-                this.validator.validate(this.byId('pageSearchFormE'));
-                if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
+                this.validator.validate(this.byId("pageSearchFormE"));
+                if (this.validator.validate(this.byId("pageSearchFormS")) !== true) return;
                 
                 this.sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
                 var oView = this.getView(),

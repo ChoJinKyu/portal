@@ -124,51 +124,17 @@ sap.ui.define([
                         .setProperty("/headerExpanded", true);
                 }, this);
             
-            // MultiInput - 초기화
-            this.byId("buyerEmpno").setValue((this.byId("buyerEmpno").oldText = [
-                "(", this.$session.employee_number, ") ", this.$session.employee_name
-            ].join("")));
-            this.byId("buyerEmpno").oldValue = this.$session.employee_number;
-
-            // middleware - token/dialog 처리
-            this.before("search", "jSearch", "list", "Pr_ReviewListView", function() {
-                // Multi
-                [
-                    ["requestor_department_code", this.byId("requestorDepartmentCode")], 
-                    ["buyer_department_code", this.byId("buyerDepartmentCode")], 
-                    ["material_code", this.byId("materialCode")], 
-                    ["org_code", this.byId("orgCode")], 
-                    ["requestor_empno", this.byId("requestorEmpno")], 
-                ]
-                .forEach(e => this.convTokenToBind("jSearch", ["/", e[0], "/values"].join(""), e[1].getTokens()), this);
-                // Single
-                [
-                    ["buyer_empno", this.byId("buyerEmpno")], 
-                ]
-                .forEach(e => {
-                    // 키워드값이 변경된 경우(NULL)
-                    !e[1].getValue()
-                    &&
-                    this.getModel("jSearch").setProperty(["/", e[0]].join(""), "");
-
-                    // 키워드값이 변경된 경우
-                    e[1].getValue()
-                    &&
-                    !(e[1].oldText == e[1].getValue())
-                    &&
-                    this.getModel("jSearch").setProperty(["/", e[0]].join(""), "invalid");
-
-                    // 키워드값이 원복된 경우
-                    e[1].getValue()
-                    &&
-                    (e[1].oldText == e[1].getValue())
-                    &&
-                    this.getModel("jSearch").setProperty(["/", e[0]].join(""), e[1].oldValue);
-                }, this);
-            });
-            this.after("search", "jSearch", "list", "Pr_ReviewListView", function() {
-                this.byId("mainTable").removeSelections(true);
-            });
+            // search 재정의
+            this.search = (function() {
+                // before
+                // after
+                setTimeout((function(){
+                    // 선택영역초기화
+                    this.byId("mainTable").removeSelections(true);
+                }).bind(this), 0);
+                // prototype
+                return BaseController.prototype.search.apply(this, arguments);
+            }).bind(this);
         },
         /* =========================================================== */
         /* event handlers                                              */
@@ -182,41 +148,71 @@ sap.ui.define([
             // 자재코드
             type == "material_code"
             &&
-            this.dialog(new MaterialMasterDialog({
-                title: "Choose Material Code",
-                multiSelection: true,
-                items: {
-                    filters: [
-                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
-                    ],
-                    sorters: [
-                        new Sorter("material_code")
-                    ]
-                },
-                orgCode: ""
-            }), function(r) {
+            this.dialog((function(){
+                var dlg = new MaterialMasterDialog({
+                    title: this.getModel("I18N").getText("/NOP00041"),
+                    loadWhenOpen: false,
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                        ],
+                        sorters: [
+                            new Sorter("material_code")
+                        ]
+                    },
+                    orgCode: ""
+                });
+                setTimeout(function(){
+                    // token
+                    control.getTokens().length > 0 && dlg.setTokens(control.getTokens());
+                    // keyword
+                    control.getValue() 
+                    && 
+                    dlg.oSearchDesc.setValue(control.getValue())
+                    && 
+                    dlg.oDialog.fireEvent("searchPress");
+                }, 0);
+                return dlg;
+            }).call(this), function(r) {
+                control.setValue("");
                 control.setTokens(r.getSource().getTokens());
-            }, control);
+            });
 
             // 조직코드
             type == "org_code"
             &&
-            this.dialog(new PurOperationOrgDialog({
-                title: this.getModel("I18N").getText("/NOP00005"),
-                multiSelection: true,
-                items: {
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
-                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code),
-                        new Filter("process_type_code", FilterOperator.EQ, "OP01")
-                    ],
-                    sorters: [
-                        new Sorter("org_code")
-                    ]
-                }
-            }), function(r) {
+            this.dialog((function(){
+                var dlg = new PurOperationOrgDialog({
+                    title: this.getModel("I18N").getText("/NOP00005"),
+                    loadWhenOpen: false,
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
+                            new Filter("company_code", FilterOperator.EQ, this.$session.company_code),
+                            new Filter("process_type_code", FilterOperator.EQ, "OP01")
+                        ],
+                        sorters: [
+                            new Sorter("org_code")
+                        ]
+                    }
+                });
+                setTimeout(function(){
+                    // token
+                    control.getTokens().length > 0 && dlg.setTokens(control.getTokens());
+                    // keyword
+                    control.getValue() 
+                    && 
+                    dlg.oSearchKeyword.setValue(control.getValue())
+                    && 
+                    dlg.oDialog.fireEvent("searchPress");
+                }, 0);
+                return dlg;
+            }).call(this), function(r){
+                control.setValue("");
                 control.setTokens(r.getSource().getTokens());
-            }, control);
+            });
 
             (
                 // 요청자부서
@@ -226,52 +222,92 @@ sap.ui.define([
                 type == "buyer_department_code"
             )
             &&
-            this.dialog(new DepartmentDialog({
-                title: this.getModel("I18N").getText("/NOP00002"),
-                multiSelection: true,
-                items: {
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
-                    ]
-                }
-            }), function(r) {
+            this.dialog((function(){
+                var dlg = new DepartmentDialog({
+                    title: this.getModel("I18N").getText("/NOP00002"),
+                    loadWhenOpen: false,
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                        ]
+                    }
+                });
+                setTimeout(function(){
+                    // token
+                    control.getTokens().length > 0 && dlg.setTokens(control.getTokens());
+                    // keyword
+                    control.getValue() 
+                    && 
+                    dlg.oSearchKeyword.setValue(control.getValue())
+                    && 
+                    dlg.oDialog.fireEvent("searchPress");
+                }, 0);
+                return dlg;
+            }).call(this), function(r){
+                control.setValue("");
                 control.setTokens(r.getSource().getTokens());
-            }, control);
+            });
 
             // 요청자명
             type == "requestor_empno"
             &&
-            this.dialog(new EmployeeDialog({
-                title: this.getModel("I18N").getText("/NOP00003"),
-                multiSelection: true,
-                items: {
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
-                    ]
-                }
-           }), function(r) {
+            this.dialog((function(){
+                var dlg = new EmployeeDialog({
+                    title: this.getModel("I18N").getText("/NOP00003"),
+                    loadWhenOpen: false,
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                        ]
+                    }
+                });
+                setTimeout(function(){
+                    // token
+                    control.getTokens().length > 0 && dlg.setTokens(control.getTokens());
+                    // keyword
+                    control.getValue() 
+                    && 
+                    dlg.oSearchKeyword.setValue(control.getValue())
+                    && 
+                    dlg.oDialog.fireEvent("searchPress");
+                }, 0);
+                return dlg;
+            }).call(this), function(r){
+                control.setValue("");
                 control.setTokens(r.getSource().getTokens());
-            }, control);
+            });
 
             // 구매담당자
             type == "buyer_empno"
             &&
-            this.dialog(new EmployeeDialog({
-                title: this.getModel("I18N").getText("/NOP00003"),
-                multiSelection: false,
-                items: {
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
-                    ]
-                }
-            }), function(r) {
-                control.setValue((control.oldText = [
-                    "(", r.getParameter("item").employee_number, ") ", r.getParameter("item").user_local_name
-                ].join("")));
-                control.oldValue = r.getParameter("item").employee_number;
-                this.getModel("jSearch")
-                    .setProperty("/" + type, r.getParameter("item").employee_number);
-            }, control);
+            this.dialog((function(){
+                var dlg = new EmployeeDialog({
+                    title: this.getModel("I18N").getText("/NOP00003"),
+                    loadWhenOpen: false,
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                        ]
+                    }
+                });
+                setTimeout(function(){
+                    var keyword = control.getValue() != control.getOldValue()
+                        ? control.getValue()
+                        : control.getDesc();
+                    !!keyword 
+                    && 
+                    dlg.oSearchKeyword.setValue(keyword)
+                    && 
+                    dlg.oDialog.fireEvent("searchPress");
+                }, 0);
+                return dlg;
+            }).call(this), function(r) {
+                control.setCode(r.getParameter("item").employee_number);
+                control.setDesc(r.getParameter("item").user_local_name);
+            });
         },
         // 조회
         onSearch: function (event) {
@@ -371,7 +407,7 @@ sap.ui.define([
                 }, { skip: true })
                 .done((function(r) {
                     MessageBox.confirm(message, {
-                        title: "Comfirmation",
+                        title: this.getModel("I18N").getText("/CONFIRMATION"),
                         initialFocus: sap.m.MessageBox.Action.CANCEL,
                         onClose: (function (sButton) {
                             if (sButton === MessageBox.Action.OK) {
@@ -397,29 +433,39 @@ sap.ui.define([
                                         }).bind(this),
                                         onValueHelpRequest: function() {
                                             var [ event, type, ...args ] = arguments;
-                                            var { model, path } = args[args.length - 1];
                                             var control = event.getSource();
 
-                                            this.dialog(new EmployeeDialog({
-                                                title: this.getModel("I18N").getText("/NOP00003"),
-                                                multiSelection: false,
-                                                items: {
-                                                    filters: [
-                                                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
-                                                    ]
-                                                }
-                                            }), function(r) {
-                                                control.setValue((control.oldText = [
-                                                    "(", r.getParameter("item").employee_number, ") ", r.getParameter("item").user_local_name
-                                                ].join("")));
-                                                control.oldValue = r.getParameter("item").employee_number;
-                                                this.getModel("fragment")
-                                                    .setProperty("/reason/buyerEmpno", r.getParameter("item").employee_number);
-                                            }, control);
+                                            this.dialog((function(){
+                                                var dlg = new EmployeeDialog({
+                                                    title: this.getModel("I18N").getText("/NOP00003"),
+                                                    loadWhenOpen: false,
+                                                    multiSelection: false,
+                                                    items: {
+                                                        filters: [
+                                                            new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                                                        ]
+                                                    }
+                                                });
+                                                setTimeout(function(){
+                                                    var keyword = control.getValue() != control.getOldValue()
+                                                        ? control.getValue()
+                                                        : control.getDesc();
+                                                    !!keyword 
+                                                    && 
+                                                    dlg.oSearchKeyword.setValue(keyword)
+                                                    && 
+                                                    dlg.oDialog.fireEvent("searchPress");
+                                                }, 0);
+                                                return dlg;
+                                            }).call(this), function(r) {
+                                                control.setCode(r.getParameter("item").employee_number);
+                                                control.setDesc(r.getParameter("item").user_local_name);
+                                            });
                                         },
                                         onCommit: function() {
                                             var [event, action, value, ...args] = arguments;
-                                            if (value.action == 'CHANGE' && !value.buyerEmpno) {
+                                            
+                                            if (value.action == 'CHANGE' && (!value.buyerEmpno || value.buyerEmpno == 'invalid')) {
                                                 MessageBox.alert(this.getModel("I18N").getText("/NOP00001"));
                                                 return false;
                                             }
@@ -430,13 +476,11 @@ sap.ui.define([
                                             return value;
                                         },
                                         onCancel: function() {
-                                            //var [event, action, ...args] = arguments;
                                             return ;
                                         }
                                     }, this)
                                     .done(result => {
                                         var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
-                                        //console.log(">>>>>>>>>>>>> done", result);
                                         this.procedure(service, entry, {
                                             inputData: {
                                                 jobType: action,

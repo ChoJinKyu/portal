@@ -255,9 +255,11 @@ sap.ui.define([
 
             var aSearchFilters = [];
 
-            console.log(this.getModel("USER_SESSION").getSessionAttr("TENANT_ID"));
+            console.log(this.tenant_id);
 
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getModel("USER_SESSION").getSessionAttr("TENANT_ID")));
+            // aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getModel("USER_SESSION").getSessionAttr("TENANT_ID")));
+
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id));
 
             if (searchKeyword != "") {                
                 aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchKeyword.toLowerCase().replace("'","''")+"'"));

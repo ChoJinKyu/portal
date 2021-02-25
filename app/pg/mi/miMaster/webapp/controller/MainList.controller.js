@@ -117,7 +117,17 @@ sap.ui.define([
 			
 
 			console.groupEnd();
-		},
+        },
+        
+        onBeforeExport: function (oEvt) {
+            var mExcelSettings = oEvt.getParameter("exportSettings");
+
+            // Disable Worker as Mockserver is used in Demokit sample
+            mExcelSettings.worker = true;
+            mExcelSettings.workbook.columns[4].falseValue = "No";
+            mExcelSettings.workbook.columns[4].trueValue = "Yes";
+            //mExcelSettings.workbook.columns[5].textAlign = "Left";
+        },
 		
 		/**
 		 * System Event onBeforeRendering
@@ -208,8 +218,8 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 	
-			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getValue(); 
-			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
+			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getValue();
+            var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();      
 			//var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
 			var fOcode = oUse_flag =="false" ? false : true;
@@ -224,7 +234,8 @@ sap.ui.define([
 			}
 
 			if (oMi_material_name.length > 0) {
-				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
+                oSmtFilter.getControlByKey("mi_material_name").setValue(oMi_material_name.toUpperCase());    
+				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name.toUpperCase());
 				mBindingParams.filters.push(oMi_material_nameFilter);
 			}
 
@@ -361,10 +372,221 @@ sap.ui.define([
         /**
          * @param {sap.m.MessageBox.Action} oAction 
          */
-		_deleteAction: function(oAction) {
+
+         _deleteAction: function(oAction) {
+            console.group("_deleteAction");
+			var oModel = this.getOwnerComponent().getModel(),
+                that = this,
+                aUsedEntity = [],
+                aUnUsedEntity = [],
+                iSelected = this._getSmartTableById().getTable().getSelectedItems().length,
+                iChkSelected = 0,
+                bContinue = true;
+            
+			if(oAction === sap.m.MessageBox.Action.DELETE) {
+                that.getView().setBusy(true);
+
+				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
+                    var sPath = oItem.getBindingContextPath();	
+					var mParameters = {"groupId":that._m.groupID};
+					var oRecord = that.getModel().getProperty(sPath);
+					var groupID = that._m.groupID;				
+					//var oTenant_id = that._sso.dept.tenant_id;
+					
+					function _readCheckBOMEntity(oFilter) {
+						console.log("_readCheckBOMEntity");						
+						return new Promise(function(resolve, reject) {
+								oModel.read("/MIMaterialCodeBOMManagementItem", {
+								filters: oFilter,
+								success: function(oData) {		
+									console.log(">>_readCheckBOMEntity success");
+									resolve(oData);
+								},
+								error: function(oResult) {
+									reject(oResult);
+								}
+							});
+						});
+					};
+			
+					function _readCheckPriceEntity(oFilter) {
+						console.log("_readCheckPriceEntity");
+						return new Promise(function(resolve, reject) {
+							oModel.read("/MIMaterialPriceManagement", {
+								filters: oFilter,
+								success: function(oData) {		
+									console.log(">>_readCheckPriceEntity success");
+									resolve(oData);
+								},
+								error: function(oResult) {
+									reject(oResult);
+								}
+							});
+						});
+					};
+
+					function _readCheckLngEntity(oFilter) {
+						return new Promise(function(resolve, reject) {
+								oModel.read("/MIMaterialCodeText", {
+								filters: oFilter,
+								success: function(oData) {		
+                                    console.log(">>_readCheckLngEntity success");                                    
+									resolve(oData);
+								},
+								error: function(oResult) {
+									reject(oResult);
+								}
+							});
+						});
+					};
+
+					function _deleteMIMaterialCodeText(oMIMaterialCodeTextPath) {
+						console.log("_deleteActionLng --delete");
+						console.log("_deleteActionLng --oMIMaterialCodeTextPath", oMIMaterialCodeTextPath);
+						oModel.remove(oMIMaterialCodeTextPath, { groupId: groupID}); 			
+					};
+
+					function _deleteMiMaterialCode(oMIMaterialCodePath) {
+						console.log("_deleteMiMaterialCode --delete");
+						console.log("_deleteMiMaterialCode --oMIMaterialCodePath", oMIMaterialCodePath);						
+						oModel.remove(oMIMaterialCodePath, { groupId: groupID }); 			
+					};
+
+                    
+                    
+					function _deleteEntityCheck(values){
+						console.log("==deleteEntityCheck==");
+						
+						var oBomCount  = values[0].results.length;
+						var oPriceCount = values[1].results.length;
+						var oLngEntity  = values[2].results.length;
+
+						console.log("oBomCount", oBomCount);
+						console.log("oPriceCount", oPriceCount);
+                        console.log("oLngEntity", oLngEntity);
+
+                     
+						if(oBomCount>0 || oPriceCount>0){
+                            aUsedEntity.push(oRecord);//(oBomCount > 0 ? values[0].results[0].mi_material_code : values[1].results[0].mi_material_code);
+                            bContinue = false;
+						}else if(oLngEntity>0){  
+                            var oItem = {mi_material_code : oRecord.mi_material_code, category_code : oRecord.category_code, language : values[2].results};
+                            aUnUsedEntity.push(oItem);
+                        }
+
+                        iChkSelected ++;
+                        if(iSelected === iChkSelected){
+                            if(bContinue)_deleteEntity();  
+                            else {
+                                that.getView().setBusy(false);
+                                _failDeleteEntity();
+                            }
+                        }
+                        
+					}
+
+                    function _failDeleteEntity(){
+                        MessageToast.show(that.getModel("I18N").getText("/NPG00017"));  //, "("+aUsedEntity.length+")"
+                    }
+
+                    function _deleteEntity(){
+                        console.log("==_deleteEntity==");
+                        console.log(aUnUsedEntity.length);
+
+                        var LanDataSource = aUnUsedEntity;
+                        var iDelEntity = 0;
+                                //console.log(LanDataSource);
+                                
+                        aUnUsedEntity.forEach(function(aEntry){
+                            var iLngEntry = aEntry.language.length;
+                            var iDelEntry = 0;
+                            var oEntryItem = aEntry.language;
+                            oEntryItem.forEach(function(oItem){
+                                var oMIMaterialCodeTextKey = {
+                                    tenant_id : that._sso.dept.tenant_id,
+                                    mi_material_code: oItem.mi_material_code,
+                                    language_code: oItem.language_code,
+                                };
+                                var oMIMaterialCodeTextPath = oModel.createKey(
+                                    that._m.serviceName.mIMaterialCodeText,
+                                    oMIMaterialCodeTextKey
+                                );
+
+                                _deleteMIMaterialCodeText(oMIMaterialCodeTextPath);
+
+                                iDelEntry++;
+
+                            });
+
+                            if(iLngEntry === iDelEntry){
+                                var oDeleteMIMaterialCodeKey = {
+                                    tenant_id : that._sso.dept.tenant_id,
+                                    mi_material_code: aEntry.mi_material_code,
+                                    category_code:  aEntry.category_code
+                                };
+                                
+                                
+                                var oDeleteMaterialCodePath = oModel.createKey(
+                                        that._m.serviceName.mIMaterialCode,
+                                        oDeleteMIMaterialCodeKey
+                                );
+
+                                console.log("oDeleteMaterialCodePath", oDeleteMaterialCodePath);
+                                _deleteMiMaterialCode(oDeleteMaterialCodePath);
+                            }
+
+                            iDelEntity++;
+                        });
+
+                        
+                        function dataRefresh(){
+                            oModel.updateBindings(true);
+                            oModel.refresh(true); 
+                            that.getView().byId("mainTable").getModel().refresh(true);
+                        }
+
+                        if(iDelEntity === aUnUsedEntity.length){ 
+                            setTimeout(that._setUseBatch(oModel), 1000);
+                            setTimeout(dataRefresh, 1000);
+                            that._handleClose();
+                        }
+                        
+                    }
+
+					function _deleteChecklistError(response){
+						console.log("==deleteChecklistError==");
+						console.log(response);
+                    }
+                    
+					var oFilter = [
+						new Filter("tenant_id", FilterOperator.EQ, that._sso.dept.tenant_id),
+						new Filter("mi_material_code", FilterOperator.EQ, oRecord.mi_material_code)
+					];
+
+					console.log("--Promise oFilter--", oFilter);
+					var bFlag = Promise.all([                                      
+                                    _readCheckBOMEntity(oFilter),
+                                    _readCheckPriceEntity(oFilter),
+                                    _readCheckLngEntity(oFilter)							
+					]).then(       
+                        _deleteEntityCheck.bind(that)
+                        ,_deleteChecklistError.bind(that)
+                    ).then(
+
+                    );       
+					//setTimeout(resut_bFlag, 1000);
+				});
+				
+            } 
+            console.groupEnd();
+        },
+        
+		_deleteAction2: function(oAction) {
 			console.group("_deleteAction");
 			var oModel = this.getOwnerComponent().getModel(),
-				that = this;
+                that = this,
+                aUsedEntity = [],
+                bContinue = true;
             
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 
@@ -486,7 +708,10 @@ sap.ui.define([
 
                      
 						if(oBomCount>0 || oPriceCount>0){
-							MessageToast.show(this.getModel("I18N").getText("/NPG00017"));  
+
+                            aUsedEntity.push(oBomCount > 0 ? values[0].results[0].mi_material_code : values[1].results[0].mi_material_code);
+                            bContinue = false;
+							//MessageToast.show(this.getModel("I18N").getText("/NPG00017"));  
 							return; 
 						}else{
                            
@@ -532,7 +757,11 @@ sap.ui.define([
 					
 					function resut_bFlag(){
 						console.log("bFlag" , bFlag);
-					}
+                    }
+                    
+                    function _testCheck(values){
+
+                    }
 					var oFilter = [
 						new Filter("tenant_id", FilterOperator.EQ, that._sso.dept.tenant_id),
 						new Filter("mi_material_code", FilterOperator.EQ, oRecord.mi_material_code)
@@ -543,10 +772,9 @@ sap.ui.define([
                                     _readCheckBOMEntity(oFilter),
                                     _readCheckPriceEntity(oFilter),
                                     _readCheckLngEntity(oFilter)							
-					]).then(                        
+					]).then(       
                         _deleteEntityCheck.bind(that)
-                        ,_deleteChecklistError.bind(that));
-
+                        ,_deleteChecklistError.bind(that));       
 					//setTimeout(resut_bFlag, 1000);
 				});
 				
@@ -559,6 +787,7 @@ sap.ui.define([
             // var oFclModel = this.getModel("fcl");
             // oFclModel.setProperty("/layout", sLayout);
             this.getRouter().navTo("mainPage", {layout: sLayout});
+            this.getView().setBusy(false);
         },
 
 		_setUseBatch : function(oModel) {

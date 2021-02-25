@@ -545,6 +545,38 @@ sap.ui.define([
 
                 }
             },
+            // 숫자 입력 자리수 확인
+            _inputNumberCheck : function(sValue, nValue1, nValue2){ // 20210224 kbg 추가
+                var temp = sValue.indexOf('.'); // 소수점
+                var oValueState = "Error";
+                var oValueStateText;
+                var pFlag;
+                var result = {};
+                if(temp != -1){
+                    if(temp > nValue1){  // 정수 
+                        oValueStateText = "입력 자리수를 확인해 주세요."
+                        pFlag = false;
+                    }else{
+                        var temp2 = sValue.substring(temp+1);
+                        if(temp2.length>nValue2){ //소수점 
+                            oValueStateText = "입력 자리수를 확인해 주세요."
+                            pFlag = false;
+                        }
+                    }
+                }else{
+                    if(sValue.length > nValue1){  //정수 
+                        oValueStateText = "입력 자리수를 확인해 주세요."
+                        pFlag = false;
+                    }
+                }
+
+                if(pFlag == false){
+                    result.valueState = oValueState;
+                    result.valueStateText = oValueStateText;
+                    return result;
+                }
+                        
+            },
 
             _validator : function(){
                 var oModel = this.getModel("NegoHeaders");
@@ -569,6 +601,50 @@ sap.ui.define([
                         if(sRequest_Quantity === "")oValueStates.request_quantity = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                         if(sUom_Code === "")oValueStates.uom_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                                             
+
+                        // 숫자 입력 자리수 확인 추가 20210224 kbg
+                        // if(oRow.bpa_price != undefined || oRow.bpa_price != null){
+                        //BPA Price
+                        if(oRow.bpa_price.length > 0){ 
+                            var oResult = this._inputNumberCheck(oRow.bpa_price, 23, 5); //숫자 자리수 확인
+                            if(oResult){
+                                bReturn = false;
+                                oValueStates.bpa_price = {valueState : oResult.valueState, valueStateText: oResult.valueStateText };
+                            }
+                        }
+                        // bidding_start_net_price
+                        if(oRow.bidding_start_net_price.length > 0){ 
+                            var oResult = this._inputNumberCheck(oRow.bidding_start_net_price, 23, 5); //숫자 자리수 확인
+                            if(oResult){
+                                bReturn = false;
+                                oValueStates.bidding_start_net_price = {valueState : oResult.valueState, valueStateText: oResult.valueStateText };
+                            }
+                        }
+                        // bidding_target_net_price
+                        if(oRow.bidding_target_net_price.length > 0){ 
+                            var oResult = this._inputNumberCheck(oRow.bidding_target_net_price, 23, 5); //숫자 자리수 확인
+                            if(oResult){
+                                bReturn = false;
+                                oValueStates.bidding_target_net_price = {valueState : oResult.valueState, valueStateText: oResult.valueStateText };
+                            }
+                        }
+                        // current_price
+                        if(oRow.current_price.length > 0){ 
+                            var oResult = this._inputNumberCheck(oRow.current_price, 23, 5); //숫자 자리수 확인
+                            if(oResult){
+                                bReturn = false;
+                                oValueStates.current_price = {valueState : oResult.valueState, valueStateText: oResult.valueStateText };
+                            }
+                        }
+                        // request_quantity
+                        if(oRow.request_quantity.length > 0){ 
+                            var oResult = this._inputNumberCheck(oRow.request_quantity, 25, 3); //숫자 자리수 확인
+                            if(oResult){
+                                bReturn = false;
+                                oValueStates.request_quantity = {valueState : oResult.valueState, valueStateText: oResult.valueStateText };
+                            }
+                        }
+                        // 숫자 입력 자리수 확인 추가 끝
     
                         if('operation_org_code' in oValueStates || 'material_desc' in oValueStates || 'request_quantity' in oValueStates || 'uom_code' in oValueStates ){
                             bReturn = false;
@@ -576,7 +652,57 @@ sap.ui.define([
     
                         oRow.__metadata = {_valueStates : oValueStates};
                     }
-                });
+                    
+                }.bind(this));
+                
+                // 20210223 kbg validation 추가
+                var oValueStates = {};
+                if(parseInt(oModel.oData.close_date_ext_enabled_hours) > 99){
+                    oValueStates.close_date_ext_enabled_hours = {valueState : "Error", valueStateText: "2자리까지 입력 가능합니다." };
+                    bReturn = false;
+                }
+                if(parseInt(oModel.oData.close_date_ext_enabled_count) > 999){
+                    oValueStates.close_date_ext_enabled_count = {valueState : "Error", valueStateText: "3자리까지 입력 가능합니다." };
+                    bReturn = false;
+                }
+
+                // Award Type = Total amount 일 때, 가격 확인(정수23,소수점5자리까지만 가능)
+                if(oModel.oData.award_type_code == '020'){
+                    
+                    var sTargetAmount = oModel.oData.target_amount;
+                    var oResult = this._inputNumberCheck(sTargetAmount, 23, 5); //숫자 자리수 확인
+                    console.log("oResult =========================== ", oResult);
+                    if(oResult){
+                        bReturn = false;
+                        oValueStates.target_amount = {valueState : oResult.valueState, valueStateText: oResult.valueStateText };
+                    }
+                }
+
+                // closing date < 오늘날짜 에러
+                if(oModel.oData.closing_date){
+                    var oClosingTime = oModel.oData.closing_date.getTime();
+                    var temp = new Date();
+                    var temp2 = temp.getTime();
+                    if(temp2 > oClosingTime){
+                        bReturn = false;
+                        oValueStates.closing_date = {valueState : "Error", valueStateText: "종료일은 미래값만 입력 가능합니다." };
+                    }
+
+                    //시작일 > 종료일 에러
+                    if(oModel.oData.open_date.getTime() > oClosingTime){
+                        bReturn = false;
+                        oValueStates.closing_date = {valueState : "Error", valueStateText: "종료일은 시작일보다 커야합니다." };
+                    }
+                }else{  //필수 입력
+                    bReturn = false;
+                    oValueStates.closing_date = {valueState : "Error", valueStateText: "종료일은 필수 입력입니다." };
+                }
+
+                oModel.oData.validation = oValueStates;
+                // 20210223 kbg validation 추가 끝
+
+                
+                
 
                 if(!bReturn){
                     oModel.setProperty("/Items", oModel.getProperty("/Items"));
@@ -1276,7 +1402,7 @@ sap.ui.define([
                         var oItems = this.getView().getModel("NegoHeaders").getData().Items;
 
                         for( var a = 0; a < selectedIndices.length ; a++ ) {
-                            var objTemp = oItems[a];
+                            var objTemp = oItems[selectedIndices[a]];
 
                             var oObj = {};
                             oSelectedItems.forEach(element => {

@@ -61,7 +61,7 @@ sap.ui.define([
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
 
-                if(oArgs.search){
+                if(oArgs.search && !$.isEmptyObject(oViewModel.getProperty("/cond/EQ"))){
                     this.onPressSearch();
                 }
 
@@ -202,9 +202,10 @@ sap.ui.define([
                 oBtnEavluType.bindItems({
                     path : "util>/UserEvalTypeView",
                     filters : aFilters,
-                    template : new SegmentedButtonItem({ 
+                    template : new ListItem({ 
                         text : "{util>evaluation_type_name}", 
-                        key : "{util>evaluation_type_code}"
+                        key : "{util>evaluation_type_code}", 
+                        additionalText : "{util>evaluation_type_code}"
                     })
                 });
 
@@ -776,9 +777,9 @@ sap.ui.define([
                 oResourceBundle = oI18nModel.getResourceBundle();
                 aTreeData = oViewModel.getProperty("/Tree/list");
 
-                ExcelUtil.fnExportGridTable({
+                ExcelUtil.fnExportExcel({
                     fileName : oResourceBundle.getText("appTitle"),
-                    column : oTable,
+                    table : oTable,
                     data : aTreeData
                 });
             }

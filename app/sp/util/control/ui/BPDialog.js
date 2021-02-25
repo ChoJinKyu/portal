@@ -22,11 +22,12 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: true },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em" },
                 keyField: { type: "string", group: "Misc", defaultValue: "business_partner_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "business_partner_code" },
-                items: { type: "sap.ui.core.Control" },
-                filters: []
+                items: { type: "sap.ui.core.Control" }
+
             }
         },
 
@@ -34,8 +35,9 @@ sap.ui.define([
 
         createSearchFilters: function () {
             var oThis = this;
+            var sTenantId = "L2100";
             var oFilter = {
-                tenantId: new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                tenantId: new Filter("tenant_id", FilterOperator.EQ, sTenantId),
                 languageCd: new Filter("language_cd", FilterOperator.EQ, "KO")
             };
 
@@ -140,7 +142,7 @@ sap.ui.define([
 
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_CODE")}),
+                        new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_CODE") }),
                         this.oBPCode
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
@@ -238,7 +240,7 @@ sap.ui.define([
                 new Column({
                     hAlign: "Center",
                     width: "7rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/TYPE") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_TYPE_CODE") }),
                     template: new Text({ text: "{type_name}" })
                 }),
                 new Column({
@@ -250,13 +252,13 @@ sap.ui.define([
                 new Column({
                     hAlign: "Center",
                     width: "8rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_LOCAL_NAME")  }),
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_LOCAL_NAME") }),
                     template: new Text({ text: "{business_partner_local_name}", wrapping: false })
                 }),
                 new Column({
                     hAlign: "Center",
                     width: "8rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_ENGLISH_NAME")}),
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_ENGLISH_NAME") }),
                     template: new Text({ text: "{business_partner_english_name}", wrapping: false })
                 }),
                 new Column({
@@ -334,13 +336,14 @@ sap.ui.define([
 
         loadBPData: function (oThis) {
             var that = oThis,
-                cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
+                sTenantId = "L2100",
+                cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
             that.oDialog.setModel(new ManagedModel(), "BPVIEW");
 
             //if(!that.getModel("BPVIEW").getProperty("/company")){
             oServiceModel.read("/companyView", {
                 filters: cFilters,
-                sorters: [new Sorter("company_code", true)],
+                sorters: [new Sorter("company_code")],
                 success: function (oData) {
                     var aRecords = oData.results;
                     //aRecords.unshift({company_code:"", company_name: that.getModel("I18N").getText("/ALL")});
@@ -352,7 +355,7 @@ sap.ui.define([
             //if(!that.getModel("BPVIEW").getProperty("/bizUnit")){
             oServiceModel.read("/OrganizationView", {
                 filters: cFilters,
-                sorters: [new Sorter("bizunit_code", true)],
+                sorters: [new Sorter("bizunit_code")],
                 success: function (oData) {
                     var aRecords = oData.results;
                     //aRecords.unshift({bizunit_code:"", bizunit_name: that.getModel("I18N").getText("/ALL")});
@@ -364,7 +367,7 @@ sap.ui.define([
             //if(!that.getModel("BPVIEW").getProperty("/supplierType")){
             oServiceModel.read("/SupplierTypeView", {
                 filters: cFilters,
-                sorters: [new Sorter("code", true)],
+                sorters: [new Sorter("code")],
                 success: function (oData) {
                     var aRecords = oData.results;
                     //aRecords.unshift({code:"", code_name: that.getModel("I18N").getText("/ALL")});
@@ -374,8 +377,8 @@ sap.ui.define([
             //}
 
             oServiceModel.read("/BusinessPartnerRoleCodeView", {
-                 filters: cFilters,
-                sorters: [new Sorter("code", true)],
+                filters: cFilters,
+                sorters: [new Sorter("code")],
                 success: function (oData) {
                     var aRecords = oData.results;
                     aRecords.unshift({ code: "", code_name: that.getModel("I18N").getText("/ALL") });
@@ -384,8 +387,8 @@ sap.ui.define([
             })
 
             oServiceModel.read("/BusinessPartnerRegistrationProgressView", {
-                 filters:  cFilters,
-                sorters: [new Sorter("code", true)],
+                filters: cFilters,
+                sorters: [new Sorter("code")],
                 success: function (oData) {
                     var aRecords = oData.results;
                     aRecords.unshift({ code: "", code_name: that.getModel("I18N").getText("/ALL") });
@@ -394,8 +397,8 @@ sap.ui.define([
             });
 
             oServiceModel.read("/BusinessPartnerStatusView", {
-                 filters: cFilters,
-                sorters: [new Sorter("code", true)],
+                filters: cFilters,
+                sorters: [new Sorter("code")],
                 success: function (oData) {
                     var aRecords = oData.results;
                     aRecords.unshift({ code: "", code_name: that.getModel("I18N").getText("/ALL") });
@@ -407,68 +410,92 @@ sap.ui.define([
 
         },
         loadData: function (obj) {
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
-                aSorters = [new Sorter("business_partner_code", true)],
-                sBPCode = this.oBPCode.getValue(),
-                sBPName = this.oBPName.getValue(),
-                sTaxId = this.oTaxId.getValue(),
-                sCompny = this.oCompny.getSelectedKey(),
-                sOrg = this.oOrg.getSelectedKey(),
-                sType = this.oType.getSelectedKey(),
-                sOldSupplierCode = this.oOldSupplierCode.getValue(),
-                sOldMakerCode = this.oOldMakerCode.getValue(),
-                sRole = this.oRole.getSelectedKey(),
-                sRegisterStatus = this.oRegisterStatus.getSelectedKey(),
-                sStatus = this.oStatus.getSelectedKey();
+            if (!this.oDialog.getModel("BPVIEW")) {
+                this.getMetadata().getPropertyDefaults().loadWhenOpen = false;
+                this.oDialog.setBusy(true);
+                this.loadBPData(this);
+            } else {
+                var sTenantId = "L2100";//SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+                var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
+                    // aSorters = [new Sorter("business_partner_code", true)],
+                    sBPCode = this.oBPCode.getValue(),
+                    sBPName = this.oBPName.getValue(),
+                    sTaxId = this.oTaxId.getValue(),
+                    sCompny = this.oCompny.getSelectedKey(),
+                    sOrg = this.oOrg.getSelectedKey(),
+                    sType = this.oType.getSelectedKey(),
+                    sOldSupplierCode = this.oOldSupplierCode.getValue(),
+                    sOldMakerCode = this.oOldMakerCode.getValue(),
+                    sRole = this.oRole.getSelectedKey(),
+                    sRegisterStatus = this.oRegisterStatus.getSelectedKey(),
+                    sStatus = this.oStatus.getSelectedKey();
 
-            if (sBPCode) {
-                sBPCode = sBPCode.toUpperCase();
-                this.oBPCode.setValue(sBPCode);
-                aFilters.push(new Filter("business_partner_code", FilterOperator.Contains, sBPCode));
+                if (sBPCode) {
+                    sBPCode = sBPCode.toUpperCase();
+                    this.oBPCode.setValue(sBPCode);
+                    aFilters.push(new Filter("business_partner_code", FilterOperator.Contains, sBPCode));
+                }
+                if (sBPName) {
+                    aFilters.push(
+                        new Filter({
+                            filters: [
+                                new Filter("business_partner_local_name", FilterOperator.Contains, sBPName),
+                                new Filter("business_partner_english_name", FilterOperator.Contains, sBPName)
+                            ],
+                            and: false
+                        })
+                    )
+                }
+                if (sTaxId) aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
+                if (sCompny) aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompny));
+                if (sOrg) aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrg));
+                if (sType) {
+                    aFilters.push(new Filter("type_code", FilterOperator.EQ, sType));
+                }
+                if (sOldSupplierCode) {
+                    aFilters.push(new Filter("old_supplier_code", FilterOperator.Contains, sOldSupplierCode));
+                }
+                if (sOldMakerCode) {
+                    aFilters.push(new Filter("old_maker_code", FilterOperator.Contains, sOldMakerCode));
+                }
+                if (sRole === "100001") {
+                    aFilters.push(new Filter("supplier_role", FilterOperator.EQ, "Y"));
+                } else if (sRole === "100006") {
+                    aFilters.push(new Filter("maker_role", FilterOperator.EQ, "Y"));
+                }
+                if (sRegisterStatus) {
+                    aFilters.push(new Filter("business_partner_register_progress_code", FilterOperator.EQ, sRegisterStatus));
+                }
+
+                if (sStatus) aFilters.push(new Filter("business_partner_status_code", FilterOperator.EQ, sStatus));
+
+                this.oDialog.setBusy(true);
+
+                //fixed column 
+                this.oDialog.getAggregation("content")[0].getAggregation("items")[1].setFixedColumnCount(5);
+
+                oServiceModel.read("/BusinessPartnerView", {
+                    filters: aFilters,
+                    urlParameters: {
+                        "$orderby": "company_code asc, org_code asc, type_code asc, business_partner_code asc"
+                    },
+                    // sorters: aSorters,
+                    success: function (oData) {
+                        var aRecords = oData.results;
+                        this.oDialog.setData(aRecords, false);
+                        this.oDialog.setBusy(false);
+
+                    }.bind(this)
+                });
             }
-            if (sBPName) aFilters.push(new Filter("business_partner_local_name", FilterOperator.Contains, sBPName));
-            if (sTaxId) aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
-            if (sCompny) aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompny));
-            if (sOrg) aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrg));
-            if (sType) {
-                aFilters.push(new Filter("type_code", FilterOperator.EQ, sType));
+
+
+        },
+        onExit: function () {
+            for (var sFragmentName in this._oFragments) {
+                this._oFragments[sFragmentName].destroy();
+                delete this._oFragments[sFragmentName];
             }
-            if (sOldSupplierCode) {
-                aFilters.push(new Filter("old_supplier_code", FilterOperator.Contains, sOldSupplierCode));
-            }
-            if (sOldMakerCode) {
-                aFilters.push(new Filter("old_maker_code", FilterOperator.Contains, sOldMakerCode));
-            }
-            if (sRole === "100001") {
-                aFilters.push(new Filter("supplier_role", FilterOperator.EQ, "Y"));
-            } else if (sRole === "100006") {
-                aFilters.push(new Filter("maker_role", FilterOperator.EQ, "Y"));
-            }
-            if (sRegisterStatus) {
-                aFilters.push(new Filter("business_partner_register_progress_code", FilterOperator.EQ, sRegisterStatus));
-            } 
-
-            if (sStatus) aFilters.push(new Filter("business_partner_status_code", FilterOperator.EQ, sStatus));
-
-            this.oDialog.setBusy(true);
-
-            //fixed column 
-            this.oDialog.getAggregation("content")[0].getAggregation("items")[1].setFixedColumnCount(5);
-
-            oServiceModel.read("/BusinessPartnerView", {
-                filters: aFilters,
-                sorters: aSorters,
-                success: function (oData) {
-                    var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, "BPList");
-                    this.oDialog.setBusy(false);
-                    if (!this.oDialog.getModel("BPVIEW")) {
-                        this.oDialog.setBusy(true);
-                        this.loadBPData(this);
-                    }
-                }.bind(this)
-            });
-
         }
 
     });

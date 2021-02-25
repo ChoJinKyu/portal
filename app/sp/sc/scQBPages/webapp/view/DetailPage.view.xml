@@ -169,29 +169,36 @@
                                                                         <DateTimePicker id="searchOpenDatePicker" placeholder="Open Date ..." 
                                                                             valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" visible="{=${propInfo>/isEditMode}}"
                                                                             value="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" />
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: false} }" />
                                                                         <Text text="{path: 'NegoHeaders>/open_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: false} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                                     </FlexBox>
                                                                     <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                                                                     <FlexBox>
                                                                         <DateTimePicker id="searchEndDatePicker" placeholder="End Date ..." 
                                                                             valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" visible="{=${propInfo>/isEditMode}}"
                                                                             value="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" />
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: false} }"
+                                                                            valueState="{NegoHeaders>/validation/closing_date/valueState}" 
+                                                                            valueStateText="{NegoHeaders>/validation/closing_date/valueStateText}" />
                                                                         <Text text="{path: 'NegoHeaders>/closing_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: false} }" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                                     </FlexBox>
                                                                 </HBox>
                                                             </VBox>
 
                                                             <HBox  width="50%" >
                                                                 <VBox width="50%">
-
+                                                                     <!-- {NegoHeaders>__metadata/_valueStates/operation_org_code/valueState}
+                                                                    oModel.oData.validation._valueStates.close_date_ext_enabled_hours 
+                                                                valueState="{NegoHeaders>__metadata/_valueStates/operation_org_code/valueState}"
+                                                            validation._valueStates.close_date_ext_enabled_hours.valueState-->
                                                                     <Label  text="Extension Period:" width="130px" class="sapMLabelNoText "/> 
                                                                     <HBox  height="100%" alignItems="Center" >
                                                                         <Input id="inputEP" value="{NegoHeaders>/close_date_ext_enabled_hours}" type="Number" description="Hr"
-                                                                            visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd" textAlign="Right"/>
+                                                                            visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd" textAlign="Right"
+                                                                            valueState="{NegoHeaders>/validation/close_date_ext_enabled_hours/valueState}" 
+                                                                            valueStateText="{NegoHeaders>/validation/close_date_ext_enabled_hours/valueStateText}"/>
                                                                         <Text text="{NegoHeaders>/close_date_ext_enabled_hours} Hr" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                                         <!-- <Label  text="Hr"  class="sapUiSmallMarginBegin" /> -->
                                                                     </HBox>
@@ -204,7 +211,9 @@
                                                                     <Label  text="Extension Count:" width="130px"  class="sapMLabelNoText "/> 
                                                                     <HBox  height="100%" alignItems="Center" >
                                                                         <Input id="inputEC"  value="{NegoHeaders>/close_date_ext_enabled_count}" type="Number" description="Times"
-                                                                            visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd" textAlign="Right"/>
+                                                                            visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd" textAlign="Right"
+                                                                            valueState="{NegoHeaders>/validation/close_date_ext_enabled_count/valueState}" 
+                                                                            valueStateText="{NegoHeaders>/validation/close_date_ext_enabled_count/valueStateText}"/>
                                                                         <Text text="{NegoHeaders>/close_date_ext_enabled_count} Times" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                                         <!-- <Label  text="Times"  class="sapUiSmallMarginBegin"/>    -->
                                                                     </HBox>
@@ -345,7 +354,9 @@
                                                 <core:Item key="020" text="Award by Total Amount"/>
                                             </Select> 
                                             <Label  text="Target Total Amount" visible="{=${NegoHeaders>/award_type_code}==='020'}"/> 
-                                            <Input value="{NegoHeaders>/target_amount}" type="Number"  textAlign="Right" visible="{=${NegoHeaders>/award_type_code}==='020'}"/> 
+                                            <Input value="{NegoHeaders>/target_amount}" type="Number"  textAlign="Right" visible="{=${NegoHeaders>/award_type_code}==='020'}"
+                                                    valueState="{NegoHeaders>/validation/target_amount/valueState}" 
+                                                                            valueStateText="{NegoHeaders>/validation/target_amount/valueStateText}"/> 
                                             <Label text="Partial Response" />
 
                                             <SegmentedButton id="SegmentButtonUsed" selectedKey="{NegoHeaders>/partial_allow_flag}" 
@@ -634,7 +645,9 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
                                                                     <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right"
-                                                                        placeholder="소수점 5자리까지"/>
+                                                                        placeholder="소수점 5자리까지"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/bpa_price/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/bpa_price/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>bpa_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -697,8 +710,8 @@
                                                             <Label text="{I18N>/QUANTITY}" required="true"/>
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
-                                                                        placeholder="소수점 3자리까지"
+                                                                    <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"
+                                                                        placeholder="소수점 3자리까지" type="Number"
                                                                         valueState="{NegoHeaders>__metadata/_valueStates/request_quantity/valueState}" 
                                                                         valueStateText="{NegoHeaders>__metadata/_valueStates/request_quantity/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>request_quantity}" visible="{=!${propInfo>/isEditMode}}" />
@@ -781,7 +794,9 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
                                                                     <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" 
-                                                                        placeholder="소수점 5자리까지"/>
+                                                                        placeholder="소수점 5자리까지"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/bidding_start_net_price/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/bidding_start_net_price/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>bidding_start_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -804,7 +819,9 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
                                                                     <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" 
-                                                                        placeholder="소수점 5자리까지"/>
+                                                                        placeholder="소수점 5자리까지"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/bidding_target_net_price/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/bidding_target_net_price/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>bidding_target_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -814,7 +831,9 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
                                                                     <Input value="{NegoHeaders>current_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" 
-                                                                        placeholder="소수점 5자리까지"/>
+                                                                        placeholder="소수점 5자리까지"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/current_price/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/current_price/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>current_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>

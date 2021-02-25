@@ -9,6 +9,8 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     height="100%"
+    xmlns:lib-f="ext.lib.control.f"
+    xmlns:lib-m="ext.lib.control.m"
 >
     
     <f:DynamicPage 
@@ -21,52 +23,51 @@
     >
         
         <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
+            <lib-f:CustomDynamicPageTitle>
+                <lib-f:heading>
                      <!-- 평가항목 관리 -->
-                    <Title text="{I18N>/EVAL_ITEM} {I18N>/MANAGEMENT}" />
-                </f:heading>
+                     <!-- <Toolbar style="Clear">
+                         <lib-m:FavoriteMenuButton menuCode="SPSMU00001"/>
+                         <Title text="{I18N>/EVAL_ITEM} {I18N>/MANAGEMENT}" />
+                     </Toolbar> -->
+                     
+                    <HBox class="sapUiSizeCompact">
+                        <lib-m:FavoriteMenuButton menuCode="SPSMU00001"/>
+                        <Title text="{I18N>/EVAL_ITEM} {I18N>/MANAGEMENT}" />
+                    </HBox>
+                </lib-f:heading>
+                <lib-f:actions>
+                </lib-f:actions>
+                 <lib-f:navigationActions>
+                </lib-f:navigationActions>
 
-                <!-- <f:expandedHeading> -->
-                     <!-- 평가항목 관리 -->
-                    <!-- <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" /> -->
-                <!-- </f:expandedHeading> -->
-                <f:expandedContent>
-                </f:expandedContent>
-
-                <!-- <f:snappedHeading> -->
-                     <!-- 평가항목 관리 -->
-                    <!-- <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" /> -->
-                <!-- </f:snappedHeading> -->
-                <f:snappedContent>
+                <lib-f:fixedContent>
                     <form:SimpleForm 
-                        layout="ResponsiveGridLayout"
-                    >
-                        <VBox>
-                            <!-- 평가항목명 -->
-                            <Label text="{I18N>/EVAL_ITEM_NM}" />
-                            <Input 
-                                value="{viewModel>/cond/Contains/evaluation_article_name}"
-                            />
-                            <layoutData>
-                                <layout:GridData span="L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox alignItems="End" justifyContent="End">
-                            <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
-                            <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
-                            <layoutData>
-                                <layout:GridData span="L2 M2 S2" indent="L7 M4 S0"/>
-                            </layoutData>
-                        </VBox>
+                        layout="ResponsiveGridLayout">
+                        <form:content>
+                            <VBox>
+                                <!-- 평가항목명 -->
+                                <Label text="{I18N>/EVAL_ITEM_NM}" />
+                                <Input 
+                                    value="{viewModel>/cond/Contains/evaluation_article_name}"
+                                />
+                                <layoutData>
+                                    <layout:GridData span="L3 M6 S10" />
+                                </layoutData>
+                            </VBox>
+                             <VBox>
+                                <Label/>
+                                <FlexBox alignItems="End" justifyContent="End">
+                                <Button id="btnSearch" text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
+                                </FlexBox>
+                                <layoutData>
+                                    <layout:GridData span="L2 M2 S2" indent="L7 M4 S0"/>
+                                </layoutData>
+                            </VBox>
+                        </form:content>
                     </form:SimpleForm>
-                </f:snappedContent>
-                
-                <f:actions>
-                    <!-- 조회 -->
-                    <!-- <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/> -->
-                </f:actions>
-            </f:DynamicPageTitle>
+                </lib-f:fixedContent>
+            </lib-f:CustomDynamicPageTitle>
         </f:title>
 
         <f:header> 
@@ -109,13 +110,17 @@
                     <VBox>
                         <!-- 평가유형명 -->
                         <Label text="{I18N>/EVALUATION_TYPE_NAME}" required="true"/>
-                        <SegmentedButton 
+                        <ComboBox 
                             id="evaluType" 
+                            width="100%" 
+                            required="true"
+                            fieldGroupIds="searchRequired"
+                            showSecondaryValues="true"
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
                             selectionChange="onSelectionChangeEvaluTypeCode"
                         />
                         <layoutData>
-                            <layout:GridData span="L8 M6 S12" />
+                            <layout:GridData span="L2 M6 S12" />
                         </layoutData>
                     </VBox>
                     <VBox>
@@ -126,11 +131,10 @@
                             selectedKey="{viewModel>/cond/EQ/evaluation_article_type_code}"
                         />
                         <layoutData>
-                            <layout:GridData span="L2 M6 S12" linebreak="true"/>
+                            <layout:GridData span="L2 M6 S12"/>
                         </layoutData>
                     </VBox>
-                    <VBox>
-                        <!-- 평가항목명 -->
+                    <!-- <VBox>
                         <Label text="{I18N>/EVAL_ITEM_NM}" />
                         <Input 
                             value="{viewModel>/cond/Contains/evaluation_article_name}"
@@ -139,14 +143,13 @@
                         <layoutData>
                             <layout:GridData span="L2 M6 S12" />
                         </layoutData>
-                    </VBox>
-                    <FlexBox alignItems="End" justifyContent="End">
-                        <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
+                    </VBox> -->
+                    <!-- <FlexBox alignItems="End" justifyContent="End">
                         <Button id="btnSearch" text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
                         <layoutData>
                             <layout:GridData span="XL12 L12 M12 S12" />
                         </layoutData>
-                    </FlexBox>
+                    </FlexBox> -->
                 </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
@@ -206,7 +209,7 @@
                         </MenuButton>
                         <Button icon="sap-icon://expand-all" tooltip="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
                         <Button icon="sap-icon://collapse-all" tooltip="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
-                        <Button icon="sap-icon://excel-attachment" type="Transparent" press="onExcelExport" />
+                        <Button icon="sap-icon://excel-attachment" tooltip="excel-download" type="Transparent" press="onExcelExport" />
                         <Button icon="sap-icon://action-settings" type="Transparent" press="onMainTablePersoButtonPressed"/>
                     </OverflowToolbar>
                 </t:extension>
@@ -289,12 +292,18 @@
                         </t:customData>
                     </t:Column>
                     <!-- 정렬 -->
-                    <t:Column label="{I18N>/SORT}" name="" width="5em" hAlign="Center">    
+                    <t:Column name="" width="5em" hAlign="End">    
+                        <Label text="{I18N>/SORT}" width="100%" textAlign="Center"/>
                         <t:template>
-                            <Text text="{viewModel>sort_sequence}" tooltip="{viewModel>sort_sequence}" wrapping="false" />
+                            <Text text="{
+                                path:'viewModel>sort_sequence',
+                                type:'sap.ui.model.odata.type.Decimal'
+                            }" tooltip="{viewModel>sort_sequence}" wrapping="false" />
                         </t:template>
                         <t:customData>
                             <core:CustomData key="property" value="sort_sequence"/>
+                            <core:CustomData key="type" value="number"/>
+                            <core:CustomData key="textAlign" value="End"/>
                         </t:customData>
                     </t:Column>
                     <!-- 작성자 -->

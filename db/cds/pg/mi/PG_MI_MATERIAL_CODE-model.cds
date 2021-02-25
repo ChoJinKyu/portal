@@ -13,6 +13,7 @@
   7. entity description : 시황자재코드 속성
   8. history
   -. 2020.11.16 : 디포커스 김종현 최초작성
+  -. 2021.02.24 : 디포커스 최상호 수정
 *************************************************/
 
 namespace pg;
@@ -22,15 +23,15 @@ using {pg as MI_Code_Attr} from '../mi/PG_MI_MATERIAL_CODE-model';
 using {pg as Categ_Code} from './PG_MI_CATEGORY_HICHY_STRU-model';
 
 entity MI_Material_Code {
-  key tenant_id        : String(5) not null  @title : '회사코드';
-  key mi_material_code : String(40) not null @title : '시황자재코드';
-  key category_code    : String(40) not null @title : '카테고리코드';
+    key tenant_id        : String(5) not null  @title : '회사코드';
+    key mi_material_code : String(40) not null @title : '시황자재코드';
+        category_code    : String(40) not null @title : '카테고리코드';
 
-      category_codes   : Association to Categ_Code.MI_Category_Hichy_Stru
-                           on  category_codes.tenant_id     = tenant_id
-                           and category_codes.category_code = category_code;
+        category_codes   : Association to Categ_Code.MI_Category_Hichy_Stru
+                               on category_codes.tenant_id = tenant_id
+                               and category_codes.category_code = category_code;
 
-      use_flag         : Boolean not null    @title : '사용여부';
+        use_flag         : Boolean not null    @title : '사용여부';
 }
 
 extend MI_Material_Code with util.Managed;

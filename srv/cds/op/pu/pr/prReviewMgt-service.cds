@@ -36,20 +36,20 @@ using {cm.Spp_User_Session_View as sppUserSession} from '../../../../../db/cds/c
 @path : '/op.prReviewMgtService'
 service PrReviewMgtService {
 
-   // 구매요청 검토/접수 목록
+    // 구매요청 검토/접수 목록
     view Pr_ReviewListView @(title : '구매요청 검토/접수 List View') as
-        select 
+        select
              key dtl.tenant_id  // 테넌트ID
             ,key dtl.company_code  // 회사코드
             ,key dtl.pr_number  // 구매요청번호
             ,key dtl.pr_item_number  // 구매요청품목번호
 
             ,mst.pr_type_code  // 구매요청유형코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE', mst.pr_type_code, 'KO') as pr_type_name : String(240)  // 구매요청 유형
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE', mst.pr_type_code, ssv.LANGUAGE_CODE) as pr_type_name : String(240)  // 구매요청 유형
             ,mst.pr_type_code_2  // 구매요청품목그룹코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_2', mst.pr_type_code_2, 'KO') as pr_type_name_2 : String(240)  // 품목그룹
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_2', mst.pr_type_code_2, ssv.LANGUAGE_CODE) as pr_type_name_2 : String(240)  // 품목그룹
             ,mst.pr_type_code_3  // 구매요청품목코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_3', mst.pr_type_code_3, 'KO') as pr_type_name_3 : String(240)  // 카테고리
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_3', mst.pr_type_code_3, ssv.LANGUAGE_CODE) as pr_type_name_3 : String(240)  // 카테고리
 
             ,dtl.org_code  // 조직코드
             ,org.org_name : String(240) // 조직코드명
@@ -73,7 +73,7 @@ service PrReviewMgtService {
             ,ifnull(dtl.buyer_department_code, hrEmpBuyer.department_code) as buyer_department_code : String(30)  // 구매담당자부서
 
             ,mst.pr_create_status_code  // 구매요청생성상태코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, 'KO') as pr_create_status_name : String(240)  // 구매요청생성상태코드
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, ssv.LANGUAGE_CODE) as pr_create_status_name : String(240)  // 구매요청생성상태코드
 
             ,mst.approval_flag  // 품의여부
             ,mst.approval_number  // 품의번호
@@ -85,9 +85,9 @@ service PrReviewMgtService {
             ,dtl.price_unit  // 가격단위
             ,mst.pr_template_number  // 구매요청템플릿번호
             ,mst.pr_create_system_code  // 구매요청생성시스템코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, 'KO') as pr_create_system_name : String(240)  // 구매요청생성시스템
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, ssv.LANGUAGE_CODE) as pr_create_system_name : String(240)  // 구매요청생성시스템
             ,dtl.pr_progress_status_code  // 구매요청진행상태코드
-            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), ssv.LANGUAGE_CODE) as pr_progress_status_name : String(240)  // 구매요청진행상태코드
 
             ,dtl.approval_date  // 결재일자
             //,dtl.confirmed_date  // 확정일자
@@ -97,7 +97,6 @@ service PrReviewMgtService {
              end as confirmed_date : Date  // 확정일자
 
             ,dtl.remark  // 비고
-            ,dtl.attch_group_number  // 첨부파일그룹번호
             ,dtl.delete_flag  // 삭제여부
             ,dtl.closing_flag  // 마감여부
             ,dtl.item_category_code  // 품목범주코드
@@ -109,6 +108,22 @@ service PrReviewMgtService {
         on  dtl.tenant_id    = mst.tenant_id
         and dtl.company_code = mst.company_code
         and dtl.pr_number    = mst.pr_number
+
+        // Session
+        //inner join sppUserSession ssv
+        inner join (select 'L2100' as TENANT_ID
+                          ,'LGCKR' as COMPANY_CODE
+                          ,'100000' as EMPLOYEE_NUMBER
+                          ,'김구매' as EMPLOYEE_NAME
+                          ,'Buyer Kim' as ENGLISH_EMPLOYEE_NAME
+                          ,'C' as EMPLOYEE_STATUS_CODE
+                          ,'EN' as LANGUAGE_CODE
+                          ,'AS054' as TIMEZONE_CODE
+                          ,'KRW' as CURRENCY_CODE
+                    from  prMst
+                    limit 1) ssv
+        on  ssv.TENANT_ID    = mst.tenant_id
+        and ssv.COMPANY_CODE = mst.company_code
 
         // 요청자 부서
         left outer join hrEmployee hrEmp
@@ -128,7 +143,7 @@ service PrReviewMgtService {
         and org.org_code      = dtl.org_code
     ;
 
-   // 구매요청 검토/접수 상세
+    // 구매요청 검토/접수 상세
     view Pr_ReviewDtlView @(title : '구매요청 검토/접수 Detail View') as
         select
              key mst.tenant_id  // 테넌트ID
@@ -138,20 +153,20 @@ service PrReviewMgtService {
             ,mst.erp_pr_number  // ERP구매요청번호
 
             ,mst.pr_create_status_code  // 구매요청생성상태코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, 'KO') as pr_create_status_name : String(240)  // 구매요청생성상태코드
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, ssv.LANGUAGE_CODE) as pr_create_status_name : String(240)  // 구매요청생성상태코드
             ,dtl.pr_progress_status_code  // 구매요청진행상태코드
-            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), ssv.LANGUAGE_CODE) as pr_progress_status_name : String(240)  // 구매요청진행상태코드
 
             ,mst.pr_type_code  // 구매요청유형코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE', mst.pr_type_code, 'KO') as pr_type_name : String(240)  // 구매요청 유형
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE', mst.pr_type_code, ssv.LANGUAGE_CODE) as pr_type_name : String(240)  // 구매요청 유형
             ,mst.pr_type_code_2  // 구매요청품목그룹코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_2', mst.pr_type_code_2, 'KO') as pr_type_name_2 : String(240)  // 품목그룹
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_2', mst.pr_type_code_2, ssv.LANGUAGE_CODE) as pr_type_name_2 : String(240)  // 품목그룹
             ,mst.pr_type_code_3  // 구매요청품목코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_3', mst.pr_type_code_3, 'KO') as pr_type_name_3 : String(240)  // 품목
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_3', mst.pr_type_code_3, ssv.LANGUAGE_CODE) as pr_type_name_3 : String(240)  // 품목
             ,mst.pr_template_number  // 구매요청템플릿번호
             ,tmp.pr_template_name : String(100)  // 구매요청템플릿명
             ,mst.pr_create_system_code  // 구매요청생성시스템코드
-            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, 'KO') as pr_create_system_name : String(240)  // 구매요청생성시스템
+            ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, ssv.LANGUAGE_CODE) as pr_create_system_name : String(240)  // 구매요청생성시스템
 
             ,dtl.org_code  // 조직코드
             ,org.org_name : String(240)  // 조직코드명
@@ -163,7 +178,7 @@ service PrReviewMgtService {
             ,dtl.pr_desc  // 품명 - 구매요청내역
             ,dtl.remark  // 비고
             ,dtl.item_category_code  // 품목범주코드
-            ,cm_get_code_name_func(dtl.tenant_id, 'OP_ERP_ITEM_CATEGORY_CODE', dtl.item_category_code, 'KO') as item_category_name : String(240)  // 품목범주코드
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_ERP_ITEM_CATEGORY_CODE', dtl.item_category_code, ssv.LANGUAGE_CODE) as item_category_name : String(240)  // 품목범주코드
             ,dtl.sloc_code  // 저장위치코드
 
             ,dtl.requestor_empno  // 구매요청자사번
@@ -201,7 +216,6 @@ service PrReviewMgtService {
             ,dtl.account_assignment_category_code  // 계정지정범주코드
 
             ,dtl.org_type_code  // 조직유형코드
-            ,dtl.attch_group_number  // 첨부파일그룹번호
             ,dtl.delete_flag  // 삭제여부
             ,dtl.closing_flag  // 마감여부
 
@@ -211,10 +225,26 @@ service PrReviewMgtService {
         and dtl.company_code = mst.company_code
         and dtl.pr_number    = mst.pr_number
 
+        // Session
+        //inner join sppUserSession ssv
+        inner join (select 'L2100' as TENANT_ID
+                          ,'LGCKR' as COMPANY_CODE
+                          ,'100000' as EMPLOYEE_NUMBER
+                          ,'김구매' as EMPLOYEE_NAME
+                          ,'Buyer Kim' as ENGLISH_EMPLOYEE_NAME
+                          ,'C' as EMPLOYEE_STATUS_CODE
+                          ,'EN' as LANGUAGE_CODE
+                          ,'AS054' as TIMEZONE_CODE
+                          ,'KRW' as CURRENCY_CODE
+                    from  prMst
+                    limit 1) ssv
+        on  ssv.TENANT_ID    = mst.tenant_id
+        and ssv.COMPANY_CODE = mst.company_code
+
         // 구매요청템플릿명
         left outer join prTLng tmp
         on  tmp.tenant_id     = mst.tenant_id
-        and tmp.language_code = 'KO'
+        and tmp.language_code = ssv.LANGUAGE_CODE
         and tmp.pr_template_number = mst.pr_template_number
 
         // 요청자 부서
@@ -238,13 +268,16 @@ service PrReviewMgtService {
         left outer join (select m.tenant_id
                                ,m.material_group_code
                                ,ifnull(l.material_group_name, m.material_group_name) as material_group_name : String(100)
+                               ,l.language_code
                          from mtlGroup m
                          left outer join mtlGroupLng l
                          on l.tenant_id = m.tenant_id
                          and l.material_group_code = m.material_group_code
-                         and l.language_code = 'KO') mtlGr
+                         //and l.language_code = ssv.LANGUAGE_CODE
+                        ) mtlGr
         on  mtlGr.tenant_id = dtl.tenant_id
         and mtlGr.material_group_code = dtl.material_group_code
+        and mtlGr.language_code = ssv.LANGUAGE_CODE
 
         // 구매그룹명
         left outer join purGroup purGr
@@ -267,7 +300,7 @@ service PrReviewMgtService {
         and mtlPurGr.use_flag              = true
         ;
 
-   // 구매요청 검토/접수 상세 - 계정정보
+    // 구매요청 검토/접수 상세 - 계정정보
     view Pr_ReviewDtlAcctView @(title : '구매요청 검토/접수 Detail Account View') as
         select
              key acct.tenant_id  // 테넌트ID
@@ -298,36 +331,57 @@ service PrReviewMgtService {
         and dtl.pr_number      = acct.pr_number
         and dtl.pr_item_number = acct.pr_item_number
 
+        // Session
+        //inner join sppUserSession ssv
+        inner join (select 'L2100' as TENANT_ID
+                          ,'LGCKR' as COMPANY_CODE
+                          ,'100000' as EMPLOYEE_NUMBER
+                          ,'김구매' as EMPLOYEE_NAME
+                          ,'Buyer Kim' as ENGLISH_EMPLOYEE_NAME
+                          ,'C' as EMPLOYEE_STATUS_CODE
+                          ,'EN' as LANGUAGE_CODE
+                          ,'AS054' as TIMEZONE_CODE
+                          ,'KRW' as CURRENCY_CODE
+                    from  prMst
+                    limit 1) ssv
+        on  ssv.TENANT_ID    = acct.tenant_id
+        and ssv.COMPANY_CODE = acct.company_code
+
+        // 계정(Account) Mst
         left outer join acctMst acctMst
         on  acctMst.tenant_id     = acct.tenant_id
         and acctMst.company_code  = acct.company_code
-        and acctMst.language_code = 'KO'
+        and acctMst.language_code = ssv.LANGUAGE_CODE
         and acctMst.account_code  = acct.account_code
 
+        // Cost Center Mst
         left outer join cctrMst cctrMst
         on  cctrMst.tenant_id     = acct.tenant_id
         and cctrMst.company_code  = acct.company_code
-        and cctrMst.language_code = 'KO'
+        and cctrMst.language_code = ssv.LANGUAGE_CODE
         and cctrMst.cctr_code     = acct.cctr_code
         and $now between cctrMst.effective_start_date and cctrMst.effective_end_date
 
+        // WBS Mst
         left outer join wbsMst wbsMst
         on  wbsMst.tenant_id    = acct.tenant_id
         and wbsMst.company_code = acct.company_code
-        and wbsMst.wbs_code = acct.wbs_code
+        and wbsMst.wbs_code     = acct.wbs_code
 
+        // 자산(Asset) Mst
         left outer join assetMst assetMst
         on  assetMst.tenant_id    = acct.tenant_id
         and assetMst.company_code = acct.company_code
         and assetMst.asset_number = acct.asset_number
 
+        // Order Mst
         left outer join orderMst orderMst
         on  orderMst.tenant_id    = acct.tenant_id
         and orderMst.company_code = acct.company_code
         and orderMst.order_number = acct.order_number
         ;
 
-   // 구매요청 검토/접수 상세 - 이력정보
+    // 구매요청 검토/접수 상세 - 이력정보
     view Pr_ReviewDtlHistView @(title : '구매요청 검토/접수 Detail History View') as
         select
              key hist.tenant_id  // 테넌트ID
@@ -338,11 +392,11 @@ service PrReviewMgtService {
 
             ,hist.local_update_dtm  // 변경일자 - 로컬수정시간
             ,hist.job_type_code  // 업무유형코드
-            ,cm_get_code_name_func(hist.tenant_id, 'OP_PR_REVIEW_JOB_TYPE_CODE', hist.job_type_code, 'KO') as job_type_name : String(240)  // 업무유형명
+            ,cm_get_code_name_func(hist.tenant_id, 'OP_PR_REVIEW_JOB_TYPE_CODE', hist.job_type_code, ssv.LANGUAGE_CODE) as job_type_name : String(240)  // 업무유형명
             //,hist.before_desc  // 이전내역
             //,hist.after_desc  // 이후내역
-            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.before_desc, 'KO'), hist.before_desc) as before_desc : String(240)  // 이전내역
-            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.after_desc, 'KO'), hist.after_desc) as after_desc : String(240)  // 이후내역
+            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.before_desc, ssv.LANGUAGE_CODE), hist.before_desc) as before_desc : String(240)  // 이전내역
+            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.after_desc, ssv.LANGUAGE_CODE), hist.after_desc) as after_desc : String(240)  // 이후내역
 
             ,hist.remark AS processed_reason  // 처리사유
             ,hist.update_user_id as worker_empno  // 처리자사번
@@ -354,6 +408,44 @@ service PrReviewMgtService {
         and dtl.company_code   = hist.company_code
         and dtl.pr_number      = hist.pr_number
         and dtl.pr_item_number = hist.pr_item_number
+
+        //inner join sppUserSession ssv
+        inner join (select 'L2100' as TENANT_ID
+                          ,'LGCKR' as COMPANY_CODE
+                          ,'100000' as EMPLOYEE_NUMBER
+                          ,'김구매' as EMPLOYEE_NAME
+                          ,'Buyer Kim' as ENGLISH_EMPLOYEE_NAME
+                          ,'C' as EMPLOYEE_STATUS_CODE
+                          ,'EN' as LANGUAGE_CODE
+                          ,'AS054' as TIMEZONE_CODE
+                          ,'KRW' as CURRENCY_CODE
+                    from  prMst
+                    limit 1) ssv
+        on  ssv.TENANT_ID    = hist.tenant_id
+        and ssv.COMPANY_CODE = hist.company_code
+        ;
+
+
+   // Session Info
+    view Pr_ReviewSessionView @(title : '구매요청 검토/접수 Session View') as
+        select
+             key ssv.CONNECTION
+                ,ssv.APPLICATIONUSER
+                ,ssv.USER_ID
+                ,ssv.TENANT_ID
+                ,ssv.COMPANY_CODE
+                ,ssv.EMPLOYEE_NUMBER
+                ,ssv.EMPLOYEE_NAME
+                ,ssv.ENGLISH_EMPLOYEE_NAME
+                ,ssv.EMPLOYEE_STATUS_CODE
+                ,ssv.LANGUAGE_CODE
+                ,ssv.TIMEZONE_CODE
+                ,ssv.DATE_FORMAT_TYPE
+                ,ssv.DIGITS_FORMAT_TYPE
+                ,ssv.CURRENCY_CODE
+                ,ssv.EMAIL
+                ,ssv.ROLES
+        from sppUserSession ssv
         ;
 
 }

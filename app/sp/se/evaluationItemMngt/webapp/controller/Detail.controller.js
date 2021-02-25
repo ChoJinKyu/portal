@@ -532,7 +532,7 @@ sap.ui.define([
              */
             , onPressPageNavBack : function(){
                 
-                this.getOwnerComponent().getRouter().navTo("Master", {search:"Y"});
+                this.getOwnerComponent().getRouter().navTo("Master");
             }
             /**
              * 해당 상세 평가 삭제
@@ -624,15 +624,16 @@ sap.ui.define([
                         if(sAction === MessageBox.Action.CANCEL){
                             return;
                         }
-                        if(!this._checkValidation()){
-                            return;
-                        }
                         if(oArgs.new === "Y"){
                             sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/CreateEvalItemSaveProc";
                         }else{
                             sURLPath = "srv-api/odata/v4/sp.evaluationItemMngtV4Service/EvalItemSaveProc";
                         }
                         
+                        if(!this._checkValidation()){
+                            return;
+                        }
+
                         oSaveData = this._getSaveData("U");
                         if(!oSaveData){
                             return;
@@ -652,8 +653,8 @@ sap.ui.define([
                                     });
                                     return;
                                 }
-                                this._readHeader();
                                 this.getOwnerComponent().byId("Master").byId("btnSearch").firePress();
+                                this._readHeader();
                                 // MessageBox.success(oI18NModel.getProperty("/NCM01001"), {
                                 //     onClose : function (sAction) {
                                 //         oView.setBusy(false);
@@ -706,9 +707,11 @@ sap.ui.define([
                 if(oArgs.new === "Y"){
                     aControls = oView.getControlsByFieldGroupId("newRequired");
                     bValid = this._isValidControl(aControls);
+                    
                 }else{
                     aControls = oView.getControlsByFieldGroupId("detailRequired");
                     bValid = this._isValidControl(aControls);
+
                 }
 
                 return bValid;

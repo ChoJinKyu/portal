@@ -22,37 +22,37 @@
     editHeaderButtonPress="handleEditBtnPress" >
 
     <uxap:headerTitle>
-      <uxap:ObjectPageDynamicHeaderTitle>
-        <uxap:expandedHeading>
-          <Title text="{I18N>/PR_REVIEW}" wrapping="true" />
-        </uxap:expandedHeading>
-                <uxap:navigationActions>
-                    <!-- 전체화면 -->
-                    <OverflowToolbarButton
-                        icon="sap-icon://full-screen"
-                        type="Transparent"
-                        tooltip="Enter Full Screen Mode"
-                        visible="{= ${fcl>/layout} !== 'MidColumnFullScreen'}"
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full', column: 'two' })"
-                    />
-                    <!-- 전체화면해제 -->
-                    <OverflowToolbarButton
-                        icon="sap-icon://exit-full-screen"
-                        type="Transparent"
-                        tooltip="Exit Full Screen Mode"
-                        visible="{= ${fcl>/layout} === 'MidColumnFullScreen'}"
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit', column: 'two' })"
-                    />
-                    <!-- 뒤로가기 -->
-                    <OverflowToolbarButton
-                        icon="sap-icon://decline"
-                        type="Transparent"
-                        text="back"
-                        tooltip="Back to the list"
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'NavBack', column: 'two' })"
-                    />
-                </uxap:navigationActions>
-      </uxap:ObjectPageDynamicHeaderTitle>
+        <uxap:ObjectPageDynamicHeaderTitle>
+            <uxap:expandedHeading>
+                <Title text="{I18N>/PR_REVIEW}" wrapping="true" />
+            </uxap:expandedHeading>
+            <uxap:navigationActions>
+                <!-- 전체화면 -->
+                <OverflowToolbarButton
+                    icon="sap-icon://full-screen"
+                    type="Transparent"
+                    tooltip="{I18N>/NCM03002}"
+                    visible="{= ${fcl>/layout} !== 'MidColumnFullScreen'}"
+                    press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full', column: 'two' })"
+                />
+                <!-- 전체화면해제 -->
+                <OverflowToolbarButton
+                    icon="sap-icon://exit-full-screen"
+                    type="Transparent"
+                    tooltip="{I18N>/NCM03003}"
+                    visible="{= ${fcl>/layout} === 'MidColumnFullScreen'}"
+                    press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit', column: 'two' })"
+                />
+                <!-- 뒤로가기 -->
+                <OverflowToolbarButton
+                    icon="sap-icon://decline"
+                    type="Transparent"
+                    text="back"
+                    tooltip="{I18N>/NCM03001}"
+                    press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'NavBack', column: 'two' })"
+                />
+            </uxap:navigationActions>
+        </uxap:ObjectPageDynamicHeaderTitle>
     </uxap:headerTitle>
 
     <uxap:headerContent>

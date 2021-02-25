@@ -204,7 +204,7 @@
                     showTablePersonalisation="false"
                     header="{I18N>/MAKER} {I18N>/LIST}"
                     showRowCount="true"
-                    editable="true"                    
+                    editable="false"                    
                     persistencyKey="SmartTableAnalytical_Explored"
                     enableAutoBinding="false"                     
                     class="sapUiResponsiveContentPadding"                    

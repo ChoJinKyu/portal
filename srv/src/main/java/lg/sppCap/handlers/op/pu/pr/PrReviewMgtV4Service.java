@@ -133,13 +133,13 @@ public class PrReviewMgtV4Service implements EventHandler {
         });
 
         // Procedure Call
-        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-        paramList.add(new SqlParameter("I_JOB_TYPE", Types.VARCHAR));
-        paramList.add(new SqlParameter("I_BUYER_EMPNO", Types.VARCHAR));
-        paramList.add(new SqlParameter("I_BUYER_DEPARTMENT_CODE", Types.VARCHAR));
-        paramList.add(new SqlParameter("I_PROCESSED_REASON", Types.VARCHAR));
-        paramList.add(new SqlParameter("I_EMPLOYEE_NUMBER", Types.VARCHAR));
-        paramList.add(oReturn);
+        List<SqlParameter> paramTypeList = new ArrayList<SqlParameter>();
+        paramTypeList.add(new SqlParameter("I_JOB_TYPE", Types.VARCHAR));
+        paramTypeList.add(new SqlParameter("I_BUYER_EMPNO", Types.VARCHAR));
+        paramTypeList.add(new SqlParameter("I_BUYER_DEPARTMENT_CODE", Types.VARCHAR));
+        paramTypeList.add(new SqlParameter("I_PROCESSED_REASON", Types.VARCHAR));
+        paramTypeList.add(new SqlParameter("I_EMPLOYEE_NUMBER", Types.VARCHAR));
+        paramTypeList.add(oReturn);
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
             @Override
@@ -160,7 +160,7 @@ public class PrReviewMgtV4Service implements EventHandler {
 
                 return stmt;
             }
-        }, paramList);
+        }, paramTypeList);
 
         log.info("#### onCallPrReviewSaveProc - Call Proc Success ####");
 
@@ -172,6 +172,9 @@ public class PrReviewMgtV4Service implements EventHandler {
 
         log.info("#### onCallPrReviewSaveProc Handlers End ####");
     }
+
+
+
 
     @Transactional(rollbackFor = SQLException.class)
     @On(event = CallPrReviewVldtProcContext.CDS_NAME)
@@ -260,10 +263,10 @@ public class PrReviewMgtV4Service implements EventHandler {
         });
 
         // Procedure Call
-        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-        paramList.add(new SqlParameter("I_JOB_TYPE", Types.VARCHAR));
-        paramList.add(new SqlParameter("I_EMPLOYEE_NUMBER", Types.VARCHAR));
-        paramList.add(oReturn);
+        List<SqlParameter> paramTypeList = new ArrayList<SqlParameter>();
+        paramTypeList.add(new SqlParameter("I_JOB_TYPE", Types.VARCHAR));
+        paramTypeList.add(new SqlParameter("I_EMPLOYEE_NUMBER", Types.VARCHAR));
+        paramTypeList.add(oReturn);
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
             @Override
@@ -278,7 +281,7 @@ public class PrReviewMgtV4Service implements EventHandler {
 
                 return stmt;
             }
-        }, paramList);
+        }, paramTypeList);
 
         log.info("#### onCallPrReviewVldtProc - Call Proc Success ####");
 

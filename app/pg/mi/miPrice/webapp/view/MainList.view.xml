@@ -188,9 +188,9 @@
                         <Button id="mainTableSaveButton" text="{I18N>/SAVE}"  enabled="{viewControl>/enabled}" type="Emphasized" press=".onMainTableSaveButtonPress" />
                     
                         <!-- <Button icon="sap-icon://upload" type="Transparent" press=".onMainTableDelete"/> -->
+                        <Button icon="sap-icon://download" type="Transparent" enabled="false" tooltip="Template Download"/>    
                         <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
-                                        buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
-                        <Button icon="sap-icon://download" type="Transparent" enabled="false" tooltip="Template Download"/>           
+                                        buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>       
 <!-- 
                         <Button iconOnly="true" icon="sap-icon://excel-attachment" press=".onExport"/> -->
 
@@ -269,18 +269,19 @@
                                 <Text text="{list>category_code}"></Text>
                             </t:template>
                         </t:Column>
-                        <t:Column hAlign="Center" width="10em">
+                        <!-- <t:Column hAlign="Center" width="10em">
                             <Label text="{I18N>/CATEGORY_NAME}"/>
                             <t:template>
                                 <Text text="{list>category_name}"></Text>
                             </t:template>
-                        </t:Column>
-                        <t:Column hAlign="Center" width="10em" >
+                        </t:Column> -->
+                        <t:Column hAlign="Center" width="7em" >
                             <Label text="{I18N>/CURRENCY_UNIT}" required="true" />
                             <t:template>
                                 <ComboBox items="{path: '/CurrencyUnitView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요."  selectedKey="{list>currency_unit}" editable="{= ${list>_row_state_} === 'C' }"
                                     width="100%" required="true" value="{list>currency_unit}"
+                                    change=".onChangeCombobox"
                                     valueState="{list>__metadata/_valueStates/currency_unit/valueState}" valueStateText="{list>__metadata/_valueStates/currency_unit/valueStateText}">
                                     <items>
                                         <core:Item key="{currency_code}" text="{currency_code}" />
@@ -288,37 +289,25 @@
                                 </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column hAlign="Center" width="10em" >
+                        <t:Column hAlign="Center" width="7em" >
                             <Label text="{I18N>/QUANTITY_UNIT}" required="true" />
                             <t:template>
                                 <ComboBox items="{path: '/UnitOfMeasureView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>quantity_unit}" editable="{= ${list>_row_state_} === 'C' }"
                                     width="100%" required="true" value="{list>quantity_unit}"
+                                    change=".onChangeCombobox"
                                     valueState="{list>__metadata/_valueStates/quantity_unit/valueState}" valueStateText="{list>__metadata/_valueStates/quantity_unit/valueStateText}">
                                     <core:Item key="{uom_code}" text="{uom_code}"/>
                                 </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column hAlign="Center" width="10em" >
-                            <Label text="{I18N>/EXCHANGE_UNIT}"/>
-                            <t:template><!--value="{
-                                        path: 'list>exchange_unit',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 40
-                                        }
-                                    }">-->
-                                <Input value="{list>exchange_unit}" 
-                                 editable="{= ${list>_row_state_} === 'C' }" 
-                                 valueState="{list>__metadata/_valueStates/exchange_unit/valueState}" valueStateText="{list>__metadata/_valueStates/exchange_unit/valueStateText}"/> 
-                            </t:template>
-                        </t:Column>
-                        <t:Column hAlign="Center" width="10em" >
+                        <t:Column hAlign="Center" width="6em" >
                             <Label text="{I18N>/EXCHANGE_CODE}" required="true" />
                             <t:template>
                                 <ComboBox items="{path: '/MIExchangeView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>exchange}" editable="{= ${list>_row_state_} === 'C' }"
                                     width="100%" required="true" value="{list>exchange}"
+                                    change=".onChangeCombobox"
                                     valueState="{list>__metadata/_valueStates/exchange/valueState}" valueStateText="{list>__metadata/_valueStates/exchange/valueStateText}">
                                     <core:Item key="{exchage}" text="{exchage}"/>
                                 </ComboBox>
@@ -330,39 +319,11 @@
                                 <ComboBox items="{path: '/MITermsdelvView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>termsdelv}" 
                                     width="100%" required="true" value="{list>termsdelv}"
-                                    change=".onChangeData"
+                                    selectionChange=".onChangeData"
+                                    change=".onChangeCombobox"
                                     valueState="{list>__metadata/_valueStates/termsdelv/valueState}" valueStateText="{list>__metadata/_valueStates/termsdelv/valueStateText}">
                                     <core:Item key="{termsdelv}" text="{termsdelv}"/>
                                 </ComboBox> 
-                            </t:template>
-                        </t:Column>
-                        <t:Column hAlign="Center" width="10em" >
-                            <Label text="{I18N>/SOURCING_GROUP_CODE}"/>
-                            <t:template>
-                                <!-- value="{
-                                        path: 'list>sourcing_group_code',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 10
-                                        }
-                                    }"-->
-                                <Input value="{list>sourcing_group_code}" change=".onChangeData"
-                                valueState="{list>__metadata/_valueStates/sourcing_group_code/valueState}" valueStateText="{list>__metadata/_valueStates/sourcing_group_code/valueStateText}"/> 
-                            </t:template>
-                        </t:Column>
-
-                        <t:Column hAlign="Center" width="10em" >
-                            <Label text="{I18N>/DELIVERY_MM}"/>
-                            <t:template>
-                                <!--value="{
-                                        path: 'list>delivery_mm',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 10
-                                        }
-                                    }"-->
-                                <Input value="{list>delivery_mm}" change=".onChangeData"
-                                valueState="{list>__metadata/_valueStates/delivery_mm/valueState}" valueStateText="{list>__metadata/_valueStates/delivery_mm/valueStateText}"/> 
                             </t:template>
                         </t:Column>
                         <t:Column hAlign="Center" width="10em" >
@@ -385,6 +346,48 @@
                                      value="{list>price}" 
                                     textAlign="Right" required="true"
                                     valueState="{list>__metadata/_valueStates/price/valueState}" valueStateText="{list>__metadata/_valueStates/price/valueStateText}"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/EXCHANGE_UNIT}"/>
+                            <t:template><!--value="{
+                                        path: 'list>exchange_unit',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 40
+                                        }
+                                    }">-->
+                                <Input value="{list>exchange_unit}" 
+                                 editable="{= ${list>_row_state_} === 'C' }" 
+                                 valueState="{list>__metadata/_valueStates/exchange_unit/valueState}" valueStateText="{list>__metadata/_valueStates/exchange_unit/valueStateText}"/> 
+                            </t:template>
+                        </t:Column>
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/SOURCING_GROUP_CODE}"/>
+                            <t:template>
+                                <!-- value="{
+                                        path: 'list>sourcing_group_code',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 10
+                                        }
+                                    }"-->
+                                <Input value="{list>sourcing_group_code}" change=".onChangeData"
+                                valueState="{list>__metadata/_valueStates/sourcing_group_code/valueState}" valueStateText="{list>__metadata/_valueStates/sourcing_group_code/valueStateText}"/> 
+                            </t:template>
+                        </t:Column>
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/DELIVERY_MM}"/>
+                            <t:template>
+                                <!--value="{
+                                        path: 'list>delivery_mm',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 10
+                                        }
+                                    }"-->
+                                <Input value="{list>delivery_mm}" change=".onChangeData"
+                                valueState="{list>__metadata/_valueStates/delivery_mm/valueState}" valueStateText="{list>__metadata/_valueStates/delivery_mm/valueStateText}"/> 
                             </t:template>
                         </t:Column>
                     </t:columns>  

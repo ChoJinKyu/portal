@@ -23,7 +23,7 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Company" labelFor="search_company_s" required="true"></Label>     
+                                <Label text="{I18N>/COMPANY}" labelFor="search_company_s" required="true"></Label>     
                                 <MultiComboBox id="search_company_s" width="100%" required="true" 
                                     items="{
                                                 path: 'org>/Org_Company',
@@ -38,7 +38,7 @@
                                 <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Operation ORG" labelFor="search_operation_org_s" required="true"></Label>
+                                <Label text="{I18N>/OPERATION_ORG}" labelFor="search_operation_org_s" required="true"></Label>
                                 <MultiComboBox id="search_operation_org_s" width="100%" required="true"
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
@@ -79,7 +79,7 @@
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Company" labelFor="search_company_e" required="true"></Label>
+                                <Label text="{I18N>/COMPANY}" labelFor="search_company_e" required="true"></Label>
                                 <MultiComboBox id="search_company_e" width="100%" required="true" 
                                     items="{
                                                 path: 'org>/Org_Company',
@@ -94,7 +94,7 @@
                                 <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Operation ORG" labelFor="search_operation_org_e" required="true"></Label>
+                                <Label text="{I18N>/OPERATION_ORG}" labelFor="search_operation_org_e" required="true"></Label>
                                 <MultiComboBox id="search_operation_org_e" width="100%" required="true"
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
@@ -145,7 +145,7 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/APPROVAL_NO}" labelFor="search_approval_no"></Label>
+                            <Label text="{I18N>/APPROVAL_NUMBER}" labelFor="search_approval_no"></Label>
                             <Input id="search_approval_no" type="Text" value="" />
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
                         </VBox>
@@ -155,7 +155,7 @@
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="OUTCOME" labelFor="search_out_come"></Label>
+                            <Label text="{I18N>/OUTCOME_CODE}" labelFor="search_out_come"></Label>
                             <ComboBox 
                                 id="search_out_come"
                                 placeholder="선택해주세요" width="100%" 
@@ -171,7 +171,7 @@
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/NEGOTIATION}" labelFor="search_negotiation"></Label>
+                            <Label text="{I18N>/NEGO_DOCUMENT_NUMBER}" labelFor="search_negotiation"></Label>
                             <Input id="search_negotiation" type="Text" value="" />
                             <layoutData><layout:GridData span="XL2 L2 M2 S12" /></layoutData>
                         </VBox>
@@ -207,7 +207,7 @@
                 </t:extension>
                 <t:columns>
                     <t:Column hAlign="Center" width="8rem">
-                        <Label text="{I18N>/APPROVAL_NO}" textAlign="Center" />
+                        <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                         <t:template>
                             <Text text="{list>approval_number}" />
                         </t:template>
@@ -225,13 +225,13 @@
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="25rem">
-                        <Label text="{I18N>/REQUESTOR} Team" textAlign="Left" />
+                        <Label text="{I18N>/REQUESTOR_DEPARTMENT}" textAlign="Left" />
                         <t:template>
                             <Text text="{list>requestor_teamnm}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10rem">
-                        <Label text="OUTCOME" textAlign="Left" />
+                        <Label text="{I18N>/OUTCOME_CODE}" textAlign="Left" />
                         <t:template>
                             <Text text="" />
                         </t:template>
@@ -243,7 +243,7 @@
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10rem">
-                        <Label text="{I18N>/NEGOTIATION} No" textAlign="Left" />
+                        <Label text="{I18N>/NEGO_DOCUMENT_NUMBER}" textAlign="Left" />
                         <t:template>
                             <Text text="" />
                         </t:template>

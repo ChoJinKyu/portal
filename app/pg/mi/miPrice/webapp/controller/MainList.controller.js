@@ -183,6 +183,15 @@ sap.ui.define([
             this.getModel("viewControl").setProperty("/enabled", true);
 
         },
+
+        onChangeCombobox : function(oEvent){
+            //if(!oEvent.mParameters.itemPressed == )
+            var oBindingInfo = oEvent.getSource().getBindingInfo("selectedKey");
+            var sPath = oBindingInfo.binding.getContext().sPath+"/"+oBindingInfo.binding.sPath;
+            this.getModel("list").setProperty(sPath, "");
+            if(oBindingInfo.binding.sPath === "termsdelv") this.onChangeData(oEvent);
+        },
+
 		onMainTableDeleteButtonPress: function(){
             //--- m Table 일 경우,
 			// var oTable = this.byId("mainTable"),
@@ -546,7 +555,7 @@ sap.ui.define([
                 // var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
                 var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKeys();
                 var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();       
-                oSmtFilter.getControlByKey("mi_material_name").setValue(oMi_material_name.toUpperCase());       
+                //oSmtFilter.getControlByKey("mi_material_name").setValue(oMi_material_name.toUpperCase());       
                 var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKeys();    
                 var oExchange = oSmtFilter.getControlByKey("exchange").getSelectedKeys();    
                 var oTermsdelv = oSmtFilter.getControlByKey("termsdelv").getSelectedKeys();    
@@ -560,7 +569,13 @@ sap.ui.define([
                 }
     
                 if (oMi_material_name.length > 0) {
-                    var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
+                    //var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
+                    var oMi_material_nameFilter = new Filter({
+							path: "mi_material_name",
+							operator: FilterOperator.Contains,
+							value1: oMi_material_name,
+							caseSensitive: false
+					    });
                     aTableSearchState.push(oMi_material_nameFilter);
                 }
     
@@ -878,7 +893,7 @@ sap.ui.define([
 
                 oCells[2].setText("");
                 oCells[3].setText("");
-                oCells[4].setText("");
+                //oCells[4].setText("");
                 
             //MIMatListView // mi_material_code
             
@@ -894,11 +909,11 @@ sap.ui.define([
                     if( oData["results"].length > 0 ) {
                         oCells[2].setText(oData["results"][0]["mi_material_name"]);
                         oCells[3].setText(oData["results"][0]["category_code"]);
-                        oCells[4].setText(oData["results"][0]["category_name"]);
+                        //oCells[4].setText(oData["results"][0]["category_name"]);
                     }else {
                         oCells[2].setText("");
                         oCells[3].setText("");
-                        oCells[4].setText("");
+                        //oCells[4].setText("");
                     }
                     
 				}.bind(this)
