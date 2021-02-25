@@ -858,6 +858,7 @@ sap.ui.define([
             
         },
           onChangeEdit : function(oEvent){
+
             var oControl, oContext, oBindContxtPath, oBingModel, oRowData;
 
             oControl = oEvent.getSource();

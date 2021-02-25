@@ -84,10 +84,10 @@
                                                             }   
                                                             }"
                                                             editable="{=${DetailView>/isCreateMode}}"
-                                                            fieldGroupIds="required"
+                                                            fieldGroupIds="required,codeCheck"
                                                             required="true"
                                                             showSuggestion="true"
-                                                            liveChange="_onKeyLiveChange"
+                                                            change="_onKeyLiveChange"
                                                             />
                                                             <!-- "{
                                                              path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_code',
@@ -919,6 +919,7 @@
                     </OverflowToolbar>
                     </uxap:footer>
                     </uxap:ObjectPageLayout>
+                    
 
                         <!-- <cm-ui:EmployeeDialog id="employeeDialog" 
                         title="직원 검색"

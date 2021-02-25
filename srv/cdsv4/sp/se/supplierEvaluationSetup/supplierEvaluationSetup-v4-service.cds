@@ -119,8 +119,8 @@ service SupEvalSetupV4Service {
         evaluation_operation_unit_code: String(30);
         evaluation_type_code: String(30);
         evaluation_grade: String(10);
-        evaluation_grade_start_score: Decimal(5,2);
-        evaluation_grade_end_score: Decimal(5,2);
+        evaluation_grade_start_score: Decimal(6,2);
+        evaluation_grade_end_score: Decimal(6,2);
         inp_apply_code: String(30);
     };
 

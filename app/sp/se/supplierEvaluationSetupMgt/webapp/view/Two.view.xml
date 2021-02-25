@@ -264,7 +264,7 @@
                                                              type : 'sap.ui.model.odata.type.Decimal',
                                                              constraints : {
                                                                  
-                                                                 precision:5,
+                                                                 precision:6,
                                                                  scale:2
                                                                }   
                                                         }"
@@ -275,6 +275,7 @@
                                                 required="true"
                                                 change="onChangeEdit"
                                                 enabled="true"
+                                                liveChange="_onNumberLiveChange"
                                                 />
                                                 <Input   
                                                 width="100%" 
@@ -283,7 +284,7 @@
                                                              type : 'sap.ui.model.odata.type.Decimal',
                                                              constraints : {
                                                                  
-                                                                 precision:5,
+                                                                 precision:6,
                                                                  scale:2
                                                                }   
                                                         }"
@@ -295,6 +296,7 @@
                                                 required="true"
                                                 change="onChangeEdit"
                                                 enabled="true"
+                                                liveChange="_onNumberLiveChange"
                                                 />
                                                 <ComboBox selectedKey="{TwoView>inp_apply_code}" width="100%" items="{
                                                             path: 'common>/Code',

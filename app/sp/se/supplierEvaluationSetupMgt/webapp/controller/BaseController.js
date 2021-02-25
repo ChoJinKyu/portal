@@ -6,9 +6,11 @@ sap.ui.define([
     "sap/ui/core/ValueState",					
     "sap/ui/model/Filter",
     "ext/lib/util/SppUserSessionUtil",
-    "sap/ui/model/json/JSONModel"
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast"
 
-], function (Controller, MessageBox, Message, MessageType, ValueState, Filter, SppUserSessionUtil, JSONModel) {
+], function (Controller, MessageBox, Message, MessageType, ValueState,
+     Filter, SppUserSessionUtil, JSONModel, MessageToast) {
 	"use strict";
 
 	return Controller.extend("sp.se.supplierEvaluationSetupMgt.controller.BaseController", {
@@ -138,6 +140,9 @@ sap.ui.define([
                 }
                 
                 if(oContext&&oContext.getType()){
+                    if(oContext.getType().getMetadata().getName() === "sap.ui.model.odata.type.Decimal"){
+                        sValue = sValue.replace(/,/gi, "");
+                    }
                     try{
                         oContext.getType().validateValue(sValue);
                     }catch(e){
@@ -153,6 +158,8 @@ sap.ui.define([
                         oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
                         oControl.focus();
                         return false;
+                    }else if(sEleName === "dddddd"){
+                    
                     }else{
                         oControl.setValueState(ValueState.None);
                     }
@@ -206,6 +213,7 @@ sap.ui.define([
             //     bValid = this._isValidControl(aControls);
             // }else{
                 aControls = oView.getControlsByFieldGroupId("required");
+                aControls = oView.getControlsByFieldGroupId("");
                 bValid = this._isValidControl(aControls);
             // }
 
@@ -239,18 +247,16 @@ sap.ui.define([
            ,_onKeyLiveChange: function(oEvent){
             var _oInput = oEvent.getSource();
             var val = _oInput.getValue();
-            //     val = val.replace(/[^\d]/g, '');
-                
-            // _oInput.setValue(val);
 
-            // var blank_pattern = /[\s]/g;
-            // if( blank_pattern.test(val) == true){
-                // MessageToast.show(' 공백은 사용할 수 없습니다. ');
+                var blank_pattern = /[^A-Za-z0-9_]/gi;
+                if( blank_pattern.test(val) == true){
 
-                // val = val.replace(/[ㄱ-힣~!@#$%^&*()_+|<>?:{}= ]/g,'');
-                val = val.replace(/[^A-Za-z0-9]/ig, '');
+                MessageToast.show("영문,숫자,_ 만입력 가능 합니다.");
+
+                val = val.replace(/[^A-Za-z0-9_]/gi, '');
+
                 _oInput.setValue(val);
-            // }
+                }
 
             }
 
@@ -258,24 +264,17 @@ sap.ui.define([
             var _oInput = oEvent.getSource();
             var val = _oInput.getValue();
 
+                var blank_pattern = /[^0-9.,]/gi;
+                if( blank_pattern.test(val) == true){
 
-                val = val.replace(/[0-9]/ig, '');
+                MessageToast.show("숫자 만입력 가능 합니다.");
 
-                _oInput.setValue(val);
-
-            }
-
-            ,_onGradeLiveChanage: function(oEvent){
-            var _oInput = oEvent.getSource();
-            var val = _oInput.getValue();
-
-
-                val = val.replace(/[^0-9.]/ig, '');
+                val = val.replace(/[^0-9.,]/gi, '');
 
                 _oInput.setValue(val);
 
+               }
             }
-
             
 
             
