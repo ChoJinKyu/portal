@@ -69,16 +69,15 @@ sap.ui.define([
 
                 this.getView().setModel(new ManagedListModel(), "approver");
                 this.setModel(new JSONModel(), "detailModel");
-                this.setModel(new JSONModel(), "detailViewModel");
+                this.setModel(new JSONModel({viewMode: true}), "detailViewModel");
 
-                //마스터정보 리스트
-                this.setModel(new JSONModel(), "masterInfoList");
+                //마스터정보
+                //this.setModel(new JSONModel(), "masterInfoList");
                 //일반정보 리스트, 기준단가목록 같이 사용할수 없어서 나눔
-                this.setModel(new ManagedListModel(), "generalInfoList");
-                this.setModel(new ManagedListModel(), "basePriceInfoList");
+                //this.setModel(new ManagedListModel(), "generalInfoList");
+                //this.setModel(new ManagedListModel(), "basePriceInfoList");
                 //협상이력
-                this.setModel(new ManagedListModel(), "negotitaionList");
-
+                //this.setModel(new ManagedListModel(), "negotitaionList");
             },
 
             /**
@@ -86,30 +85,30 @@ sap.ui.define([
             */
             _onRoutedThisPage: function (oEvent) {
                 //푸터 버튼 초기화
-                this.fnBtnCtrlClear();
                 this.fnLoadData(oEvent.getParameter("arguments"));
             },
             /*========================================= Init : End ===============================*/
             fnBtnCtrlClear: function() {
-                console.log("버튼 초기화!!");
+                //console.log("버튼 초기화!!");
                 that.byId("draftBtn").setVisible(false);
                 that.byId("deleteBtn").setVisible(false);
                 that.byId("requestBtn").setVisible(false);
                 that.byId("approveBtn").setVisible(false);
                 that.byId("rejectBtn").setVisible(false);
-                //that.byId("cancelBtn").setVisible(false);
+                //that.byId("editBtn").setVisible(false);
             },
 
             fnBtnCtrl: function (approveStatus) {
                 console.log("approveStatus:" + approveStatus);
                 var oDetailViewModel = this.getModel("detailViewModel");
-
+                console.log("detailViewModel::::" + oDetailViewModel.getProperty("/viewMode"));
                 switch (approveStatus) {
                     case "DR":
+                        //that.byId("editBtn").setVisible(true);
                         that.byId("draftBtn").setVisible(true);
                         that.byId("deleteBtn").setVisible(true);
                         that.byId("requestBtn").setVisible(true);
-                        oDetailViewModel.setProperty("/viewMode", true);
+                        //oDetailViewModel.setProperty("/viewMode", true);
                         break;
                     case "AR":
                         //that.byId("cancelBtn").setVisible(true);
@@ -127,7 +126,7 @@ sap.ui.define([
                         that.onEditToggle(false);
                         break;
                     case "CR":
-                        console.log("너왜 않나와");
+                        //console.log("너왜 않나와");
                         that.byId("draftBtn").setVisible(true);
                         break;
                 }
@@ -169,21 +168,21 @@ sap.ui.define([
                 this.generalInfoTbl = this.byId("generalInfoTbl");
                 var oRootModel = this.getModel("rootModel");
                 var oDetailModel = this.getModel("detailModel");
-                var generalInfoModel = this.getModel("generalInfoList");
-                this.basePriceInfoModel = this.getModel("basePriceInfoList");
+                //var generalInfoModel = this.getModel("generalInfoList");
+                //this.basePriceInfoModel = this.getModel("basePriceInfoList");
                 var oDetailViewModel = this.getModel("detailViewModel");
-                var oApproverModel = this.getModel("approver");
-                generalInfoModel.setProperty("/entityName", "GeneralView");
-                generalInfoModel.setProperty("/GeneralView", null);
-                this.basePriceInfoModel.setProperty("/entityName", "GeneralView");
-                this.basePriceInfoModel.setProperty("/GeneralView", null);
+                //var oApproverModel = this.getModel("approver");
+                //generalInfoModel.setProperty("/entityName", "GeneralView");
+                //generalInfoModel.setProperty("/GeneralView", null);
+                //this.basePriceInfoModel.setProperty("/entityName", "GeneralView");
+                //this.basePriceInfoModel.setProperty("/GeneralView", null);
 
                 //this.onRichTextEditorRendering();
 
                 // Approval Line 초기화 시작
-                oApproverModel.setProperty("/entityName", "Approvers");
-                oApproverModel.setProperty("/Approvers", null);
-
+                //oApproverModel.setProperty("/entityName", "Approvers");
+                //oApproverModel.setProperty("/Approvers", null);
+                this.fnBtnCtrlClear();
                 var oReferMulti = this.byId("referMulti");
 
                 if (oReferMulti) {
@@ -195,7 +194,7 @@ sap.ui.define([
 
                 if (args.pMode === "R") {
                     oDetailModel.setData({});
-                    oDetailViewModel.setProperty("/viewMode", false);
+                    oDetailViewModel.setProperty("/viewMode", true);
 
                     var aMasterFilters = [];
                     aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
@@ -213,17 +212,19 @@ sap.ui.define([
                                 "tenant_d": "L2100",
                                 "approval_number": result.approval_number,
                                 "approval_title": result.approval_title,
-                                "approval_contents": result.approval_contents,
+                                "approval_contents": decodeURIComponent(escape(result.approval_contents)),
                                 "approval_status_code": result.approve_status_code,
                                 "approval_status_name": result.approve_status_name,
                                 "requestor_empno": result.requestor_empnm,
                                 "request_date": this.getOwnerComponent()._changeDateString(oToday),
                                 "net_price_document_type_code": result.net_price_document_type_code,
+                                "net_price_document_type_name": result.net_price_document_type_name,
                                 "net_price_source_code": result.net_price_source_code,
+                                "net_price_source_name": result.net_price_source_name,
                                 "net_price_type_code": result.net_price_type_code
                             };
                             oDetailModel.setData(oNewBasePriceData);
-
+                            oDetailModel.refresh(true);
                             //버튼 컨트롤
                             that.fnBtnCtrl(result.approve_status_code);
                             //업로드영역 컨트롤
@@ -232,7 +233,8 @@ sap.ui.define([
 
                             that._readData("detail", "/GeneralView", aMasterFilters, {}, function (data) {
                                 console.log("GeneralView::", data);
-                                generalInfoModel.setProperty("/GeneralView", data.results);
+                                oDetailModel.setProperty("/GeneralView", data.results);
+                                //generalInfoModel.setProperty("/GeneralView", data.results);
                             }.bind(this));
 
                             oView.setBusy(false);
@@ -250,11 +252,12 @@ sap.ui.define([
                         "approval_status_code": "DR",    // DR: Draft
                         "approval_status_name": oRootModel.getProperty("/processList/0/code_name"),
                         "requestor_empno": "00000",
-                        "request_date": this.getOwnerComponent()._changeDateString(oToday)
+                        "request_date": this.getOwnerComponent()._changeDateString(oToday),
+                        "GeneralView": []
                     };
                     oDetailModel.setData(oNewBasePriceData);
                     oDetailViewModel.setProperty("/detailsLength", 0);
-                    oDetailViewModel.setProperty("/viewMode", true);
+                    //oDetailViewModel.setProperty("/viewMode", true);
 
                     // 저장된 Approver가 없는 경우 Line 추가
                     this.onApproverAdd(0);
@@ -302,7 +305,7 @@ sap.ui.define([
             /*========================================= ValueHelp : Start ===============================*/
             vhMakerCode: function (oEvent) {
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                var generalInfoModel = this.getModel("generalInfoList");
+                var oDetailModel = this.getModel("detailModel");
 
                 if (!this.oMakerCodeDialog) {
                     this.oMakerCodeDialog = new MakerDialog({
@@ -310,8 +313,8 @@ sap.ui.define([
                     });
 
                     this.oMakerCodeDialog.attachEvent("apply", function (oEvent) {
-                        generalInfoModel.setProperty(that.sPath + "/maker_code", oEvent.mParameters.item.maker_code);
-                        generalInfoModel.setProperty(that.sPath + "/maker_name", oEvent.mParameters.item.maker_local_name);
+                        oDetailModel.setProperty(that.sPath + "/maker_code", oEvent.mParameters.item.maker_code);
+                        oDetailModel.setProperty(that.sPath + "/maker_name", oEvent.mParameters.item.maker_local_name);
                     }.bind(this));
                 }
                 this.oMakerCodeDialog.open();
@@ -321,6 +324,7 @@ sap.ui.define([
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
                 var oPurOrgModel = this.getModel("purOrg");
                 var oRootModel = this.getModel("rootModel");
+                var oDetailModel = this.getModel("detailModel");
 
                 var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
                 oPurOrgModel.read("/Pur_Operation_Org", {
@@ -343,8 +347,6 @@ sap.ui.define([
 
                             oRootModel.setProperty("/purOrg", oPurOrg);
 
-
-                            var generalInfoModel = that.getModel("generalInfoList");
                             if (!that.oSearchMultiMaterialMasterDialog) {
                                 that.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({
                                     title: "Choose Material Code",
@@ -356,11 +358,11 @@ sap.ui.define([
                                 that.oSearchMultiMaterialMasterDialog.attachEvent("apply", function (oEvent) {
                                     console.log("apply event!!!");
                                     //oViewModel.refresh();
-                                    generalInfoModel.setProperty(that.sPath + "/company_code", oEvent.mParameters.item.company_code);
-                                    generalInfoModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
-                                    generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
-                                    generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
-                                    generalInfoModel.setProperty(that.sPath + "/uom", oEvent.mParameters.item.base_uom_code);
+                                    oDetailModel.setProperty(that.sPath + "/company_code", oEvent.mParameters.item.company_code);
+                                    oDetailModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
+                                    oDetailModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
+                                    oDetailModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
+                                    oDetailModel.setProperty(that.sPath + "/uom", oEvent.mParameters.item.base_uom_code);
                                 }.bind(that));
                             }
                             that.oSearchMultiMaterialMasterDialog.open();
@@ -376,7 +378,8 @@ sap.ui.define([
             vhMaterialCode: function (oEvent) {
                 //console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                var generalInfoModel = this.getModel("generalInfoList");
+                var oDetailModel = this.getModel("detailModel");
+
                 if (!this.gMatrialDialog) {
                     this.gMatrialDialog = new MatrialDialog({
                         title: "Choose Material",
@@ -390,8 +393,8 @@ sap.ui.define([
 
                     this.gMatrialDialog.attachEvent("apply", function (oEvent) {
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
-                        generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
-                        generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
+                        oDetailModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
+                        oDetailModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
                     }.bind(this));
                 }
 
@@ -404,7 +407,7 @@ sap.ui.define([
             vhSupplierCode: function (oEvent) {
                 //console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                var generalInfoModel = this.getModel("generalInfoList");
+                var oDetailModel = this.getModel("detailModel");
                 if (!this.gSupplierDialog) {
                     this.gSupplierDialog = new SupplierDialog({
                         title: "Choose Supplier",
@@ -419,9 +422,9 @@ sap.ui.define([
                     this.gSupplierDialog.attachEvent("apply", function (oEvent) {
                         //console.log("달라지기 있기 없기 sPath:" + that.sPath);
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
-                        generalInfoModel.setProperty(that.sPath + "/supplier_code", oEvent.mParameters.item.supplier_code);
-                        generalInfoModel.setProperty(that.sPath + "/supplier_local_name", oEvent.mParameters.item.supplier_local_name);
-                        generalInfoModel.setProperty(that.sPath + "/supplier_english_name", oEvent.mParameters.item.supplier_english_name);
+                        oDetailModel.setProperty(that.sPath + "/supplier_code", oEvent.mParameters.item.supplier_code);
+                        oDetailModel.setProperty(that.sPath + "/supplier_local_name", oEvent.mParameters.item.supplier_local_name);
+                        oDetailModel.setProperty(that.sPath + "/supplier_english_name", oEvent.mParameters.item.supplier_english_name);
                     }.bind(this));
                 }
 
@@ -462,7 +465,7 @@ sap.ui.define([
             vhVendorPoolCode: function (oEvent) {
                 //console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                var generalInfoModel = this.getModel("generalInfoList");
+                var oDetailModel = this.getModel("detailModel");
                 if (!this.gVendorPoolDialog) {
                     this.gVendorPoolDialog = new VendorPoolDialog({
                         title: "Choose VendorPool",
@@ -477,8 +480,8 @@ sap.ui.define([
                     this.gVendorPoolDialog.attachEvent("apply", function (oEvent) {
                         //console.log("달라지기 있기 없기 sPath:" + that.sPath);
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
-                        generalInfoModel.setProperty(that.sPath + "/vendor_pool_code", oEvent.mParameters.item.vendor_pool_code);
-                        generalInfoModel.setProperty(that.sPath + "/vendor_pool_local_name", oEvent.mParameters.item.vendor_pool_local_name);
+                        oDetailModel.setProperty(that.sPath + "/vendor_pool_code", oEvent.mParameters.item.vendor_pool_code);
+                        oDetailModel.setProperty(that.sPath + "/vendor_pool_local_name", oEvent.mParameters.item.vendor_pool_local_name);
                     }.bind(this));
                 }
 
@@ -490,19 +493,19 @@ sap.ui.define([
 
             /*========================================= ValueHelp : End ===============================*/
             fnChkPriceVal: function(oEvent, path) {
-                var generalInfoModel = this.getModel("generalInfoList");
+                var oDetailModel = this.getModel("detailModel");
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
                 var newValue = oEvent.getParameter("newValue");
                 console.log(path, newValue.length);
 
-                var _pattern1 = /^\d{8}$/; // 현재 value값이 3자리 숫자이면 . 만 입력가능
+                var _pattern1 = /^\d{25}$/; // 현재 value값이 3자리 숫자이면 . 만 입력가능
 
                 if (_pattern1.test(newValue)) {
                     console.log("더이상 숫자를 입력 할수 없습니다." + newValue.length, newValue.substr(0, newValue.length -1).length);
                     this.setValue = newValue.substr(0, newValue.length-1);
                     console.log(newValue, this.setValue);
-                    generalInfoModel.setProperty(that.sPath + "/" + path, null);
-                    generalInfoModel.setProperty(that.sPath + "/" + path, this.setValue);
+                    oDetailModel.setProperty(that.sPath + "/" + path, null);
+                    oDetailModel.setProperty(that.sPath + "/" + path, this.setValue);
                     return;
                 }
                 // 소수점 둘째자리까지만 입력가능
@@ -512,8 +515,8 @@ sap.ui.define([
                     console.log("소수점 5자리 입력가능합니다.");
                     this.setValue = newValue.substr(0, newValue.length-1);
                     console.log(newValue, this.setValue);
-                    generalInfoModel.setProperty(that.sPath + "/" + path, null);
-                    generalInfoModel.setProperty(that.sPath + "/" + path, this.setValue);
+                    oDetailModel.setProperty(that.sPath + "/" + path, null);
+                    oDetailModel.setProperty(that.sPath + "/" + path, this.setValue);
                     return;
                 }  
             },
@@ -535,11 +538,11 @@ sap.ui.define([
             },
             
             fnChkEndDate: function (oEvent) {
-                var generalInfoModel = this.getModel("generalInfoList");
+                var oDetailModel = this.getModel("detailModel");
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                if (generalInfoModel.getProperty(that.sPath + "/effective_start_date") !== null &&generalInfoModel.getProperty(that.sPath + "/effective_end_date") !== null) {
-                    if (new Date(generalInfoModel.getProperty(that.sPath + "/effective_start_date")) > new Date(generalInfoModel.getProperty(that.sPath + "/effective_end_date"))) {
-                        generalInfoModel.setProperty(that.sPath + "/effective_end_date", null);
+                if (oDetailModel.getProperty(that.sPath + "/effective_start_date") !== null && oDetailModel.getProperty(that.sPath + "/effective_end_date") !== null) {
+                    if (new Date(oDetailModel.getProperty(that.sPath + "/effective_start_date")) > new Date(oDetailModel.getProperty(that.sPath + "/effective_end_date"))) {
+                        oDetailModel.setProperty(that.sPath + "/effective_end_date", null);
                         MessageToast.show("유효 종료일자가 적합하지 않습니다.");
                     }
                 }
@@ -579,9 +582,9 @@ sap.ui.define([
             /**
              * 수정모드 변경
              */
-            onEditToggle: function (flag) {
+            onEditToggle: function () {
                 var oDetailViewModel = this.getModel("detailViewModel");
-                oDetailViewModel.setProperty("/viewMode", flag);
+                oDetailViewModel.setProperty("/viewMode", !oDetailViewModel.getProperty("/viewMode"));
             },
 
             onApproverAdd: function (oParam) {
@@ -697,7 +700,7 @@ sap.ui.define([
                 var chkFlag = true;
                 var procObj = {};
                 var inDetails = [];
-
+                var oDetailModel = that.getModel("detailModel");
                 procObj = {
                     "param": {
                         "tenant_id": "L2100",
@@ -706,7 +709,7 @@ sap.ui.define([
                     }
                 };
 
-                this.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
+                this.generalInfoList = oDetailModel.getProperty("/GeneralView");
                 console.log("generalInfoList : " + this.generalInfoList);
                 $(this.generalInfoList).each(function (idx, item) {
                     //console.log("item:" + item);
@@ -748,7 +751,7 @@ sap.ui.define([
                                     contentType: "application/json",
                                     success: function (data) {
                                         console.log('data:', data);
-                                        that.basePriceInfoModel.setProperty("/GeneralView", data.outDetails);
+                                        oDetailModel.setProperty("/BasePriceListView", data.outDetails);
                                     },
                                     error: function (e) {
                                         var eMessage = "callProcError",
@@ -779,22 +782,23 @@ sap.ui.define([
              * Base Price 라인 추가
              */
             onAddGeneralInfo: function () {
-                var generalInfoModel = this.getModel("generalInfoList");
-                generalInfoModel.addRecord({
+                var oDetailModel = this.getModel("detailModel");
+                var aDetails = oDetailModel.getProperty("/GeneralView");
+                var oDefault = {
                     "_row_state_": "C",
                     "tenant_id": "L2100",
                     "curr_net_price": "0",
                     "currency_code" : ""
-                }, "/GeneralView", 0); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
-
-                generalInfoModel.refresh();
+                };
+                aDetails.unshift(oDefault);
+                oDetailModel.refresh();
             },
 
             /**
              * detail 선택 데이터 체크
              */
             onRowSelectionChange: function (oEvent) {
-                var generalInfoModel = this.getModel("generalInfoList"),
+                var generalInfoModel = this.getModel("detailModel"),
                     oParameters = oEvent.getParameters(),
                     bSelectAll = !!oParameters.selectAll;
 
@@ -813,12 +817,19 @@ sap.ui.define([
             /**
              * 체크된 detail 데이터 삭제
              */
-            onDeleteGeneralInfo: function () {
-                var table = this.byId("generalInfoTbl"),
-                    model = this.getModel("generalInfoList");
-                table.getSelectedIndices().reverse().forEach(function (idx) {
-                    model.markRemoved(idx);
-                });
+            onDeleteGeneralInfo: function (oEvent) {
+                var oDetailModel = this.getModel("detailModel"),
+                    aDetails = oDetailModel.getProperty("/GeneralView"),
+                    oDetailTable = oEvent.getSource().getParent().getParent();
+
+                for (var i = aDetails.length-1; 0 <= i; i--) {
+                    if (aDetails[i].checked) {
+                        aDetails.splice(i, 1);
+                    }
+                }
+
+                oDetailModel.refresh();
+                oDetailTable.clearSelection();
             },
 
             //N2팝업 시작
@@ -886,7 +897,7 @@ sap.ui.define([
 
             onPressSimpleChangeDialogSave: function () {
                 var oSelectedItems = this._SimpleChangeTable.getSelectedItems();
-
+                var oDetailModel = this.getModel("detailModel");
                 //console.log(" - -- - - onPressSimpleChangeDialogSave - - - - ")
                 //console.log(oSelectedItems);
                 
@@ -897,7 +908,7 @@ sap.ui.define([
                 if (oSelectedItems.length > 0) {
                     var selectedIndices = this.getView().byId("generalInfoTbl").getSelectedIndices();
                     if (selectedIndices.length > 0) {
-                        var oItems = this.getModel("generalInfoList").getData().GeneralView;
+                        var oItems = oDetailModel.getData().GeneralView;
                         
                         var getSimpleChangObj = {};
                         for (var i = 0; i < selectedIndices.length; i++) {
@@ -937,7 +948,7 @@ sap.ui.define([
                             //var sId = oSelectedItems[0].getCells()[1].sId;
                         }
 
-                        this.getModel("generalInfoList").refresh();
+                        oDetailModel.refresh();
                         this._SimpleChangeDialog.close();
                     }
                 } else {
@@ -946,8 +957,9 @@ sap.ui.define([
             },
 
             generalInfoChange: function (oEvent) {
+                var oDetailModel = this.getModel("detailModel");
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                this.getModel("generalInfoList").setProperty(that.sPath + oEvent.getSource().getBinding("value").sPath, oEvent.getParameter("value"));
+                oDetailModel.setProperty(that.sPath + oEvent.getSource().getBinding("value").sPath, oEvent.getParameter("value"));
             },
             /*========================================= On Change Action : End ===============================*/
 
@@ -983,7 +995,8 @@ sap.ui.define([
 
                 var procObj = {};
                 var generalList = [];
-                that.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
+                var oDetailModel = this.getModel("detailModel");
+                that.generalInfoList = oDetailModel.getProperty("/GeneralView");
                 
                 if (this.validator.validate(this.byId("detailForm")) !== true) return;
                 if (that.generalInfoList === null || that.generalInfoList.length === 0) {
