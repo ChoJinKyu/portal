@@ -18,39 +18,115 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:t="sap.ui.table"
+    xmlns:lib-f="ext.lib.control.f"
+    xmlns:lib-m="ext.lib.control.m"
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
     height="100%">
     
     <f:DynamicPage id="page"
-        headerExpanded="true" 
+        headerExpanded="{=${Main>/expand}}" 
         toggleHeaderOnTitleClick="true">
         
         <f:title>
-            <f:DynamicPageTitle stateChange="stateChange">
+            <lib-f:CustomDynamicPageTitle stateChange="stateChange" id="abcd">
+                <lib-f:heading>
+                    <Title text="{I18N>/MICATEGORY_TITLE}" />
+                </lib-f:heading>
+                <lib-f:actions>
+                </lib-f:actions>
+                <lib-f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </lib-f:navigationActions>
+                <lib-f:fixedContent>
+                    <!-- <form:SimpleForm class="searchBox" maxContainerCols="2" layout="ResponsiveGridLayout" editable="true" 
+                        adjustLabelSpan="false" 
+                        labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/KEYWORD}:" labelFor="searchKeyword"></Label>
+                                <Input id="searchKeyword" placeholder="{I18N>/KEYWORD}"></Input>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/COUNTRY}:" labelFor="searchCountry"></Label>
+                                <MultiInput id="searchCountry"
+                                    placeholder="{I18N>/COUNTRY}"
+                                    showValueHelp="true" valueHelpRequest=".onSearchCountryDialogPress">
+                                </MultiInput>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M5 S10" />
+                                </layoutData>
+                            </VBox>
+                            <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                                <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
+                                <layoutData>
+                                    <layout:GridData span="XL12 L12 M12 S12" />
+                                </layoutData>
+                            </FlexBox>
+                        </form:content>
+                    </form:SimpleForm> -->
+                    <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false"
+                        basicSearchFieldName="category_code"
+                        considerSelectionVariants="true" entitySet="a" search="filterSearch" >
+
+                        <smartFilterBar:controlConfiguration>
+                            <smartFilterBar:ControlConfiguration key="category_code" index="1" label="{I18N>/CATEGORY_CODE}"
+                                groupId="_BASIC" visibleInAdvancedArea="true" >
+                                <smartFilterBar:customControl>
+                                    <Input id="filterCategoryCode" placeholder="Category Code" liveChange="liveCategoryCode"/>
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>
+                            <smartFilterBar:ControlConfiguration key="category_name" index="2" label="{I18N>/CATEGORY_NAME}" visible="{=${Main>/expand}}"
+                                groupId="_BASIC" visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                    <Input id="filterCategoryName" placeholder="Category Name" />
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>
+                            <smartFilterBar:ControlConfiguration key="system_create_dtm" index="3" label="{I18N>/WRITE_DATE}" visible="{=${Main>/expand}}"
+                                groupId="_BASIC" visibleInAdvancedArea="true" class="widthAdd">
+                                <smartFilterBar:customControl>
+                                <DateRangeSelection 
+                                    id="filterCreateDate" 
+                                    showFooter="true" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" displayFormat="yyyy-MM-dd"
+                                    change="filterCreateDateChange"/>	
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>
+                            
+
+                        </smartFilterBar:controlConfiguration>
+                        <smartFilterBar:layoutData>
+                            <FlexItemData shrinkFactor="0"/>
+                        </smartFilterBar:layoutData>
+                        
+                    </smartFilterBar:SmartFilterBar>
+
+                </lib-f:fixedContent>
+            </lib-f:CustomDynamicPageTitle>
+
+
+
+
+
+
+            <!-- <f:DynamicPageTitle stateChange="stateChange">
                 <f:heading>
-                    <!-- <Title text="{i18n>appTitle}" /> -->
                     <Title text="{I18N>/MICATEGORY_TITLE}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
-                <!-- <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
-                </f:actions>
-                <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions> -->
-            </f:DynamicPageTitle>
+            </f:DynamicPageTitle> -->
         </f:title>
 
-        <f:header> 
-            <f:DynamicPageHeader pinnable="true">
-                <!-- <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                    <form:content> -->
-                        <!-- <VBox> -->
-                            <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false"
+        <f:header > 
+            <f:DynamicPageHeader pinnable="true" >
+                <Text text="" visible="false"/>
+                
+                            <!-- <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false"
                                 basicSearchFieldName="category_code"
                                 considerSelectionVariants="true" entitySet="a" search="filterSearch" >
 
@@ -69,45 +145,24 @@
                                             <Input id="filterCategoryName" placeholder="Category Name" />
                                         </smartFilterBar:customControl>
                                     </smartFilterBar:ControlConfiguration>
-                                    <smartFilterBar:ControlConfiguration key="system_create_dtm" index="3" label="{I18N>/WRITE_DATE}"
+                                    <smartFilterBar:ControlConfiguration key="system_create_dtm" index="3" label="{I18N>/WRITE_DATE}" visible="{ =${Main>/expand} } "
                                         groupId="_BASIC" visibleInAdvancedArea="true" class="widthAdd">
                                         <smartFilterBar:customControl>
                                         <DateRangeSelection 
                                             id="filterCreateDate" 
-                                            showFooter="true" placeholder="YYYY/MM/DD - YYYY/MM/DD" displayFormat="yyyy/MM/dd"
+                                            showFooter="true" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" displayFormat="yyyy-MM-dd"
                                             change="filterCreateDateChange"/>	
                                         </smartFilterBar:customControl>
                                     </smartFilterBar:ControlConfiguration>
                                     
-
-                                    <!-- <smartFilterBar:ControlConfiguration key="aaa" index="3" label="TEST"
-                                        groupId="_BASIC" visibleInAdvancedArea="true">
-                                        <smartFilterBar:customControl>
-                                            <ComboBox
-                                                items="{
-                                                    path: '/MICategoryHierarchyStructureView',
-                                                    sorter: {
-                                                        path: 'parent_node_id',
-                                                        descending: false,
-                                                        group: true
-                                                    }
-                                                }">
-                                                <core:Item key="{category_code}" text="{category_code}" />
-                                            </ComboBox>
-                                        </smartFilterBar:customControl>
-                                    </smartFilterBar:ControlConfiguration> -->
 
                                 </smartFilterBar:controlConfiguration>
                                 <smartFilterBar:layoutData>
                                     <FlexItemData shrinkFactor="0"/>
                                 </smartFilterBar:layoutData>
                                 
-                            </smartFilterBar:SmartFilterBar>
+                            </smartFilterBar:SmartFilterBar> -->
                            
-                        <!-- </VBox> -->
-                           
-                    <!-- </form:content>
-                </form:SimpleForm> -->
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -147,14 +202,15 @@
                         }">
                         <t:extension>
                             <OverflowToolbar>
-                                <Title id="title" text="Category" level="H2"/> 
+                                <Title id="title" text="Category ({Main>/count})" level="H2"/>  
                                 <ToolbarSpacer/>
-                                <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                                <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                                <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
+                                <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"/>
                                 <Button id="mainTableCreate1Button" text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press=".onMainTableCreate1ButtonPress" enabled="{= ${master>/indices} === 1 ? ${master>/level} === 0 ? ${sm>/screen} === 'M' ? true : false : false : false}" />
-                                <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/>
-                                <ToolbarSeparator/>
+                                <Button id="mainTableDeleteButton" text="{I18N>/MI_ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/>
+                                <Button id="mainTableButtonAllOpen" icon="sap-icon://expand-all" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}" />
+                                <Button id="mainTableButtonAllClose" icon="sap-icon://collapse-all" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}" />
+                                
+                                
                                 <!-- <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                     <layoutData>
                                         <OverflowToolbarLayoutData priority="NeverOverflow" />
@@ -191,7 +247,8 @@
                             <t:Column label="{I18N>/WRITE_DATE}">    
                                 <t:template>
                                     <Text text="{path: 'system_create_dtm',
-                                    type: 'sap.ui.model.type.Date'}" wrapping="false" />
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: { pattern: 'yyyy-MM-dd' , UTC: true } }" wrapping="false" />
                                 </t:template>
                             </t:Column>
                             

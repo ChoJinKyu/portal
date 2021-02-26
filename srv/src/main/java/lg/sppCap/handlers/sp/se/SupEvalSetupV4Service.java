@@ -441,8 +441,8 @@ public class SupEvalSetupV4Service implements EventHandler { // import cds.gen.s
         v_sql_createTableEGRAD.append("EVALUATION_OPERATION_UNIT_CODE NVARCHAR(30),");
         v_sql_createTableEGRAD.append("EVALUATION_TYPE_CODE NVARCHAR(30),");
         v_sql_createTableEGRAD.append("EVALUATION_GRADE NVARCHAR(10),");
-        v_sql_createTableEGRAD.append("EVALUATION_GRADE_START_SCORE DECIMAL(5,2),");
-        v_sql_createTableEGRAD.append("EVALUATION_GRADE_END_SCORE DECIMAL(5,2),");
+        v_sql_createTableEGRAD.append("EVALUATION_GRADE_START_SCORE DECIMAL(6,2),");
+        v_sql_createTableEGRAD.append("EVALUATION_GRADE_END_SCORE DECIMAL(6,2),");
         v_sql_createTableEGRAD.append("INP_APPLY_CODE NVARCHAR(30))");
         
         String v_sql_dropTableEGRAD = "DROP TABLE #LOCAL_TEMP_EGRAD"; 

@@ -579,11 +579,11 @@
                                                     </VBox>
                                                     <VBox width="25%">
                                                         <Label  text="{I18N>/NW_TARGET_AMOUNT}:" visible="true"/> 
-                                                        <Text text="{
+                                                        <!-- <Text text="{
                                                                 path: 'NegoHeaders>/target_amount',
                                                                 formatter: '.numberFormatter.toNumberString'
-                                                                }" />
-                                                            
+                                                                }" /> -->
+                                                        <Text text="{NegoHeaders>/target_amount}" />
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>

@@ -9,7 +9,7 @@
     xmlns:lib-m="ext.lib.m"
     xmlns:t="sap.ui.table"
     xmlns:co="sap.suite.ui.commons"
-    xmlns:rte="sap.ui.richtexteditor"
+    xmlns:lib-rte="ext.lib.control.ui.rte"
     height="100%">
 
     <uxap:ObjectPageLayout
@@ -194,12 +194,18 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <SearchField id="similarCategoryCode" value="{master>/similar_category_name} [{master>/similar_category_code}]" search=".onSearchPartCategory"  visible="{viewModel>/editMode}" width="50%" liveChange="onLiveChange" />
+                                        <SearchField id="similarCategoryCode" search=".onSearchPartCategory"  visible="{viewModel>/editMode}" width="50%" liveChange="onLiveChange" />
                                         <Text id="similarCategoryCodeTx" text="{master>/similar_category_name} [{master>/similar_category_code}]" visible="{viewModel>/showMode}" width="50%" />
                                         
                                         <Label text="{I18N>/DESCRIPTION}: " required="true"/>
                                         <!-- Text Editor 시작 -->
-                                        <rte:RichTextEditor
+                                        <lib-rte:RichTextEditor
+                                            id="richTextEditor"
+                                            editMode="{viewModel>/editMode}"
+                                            value="{master>/request_desc}"
+                                            height="400px"
+                                            width="100%" />
+                                        <!-- <rte:RichTextEditor
                                             id="richTextEditor"
                                             width="100%"
                                             height="300px" 
@@ -211,8 +217,7 @@
                                             editorType="TinyMCE4"
                                             visible="{viewModel>/editMode}">
                                         </rte:RichTextEditor>
-                                        <!-- Text Editor 끝 -->
-                                        <FormattedText height="200px" htmlText="{= ${master>/request_desc} ? ${master>/request_desc} : '' }" visible="{= !${viewModel>/editMode}}" width="100%"/>
+                                        <FormattedText height="200px" htmlText="{= ${master>/request_desc} ? ${master>/request_desc} : '' }" visible="{= !${viewModel>/editMode}}" width="100%"/> -->
                                         
                                     </VBox>
                                 </layout:Grid>

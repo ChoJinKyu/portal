@@ -74,6 +74,7 @@ sap.ui.define([
 
         _onDetailMatched: function (oEvent) {
             var oView = this.getView();
+            this.removeRichTextEditorValue();
             this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
                 this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
                 this.company_code = oEvent.getParameter("arguments")["company_code"],
@@ -90,7 +91,6 @@ sap.ui.define([
                 this.getModel("DetailView").setProperty("/isCreate", true);
                 this.getModel("masterModel").setData({});
                 this.getModel("managerModel").setData({});
-                this.removeRichTextEditorValue();
                 this._toEditMode();
 
             } else {
@@ -501,7 +501,7 @@ sap.ui.define([
                 type: sap.m.ListType.Inactive
             });
 
-            this.oEditableTemplate = new ColumnListItem({
+             this.oEditableTemplate = new ColumnListItem({
                 cells: [
                     // @ts-ignore
                     new sap.m.ObjectStatus({
@@ -556,17 +556,15 @@ sap.ui.define([
                             if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
-
-
                         }
                     }),
                     // @ts-ignore
                     new sap.m.Input({
                         width: "80%",
                         value: {
-                            path: 'indicatorModel>monitoring_indicator_start_value',
-                            type: new sap.ui.model.type.Integer
+                            path: 'indicatorModel>monitoring_indicator_start_value'
                         },
+                        type: "Number",
                         liveChange: function (oEvent) {
                             var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
                             if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
@@ -579,9 +577,10 @@ sap.ui.define([
                     new sap.m.Input({
                         width: "80%",
                         value: {
-                            path: 'indicatorModel>monitoring_indicator_last_value',
-                            type: new sap.ui.model.type.Integer
+                            path: 'indicatorModel>monitoring_indicator_last_value'
                         },
+                        type: "Number",
+                        editable: "{=${indicatorModel>monitoring_ind_condition_cd} === '[]' ? true: false}",
                         liveChange: function (oEvent) {
                             var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
                             if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
@@ -628,7 +627,7 @@ sap.ui.define([
                         },
                         selectionChange: function (oEvent) {
                             var status = oEvent.getSource().getParent().getAggregation("cells")[0].getIcon();
-                            if (status !== "sap-icon://add" && status !== "sap-icon://decline" ) {
+                            if (status !== "sap-icon://add" && status !== "sap-icon://decline") {
                                 oEvent.getSource().getParent().getAggregation("cells")[0].setIcon("sap-icon://accept");
                             }
 

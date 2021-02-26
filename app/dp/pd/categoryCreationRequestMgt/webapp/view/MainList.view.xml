@@ -21,10 +21,14 @@
         <f:title>
             <lib-f:CustomDynamicPageTitle>
                 <lib-f:heading>
-                    <HBox alignItems="Center">
+                    <HBox class="sapUiSizeCompact">
+                        <lib-m:FavoriteMenuButton menuCode="DPPDU00009"/>
+                        <Title text="{I18N>/PART_CATEGORY_CREATION_REQUEST}" />
+                    </HBox>
+                    <!-- <HBox alignItems="Center">
                         <Button icon="sap-icon://unfavorite" type="Transparent" />
                          <Title text="{I18N>/PART_CATEGORY_CREATION_REQUEST}" />
-                    </HBox>
+                    </HBox> -->
                 </lib-f:heading>
                 <lib-f:fixedContent>
                     <form:SimpleForm class="searchBox"

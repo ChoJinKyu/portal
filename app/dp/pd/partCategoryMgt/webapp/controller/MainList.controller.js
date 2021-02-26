@@ -82,43 +82,77 @@ sap.ui.define([
                     predicates.push(new Filter("category_group_code", FilterOperator.EQ, this.byId("searchCategoryCombo").getSelectedKey()));
                 }
 
-                if (!!this.byId("searchActiveFlag").getSelectedKey()) {
-                    if(this.byId("searchActiveFlag").getSelectedKey()=="Active"){
-                        predicates.push(new Filter("active_flag", FilterOperator.EQ, true));
-                    } else {
-                        predicates.push(new Filter("active_flag", FilterOperator.EQ, false));
-                    }
-                    
+                if ( this.byId("searchActiveFlag").getSelectedKey() == "Active" ) {
+                    this.onPartDialogTreeSearch();
+                } 
+
+                if ( this.byId("searchActiveFlag").getSelectedKey() == "Inactive" ) {
+                    this.onPartDialogTreeSearch();
                 }
-               
-                this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel(), { returnType: "Array" });
-                this.getView().setBusy(true);
+
+                if ( this.byId("searchActiveFlag").getSelectedKey() == "All" ) {
+                    this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel(), { returnType: "Array" });
+                    this.getView().setBusy(true);
+                    this.treeListModel
+                        .read("/pdPartCategoryView", {
+                            filters: predicates
+                        })
+                        // 성공시
+                        .then((function (jNodes) {
+                            this.getView().setModel(new JSONModel({
+                                "pdPartCategoryView": {
+                                    "nodes": jNodes[0],
+                                    "list": jNodes[1]
+                                }
+                            }), "tree");
+                        }).bind(this))
+                        // 실패시
+                        .catch(function (oError) {
+                        })
+                        // 모래시계해제
+                        .finally((function () {
+                            this.getView().setBusy(false);
+                            this.getView().byId("treeTable").collapseAll();
+                        }).bind(this));
+                }
+                
+            },
+
+            onPartDialogTreeSearch: function (oEvent) {
+                var treePartCategory = [];
+
+                if (!!this.byId("searchCategoryCombo").getSelectedKey()) {
+                    treePartCategory.push(new Filter("category_group_code", FilterOperator.EQ, this.byId("searchCategoryCombo").getSelectedKey()));
+                }
+
+                if (!!this.byId("searchActiveFlag").getSelectedKey()) {
+                    treePartCategory.push(new Filter("active_flag_val", FilterOperator.EQ, this.byId("searchActiveFlag").getSelectedKey()));
+                }
+
+                this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
                 this.treeListModel
                     .read("/pdPartCategoryView", {
-                        filters: predicates
+                        filters: treePartCategory
                     })
                     // 성공시
                     .then((function (jNodes) {
-                        
                         this.getView().setModel(new JSONModel({
                             "pdPartCategoryView": {
-                                "nodes": jNodes[0],
-                                "list": jNodes[1]
+                                "nodes": jNodes
                             }
                         }), "tree");
-
-                        
                     }).bind(this))
                     // 실패시
                     .catch(function (oError) {
                     })
                     // 모래시계해제
                     .finally((function () {
-                        this.getView().setBusy(false);
-                        this.getView().byId("treeTable").collapseAll();
+                        var table = this.byId("treeTable");
+                        table.expandToLevel(3);
                     }).bind(this));
+                
             },
-
+            
             onMainTableexpandAll: function(e) {
                 var table = this.getView().byId("treeTable");
                 table.expandToLevel(3);

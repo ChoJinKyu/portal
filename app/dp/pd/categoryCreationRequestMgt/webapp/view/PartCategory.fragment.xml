@@ -11,39 +11,66 @@
     
     <Dialog id="PartCategory" class="sapUiSizeCompact" title="Select Part Category" contentWidth="30%" >
         <content>
-            <VBox>
-                <table:TreeTable
-                    id="diatreeTable"
-                    selectionMode="Single"
-                    rowSelectionChange=".selectPartCategoryValue"  
-                    selectionBehavior="Row"                  
-                    enableColumnReordering="false"
-                    expandFirstLevel="true"
-                    rows="{
-                        path : 'tree>/pdPartCategoryView',
-                        parameters : {
-                            arrayNames: ['nodes'],
-                        	numberOfExpandedLevels: 3
-                        }
-                    }">
-                <table:extension>
-                </table:extension>   
-                <table:columns>
-                    <table:Column label="Part Category Name" >
-                        <table:template>
-                            <Text id="categoryName" text="{tree>category_name} ({tree>category_code})" wrapping="false" />
-                        </table:template>
-                    </table:Column>
-                </table:columns>
-                    <table:Column label="Part Category Code"  width="0em" >
-                        <table:template>
-                            <Text id="categoryCode" text="{category_code}" wrapping="false" />
-                        </table:template>
-                    </table:Column>                             
-                </table:TreeTable>  
-                <layoutData>
-                    <layout:GridData span="XL12 L12 M12 S12" />
-                </layoutData>
+            <VBox class="sapUiSmallMargin">
+                <form:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4"
+                    labelSpanL="3"
+                    labelSpanM="4"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="0"
+                    emptySpanL="4"
+                    emptySpanM="0"
+                    emptySpanS="0"
+                    columnsXL="2"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false">
+                    <form:content>
+                        <VBox>
+                            <Input id="part_category" placeholder="Input data" change=".onPartDialogTreeSearch" />
+                            <layoutData>
+                                <layout:GridData span="XL4 L4 M4 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <table:TreeTable
+                                id="diatreeTable"
+                                selectionMode="Single"
+                                rowSelectionChange=".selectPartCategoryValue"  
+                                selectionBehavior="Row"                  
+                                enableColumnReordering="false"
+                                expandFirstLevel="true"
+                                rows="{
+                                    path : 'tree>/pdPartCategoryView',
+                                    parameters : {
+                                        arrayNames: ['nodes'],
+                                        numberOfExpandedLevels: 3
+                                    }
+                                }">
+                            <table:extension>
+                            </table:extension>   
+                            <table:columns>
+                                <table:Column label="Part Category Name" >
+                                    <table:template>
+                                        <Text id="categoryName" text="{tree>category_name} ({tree>category_code})" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                            </table:columns>
+                                <table:Column label="Part Category Code"  width="0em" >
+                                    <table:template>
+                                        <Text id="categoryCode" text="{category_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>                             
+                            </table:TreeTable>  
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
             </VBox>
         </content>
         <ToolbarSpacer/>

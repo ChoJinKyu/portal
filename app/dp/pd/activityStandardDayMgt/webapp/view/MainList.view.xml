@@ -18,10 +18,14 @@
         <f:title>
             <lib-f:CustomDynamicPageTitle>
                 <lib-f:heading>
-                    <HBox alignItems="Center">
-                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                    <HBox class="sapUiSizeCompact">
+                        <lib-m:FavoriteMenuButton menuCode="DPPDU00007"/>
                         <Title text="Activity {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
                     </HBox>
+                    <!-- <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="Activity {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
+                    </HBox> -->
                 </lib-f:heading>
                 <lib-f:fixedContent>
                     <form:SimpleForm class="searchBox"

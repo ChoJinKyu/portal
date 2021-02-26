@@ -650,6 +650,7 @@ sap.ui.define([
         },
 
         partCategoryPopupClose: function (oEvent) {
+            this.byId("part_category").setValue();
             this.byId("PartCategory").close();
         },
 
@@ -668,6 +669,55 @@ sap.ui.define([
             
         },
        
+        onPartDialogTreeSearch: function (oEvent) {
+            var treePartCategory = [];
+
+            treePartCategory.push(new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
+                    new Filter("category_group_code", FilterOperator.EQ, "CO")
+                ],
+                and: false
+            }));
+
+            if (!!this.byId("part_category").getValue()) {
+                treePartCategory.push(new Filter({
+                    path: 'keyword',
+                    filters: [
+                        new Filter("category_name", FilterOperator.Contains, this.byId("part_category").getValue())
+                    ],
+                    and: false
+                }));
+            }
+
+            this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
+            this.treeListModel
+                .read("/pdPartCategoryView", {
+                     filters: treePartCategory
+                })
+                // 성공시
+                .then((function (jNodes) {
+                    this.getView().setModel(new JSONModel({
+                        "pdPartCategoryView": {
+                            "nodes": jNodes
+                        }
+                    }), "tree");
+                }).bind(this))
+                // 실패시
+                .catch(function (oError) {
+                })
+                // 모래시계해제
+                .finally((function () {
+                    if(!!this.byId("part_category").getValue()){
+                        var table = this.byId("diatreeTable");
+                        table.expandToLevel(3);
+                    } else {
+                        this.byId("diatreeTable").collapseAll();
+                    }
+                }).bind(this));
+            
+        },
+        
         onSelectionChange: function(oEvent) {
             this.byId("categoryGroupCodeCombo").setValueState("None");
         },

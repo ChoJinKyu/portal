@@ -73,11 +73,12 @@ sap.ui.define([
 				// }.bind(this));								
             }.bind(this));
             
-            this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
+            this.getView().byId("smartFilterBar")._oSearchButton.setText(oi18nSearch);
 
 			var oUi = new JSONModel({
 				headerExpanded: true,
-				busy : false
+                busy : false,
+                isEnabled: true
 			});
 
 
@@ -93,7 +94,10 @@ sap.ui.define([
 		
 			this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
 			
-			this._deleteMessageCount = 0;
+            this._deleteMessageCount = 0;
+            
+            // var oModel = this.getView().getModel();
+            // oModel.setSizeLimit(1000);
 
 		   	// var view = this.getView().byId("page"); 
 		   	// view.setBusy(true);
@@ -189,12 +193,21 @@ sap.ui.define([
 			mBindingParams.filters.push(otenant_idFilter);
 
 			if (oMaterial_desc.length > 0) {
-				var oMaterial_descFilter = new Filter("material_desc", FilterOperator.Contains, oMaterial_desc);
+				var oMaterial_descFilter = new Filter({
+                    path: "material_desc", 
+                    operator: FilterOperator.Contains, 
+                    value1: oMaterial_desc,
+                    caseSensitive: false});
 				mBindingParams.filters.push(oMaterial_descFilter);
 			}
 
 			if (oSupplier_local_name.length > 0) {
-				var oSupplier_local_nameFilter = new Filter("supplier_local_name", FilterOperator.Contains, oSupplier_local_name);
+				var oSupplier_local_nameFilter = new Filter({
+                    path: "supplier_local_name", 
+                    operator: FilterOperator.Contains, 
+                    value1: oSupplier_local_name,
+                    caseSensitive: false});
+                    // "supplier_local_name", FilterOperator.Contains, oSupplier_local_name);
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
 			}         
 
@@ -319,7 +332,8 @@ sap.ui.define([
 				termsdelv: "　"
 			};
 
-			that.getRouter().navTo("midPage", oNavParam);
+            that.getRouter().navTo("midPage", oNavParam);
+            this.getView().getModel('oUi').setProperty("/isEnabled", false);
 		},
 		
 		/**
@@ -369,10 +383,10 @@ sap.ui.define([
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenant_id: this._setReplace(aParameters["tenant_id"]),
+				tenant_id: oRecord.tenant_id,//this._setReplace(aParameters["tenant_id"]),
 				material_code: oRecord.material_code,
 				supplier_code: oRecord.supplier_code,
-				mi_bom_id: mi_bom_id
+				mi_bom_id: oRecord.mi_bom_id// mi_bom_id
 				
 			});
 
@@ -380,6 +394,8 @@ sap.ui.define([
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
                 this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/isEnabled", false);
+                
             }
 
 			var oItem = oEvent.getSource();
@@ -399,7 +415,8 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
-			//this.getModel("oUi").setProperty("/headerExpanded", true);
+            //this.getModel("oUi").setProperty("/headerExpanded", true);
+            this.getView().getModel('oUi').setProperty("/isEnabled", true);
 			this.getModel().refresh(true);
 			console.groupEnd();
 		},

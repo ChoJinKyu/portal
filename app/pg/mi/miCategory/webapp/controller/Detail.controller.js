@@ -86,6 +86,9 @@ sap.ui.define([
                 }
                 console.log("_onProductMatched2 : ");
 
+                //filterbar 접기/열기 설정
+                
+
                 oMaster = this.getView().getModel("master");
                 deleteArray = [];       //DB 삭제용
                 deleteItems = [];       //화면 Item 삭제용
@@ -614,6 +617,9 @@ sap.ui.define([
 
                                                 var oFCL = that.getView().getParent().getParent();
                                                 oFCL.setLayout();
+                                                //filterbar expand 설정
+                                                that.getView().getModel("Main").oData.expand = true;
+                                                that.getView().getModel("Main").refresh(true);
 
                                                 // oFCL.setLayout();
                                             },
@@ -969,6 +975,9 @@ sap.ui.define([
                                             category_code: that.getView().byId("inputCode").getValue(),
                                             use_flag: false
                                         });
+                                        //filterbar expand 설정
+                                        that.getView().getModel("Main").oData.expand = true;
+                                        that.getView().getModel("Main").refresh(true);
                                     },
                                     error: function (cc, vv) {
                                         // sap.m.MessageToast.show("Save failed!MICategoryHie");
@@ -1062,6 +1071,9 @@ sap.ui.define([
                                                     category_code: that.getView().byId("inputCode").getValue(),
                                                     use_flag: false
                                                 });
+                                                //filterbar expand 설정
+                                                that.getView().getModel("Main").oData.expand = true;
+                                                that.getView().getModel("Main").refresh(true);
 
 
                                             },
@@ -1347,6 +1359,9 @@ sap.ui.define([
 
                             var oFCL = that.getView().getParent().getParent();
                             oFCL.setLayout();
+                            //filterbar expand 설정
+                that.getView().getModel("Main").oData.expand = true;
+                that.getView().getModel("Main").refresh(true);
                         }
                         else {
                             return;
@@ -1403,6 +1418,9 @@ sap.ui.define([
                         category_code: " ",
                         use_flag: false
                     });
+                //filterbar expand 설정
+                this.getView().getModel("Main").oData.expand = true;
+                this.getView().getModel("Main").refresh(true);
                 // this.oRouter.navTo("RouteApp");
 
                 // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");

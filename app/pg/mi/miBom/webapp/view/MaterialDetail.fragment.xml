@@ -1,5 +1,4 @@
-<core:FragmentDefinition
-    class="sapUiSizeCompact"    
+<core:FragmentDefinition 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
@@ -14,27 +13,31 @@
 	<Dialog id="materialDetail" title="{I18N>/MI_MATERIAL_CHOOICE}">
 		<subHeader>
 			<Toolbar>
-            <HBox visible="{=!${oUi>/changeItem}}">
-                <Label text="{I18N>/MI_MATERIAL} / {I18N>/MI_MATERIAL_NAME}  :" class="sapUiSmallMarginTop sapUiSmallMarginBegin"/>
-                <SearchField id="searchField_material_code" 
-                             width="100%"
-                             search=".onMaterialSearch" 
-                             selectOnFocus="false"
-                             placeholder="{I18N>/INPUT}" 
-                             class="sapUiTinyMarginTop sapUiTinyMarginBegin sapUiLargeMarginEnd" />
-                <Label text="{I18N>/CATEGORY_CODE} / {I18N>/CATEGORY_NAME} :" class="sapUiSmallMarginTop sapUiLargeMarginBegin"/>
-                <SearchField id="searchField_category_name" 
-                             width="100%" 
-                             search=".onMaterialSearch"  
-                             selectOnFocus="false"                             
-                             placeholder="{I18N>/INPUT}"
-                             class="sapUiTinyMarginTop sapUiTinyMarginBegin  sapUiSmallMarginBottom" />            
-            </HBox>
+                <FlexBox visible="{=!${oUi>/changeItem}}" >
+                    <HBox class="sapUiLargeMarginEnd sapUiSmallMarginBegin" >
+
+                        <Label text="{I18N>/MI_MATERIAL} / {I18N>/MI_MATERIAL_NAME}  :"  class="sapUiSmallMarginTop"/>
+                        <SearchField id="searchField_material_code" 
+                                    search=".onMaterialSearch" 
+                                    selectOnFocus="false"
+                                    placeholder="{I18N>/INPUT}" 
+                                    class="sapUiTinyMarginTopBottom sapUiSmallMarginBegin" />
+                    </HBox>
+
+                    <HBox class="sapUiSmallMarginBegin">
+                        <Label text="{I18N>/CATEGORY_CODE} / {I18N>/CATEGORY_NAME} :" class="sapUiSmallMarginTop"/>
+                        <SearchField id="searchField_category_name" 
+                                    search=".onMaterialSearch"  
+                                    selectOnFocus="false"                             
+                                    placeholder="{I18N>/INPUT}"
+                                    class="sapUiTinyMarginTop sapUiSmallMarginBegin" />            
+                    </HBox>
+                </FlexBox>
 			</Toolbar>
         </subHeader>
 
 		<content>
-        <HBox width="100%">
+            <HBox width="100%">
 
                 <ScrollContainer
                     class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop" 
@@ -79,6 +82,7 @@ song scrolltoload growingScrollToLoad growing sticky growingThreshold inset
                     </items>
                 </Table>                      
             </ScrollContainer>
+
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
                 <Table  id="rightTable"
                         mode="SingleSelectLeft" 
@@ -105,7 +109,7 @@ song scrolltoload growingScrollToLoad growing sticky growingThreshold inset
                         </Column>
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="거래소"/>                            
+                                <Label text="{I18N>/EXCHANGE_PG}"/>                            
                             </header>
                         </Column>
                         <Column hAlign="Center" >
@@ -144,16 +148,14 @@ song scrolltoload growingScrollToLoad growing sticky growingThreshold inset
                     </items>
                 </Table>             
             </VBox>
-
         </HBox>
-		</content>
-			<beginButton>
-				<Button type="Transparent"  text="{I18N>/CANCEL}" press=".onMaterialDetailClose" />
-			</beginButton>
-            <endButton>
-             <Button  text="{I18N>/APPLY}"  
-             type="Emphasized" 
-             press=".onMaterialDetailApply" />
-            </endButton>
+        </content>
+        
+        <beginButton>
+            <Button type="Transparent"  text="{I18N>/CANCEL}" press=".onMaterialDetailClose" />
+        </beginButton>
+        <endButton>
+            <Button  text="{I18N>/APPLY}"  type="Emphasized" press=".onMaterialDetailApply" />
+        </endButton>
 	</Dialog>
 </core:FragmentDefinition>

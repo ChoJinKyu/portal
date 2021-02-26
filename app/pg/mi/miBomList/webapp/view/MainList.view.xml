@@ -1,331 +1,378 @@
-<mvc:View
-    controllerName="pg.mi.miBomList.controller.MainList"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:ui="sap.ui.table"
-    xmlns:f="sap.f"
-    xmlns:form="sap.ui.layout.form"
-    xmlns:layout="sap.ui.layout"
-    xmlns:core="sap.ui.core"
-    xmlns:lib-m="ext.lib.m"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
-    xmlns:sv="sap.ui.comp.smartvariants"
-    xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
-    >
-
-    <f:DynamicPage
-        id="page"
-        toggleHeaderOnTitleClick="true">
-        <!-- DynamicPage Title -->
-        <f:title>
-            <f:DynamicPageTitle >
-                <f:heading>
-                    <Title text="{I18N>/MIMATERIAL_BOM_LIST_TITLE}"/>
-                </f:heading>
-                <f:snappedContent></f:snappedContent>
-                <f:expandedContent></f:expandedContent>
-                <!-- <f:navigationActions>
+<mvc:View controllerName="pg.mi.miBomList.controller.MainList" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:ui="sap.ui.table" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:lib-m="ext.lib.m" xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:smartTable="sap.ui.comp.smarttable" xmlns:sv="sap.ui.comp.smartvariants" xmlns:smartVariantManagement="sap.ui.comp.smartvariants">
+	<f:DynamicPage id="page" toggleHeaderOnTitleClick="true">
+		<!-- DynamicPage Title -->
+		<f:title>
+			<f:DynamicPageTitle>
+				<f:heading>
+					<Title text="{I18N>/MIMATERIAL_BOM_LIST_TITLE}"/>
+				</f:heading>
+				<f:snappedContent/>
+				<f:expandedContent/>
+				<!-- <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent"/>
                 </f:navigationActions> -->
-            </f:DynamicPageTitle>
-        </f:title>
-        <!-- DynamicPage Header -->
-        <f:header>
-
-            <f:DynamicPageHeader pinnable="true">
-                <f:content>
-                <!-- <smartVariantManagement:SmartVariantManagement        
+			</f:DynamicPageTitle>
+		</f:title>
+		<!-- DynamicPage Header -->
+		<f:header>
+			<f:DynamicPageHeader pinnable="true">
+				<f:content>
+					<!-- <smartVariantManagement:SmartVariantManagement        
 				             id="pageVariantId"
                              smartVariant="pageVariantId"
 				             persistencyKey="PageVariantPKey"
                              
                               />                      -->
-                    <!-- Smart Filter -->
-                    <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMaterialCodeBOMManagementView" 
-                    useToolbar="false"
-                    considerSelectionVariants="false" 
-                    enableBasicSearch="false" >
-                        <smartFilterBar:controlConfiguration>                            
-                            <!-- 자재명 -->
-                            <smartFilterBar:ControlConfiguration key="material_desc" groupId="_BASIC" index="1" label="{I18N>/MATERIAL_NAME}"  
-                            visibleInAdvancedArea="true">
-                                <smartFilterBar:customControl>
-                                    <Input id="material_desc" tooltip="{I18N>/MATERIAL_NAME}" placeholder="{I18N>/INPUT}."/>
-                                </smartFilterBar:customControl>
-                            </smartFilterBar:ControlConfiguration>
-                            <!-- 공급업체명 -->  
-                            <smartFilterBar:ControlConfiguration key="supplier_local_name" groupId="_BASIC" index="2" label="{I18N>/SUPPLIER_NAME}" 
-                            visibleInAdvancedArea="true">
-                                <smartFilterBar:customControl>
-                                    <Input id="supplier_local_name" tooltip="{I18N>/SUPPLIER_LOCAL_NAME}" placeholder="{I18N>/INPUT}."/>
-                                </smartFilterBar:customControl>
-                            </smartFilterBar:ControlConfiguration>  
-                            <!-- 시황자재코드 -->  
-                            <!-- <smartFilterBar:ControlConfiguration key="mi_material_code" groupId="_BASIC" index="3" label="{I18N>/MI_MATERIAL_CODE}" 
-                            visibleInAdvancedArea="true">
-                                <smartFilterBar:customControl>
-                                    <Input id="mi_material_code" tooltip="{I18N>/MI_MATERIAL_CODE}" placeholder="{I18N>/INPUT}."/>
-                                </smartFilterBar:customControl>
-                            </smartFilterBar:ControlConfiguration>   -->
-                            <!-- 시황자재명 -->  
-                            <smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="3" label="{I18N>/MI_MATERIAL_NAME}" 
-                            visibleInAdvancedArea="true">
-                                <smartFilterBar:customControl>
-                                    <Input id="mi_material_name" tooltip="{I18N>/MI_MATERIAL_NAME}" placeholder="{I18N>/INPUT}."/>
-                                </smartFilterBar:customControl>
-                            </smartFilterBar:ControlConfiguration>  
-                            <smartFilterBar:ControlConfiguration key="Validated" filterType="single"/>          
-                        </smartFilterBar:controlConfiguration>
-                        <smartFilterBar:layoutData>
-                            <FlexItemData shrinkFactor="0"/>
-                        </smartFilterBar:layoutData>
-                    </smartFilterBar:SmartFilterBar>
-                </f:content>
-            </f:DynamicPageHeader>
-        </f:header>
-
-        <!-- DynamicPage Content -->
-        <f:content>
-            <ScrollContainer width="100%" horizontal="true" vertical="true" focusable="true" height="100%">
-                <smartTable:SmartTable
-                    smartVariant="pageVariantId"
-                    id="smartTable_MainTable"
-                    entitySet="MIMaterialCodeBOMManagementView"
-                    smartFilterId="smartFilterBar"
-                    tableType="ResponsiveTable"
-                    useExportToExcel="true"
-                    initiallyVisibleFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
-                    beforeRebindTable="onBeforeRebindTable"
-                    beforeExport="onBeforeExport"
-                    useVariantManagement="false"
-                    useTablePersonalisation="true"
-                    showTablePersonalisation="false"
-                    header="{I18N>/MIMATERIAL_BOM_LIST_TITLE}"
-                    showRowCount="true"            
-                    placeToolbarInTable="true"
-                    class="sapUiResponsiveContentPadding"
-                    enableAutoBinding="true"
-                    showFullScreenButton="false">
-            
-                   	<smartTable:customToolbar >
-                        <OverflowToolbar design="Transparent" width="133.5rem">
-                            <ToolbarSpacer/>
-                            <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
-                            <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
-                            <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/>
-                        </OverflowToolbar>
-		            </smartTable:customToolbar>
-                      
-                            <Table id="mainTable" 
-                                growing="true"
-                                growingThreshold="100"
-                                growingScrollToLoad="true"
-                                width="100%"
-                                height="100%"
-                                sticky="HeaderToolbar,ColumnHeaders"
-                                inset="false">
-                                 <columns>  
-                                       <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" hAlign="Center" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "material_code",  "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
-                                        </customData>
-                                            <Text text="{I18N>/MATERIAL_CODE}"></Text>
-                                        </Column>
+					<!-- Smart Filter -->
+					<smartFilterBar:SmartFilterBar id="smartFilterBar" entitySet="MIMaterialCodeBOMManagementView" useToolbar="false" considerSelectionVariants="false" enableBasicSearch="false">
+						<smartFilterBar:controlConfiguration>
+							<!-- 자재명 -->
+							<smartFilterBar:ControlConfiguration key="material_desc" groupId="_BASIC" index="1" label="{I18N>/MATERIAL}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<Input id="material_desc" tooltip="{I18N>/MATERIAL}" placeholder="{I18N>/INPUT}."/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+							<!-- 공급업체명 -->
+							<smartFilterBar:ControlConfiguration key="supplier_english_name" groupId="_BASIC" index="2" label="{I18N>/SUPPLIER_ENGLISH_NAME}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<Input id="supplier_english_name" tooltip="{I18N>/SUPPLIER_ENGLISH_NAME}" placeholder="{I18N>/INPUT}."/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+							<!-- 시황자재명 -->
+							<smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="3" label="{I18N>/MI_MATERIAL_NAME}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<Input id="mi_material_name" tooltip="{I18N>/MI_MATERIAL_NAME}" placeholder="{I18N>/INPUT}."/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+							<smartFilterBar:ControlConfiguration key="Validated" filterType="single"/>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:layoutData>
+							<FlexItemData shrinkFactor="0"/>
+						</smartFilterBar:layoutData>
+					</smartFilterBar:SmartFilterBar>
+				</f:content>
+			</f:DynamicPageHeader>
+		</f:header>
+		<!-- DynamicPage Content -->
+		<f:content>
+			<VBox width="100%" height="42rem">
+				<OverflowToolbar>
+                    <Title id="titleBomList" text="{I18N>/MIMATERIAL_BOM_LIST_TITLE} {I18N/LIST} ({countModel>/count})" level="H2"/>
+					<ToolbarSpacer/>
+					<OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
+					<OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
+                    <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/>
+                    <OverflowToolbarButton id="btnExport" icon="sap-icon://excel-attachment" tooltip="Excel Export" press=".onPressExport"/>
+				</OverflowToolbar>
+				<ScrollContainer width="100%" horizontal="true" vertical="true" focusable="false" height="100%">
+                    <smartTable:SmartTable 
+                        smartVariant="pageVariantId"
+                        id="smartTable_MainTable"
+                        entitySet="MIMaterialCodeBOMManagementView"
+                        smartFilterId="smartFilterBar"
+                        tableType="ResponsiveTable"
+                        useExportToExcel="true"
+                        initiallyVisibleFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
+                        beforeRebindTable="onBeforeRebindTable"
+                        beforeExport=".onBeforeExport"
+                        useVariantManagement="false"
+                        useTablePersonalisation="true"
+                        showTablePersonalisation="false"     
+                        placeToolbarInTable="true"
+                        class="sapUiResponsiveContentPadding"
+                        enableAutoBinding="false"
+                        showFullScreenButton="false">
+					    <smartTable:customToolbar>
+                            <OverflowToolbar visible="false"/>
+                        </smartTable:customToolbar>
+						<Table id="mainTable" growing="true" sticky="ColumnHeaders,HeaderToolbar" inset="false">
+							<columns>
+								<Column width="10rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" hAlign="Center" demandPopin="false" importance="High" popinDisplay="WithoutHeader">
+									<customData>
                                         
-                                        <Column width="15rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High" >
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
-                                        </customData>
-                                             <Text text="{I18N>/MATERIAL_NAME}"></Text>
-                                        </Column>
-
-                                        <Column width="7rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
-                                        </customData>
-                                             <Text text="{I18N>/SUPPLIER_CODE}"></Text>
-                                        </Column>
-
-                                        <Column width="15rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
-                                        </customData>
-                                             <Text text="{I18N>/SUPPLIER_LOCAL_NAME}"></Text>
-                                        </Column>
-
-                                        <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
-                                        </customData>
-                                             <Text text="{I18N>/BASE_QUANTITY}"></Text>
-                                        </Column>
-
-                                        <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "processing_cost", "leadingProperty": "processing_cost", "sortProperty": "processing_cost", "filterProperty": "processing_cost", "columnIndex": 6}'/>
-                                        </customData>
-                                             <Text text="{I18N>/PROCESSING_COST}"></Text>
-                                        </Column>
-
-                                        <Column width="6rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 7}'/>
-                                        </customData>
-                                             <Text text="{I18N>/PCST_CURRENCY_UNIT}"></Text>
-                                        </Column> 
-                        
-                                    <Column width="7rem" >
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 8}'/>
-                                        </customData>
-                                            <Text text="{I18N>/MI_MATERIAL_CODE}"/>
-                                    </Column>
- 
-                                     <Column width="10rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 9}'/>
-                                        </customData>
-                                            <Text text="{I18N>/MI_MATERIAL_NAME}"/>
-                                    </Column>
-
-                                     <Column width="10rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 10}'/>
-                                        </customData>
-                                            <Text text="{I18N>/CATEGORY_NAME}"/>
-                                    </Column>
-
-                                     <Column width="7rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "reqm_quantity_unit", "leadingProperty": "reqm_quantity_unit", "sortProperty": "reqm_quantity_unit", "filterProperty": "reqm_quantity_unit", "columnIndex": 11}'/>
-                                        </customData>
-                                            <Text text="{I18N>/REQM_QUANTITY_UNIT}"/>
-                                    </Column>
-
-                                     <Column width="5rem" >
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "reqm_quantity", "leadingProperty": "reqm_quantity", "sortProperty": "reqm_quantity", "filterProperty": "reqm_quantity", "columnIndex": 12}'/>
-                                        </customData>
-                                            <Text text="{I18N>/REQM_QUANTITY}"/>
-                                    </Column>
-
-                                     <Column width="5rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "currency_unit", "leadingProperty": "currency_unit", "sortProperty": "currency_unit", "filterProperty": "currency_unit", "columnIndex": 13}'/>
-                                        </customData>
-                                            <Text text="{I18N>/CURRENCY_UNIT}"/>
-                                    </Column>
-
-                                     <Column width="8rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "mi_base_reqm_quantity", "leadingProperty": "mi_base_reqm_quantity", "sortProperty": "mi_base_reqm_quantity", "filterProperty": "mi_base_reqm_quantity", "columnIndex": 14}'/>
-                                        </customData>
-                                            <Text text="{I18N>/MI_MATERIAL_BASE_REQM_QUANTITY}"/>
-                                    </Column>
-
-                                     <Column width="5rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "quantity_unit", "leadingProperty": "quantity_unit", "sortProperty": "quantity_unit", "filterProperty": "quantity_unit", "columnIndex": 15}'/>
-                                        </customData>
-                                            <Text text="{I18N>/QUANTITY_UNIT}"/>
-                                    </Column>
-
-                                     <Column width="5rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "exchange", "leadingProperty": "exchange", "sortProperty": "exchange", "filterProperty": "exchange", "columnIndex": 16}'/>
-                                        </customData>
-                                            <Text text="{I18N>/EXCHANGE_CODE}"/>
-                                    </Column>
-
-                                     <Column width="5rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "termsdelv", "leadingProperty": "termsdelv", "sortProperty": "termsdelv", "filterProperty": "termsdelv", "columnIndex": 17}'/>
-                                        </customData>
-                                            <Text text="{I18N>/TERMS_OF_DELIVERY}"/>
-                                    </Column>
- 
-                                     <Column width="5rem">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
-                                            value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 18}'/>
-                                        </customData>
-                                            <Text text="{I18N>/USE_FLAG}"/>
-                                    </Column> 
-									</columns> 
-                                    <items>
-                                        <ColumnListItem>
-                                            <Text text="{material_code}">
-                                                <customData>
-                                                    <core:CustomData key="mergeKey" value="{material_code}" />
-                                                </customData>
-                                            </Text> 
-                                             <Text text="{material_desc}">
-                                                <customData>
-                                                    <core:CustomData key="mergeKey" value="{material_code}" />
-                                                </customData>
-                                            </Text> 
-                                             <Text text="{supplier_code}">
-                                                <customData>
-                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}" />
-                                                </customData>
-                                            </Text>
-                                            <Text text="{supplier_local_name}">
-                                                <customData>
-                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}" />
-                                                </customData>
-                                            </Text>
-                                            <Text text="{base_quantity}">
-                                                <customData>
-                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}" />
-                                                </customData>
-                                            </Text>
-                                            <Text text="{processing_cost}">
-                                                <customData>
-                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{processing_cost}" />
-                                                </customData>
-                                            </Text>
-                                            <Text text="{pcst_currency_unit}">
-                                                <customData>
-                                                    <core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{processing_cost}{pcst_currency_unit}" />
-                                                </customData>
-                                            </Text>
-                                            <Text text="{mi_material_code}"/>
-                                            <Text text="{mi_material_name}"/>
-                                            <Text text="{category_name}"/>
-                                            <Text text="{reqm_quantity_unit}"/>
-                                            <Text text="{reqm_quantity}"/>
-                                            <Text text="{currency_unit}"/>
-                                            <Text text="{mi_base_reqm_quantity}"/>
-                                            <Text text="{quantity_unit}"/>
-                                            <Text text="{exchange}"/>
-                                            <Text text="{termsdelv}"/>
-                                            <Text text="{=${use_flag} === true ? 'Yes' : 'No'}"/>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                </smartTable:SmartTable>
-            </ScrollContainer>
-        </f:content>
-        <!-- DynamicPage Footer -->
-        
-    </f:DynamicPage>
+										<core:CustomData key="p13nData" value='\{"columnKey": "material_code",  "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
+									</customData>
+									<Text text="{I18N>/MATERIAL_CODE}"/>
+								</Column>
+								<Column width="15rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
+									</customData>
+									<Text text="{I18N>/MATERIAL}"/>
+								</Column>
+								<Column width="7rem" hAlign="Center" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
+									</customData>
+									<Text text="{I18N>/SUPPLIER_CODE}"/>
+								</Column>
+								<Column width="15rem" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "supplier_english_name", "leadingProperty": "supplier_english_name", "sortProperty": "supplier_english_name", "filterProperty": "supplier_english_name", "columnIndex": 4}'/>
+									</customData>
+									<Text text="{I18N>/SUPPLIER_ENGLISH_NAME}"/>
+								</Column>
+								
+								<Column width="6rem" hAlign="End" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+                                         <core:CustomData key="textAlign" value="End"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
+									</customData>
+									<Text text="{I18N>/BASE_QUANTITY}"/>
+                                </Column>
+                                <Column width="5rem" hAlign="Center" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "base_quantity_unit", "leadingProperty": "base_quantity_unit", "sortProperty": "base_quantity_unit", "filterProperty": "base_quantity_unit", "columnIndex": 6}'/>
+									</customData>
+									<Text text="{I18N>/BASE_QUANTITY} {I18N>/UNIT}"/>
+                                </Column>
+                                
+                                <Column width="6rem" hAlign="End" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+                                        <core:CustomData key="textAlign" value="End"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "processing_cost", "leadingProperty": "processing_cost", "sortProperty": "processing_cost", "filterProperty": "processing_cost", "columnIndex": 7}'/>
+									</customData>
+									<Text text="{I18N>/PROCESSING_COST}"/>
+                                </Column>
+                                <Column width="7rem" hAlign="Center" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "reqm_quantity_unit", "leadingProperty": "reqm_quantity_unit", "sortProperty": "reqm_quantity_unit", "filterProperty": "reqm_quantity_unit", "columnIndex": 8}'/>
+									</customData>
+									<Text text="{I18N>/REQM_QUANTITY_UNIT}"/>
+								</Column>
+                                <Column width="6rem" hAlign="Center" mergeDuplicates="true" mergeFunctionName="data#mergeKey" demandPopin="false" importance="High">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 9}'/>
+									</customData>
+									<Text text="{I18N>/PCST_CURRENCY_UNIT}"/>
+								</Column>
+								
+								<Column width="7rem" hAlign="Center">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 10}'/>
+									</customData>
+									<Text text="{I18N>/MI_MATERIAL_CODE}"/>
+								</Column>
+								<Column width="10rem">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 11}'/>
+									</customData>
+									<Text text="{I18N>/MI_MATERIAL_NAME}"/>
+								</Column>
+								<Column width="10rem">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 12}'/>
+									</customData>
+									<Text text="{I18N>/CATEGORY_NAME}"/>
+								</Column>
+								<Column width="5rem" hAlign="End">
+									<customData>
+                                        <core:CustomData key="textAlign" value="End"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "reqm_quantity", "leadingProperty": "reqm_quantity", "sortProperty": "reqm_quantity", "filterProperty": "reqm_quantity", "columnIndex": 13}'/>
+									</customData>
+									<Text text="{I18N>/REQM_QUANTITY}"/>
+								</Column>
+								<Column width="5rem" hAlign="Center">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "currency_unit", "leadingProperty": "currency_unit", "sortProperty": "currency_unit", "filterProperty": "currency_unit", "columnIndex": 14}'/>
+									</customData>
+									<Text text="{I18N>/CURRENCY_UNIT}"/>
+								</Column>
+								<Column width="8rem" hAlign="End">
+									<customData>
+                                        <core:CustomData key="textAlign" value="End"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "mi_base_reqm_quantity", "leadingProperty": "mi_base_reqm_quantity", "sortProperty": "mi_base_reqm_quantity", "filterProperty": "mi_base_reqm_quantity", "columnIndex": 15}'/>
+									</customData>
+									<Text text="{I18N>/MI_MATERIAL_BASE_REQM_QUANTITY}"/>
+								</Column>
+								<Column width="5rem" hAlign="Center">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "quantity_unit", "leadingProperty": "quantity_unit", "sortProperty": "quantity_unit", "filterProperty": "quantity_unit", "columnIndex": 16}'/>
+									</customData>
+									<Text text="{I18N>/QUANTITY_UNIT}"/>
+								</Column>
+								<Column width="5rem" hAlign="Center">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "exchange", "leadingProperty": "exchange", "sortProperty": "exchange", "filterProperty": "exchange", "columnIndex": 17}'/>
+									</customData>
+									<Text text="{I18N>/EXCHANGE_CODE}"/>
+								</Column>
+								<Column width="5rem" hAlign="Center">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "termsdelv", "leadingProperty": "termsdelv", "sortProperty": "termsdelv", "filterProperty": "termsdelv", "columnIndex": 18}'/>
+									</customData>
+									<Text text="{I18N>/TERMS_OF_DELIVERY}"/>
+								</Column>
+								<Column width="5rem" hAlign="Center">
+									<customData>
+										<core:CustomData key="p13nData" value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "type": "boolean", "columnIndex": 19}'/>
+                                        <!--Export EDM Type-->
+                                        <core:CustomData key="type" value="Boolean" />
+                                        <!--Export trueValue-->
+                                        <core:CustomData key="trueValue" value="Yes" />
+                                        <!--Export falseValue-->
+                                        <core:CustomData key="falseValue" value="No" />
+                                    </customData>
+									<Text text="{I18N>/USE_FLAG}"/>
+								</Column>
+								<Column width="5rem" visible="false" hAlign="Center">
+									<customData>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/tenant_id} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "tenant_id", "leadingProperty": "tenant_id", "sortProperty": "tenant_id", "filterProperty": "tenant_id", "columnIndex": 20}'/>
+									</customData>
+									<Text text="{I18N>/TENANT_ID}"/>
+                                        
+								</Column>
+								<Column width="5rem" visible="false">
+									<customData>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/tenant_name} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "tenant_name", "leadingProperty": "tenant_name", "sortProperty": "tenant_name", "filterProperty": "tenant_name", "columnIndex": 21}'/>
+									</customData>
+									<Text text="{I18N>/TENANT_NAME}"/>
+								</Column>
+								<Column width="7rem" visible="false" hAlign="Center">
+									<customData>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/category_code} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 22}'/>
+									</customData>
+									<Text text="{I18N>/CATEGORY_CODE}"/>
+								</Column>
+								<Column width="7rem" visible="false">
+									<customData>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/mi_bom_id} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "mi_bom_id", "leadingProperty": "mi_bom_id", "sortProperty": "mi_bom_id", "filterProperty": "mi_bom_id", "columnIndex": 23}'/>
+									</customData>
+									<Text text="{I18N>/MI}{I18N>/BOM}{I18N>/ID}"/>
+								</Column>
+								<Column width="6rem" visible="false" hAlign="Center">
+									<customData>
+                                        <core:CustomData key="type" value="Date"/>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/system_update_dtm} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 24}'/>
+									</customData>
+									<Text text="{I18N>/SYSTEM} {I18N>/CHANGE} {I18N>/DATE}"/>
+								</Column>
+								<Column width="6rem" visible="false" hAlign="Center">
+									<customData>
+                                        <core:CustomData key="type" value="Date"/>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/system_create_dtm} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "system_create_dtm", "leadingProperty": "system_create_dtm", "sortProperty": "system_create_dtm", "filterProperty": "system_create_dtm", "columnIndex": 25}'/>
+									</customData>
+									<Text text="{I18N>/SYSTEM} {I18N>/CREATE} {I18N>/DATE}"/>
+								</Column>
+								<Column width="5rem" visible="false">
+									<customData>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/update_user_id} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "update_user_id", "leadingProperty": "update_user_id", "sortProperty": "update_user_id", "filterProperty": "update_user_id", "columnIndex": 26}'/>
+									</customData>
+									<Text text="{I18N>/UPDATE_USER_ID}"/>
+								</Column>
+								<Column width="6rem" visible="false" hAlign="Center">
+									<customData>
+                                        <core:CustomData key="type" value="Date"/>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/local_update_dtm} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "local_update_dtm", "leadingProperty": "local_update_dtm", "sortProperty": "local_update_dtm", "filterProperty": "local_update_dtm", "columnIndex": 27}'/>
+									</customData>
+									<Text text="{I18N>/LOCAL_UPDATE_DATE}"/>
+								</Column>
+								<Column width="6rem" visible="false" hAlign="Center">
+									<customData>
+                                        <core:CustomData key="type" value="Date"/>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/local_create_dtm} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm", "columnIndex": 28}'/>
+									</customData>
+									<Text text="{I18N>/LOCAL_CREATE_DATE}"/>
+								</Column>
+								<Column width="5rem" visible="false">
+									<customData>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/create_user_id} !== 'true' ? 'true' : 'false'}"/>
+										<core:CustomData key="p13nData" value='\{"columnKey": "create_user_id", "leadingProperty": "create_user_id", "sortProperty": "create_user_id", "filterProperty": "create_user_id", "columnIndex": 29}'/>
+									</customData>
+									<Text text="{I18N>/CREATE_USER_ID}"/>
+								</Column>
+								<Column width="8rem" visible="false">
+									<customData>
+                                        <core:CustomData key="noExport" value="{=${columnsModel>/supplier_local_name} !== 'true' ? 'true' : 'false'}"/>
+                                        <core:CustomData key="p13nData" value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 30}'/>
+									</customData>
+									<Text text="{I18N>/SUPPLIER_LOCAL_NAME}"/>
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem>
+									<Text text="{material_code}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}"/>
+										</customData>
+									</Text>
+									<Text text="{material_desc}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}"/>
+										</customData>
+									</Text>
+									<Text text="{supplier_code}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}{supplier_code}"/>
+										</customData>
+									</Text>
+									<Text text="{supplier_english_name}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}{supplier_code}"/>
+										</customData>
+									</Text>
+									<Text text="{base_quantity}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}"/>
+										</customData>
+                                    </Text>
+									<Text text="{base_quantity_unit}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{base_quantity_unit}"/>
+										</customData>
+									</Text>
+									<Text text="{processing_cost}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{base_quantity_unit}{processing_cost}"/>
+										</customData>
+                                    </Text>
+                                    <Text text="{reqm_quantity_unit}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{base_quantity_unit}{processing_cost}{reqm_quantity_unit}"/>
+										</customData>
+									</Text>
+									<Text text="{pcst_currency_unit}">
+										<customData>
+											<core:CustomData key="mergeKey" value="{material_code}{supplier_code}{base_quantity}{base_quantity_unit}{processing_cost}{reqm_quantity_unit}{pcst_currency_unit}"/>
+										</customData>
+									</Text>
+									<Text text="{mi_material_code}"/>
+									<Text text="{mi_material_name}"/>
+									<Text text="{category_name}"/>
+									<Text text="{reqm_quantity}"/>
+									<Text text="{currency_unit}"/>
+									<Text text="{mi_base_reqm_quantity}"/>
+									<Text text="{quantity_unit}"/>
+									<Text text="{exchange}"/>
+									<Text text="{termsdelv}"/>
+									<Text text="{=${use_flag} === true ? 'Yes' : 'No'}"/>
+									<Text text="{tenant_id}"/>
+									<Text text="{tenant_name}"/>
+									<Text text="{category_code}"/>
+									<Text text="{mi_bom_id}"/>
+									<Text text="{path: 'system_update_dtm', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
+									<Text text="{path: 'system_create_dtm', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
+									<Text text="{update_user_id}"/>
+									<Text text="{path: 'local_update_dtm', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
+									<Text text="{path: 'local_create_dtm', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
+									<Text text="{create_user_id}"/>
+									<Text text="{supplier_local_name}"/>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</smartTable:SmartTable>
+				</ScrollContainer>
+			</VBox>
+		</f:content>
+		<!-- DynamicPage Footer -->
+	</f:DynamicPage>
 </mvc:View>

@@ -256,9 +256,15 @@ sap.ui.define([
                     filter_create_date = this.getView().byId("filterCreateDate").getValue();
                 } else {
                     filter_category_code = e.getParameters()[0].selectionSet[0].getValue();
-                    filter_category_name = e.getParameters()[0].selectionSet[1].getValue();
-                    filter_create_date = e.getParameters()[0].selectionSet[2].getValue();
+                    if(this.getView().getModel("Main").oData.expand == true){
+                        filter_category_name = e.getParameters()[0].selectionSet[1].getValue();
+                        filter_create_date = e.getParameters()[0].selectionSet[2].getValue();
+                    }else{  //header가 접힌 상태(안보이는)
+                        filter_category_name = "";
+                        filter_create_date = "";
+                    }
                 }
+                filter_category_code = filter_category_code.trim(); //좌우 공백 제거
                 filter_category_name = filter_category_name.trim(); //좌우 공백 제거
                 
                 var tab = this.getView().byId("treeTable");
@@ -284,13 +290,6 @@ sap.ui.define([
                 //2020/12/19 - 2020/12/21
                 if (filter_create_date.length > 0) {
                     console.log(filter_create_date);
-                    // var a = filter_create_date.replaceAll(" ", "");
-                    // var fromDate = new Date( a.substring(0, 10) );
-                    // var toDate = new Date( a.substring(11, 22) );
-                    // console.log(toDate);
-
-                    // var inputDate = toDate.getDate();
-                    // toDate.setDate(inputDate + 1);
 
                     this.byId("smartFilterBar").getControlByKey("system_create_dtm").getFrom().setHours("09", "00", "00", "00");
                     this.byId("smartFilterBar").getControlByKey("system_create_dtm").getTo().setHours("09", "00", "00", "00");
@@ -308,7 +307,19 @@ sap.ui.define([
                 }
 
                 oFilters.push(new Filter("category_code", "Contains", filter_category_code));
-                oFilters.push(new Filter("category_name", "Contains", filter_category_name));
+                // oFilters.push(new Filter("category_name", "Contains", filter_category_name));
+                oFilters.push(new Filter({
+                                        path: "category_name",
+                                        operator: FilterOperator.Contains,
+                                        value1: filter_category_name,
+                                        caseSensitive: false
+                                        }));
+                // var oFilter = new Filter({
+                //                 path: "CustomerID",
+                //                 operator: FilterOperator.Contains,
+                //                 value1: sQuery,
+                //                 caseSensitive: false
+                //                 });
 
 
                 // pOfilters.push(new Filter({filters:oFilters, bAnd:false}));
@@ -336,12 +347,22 @@ sap.ui.define([
                     }
 
                     oBinding.filter(resultFilters, sap.ui.model.FilterType.Application);
+
+                    //count 조회 용
+                    var read1 = this._read("/MICategoryHierarchyStructureView", resultFilters);
+                    read1.then(function(data){
+                        this.getView().getModel("Main").oData.count = data.results.length;
+                        this.getView().getModel("Main").refresh(true);
+                    }.bind(this));
+
+                    
+                    
                     
                     // tab.collapseAll();
                     
                     
                     
-                });
+                }.bind(this));
 
                 // this.getView().byId("treeTable").getBinding("rows").attachDataReceived(function (data, aa) {
                 //     firstRowCount = 0;
@@ -459,7 +480,10 @@ sap.ui.define([
                 // }
             },
             stateChange: function (e) {
-                // alert("stateChange");
+                //expand status
+                var oExpandStatus = e.mParameters.isExpanded;
+                this.getView().getModel("Main").oData.expand = oExpandStatus;
+                this.getView().getModel("Main").refresh(true);
             },
             onMainTablecollapseAll: function (e) {
                 this.getView().byId("treeTable").collapseAll();
@@ -491,7 +515,9 @@ sap.ui.define([
                     oMaster.setData({ "level": 0, "indices": 0 });
                 }
 
+                
 
+                
 
 
 
@@ -686,8 +712,10 @@ sap.ui.define([
                     var smData = smModel.getData();
                     smData.screen = "M";
                     smModel.setData(smData);
-                    debugger;
+                    
                 }
+
+            
 
 
 
@@ -702,6 +730,10 @@ sap.ui.define([
                     oFCL.setLayout(fioriLibrary.LayoutType.TwoColumnsMidExpanded);
                 }
                 this._setNav(" ", " ", "Yes", "0", " ", " ", " ");
+                
+                // filterbar 접기
+                this.getView().getModel("Main").oData.expand = false;
+                this.getView().getModel("Main").refresh(true);
             },
             liveCategoryCode: function (e) {
 
@@ -709,7 +741,7 @@ sap.ui.define([
                 var inputCode = this.getView().byId("filterCategoryCode");
 
                 inputCode.setValue(inputCode.getValue().toUpperCase());
-                debugger;
+                
             },
             onMainTableCreate1ButtonPress: function () {
                 var oFCL = this.getView().getParent().getParent();
@@ -732,8 +764,23 @@ sap.ui.define([
                 // oMaster.setData({"level": 1,  "indices": 0});
 
                 this._setNav(item.category_code, " ", "Yes", "1", item.category_code, item.node_id, item.node_id);
+
+                // filterbar 접기
+                this.getView().getModel("Main").oData.expand = false;
+                this.getView().getModel("Main").refresh(true);
             },
             treeTableCellClick: function (e) {
+
+                
+                // filterbar 접기
+                this.getView().getModel("Main").oData.expand = false;
+                this.getView().getModel("Main").refresh(true);
+                // if(this.getView().getParent().getParent().getLayout() != this.getView().getModel("Main").oData.layout){
+                //     this.getView().getModel("Main").oData.layout = this.getView().getParent().getParent().getLayout();
+                
+                // }
+                
+                // this.getView().getModel("Main").oData.layout = 
 
                 var index = e.getParameters().rowIndex;
                 if (index < 16) {
@@ -1008,6 +1055,7 @@ sap.ui.define([
 
                 MessageBox.confirm(textModel.getText("/NCM00003"), {
 
+                    
                     // @ts-ignore
                     title: "확인",//that.getModel("I18N").getText("/SAVE"),
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -1089,12 +1137,15 @@ sap.ui.define([
                                             async: false,
                                             groupId: "deleteId",
                                             // groupId:"batchUpdateGroup",
-                                            success: function (oData, oResponse) {
+                                            success: function (data, oResponse) {
                                                 sap.m.MessageToast.show(textModel.getText("/NCM01002"));
-                                                console.log("oData", oData);
+                                                console.log("data", data);
                                                 console.log(" oResponse", oResponse);
 
                                                 oMaster.setData({ "level": 0, "indices": 0 });
+                                                // count refresh
+                                                that.filterSearch("R");
+
 
                                                 // rowCount = rowCount - oArrayHiePath.length;
                                                 // firstRowCount = firstRowCount - oArrayHiePath.length;
@@ -1272,7 +1323,7 @@ sap.ui.define([
 
 
                 // alert(afterFlag);
-                debugger;
+                
                 if (afterFlag == -1 || this._lflag == "X") {
                     return;
                 }

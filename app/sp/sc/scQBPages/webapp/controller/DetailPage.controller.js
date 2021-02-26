@@ -547,6 +547,7 @@ sap.ui.define([
             },
             // 숫자 입력 자리수 확인
             _inputNumberCheck : function(sValue, nValue1, nValue2){ // 20210224 kbg 추가
+                sValue = String(sValue);
                 var temp = sValue.indexOf('.'); // 소수점
                 var oValueState = "Error";
                 var oValueStateText;
@@ -603,9 +604,8 @@ sap.ui.define([
                                             
 
                         // 숫자 입력 자리수 확인 추가 20210224 kbg
-                        // if(oRow.bpa_price != undefined || oRow.bpa_price != null){
                         //BPA Price
-                        if(oRow.bpa_price.length > 0){ 
+                        if(String(oRow.bpa_price).length > 0){ 
                             var oResult = this._inputNumberCheck(oRow.bpa_price, 23, 5); //숫자 자리수 확인
                             if(oResult){
                                 bReturn = false;
@@ -613,7 +613,7 @@ sap.ui.define([
                             }
                         }
                         // bidding_start_net_price
-                        if(oRow.bidding_start_net_price.length > 0){ 
+                        if(String(oRow.bidding_start_net_price).length > 0){ 
                             var oResult = this._inputNumberCheck(oRow.bidding_start_net_price, 23, 5); //숫자 자리수 확인
                             if(oResult){
                                 bReturn = false;
@@ -621,7 +621,7 @@ sap.ui.define([
                             }
                         }
                         // bidding_target_net_price
-                        if(oRow.bidding_target_net_price.length > 0){ 
+                        if(String(oRow.bidding_target_net_price).length > 0){ 
                             var oResult = this._inputNumberCheck(oRow.bidding_target_net_price, 23, 5); //숫자 자리수 확인
                             if(oResult){
                                 bReturn = false;
@@ -629,7 +629,7 @@ sap.ui.define([
                             }
                         }
                         // current_price
-                        if(oRow.current_price.length > 0){ 
+                        if(String(oRow.current_price).length > 0){ 
                             var oResult = this._inputNumberCheck(oRow.current_price, 23, 5); //숫자 자리수 확인
                             if(oResult){
                                 bReturn = false;
@@ -637,7 +637,7 @@ sap.ui.define([
                             }
                         }
                         // request_quantity
-                        if(oRow.request_quantity.length > 0){ 
+                        if(String(oRow.request_quantity).length > 0){ 
                             var oResult = this._inputNumberCheck(oRow.request_quantity, 25, 3); //숫자 자리수 확인
                             if(oResult){
                                 bReturn = false;

@@ -86,7 +86,9 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMaterialCodeBOMManagementHeaderView"
                     tableBindingPath="{MIMaterialCodeBOMManagementHeaderView}"
-                    initiallyVisibleFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,mi_bom_id,system_update_dtm"
+                    initiallyVisibleFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,"
+                    requestAtLeastFields="material_code,material_desc,supplier_code,supplier_local_name,base_quantity,processing_cost,pcst_currency_unit,mi_bom_id,tenant_id"
+                    ignoredFields="mi_bom_id,local_create_dtm,local_update_dtm,create_user_id,update_user_id,system_create_dtm,system_update_dtm,tenant_id,tenant_name"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
@@ -101,11 +103,11 @@
                     persistencyKey="SmartTablePKey"                    
                     class="sapUiResponsiveContentPadding"
                     demandPopin="true"
-                    enableAutoBinding="true"
+                    enableAutoBinding="false"
                     customData:useSmartField="true"
                     showFullScreenButton="false">
                     <smartTable:customToolbar>
-                        <OverflowToolbar design="Transparent">
+                        <OverflowToolbar design="Transparent" enabled="{oUi>/isEnabled}">
                             <ToolbarSpacer/>
                             <Button text="{I18N>/NEW}" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>    
                             <Button text="{I18N>/ROW_DELETE}" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>                        
@@ -127,103 +129,121 @@
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                   
-                            <Table id="mainTable" 
-                            mode="MultiSelect" 
-                            growingScrollToLoad="true"
-                            growing="true"
-                            sticky="ColumnHeaders,HeaderToolbar"
-                            growingThreshold="50"
-                            inset="false"   
-                            >
-                                 <columns>  
-                                       <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
-                                        <customData>
-                                        <core:CustomData key="p13nData"
+                    <Table id="mainTable" 
+                        mode="MultiSelect" 
+                        growingScrollToLoad="true"
+                        growing="true"
+                        sticky="ColumnHeaders,HeaderToolbar"
+                        growingThreshold="50"
+                        inset="false"    >
+                        <columns>  
+                            <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "material_code",  "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
-                                        </customData>
-                                            <Text text="{I18N>/MATERIAL_CODE}"></Text>
-                                        </Column>
-                                        
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High" >
-                                          <customData>
-                                        <core:CustomData key="p13nData"
+                                </customData>
+                                <Text text="{I18N>/MATERIAL_CODE}"></Text>
+                            </Column>
+                            
+                            <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center" >
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
-                                        </customData>
-                                             <Text text="{I18N>/MATERIAL}"></Text>
-                                        </Column>
+                                </customData>
+                                <Text text="{I18N>/MATERIAL}"></Text>
+                            </Column>
 
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
+                            <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
-                                        </customData>
-                                             <Text text="{I18N>/SUPPLIER}"></Text>
-                                        </Column>
+                                </customData>
+                                <Text text="{I18N>/SUPPLIER}"></Text>
+                            </Column>
 
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
+                            <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
-                                        </customData>
-                                             <Text text="{I18N>/SUPPLIER_LOCAL_NAME}"></Text>
-                                        </Column>
+                                </customData>
+                                <Text text="{I18N>/SUPPLIER_LOCAL_NAME}"></Text>
+                            </Column>
 
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
+                            <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
-                                        </customData>
-                                             <Text text="{I18N>/BASE_QUANTITY}"></Text>
-                                        </Column>
+                                </customData>
+                                <Text text="{I18N>/BASE_QUANTITY}"></Text>
+                            </Column>
 
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
+                             <Column hAlign="Center" demandPopin="false" importance="High">
+                                <customData>
+                                    <core:CustomData key="p13nData" 
+                                        value='\{"columnKey": "base_quantity_unit", "leadingProperty": "base_quantity_unit", "sortProperty": "base_quantity_unit", "filterProperty": "base_quantity_unit", "columnIndex": 6}'/>
+                                </customData>
+                                <Text text="{I18N>/BASE_QUANTITY} {I18N>/UNIT}"/>
+                            </Column>
+
+                            <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "processing_cost", "leadingProperty": "processing_cost", "sortProperty": "processing_cost", "filterProperty": "processing_cost", "columnIndex": 6}'/>
-                                        </customData>
-                                             <Text text="{I18N>/PROCESSING_COST}"></Text>
-                                        </Column>
+                                </customData>
+                                <Text text="{I18N>/PROCESSING_COST}"></Text>
+                            </Column>
 
-                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
+                            <Column minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 7}'/>
-                                        </customData>
-                                             <Text text="{I18N>/PCST_CURRENCY_UNIT}"></Text>
-                                        </Column>     
+                                </customData>
+                                <Text text="{I18N>/PCST_CURRENCY_UNIT}"></Text>
+                            </Column>     
 
-                                        <Column visible="false">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
+                            <!-- <Column visible="false" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_bom_id", "leadingProperty": "mi_bom_id", "columnIndex": 99}'/>
-                                        </customData>
-                                             <Text text="mi_bom_id"></Text>
-                                        </Column>     
-                                        <Column visible="false">
-                                          <customData>
-                                        <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
-                                        </customData>
-                                             <Text text="system_update_dtm"></Text>                                                                             
-                                        </Column>
+                                </customData>
+                                <Text text="mi_bom_id"></Text>
+                            </Column>     -->
 
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem 
-                                        type="Navigation"                                         
-                                        press=".onMainTableItemPress">
-                                            <Text text="{material_code}"></Text>
-                                            <Text text="{material_desc}"></Text>
-                                            <Text text="{supplier_code}"></Text>
-                                            <Text text="{supplier_local_name}"></Text>
-                                            <Text text="{base_quantity}"></Text>
-                                            <Text text="{processing_cost}"></Text>
-                                            <Text text="{pcst_currency_unit}"></Text>
-                                            <Text text="{mi_bom_id}"></Text>                   
-                                            <Text text="{system_update_dtm}"></Text>                   
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
+                            <!-- <Column visible="false" hAlign="Center">
+                                <customData>
+                                    <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
+                                </customData>
+                                <Text text="system_update_dtm"></Text>                                                                             
+                            </Column> -->
+
+                        </columns>
+                        <items>
+                            <ColumnListItem 
+                            type="Navigation"                                         
+                            press=".onMainTableItemPress">
+                                <Text text="{material_code}"></Text>
+                                <FlexBox >
+                                    <Text text="{material_desc}"></Text>
+                                </FlexBox>
+                                <Text text="{supplier_code}"></Text>
+                                <FlexBox >
+                                    <Text text="{supplier_local_name}"></Text>
+                                </FlexBox>
+                                <Text text="{base_quantity}"></Text>
+                                <Text text="{base_quantity_unit}"></Text>
+                                <!-- <Text text="{processing_cost}"></Text> -->
+                                <FlexBox width="100%" justifyContent="End">
+                                    <Text text="{
+                                                path:'processing_cost', 
+                                                type:'sap.ui.model.type.Float'}"/>
+                                </FlexBox>
+                                <Text text="{pcst_currency_unit}"></Text>
+                                <!-- <Text text="{mi_bom_id}"></Text>                    -->
+                                <!-- <Text text="{system_update_dtm}"></Text>                    -->
+                            </ColumnListItem>
+                        </items>
+                    </Table>
                           
                 </smartTable:SmartTable>
               </ScrollContainer>

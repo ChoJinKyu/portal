@@ -1,15 +1,4 @@
-<mvc:View 
-    xmlns="sap.m" 
-    xmlns:core="sap.ui.core" 
-    xmlns:mvc="sap.ui.core.mvc" 
-    xmlns:uxap="sap.uxap" 
-    xmlns:u="sap.ui.unified" 
-    xmlns:rte="sap.ui.richtexteditor" 
-    xmlns:l="sap.ui.layout" 
-    xmlns:f="sap.ui.layout.form" 
-    displayBlock="true" 
-    xmlns:cm-ui="cm.util.control.ui"
-    controllerName="pg.tm.tmMonitoring.controller.Detail">
+<mvc:View xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" xmlns:rte="sap.ui.richtexteditor" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" displayBlock="true" xmlns:cm-ui="cm.util.control.ui" controllerName="pg.tm.tmMonitoring.controller.Detail">
 	<App id="idAppControl">
 		<Page title="{I18N>/MONITORING_MANAGEMENT}" showNavButton="true" navButtonType="Back" navButtonPress="onNavToBack">
 			<content>
@@ -18,156 +7,111 @@
 					<uxap:headerContent/>
 					<uxap:sections>
 						<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/INFORMATION}">
-						<uxap:subSections>
+							<uxap:subSections>
 								<uxap:ObjectPageSubSection>
 									<uxap:blocks>
-                                        <VBox>
-                                        <MessageStrip 
-                                        id="activeMessage_Show" 
-                                        text="{= ${masterModel>/masterData/activate_flag} === true? '이 시나리오는 활성화 상태입니다.' : '이 시나리오는 비활성화 상태입니다.'}" 
-                                        showIcon="true" 
-                                        showCloseButton="false" 
-                                        type="{= ${masterModel>/masterData/activate_flag} === true? 'Information' : 'Warning'}"
-                                        visible="{=!${DetailView>/isEditMode}}"/>
-                                <f:SimpleForm 
-                                    id="simpleform_edit" 
-                                    maxContainerCols="2" 
-                                    editable="true" 
-                                    layout="ResponsiveGridLayout" 
-                                    adjustLabelSpan="false" 
-                                    labelSpanL="4" 
-                                    labelSpanM="4" 
-                                    emptySpanL="0" 
-                                    emptySpanM="0" 
-                                    columnsL="2" 
-                                    columnsM="2">
-                                    <f:content id="informationPageSectionForm">
-                                        <VBox>
-                                            <Label text="{I18N>/TYPE_NAME}" required="true"/>
-                                            <ComboBox visible="{=${DetailView>/isEditMode}}"  items="{
-                                                path: '/TaskMonitoringTypedCodeView',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                ]}"  required="true" id="combo_monitoring_type" selectedKey="{=${DetailView>/isCreate} === true ? null :  ${masterModel>/masterData/monitoring_type_code}}" width="100%">
-                                                <core:ListItem key="{code}" text="{code_name}"/>
-                                            </ComboBox>
-                                            <Text text="{masterModel>/masterData/monitoring_type_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
-                                            <layoutData>
-                                                <l:GridData span="XL3 L4 M4 S12"/>
-                                            </layoutData>
-                                        </VBox>
-                                        <VBox>
-                                            <Label text="{I18N>/PURCHASING_TYPE_NAME}" required="true"/>
-                                            <MultiComboBox visible="{=${DetailView>/isEditMode}}" width="100%" selectedKeys="{=${DetailView>/isCreate} === true ? null : ${masterModel>/masterData/monitoring_purchasing_type_code}.split(';')}" id="combo_purchasing_type"
-                                                items="{
-                                                    path: '/TaskMonitoringPurchaingTypeCodeView',
-                                                    sorter: {path: 'code_name'},
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                    ]}" 
-                                                required="true">
-                                                <core:ListItem key="{code}" text="{code_name}"/>
-                                            </MultiComboBox>
-                                            <Text text="{=${masterModel>/masterData/monitoring_purchasing_type_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
-                                            <layoutData>
-                                                <l:GridData span="XL3 L4 M4 S12"/>
-                                            </layoutData>
-                                        </VBox>
-                                        <VBox>
-                                            <Label text="{I18N>/ACTIVATE}" visible="{=${DetailView>/isEditMode}}" />
-                                            <!-- <Switch id="switch_activate" state="{activate_flag}" customTextOn="Yes" customTextOff="No" enabled="true"/> -->
-                                            <SegmentedButton visible="{=${DetailView>/isEditMode}}" id="segmentButton_activate" selectedKey="{=${DetailView>/isCreate} === true ? 'No' : ${masterModel>/masterData/activate_flag} === true? 'Yes' : 'No'}">
-                                                <items>
-                                                    <SegmentedButtonItem text="Yes" key="Yes"/>
-                                                    <SegmentedButtonItem text="No" key="No"/>
-                                                </items>
-                                            </SegmentedButton>
-                                            <layoutData>
-                                                <l:GridData span="XL3 L4 M4 S12"/>
-                                            </layoutData>
-                                        </VBox>
-                                        <VBox>
-                                            <Label text="{I18N>/SCENARIO}" required="true"/>
-                                            <Input 
-                                                width="100%" 
-                                                id="Input_scenarioName" 
-                                                visible="{=${DetailView>/isEditMode}}"
-                                                editable="{=${DetailView>/isCreate}}" 
-                                                type="Text" 
-                                                value="{=${DetailView>/isCreate} === true ? null : ${ path: 'masterModel>/masterData/scenario_name', type: 'sap.ui.model.type.String', constraints: { minLength: 1, maxLength: 240}}}" 
-                                                showValueHelp="false" 
-                                                required="true"/>
-                                                <Text text="{masterModel>/masterData/scenario_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
-                                            <layoutData>
-                                                <l:GridData span="XL6 L6 M12 S12" linebreak="true"/>
-                                            </layoutData>
-                                        </VBox>
-                                        <VBox>
-                                            <Label text="{I18N>/TENANT_NAME}" required="true"/>
-                                            <ComboBox id="tenant_edit_combo" 
-                                            visible="{=${DetailView>/isEditMode}}"
-                                             editable="{=${DetailView>/isCreate}}" 
-                                            selectedKey="L2100" items="{
+										<VBox>
+											<MessageStrip id="activeMessage_Show" text="{= ${masterModel>/masterData/activate_flag} === true? '이 시나리오는 활성화 상태입니다.' : '이 시나리오는 비활성화 상태입니다.'}" showIcon="true" showCloseButton="false" type="{= ${masterModel>/masterData/activate_flag} === true? 'Information' : 'Warning'}" visible="{=!${DetailView>/isEditMode}}"/>
+											<f:SimpleForm id="simpleform_edit" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+												<f:content id="informationPageSectionForm">
+													<VBox>
+														<Label text="{I18N>/TYPE_NAME}" required="true"/>
+														<ComboBox visible="{=${DetailView>/isEditMode}}" 
+                                                                    items="{
+                                                                    path: '/TaskMonitoringTypedCodeView',
+                                                                    filters: [
+                                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                    ]}" required="true" id="combo_monitoring_type" selectedKey="{=${DetailView>/isCreate} === true ? null : ${masterModel>/masterData/monitoring_type_code}}" width="100%">
+															<core:ListItem key="{code}" text="{code_name}"/>
+														</ComboBox>
+														<Text text="{masterModel>/masterData/monitoring_type_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+														<layoutData>
+															<l:GridData span="XL3 L4 M4 S12"/>
+														</layoutData>
+													</VBox>
+													<VBox>
+														<Label text="{I18N>/PURCHASING_TYPE_NAME}" required="true"/>
+														<MultiComboBox visible="{=${DetailView>/isEditMode}}" width="100%" selectedKeys="{=${DetailView>/isCreate} === true ? null : ${masterModel>/masterData/monitoring_purchasing_type_code}.split(';')}" id="combo_purchasing_type" items="{
+                                                                        path: '/TaskMonitoringPurchaingTypeCodeView',
+                                                                        sorter: {path: 'code_name'},
+                                                                        filters: [
+                                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                        ]}" required="true">
+															<core:ListItem key="{code}" text="{code_name}"/>
+														</MultiComboBox>
+														<Text text="{=${masterModel>/masterData/monitoring_purchasing_type_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+														<layoutData>
+															<l:GridData span="XL3 L4 M4 S12"/>
+														</layoutData>
+													</VBox>
+													<VBox>
+														<Label text="{I18N>/ACTIVATE}" visible="{=${DetailView>/isEditMode}}"/>
+														<!-- <Switch id="switch_activate" state="{activate_flag}" customTextOn="Yes" customTextOff="No" enabled="true"/> -->
+														<SegmentedButton visible="{=${DetailView>/isEditMode}}" id="segmentButton_activate" selectedKey="{=${DetailView>/isCreate} === true ? 'No' : ${masterModel>/masterData/activate_flag} === true? 'Yes' : 'No'}">
+															<items>
+																<SegmentedButtonItem text="Yes" key="Yes"/>
+																<SegmentedButtonItem text="No" key="No"/>
+															</items>
+														</SegmentedButton>
+														<layoutData>
+															<l:GridData span="XL3 L4 M4 S12"/>
+														</layoutData>
+													</VBox>
+													<VBox>
+														<Label text="{I18N>/SCENARIO}" required="true"/>
+														<Input width="100%" id="Input_scenarioName" visible="{=${DetailView>/isEditMode}}" editable="{=${DetailView>/isCreate}}" type="Text" value="{=${DetailView>/isCreate} === true ? null : ${ path: 'masterModel>/masterData/scenario_name', type: 'sap.ui.model.type.String', constraints: { minLength: 1, maxLength: 240}}}" showValueHelp="false" required="true"/>
+														<Text text="{masterModel>/masterData/scenario_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+														<layoutData>
+															<l:GridData span="XL6 L6 M12 S12" linebreak="true"/>
+														</layoutData>
+													</VBox>
+													<VBox>
+														<Label text="{I18N>/TENANT_NAME}" required="true"/>
+														<ComboBox id="tenant_edit_combo" visible="{=${DetailView>/isEditMode}}" editable="{=${DetailView>/isCreate}}" selectedKey="L2100" items="{
                                                 path: '/OrgTenantView'
-                                            }"
-                                                width="100%" required="true">
-                                                <core:Item key="{tenant_id}" text="{tenant_name}"/>
-                                                
-                                            </ComboBox>
-                                            <Text text="{masterModel>/masterData/tenant_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
-                                            <layoutData>
-                                                <l:GridData span="XL3 L4 M4 S12" linebreak="true"/>
-                                            </layoutData>
-                                        </VBox>
-                                        <VBox>
-                                            <Label text="{I18N>/COMPANY}" required="true"/>
-                                            <MultiComboBox 
-                                                width="100%" 
-                                                required="true" 
-                                                visible="{=${DetailView>/isEditMode}}"
-                                                id="company_edit_combo" 
-                                                items="{
+                                            }" width="100%" required="true">
+															<core:Item key="{tenant_id}" text="{tenant_name}"/>
+														</ComboBox>
+														<Text text="{masterModel>/masterData/tenant_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+														<layoutData>
+															<l:GridData span="XL3 L4 M4 S12" linebreak="true"/>
+														</layoutData>
+													</VBox>
+													<VBox>
+														<Label text="{I18N>/COMPANY}" required="true"/>
+														<MultiComboBox width="100%" required="true" visible="{=${DetailView>/isEditMode}}" id="company_edit_combo" items="{
                                                 path: '/OrgCompanyView',
                                                 sorter: {path: 'company_name'},
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                ]}" 
-                                                selectedKeys="{=${masterModel>/masterData/company_code}.split(';')}" 
-                                                maxWidth="100%">
-                                                <core:ListItem key="{company_code}" text="{company_name}"/>
-                                            </MultiComboBox>
-                                            <Text text="{=${masterModel>/masterData/company_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
-                                            <layoutData>
-                                                <l:GridData span="XL3 L4 M4 S12"/>
-                                            </layoutData>
-                                        </VBox>
-                                        <VBox>
-                                            <Label text="{I18N>/BUSINESS_UNIT}" required="true"/>
-                                            <MultiComboBox 
-                                                id="bizunit_edit_combo" 
-                                                width="100%"
-                                                visible="{=${DetailView>/isEditMode}}" 
-                                                selectedKeys="{=${masterModel>/masterData/bizunit_code}.split(';')}"
-                                                items="{
+                                                ]}" selectedKeys="{=${masterModel>/masterData/company_code}.split(';')}" maxWidth="100%">
+															<core:ListItem key="{company_code}" text="{company_name}"/>
+														</MultiComboBox>
+														<Text text="{=${masterModel>/masterData/company_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+														<layoutData>
+															<l:GridData span="XL3 L4 M4 S12"/>
+														</layoutData>
+													</VBox>
+													<VBox>
+														<Label text="{I18N>/BUSINESS_UNIT}" required="true"/>
+														<MultiComboBox id="bizunit_edit_combo" width="100%" visible="{=${DetailView>/isEditMode}}" selectedKeys="{=${masterModel>/masterData/bizunit_code}.split(';')}" items="{
                                                 path: '/OrgUnitView',
                                                 sorter: {path: 'bizunit_name'},
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                ]}" 
-                                                required="true" 
-                                                maxWidth="100%">
-                                                <core:ListItem key="{bizunit_code}" text="{bizunit_name}"/>
-                                            </MultiComboBox>
-                                            <Text text="{=${masterModel>/masterData/bizunit_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
-                                            <layoutData>
-                                                <l:GridData span="XL3 L4 M4 S12"/>
-                                            </layoutData>
-                                        </VBox>
-                                    </f:content>
-                                </f:SimpleForm>
-                            </VBox>
-                            </uxap:blocks>
-                        </uxap:ObjectPageSubSection>
+                                                ]}" required="true" maxWidth="100%">
+															<core:ListItem key="{bizunit_code}" text="{bizunit_name}"/>
+														</MultiComboBox>
+														<Text text="{=${masterModel>/masterData/bizunit_name}.replaceAll(';',', ')}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
+														<layoutData>
+															<l:GridData span="XL3 L4 M4 S12"/>
+														</layoutData>
+													</VBox>
+												</f:content>
+											</f:SimpleForm>
+										</VBox>
+									</uxap:blocks>
+								</uxap:ObjectPageSubSection>
 							</uxap:subSections>
 						</uxap:ObjectPageSection>
 					</uxap:sections>
@@ -177,97 +121,78 @@
 							<uxap:subSections>
 								<uxap:ObjectPageSubSection>
 									<uxap:blocks>
-										<!-- <VBox>
-											<f:SimpleForm id="SimpleFormChange354" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="0" labelSpanM="0" emptySpanL="0" emptySpanM="0" columnsL="3" columnsM="3">
-												<f:content>
-													<VBox id="VBox_manager" class="sapUiNoMarginBottom">
-														<Label text="{I18N>/MANAGER}" labelFor="multiInputWithEmployeeValueHelp"/>
-														<Text text="{=${masterModel>/masterData/manager_local_name} === ''? 'No Manager Data' : ${masterModel>/masterData/manager_local_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
-														<MultiInput id="multiInputWithEmployeeValueHelp" visible="{=${DetailView>/isEditMode}}" tokenUpdate="onTokenUpdate" showValueHelp="false"/>
-														<layoutData>
-															<l:GridData span="XL3 L4 M4 S12"/>
-														</layoutData>
-													</VBox>
-													<VBox id="managerVBox" class="sapUiNoMarginTop"> -->
-														<Table id="managerListTable" class="sapUiNoMarginTop" autoPopinMode="true" items="{managerModel>/manager}" mode="MultiSelect">
-															<headerToolbar class="sapUiNoMarginTop">
-																<OverflowToolbar>
-																	<content>
-																		<ToolbarSpacer/>
-																		<Button text="{I18N>/ROW_ADD}" id="btnManagerAddRow" enabled="{=${DetailView>/isEditMode}}" press=".onMultiInputWithEmployeeValuePress" type="Transparent"/>
-																		<Button text="{I18N>/ROW_DELETE}" id="btnManagerDeleteRow" enabled="{=${DetailView>/isEditMode}}" press=".onPressManagerDelete" type="Transparent"/>
-																	</content>
-																</OverflowToolbar>
-															</headerToolbar>
-															<columns>
-																<Column width="5rem" visible="{=${DetailView>/isEditMode}}">
-																	<header>
-																		<Label text="{I18N>/STATUS}"/>
-																	</header>
-																</Column>
-																<Column minScreenWidth="Tablet" demandPopin="true">
-																	<header>
-																		<Label text="{I18N>/MONITORING_MANAGER_EMPNO}"/>
-																	</header>
-																</Column>
-																<Column minScreenWidth="Tablet" demandPopin="true">
-																	<header>
-																		<Label text="{I18N>/MANAGER}"/>
-																	</header>
-																</Column>
-																<Column minScreenWidth="Tablet" demandPopin="true">
-																	<header>
-																		<Label text="{I18N>/EMAIL}"/>
-																	</header>
-																</Column>
-																<Column minScreenWidth="Tablet" demandPopin="true">
-																	<header>
-																		<Label text="{I18N>/DEPARTMENT}"/>
-																	</header>
-																</Column>
-																<Column minScreenWidth="Tablet" demandPopin="true">
-																	<header>
-																		<Label text="{I18N>/USER_POSITION}"/>
-																	</header>
-																</Column>
-																<Column minScreenWidth="Tablet" demandPopin="true" visible="{=!${DetailView>/isEditMode}}">
-																	<header>
-																		<Label text="{I18N>/SUPER_AUTHORITY_FLAG}" />
-																	</header>
-                                                                </Column>
-                                                                <Column minScreenWidth="Tablet" demandPopin="true" visible="{=${DetailView>/isEditMode}}">
-																	<header>
-																		<Label text="{I18N>/SUPER_AUTHORITY_FLAG}"/>
-																	</header>
-																</Column>
-															</columns>
+										<Table id="managerListTable" class="sapUiNoMarginTop" autoPopinMode="true" items="{managerModel>/manager}" mode="MultiSelect">
+											<headerToolbar class="sapUiNoMarginTop">
+												<OverflowToolbar>
+													<content>
+														<ToolbarSpacer/>
+														<Button text="{I18N>/ROW_ADD}" id="btnManagerAddRow" enabled="{=${DetailView>/isEditMode}}" press=".onMultiInputWithEmployeeValuePress" type="Transparent"/>
+														<Button text="{I18N>/ROW_DELETE}" id="btnManagerDeleteRow" enabled="{=${DetailView>/isEditMode}}" press=".onPressManagerDelete" type="Transparent"/>
+													</content>
+												</OverflowToolbar>
+											</headerToolbar>
+											<columns>
+												<Column width="5rem" visible="{=${DetailView>/isEditMode}}">
+													<header>
+														<Label text="{I18N>/STATUS}"/>
+													</header>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true">
+													<header>
+														<Label text="{I18N>/MONITORING_MANAGER_EMPNO}"/>
+													</header>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true">
+													<header>
+														<Label text="{I18N>/MANAGER}"/>
+													</header>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true">
+													<header>
+														<Label text="{I18N>/EMAIL}"/>
+													</header>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true">
+													<header>
+														<Label text="{I18N>/DEPARTMENT}"/>
+													</header>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true">
+													<header>
+														<Label text="{I18N>/USER_POSITION}"/>
+													</header>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true" visible="{=!${DetailView>/isEditMode}}">
+													<header>
+														<Label text="{I18N>/SUPER_AUTHORITY_FLAG}"/>
+													</header>
+												</Column>
+												<Column minScreenWidth="Tablet" demandPopin="true" visible="{=${DetailView>/isEditMode}}">
+													<header>
+														<Label text="{I18N>/SUPER_AUTHORITY_FLAG}"/>
+													</header>
+												</Column>
+											</columns>
+											<items>
+												<ColumnListItem type="Inactive">
+													<cells>
+														<ObjectStatus icon="{managerModel>status}"/>
+														<Text text="{managerModel>employee_number}"/>
+														<Text text="{managerModel>employee_name}"/>
+														<Text text="{managerModel>email_id}"/>
+														<Text text="{managerModel>department_local_name}"/>
+														<Text text="{managerModel>job_title}"/>
+														<Text text="{=${managerModel>monitoring_super_authority_flag} === true ? 'Y' : 'N'}" />
+														<SegmentedButton id="segmentButton_activate_flag" selectionChange=".onChangeAuthorityFlag" selectedKey="{=${managerModel>monitoring_super_authority_flag} === true? 'Yes' : 'No'}" >
 															<items>
-																<ColumnListItem type="Inactive">
-																	<cells>
-																		<ObjectStatus icon="{managerModel>status}"/>
-																		<Text text="{managerModel>employee_number}"/>
-																		<Text text="{managerModel>employee_name}"/>
-																		<Text text="{managerModel>email_id}"/>
-																		<Text text="{managerModel>department_local_name}"/>
-																		<Text text="{managerModel>job_title}"/>
-                                                                        <Text text="{=${managerModel>monitoring_super_authority_flag} === true ? 'Y' : 'N'}" visible="{=!${DetailView>/isEditMode}}" />
-																		<SegmentedButton id="segmentButton_activate_flag" selectionChange=".onChangeAuthorityFlag" selectedKey="{=${managerModel>monitoring_super_authority_flag} === true? 'Yes' : 'No'}" visible="{=${DetailView>/isEditMode}}">
-																			<items>
-																				<SegmentedButtonItem text="Yes" key="Yes"/>
-																				<SegmentedButtonItem text="No" key="No"/>
-																			</items>
-																		</SegmentedButton>
-																	</cells>
-																</ColumnListItem>
+																<SegmentedButtonItem text="Yes" key="Yes"/>
+																<SegmentedButtonItem text="No" key="No"/>
 															</items>
-														</Table>
-														<!-- <layoutData>
-															<l:GridData span="XL12 L12 M12 S12"/>
-														</layoutData>
-													</VBox>
-												</f:content>
-											</f:SimpleForm>
-										</VBox> -->
+														</SegmentedButton>
+													</cells>
+												</ColumnListItem>
+											</items>
+										</Table>
 									</uxap:blocks>
 								</uxap:ObjectPageSubSection>
 							</uxap:subSections>
@@ -297,8 +222,7 @@
 												<VBox id="cycleVBox">
 													<Label text="{I18N>/CYCLE}"/>
 													<Text text="{=${masterModel>/masterData/monitoring_cycle_name} === ''? 'No Cycle Data' : ${masterModel>/masterData/monitoring_cycle_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
-													<MultiComboBox id="multicombo_cycle" visible="{=${DetailView>/isEditMode}}" selectedKeys="{=${masterModel>/masterData/monitoring_cycle_code}.split(';')}" 
-                                                         items="{
+													<MultiComboBox id="multicombo_cycle" visible="{=${DetailView>/isEditMode}}" selectedKeys="{=${masterModel>/masterData/monitoring_cycle_code}.split(';')}" items="{
                                                             path: '/TaskMonitoringCycleCodeView',
                                                             sorter: {path: 'code_name'},
                                                             filters: [
@@ -322,20 +246,22 @@
 					<uxap:sections>
 						<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/DETAIL_INFORMATION}">
 							<uxap:subSections>
-								<uxap:ObjectPageSubSection>
+								<uxap:ObjectPageSubSection title="{I18N>/MONITORING_PURPOSE}" titleUppercase="false">
 									<uxap:blocks>
-										<l:VerticalLayout width="100%">
-											<VBox class="sapUiTinyMarginTop" id="monitoringVBox">
-												<Label text="{I18N>/MONITORING_PURPOSE}" design="Bold"/>
-												<rte:RichTextEditor id="reMonitoringPurpose" wrapping="false" editorType="TinyMCE4" width="100%" height="300px" editable="{=${DetailView>/isEditMode}}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-												<!-- <FormattedText id="PurposeFormattedText" visible="{=!${DetailView>/isEditMode}}"/> -->
-											</VBox>
-											<VBox class="sapUiSmallMarginTop" id="scenarioVBox">
-												<Label text="{I18N>/SCENARIO_DESC}" design="Bold"/>
-												<rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop"  editorType="TinyMCE4" editable="{=${DetailView>/isEditMode}}"  width="100%" height="300px" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-												<!-- <FormattedText id="ScenarioDescFormattedText" visible="{=!${DetailView>/isEditMode}}"/> -->
-											</VBox>
-										</l:VerticalLayout>
+										<VBox id="monitoringVBox">
+											<!-- <Label text="{I18N>/MONITORING_PURPOSE}" design="Bold"/> -->
+											<rte:RichTextEditor id="reMonitoringPurpose" wrapping="false" editorType="TinyMCE4" width="100%" height="300px" editable="{=${DetailView>/isEditMode}}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+											<!-- <FormattedText id="PurposeFormattedText" visible="{=!${DetailView>/isEditMode}}"/> -->
+										</VBox>
+									</uxap:blocks>
+								</uxap:ObjectPageSubSection>
+								<uxap:ObjectPageSubSection title="{I18N>/SCENARIO_DESC}" titleUppercase="false">
+									<uxap:blocks>
+										<VBox id="scenarioVBox">
+											<!-- <Label text="{I18N>/SCENARIO_DESC}" design="Bold"/> -->
+											<rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop" editorType="TinyMCE4" editable="{=${DetailView>/isEditMode}}" width="100%" height="300px" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+											<!-- <FormattedText id="ScenarioDescFormattedText" visible="{=!${DetailView>/isEditMode}}"/> -->
+										</VBox>
 									</uxap:blocks>
 								</uxap:ObjectPageSubSection>
 							</uxap:subSections>
@@ -364,7 +290,7 @@
 							<uxap:subSections>
 								<uxap:ObjectPageSubSection>
 									<uxap:blocks>
-										<Table id="indicatorTable" class="sapUiNoMarginTop"  autoPopinMode="true" mode="MultiSelect">
+										<Table id="indicatorTable" class="sapUiNoMarginTop" autoPopinMode="true" mode="MultiSelect">
 											<headerToolbar class="sapUiNoMarginTop">
 												<OverflowToolbar>
 													<content>
@@ -390,7 +316,7 @@
 														<Label text="{I18N>/CONDITION}"/>
 													</header>
 												</Column>
-												<Column  minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<Text text="{I18N>/INDICATOR_FIRST_VALUE}"/>
 												</Column>
 												<Column minScreenWidth="Tablet" demandPopin="true">
@@ -405,7 +331,7 @@
 												</Column>
 												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
-														<Label text="{I18N>/UNIT}" />
+														<Label text="{I18N>/UNIT}"/>
 													</header>
 												</Column>
 											</columns>
@@ -442,17 +368,22 @@
 							<uxap:subSections>
 								<uxap:ObjectPageSubSection>
 									<uxap:blocks>
-										<UploadCollection id="UploadCollection" uploadEnabled="false" fileType="gif,png,jpg,jpeg,doc,docx,xls,xlsx,hwp,pdf,ppt,pdf" maximumFilenameLength="55" maximumFileSize="10" 
-                                                            multiple="false" change=".onChange" instantUpload="false" uploadButtonInvisible="{=!${ui>/bEditMode}}" filenameLengthExceed="onFilenameLengthExceed" fileSizeExceed="onFileSizeExceed" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete" beforeUploadStarts="onBeforeUploadStarts" mode="SingleSelectMaster">
-											                    <!-- <items>
-                                                                    <UploadCollectionItem id="uploadItem" documentId="{up>documentId}" fileName="{up>fileName}"
-                                                                     mimeType="{up>mimeType}" thumbnailUrl="{up>thumbnailUrl}" url="{up>url}" deletePress="onFileDeleted" enableEdit="{=${ui>/bEditMode}}" enableDelete="true" visibleDelete="{=${ui>/bEditMode}}" visibleEdit="{=${ui>/bEditMode}}" attributes="{path: 'up>attributes',templateShareable: false}" selected="{selected}">
-                                                                        <attributes>
-                                                                            <ObjectAttribute title="{up>title}" text="{parts: [ 'up>text', 'up&gt;type' ]}" active="false"/>
-                                                                        </attributes>
-                                                                    </UploadCollectionItem>
-                                                                </items>  -->
-                                        </UploadCollection>
+                                        <UploadCollection 
+                                            id="UploadCollection" 
+                                            uploadEnabled="false" 
+                                            fileType="gif,png,jpg,jpeg,doc,docx,xls,xlsx,hwp,pdf,ppt,pdf" 
+                                            maximumFilenameLength="55" 
+                                            maximumFileSize="10" 
+                                            multiple="false" 
+                                            change=".onChange" 
+                                            instantUpload="false" 
+                                            uploadButtonInvisible="{=!${ui>/bEditMode}}" 
+                                            filenameLengthExceed="onFilenameLengthExceed" 
+                                            fileSizeExceed="onFileSizeExceed" 
+                                            typeMissmatch="onTypeMissmatch" 
+                                            uploadComplete="onUploadComplete" 
+                                            beforeUploadStarts="onBeforeUploadStarts" 
+                                            mode="SingleSelectMaster"/>
 									</uxap:blocks>
 								</uxap:ObjectPageSubSection>
 							</uxap:subSections>
@@ -461,7 +392,7 @@
 					<uxap:footer>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
-							<Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}"/>
+							<Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}"/>
 							<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
 							<Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press=".onPressDelete"/>
 							<Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
@@ -472,7 +403,8 @@
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                 ]
-                            }" apply=".onEmployeeDialogApplyPress"/>
+                            }"
+                            closeWhenApplied="true" apply=".onEmployeeDialogApplyPress"/>
 			</content>
 		</Page>
 	</App>

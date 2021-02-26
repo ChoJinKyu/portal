@@ -19,10 +19,14 @@
         <f:title>
             <lib-f:CustomDynamicPageTitle>
                 <lib-f:heading>
-                    <HBox alignItems="Center">
-                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                    <HBox class="sapUiSizeCompact">
+                        <lib-m:FavoriteMenuButton menuCode="DPPDU00008"/>
                         <Title text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/MANAGEMENT}" />
                     </HBox>
+                    <!-- <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/MANAGEMENT}" />
+                    </HBox> -->
                 </lib-f:heading>
                 <lib-f:fixedContent>
                     <form:SimpleForm class="searchBox"
@@ -66,7 +70,7 @@
                                 <Label text="{I18N>/STATUS}:" labelFor="searchActiveFlag"></Label>
                                 <SegmentedButton id="searchActiveFlag" width="100%">
                                     <items>
-                                        <SegmentedButtonItem text="All" width="3em"/>
+                                        <SegmentedButtonItem text="All" width="3em" key="All"/>
                                         <SegmentedButtonItem text="Active" width="5em" key="Active"/>
                                         <SegmentedButtonItem text="Inactive" width="5em" key="Inactive"/>
                                     </items>
@@ -110,13 +114,12 @@
             <VBox>
                 <t:TreeTable
                     id="treeTable"
-                    toggleOpenState="toggleOpenState"
                     visibleRowCountMode="Auto"
-                    rowSelectionChange=".onRowSelectionChange"
                     selectionMode="Single"
-                    selectionBehavior="Row"
+                    rowSelectionChange=".onRowSelectionChange"  
+                    selectionBehavior="Row"                  
                     enableColumnReordering="false"
-                    enableSelectAll="false"
+                    expandFirstLevel="true"
                     minAutoRowCount="18"
                     rows="{
                         path : 'tree>/pdPartCategoryView',
@@ -176,7 +179,7 @@
                         </t:Column>
                         <t:Column id="mainActiveFlagColumn" label="{I18N>/STATUS}" hAlign="Center"  width="8%">    
                             <t:template>
-                                <Text text="{= ${tree>active_flag} === true ? 'Active' : 'Inactive'}"/>
+                                <Text text="{tree>active_flag_val}" wrapping="false" />
                             </t:template>
                         </t:Column>
                         <t:Column id="mainUpdateUserIdColumn" label="{I18N>/UPDATE_USER_ID}" hAlign="Center"  width="9%">    

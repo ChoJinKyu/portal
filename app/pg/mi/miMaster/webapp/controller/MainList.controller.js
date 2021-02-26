@@ -234,8 +234,21 @@ sap.ui.define([
 			}
 
 			if (oMi_material_name.length > 0) {
-                oSmtFilter.getControlByKey("mi_material_name").setValue(oMi_material_name.toUpperCase());    
-				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name.toUpperCase());
+                // 시황자재명 입력 시 대/소문자 구분 없이 조회
+                // 기존 : 대문자로 UpperCase 기능 삭제 20210226 kbg
+                // oSmtFilter.getControlByKey("mi_material_name").setValue(oMi_material_name.toUpperCase());    
+                // var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name.toUpperCase());
+                // var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
+                // oSmtFilter.getControlByKey("mi_material_name").setValue(oMi_material_name.toUpperCase());    
+                
+                // var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
+                var oMi_material_nameFilter = new Filter({
+                    path: "mi_material_name",
+                    operator: FilterOperator.Contains,
+                    value1: oMi_material_name,
+                    caseSensitive: false
+                });
+                
 				mBindingParams.filters.push(oMi_material_nameFilter);
 			}
 

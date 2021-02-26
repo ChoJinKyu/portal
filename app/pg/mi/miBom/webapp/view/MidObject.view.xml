@@ -7,12 +7,11 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:core="sap.ui.core"
     height="100%">
-    <App>
+
         <Page id="page" 
         title="{I18N>/MIMATERIAL_BOM_TITLE}" 
         showHeader="false"
         busy="{oUi>/busy}">
-            <content>
                 <uxap:ObjectPageLayout                    
                     toggleHeaderOnTitleClick="true"
                     alwaysShowContentHeader="true"
@@ -22,13 +21,29 @@
                     upperCaseAnchorBar="false"
                     showTitleInHeaderContent="true"
                     showEditHeaderButton="true"
-                    showFooter="false">
+                    showFooter="true">
                     <uxap:headerTitle>
-                        <uxap:ObjectPageDynamicHeaderTitle>
+                        <uxap:ObjectPageDynamicHeaderTitle>              
+                            <uxap:heading>
+                                <HBox alignItems="Center">
+                                    <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column"/>
+                                    <Title text="{I18N>/MIMATERIAL_BOM_TITLE} {I18N>/REGISTER}" wrapping="true" class="sapUiSmallMarginEnd" />
+                                </HBox>
+                            </uxap:heading>
+
+                            <!-- <uxap:navigationActions>
+                                <OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{midObjectViewModel>/visibility/fullScreenBtn}"/>
+                                <OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= !${midObjectViewModel>/visibility/fullScreenBtn} }"/>
+                            </uxap:navigationActions> -->
+                        </uxap:ObjectPageDynamicHeaderTitle>
+
+                        <!-- <uxap:ObjectPageDynamicHeaderTitle>
                             <uxap:expandedHeading>
                                 <Title text="{I18N>/MIMATERIAL_BOM_TITLE} {I18N>/REGISTER}" wrapping="true"/>
                             </uxap:expandedHeading>
-
+                            <uxap:snappedHeading>
+                                <Title text="{I18N>/MIMATERIAL_BOM_TITLE} {I18N>/REGISTER}" wrapping="true"/>
+                            </uxap:snappedHeading>
                             <uxap:navigationActions>
 
                                 <OverflowToolbarButton
@@ -39,7 +54,7 @@
                                     press=".onPageNavBackButtonPress"
                                     visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                             </uxap:navigationActions>
-                        </uxap:ObjectPageDynamicHeaderTitle>
+                        </uxap:ObjectPageDynamicHeaderTitle> -->
                     </uxap:headerTitle>
                     <uxap:headerContent>
                         <layout:VerticalLayout>
@@ -60,19 +75,23 @@
                                     }"  
                                     class="sapUiTinyMarginBegin"  
                                     design="Bold"/>  
+                                    
                             </FlexBox>          
                         </layout:VerticalLayout>  
                     </uxap:headerContent>
                     <uxap:sections>
                         <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/BASIC_INFO}"  >
-                            <uxap:subSections>
+                            <uxap:subSections> 
                                 <uxap:ObjectPageSubSection>      
                                     <layout:VerticalLayout width="100%">
                                         <FlexBox height="28px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
                                             <Label text="{I18N>/BOM}" required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"/>
                                         </FlexBox>
-                                        <FlexBox height="40px" alignItems="Start" justifyContent="Start"
+                                        <!-- <FlexBox height="40px" alignItems="Start" justifyContent="Start"
                                                  visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}" 
+                                                 class="sapUiTinyMarginBottom">         -->
+                                        <FlexBox height="40px" alignItems="Start" justifyContent="Start"
+                                                 visible="false" 
                                                  class="sapUiTinyMarginBottom">        
                                             <RadioButtonGroup id="radioButtonGroup" columns="3" width="100%" selectedIndex="0">
                                                 <RadioButton id="radioButtonType01" text="{I18N>/MATERIAL_NAME}/{I18N>/CODE}" />
@@ -117,10 +136,8 @@
                                                         required="{oUi>/createMode}"
                                                         class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}"
-                                                        visible="{= ${oUi>/createMode}===false &amp;&amp; ${oUi>/copyMode}===false}"
-                                                        type="Number"
-                                                        textAlign="Right" 
-                                                        width="60px"                                                        
+                                                        visible="{oUi>/readMode}"
+                                                        width="60px"   textAlign="End"                                                          
                                                         design="Bold"/>
                                                 <Input  id="input_base_quantity"
                                                         required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
@@ -129,51 +146,73 @@
                                                         placeholder="Number" 
                                                         liveChange="._checkNumber"
                                                         textAlign="Right"                                                                                               
-                                                        visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
-                                                        value="{
-                                                            path : '{_oUiData>/number}',
+                                                        visible="{= !${oUi>/readMode}}" 
+                                                        value="{oUiData>/base_quantity}"                                                         
+                                                        />    
+                                                        <!-- path : '{_oUiData>/number}',
                                                             type : 'sap.ui.model.type.Integer',
                                                             constraints : {
                                                                 minLength: 1,
                                                                 maxLength: 10
-                                                            }
-                                                        }"                                                         
-                                                        />       
+                                                            }    -->
                                             </layout:VerticalLayout>  
+                                            <!-- 수정추가 -->
+                                            <layout:VerticalLayout class="sapUiTinyMarginBottom sapUiLargeMarginBegin sapUiLargeMarginEnd" >
+                                                <Label  text="{I18N>/BASE_QUANTITY} {I18N>/UNIT}:"  class="sapUiTinyMarginBottom"/>
+                                                <Label  text="{oUiData>/base_quantity_unit}" 
+                                                        design="Bold" textAlign="Center" 
+                                                        width="70px"                                                                                                                 
+                                                        visible="{oUi>/readMode}"
+                                                        />
+                                                <Input  id="input_base_quantity_unit"
+                                                        visible="{= !${oUi>/readMode}}" 
+                                                        textAlign="Center" editable="false"
+                                                        value="{oUiData>/base_quantity_unit}"                                                                                                                                                                        
+                                                />
+                                                
+                                                
+                                                
+                                                    <!-- <HBox  height="40px" alignItems="Center" justifyContent="Center" >
+                                                    <Text text="{NewMaterial>/uom_code}" textAlign="Center"  />
+                                                </HBox> -->
+                                            </layout:VerticalLayout> 
+                                            <!-- 수정추기 끝 -->
                                             <layout:VerticalLayout class="sapUiTinyMarginBottom sapUiLargeMarginBegin sapUiLargeMarginEnd">
                                                 <Label  text="{I18N>/PROCESSING_COST}:" 
                                                 required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}" 
                                                 class="sapUiTinyMarginBottom"/>
-                                                <Label  text="{oUiData>/processing_cost}" design="Bold"
-                                                        visible="{= ${oUi>/createMode}===false &amp;&amp; ${oUi>/copyMode}===false}"
-                                                        textAlign="Right" 
-                                                        width="50px"                                                              
+                                                <Label  text="{
+                                                            path:'oUiData>/processing_cost', 
+                                                            type:'sap.ui.model.type.Float'}" 
+                                                        design="Bold" 
+                                                        visible="{oUi>/readMode}"
+                                                        width="50px" textAlign="End"                                                             
                                                         class="sapUiLargeMarginEnd"/>
                                                 <Input  id="input_processing_cost"
                                                         required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
-                                                        visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
+                                                        visible="{= !${oUi>/readMode}}" 
                                                         type = "Number"
                                                         placeholder="Number"
                                                         liveChange="._checkNumber"
                                                         textAlign="Right"
-                                                        value="{
+                                                        value="{oUiData>/processing_cost}"                                                                                                                                                                        
+                                                />
+                                                 <!-- value="{
                                                             path : '{_oUiData>/number}',
                                                             type : 'sap.ui.model.type.Integer',
                                                             constraints : {
                                                                 minLength: 1,
                                                                 maxLength: 10
                                                             }
-                                                        }"                                                                                                                                                                        
-                                                />
+                                                        }"   -->
                                             </layout:VerticalLayout>                                          
                                             <layout:VerticalLayout class="sapUiLargeMarginBegin sapUiLargeMarginBottom" >
                                           
                                                 <Label  text="{I18N>/PCST_CURRENCY_CODE}:"                                                        
                                                         class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/pcst_currency_unit}" 
-                                                        design="Bold"    
-                                                        textAlign="Center" 
-                                                        width="70px"                                                                                                                 
+                                                        design="Bold" 
+                                                        width="70px" textAlign="Center"                                                                                                                  
                                                         visible="{oUi>/readMode}"
                                                         />
                                                             <!-- required="{= !${oUi>/readMode}}"                                           -->
@@ -192,12 +231,13 @@
                                                                 }
                                                         ]
                                                     }"
-                                                    width="120px"
+                                                    showSecondaryValues= "true" filterSecondaryValues="true"
                                                     selectedKey="{oUiData>/pcst_currency_unit}"                                       
                                                     placeholder="{I18N>/OPTION}"
                                                     visible="{= !${oUi>/readMode}}" 
                                                 >
-                                                <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" />
+                                                    <!-- <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" /> -->
+                                                    <core:ListItem key="{currency_code}" text="{currency_code_name}" additionalText="{currency_code}"/>
                                                 </ComboBox>
                                             </layout:VerticalLayout>                                                                                        
                                         </FlexBox>    
@@ -206,20 +246,27 @@
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>
                         </uxap:ObjectPageSection>
-                    </uxap:sections>
-                    <uxap:sections>
                         <uxap:ObjectPageSection title="{I18N>/MI_MATERIAL} {I18N>/LIST}"  >
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                    <uxap:blocks>
-                                         <Table
-                                            id="midTable" 
-                                            items="{path: 'midList>/',
-                                                    templateShareable: true}"
+                                    <!-- id="midTable" 
+                                            items="{path: 'midList>/', templateSharable: false}"
                                             mode="{= ${oUi>/readMode}?'None':'MultiSelect'}"
-                                            width="100%">
+                                            width="100%"  sapFDynamicPageAlignContent-->
+                                    <!-- <uxap:blocks> -->
+                                        <Table
+                                            items="{midList>/}"
+                                            mode="{= ${oUi>/readMode}?'None':'MultiSelect'}"
+                                            id="midTable" 
+                                            growingScrollToLoad="true"
+                                            growing="true"
+                                            sticky="ColumnHeaders,HeaderToolbar"
+                                            
+                                            inset="false"  
+                                            
+                                        >
                                             <headerToolbar>
-                                                <OverflowToolbar>
+                                                <OverflowToolbar visible="{=!${oUi>/readMode}}">
                                                     <content>
                                                         <ToolbarSpacer />
                                                             <Button id="buttonMidTableCreate" 
@@ -249,68 +296,68 @@
                                                     visible="false" 
                                                 >
                                                     <header>
-                                                        <Label text="ODATA"/>
+                                                        <Text text="ODATA"/>
                                                     </header>
                                                 </Column>                                                                                                                                                                                          
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="{I18N>/CODE}"/>
-                                                    </header>
+                                                <Column width="11%" minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/CODE}"/>
+                                                    <!-- </header> -->
                                                 </Column>                                                                           
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="{I18N>/NAME}"/>
-                                                    </header>
+                                                <Column width="14%" minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/NAME}"/>
+                                                    <!-- </header> -->
                                                 </Column>
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="{I18N>/CATEGORY}"/>
-                                                    </header>
+                                                <Column width="14%" minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/CATEGORY}"/>
+                                                    <!-- </header> -->
                                                 </Column>
-                                                <Column hAlign="Center" >
-                                                    <header>
-                                                        <Label text="{I18N>/REQM_QUANTITY_UNIT}"/>
-                                                    </header>
+                                                <Column width="7%" minScreenWidth ="" demandPopin="false" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/REQM_QUANTITY_UNIT}" textAlign="Center"/>
+                                                    <!-- </header> -->
                                                 </Column>                                                
-                                                <Column hAlign="Center" >
-                                                    <header>
-                                                        <Label text="{I18N>/REQM_QUANTITY}"/>
-                                                    </header>
+                                                <Column width="10%" minScreenWidth ="Tablet" demandPopin="true" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/REQM_QUANTITY}"/>
+                                                    <!-- </header> -->
                                                 </Column>
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="{I18N>/USE_FLAG}"/>
-                                                    </header>
+                                                <Column width="8%" minScreenWidth ="Tablet" demandPopin="true" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/USE_FLAG}"/>
+                                                    <!-- </header> -->
                                                 </Column>
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="화폐단위"/>
-                                                    </header>
+                                                <Column width="8%" minScreenWidth ="Tablet" demandPopin="true" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/CURRENCY_UNIT}"/>
+                                                    <!-- </header> -->
                                                 </Column>
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="{I18N>/QUANTITY_UNIT}"/>
-                                                    </header>
+                                                <Column width="8%" minScreenWidth ="Tablet" demandPopin="true" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/QUANTITY_UNIT}"/>
+                                                    <!-- </header> -->
                                                 </Column>
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="거래소"/>
-                                                    </header>
+                                                <Column width="10%" minScreenWidth ="Tablet" demandPopin="true" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/EXCHANGE_PG}"/>
+                                                    <!-- </header> -->
                                                 </Column>
-                                                <Column hAlign="Center">
-                                                    <header>
-                                                        <Label text="{I18N>/TERMS_OF_DELIVERY}"/>
-                                                    </header>
+                                                <Column width="10%" minScreenWidth ="Tablet" demandPopin="true" importance="High" hAlign="Center">
+                                                    <!-- <header> -->
+                                                        <Text text="{I18N>/TERMS_OF_DELIVERY}"/>
+                                                    <!-- </header> -->
                                                 </Column>
                                             </columns>
                                             <items>
-                                                <ColumnListItem>
+                                                <ColumnListItem type="Inactive">
                                                     <cells>
                                                         <Text text="{midList>itemMode}" />
                                                         <Text text="{midList>odataMode}"/>
                                                         <VBox>
                                                             <Button text="{midList>mi_material_code}"
-                                                                    type="Transparent"
+                                                                    type="Transparent" width="100%"
                                                                     visible="{=!${oUi>/readMode}}"                                                                     
                                                                     press=".onMaterialChange"/>  
                                                             <Text text="{midList>mi_material_code}" 
@@ -320,44 +367,51 @@
                                                         <Text text="{midList>mi_material_name}" />                                          
                                                         <Text text="{midList>category_name}" />  
                                                         <VBox  alignItems="Center">  
-                                                            <Input value="{midList>reqm_quantity_unit}" 
+                                                            <Text text="{midList>reqm_quantity_unit}" />
+                                                            <!-- <Input value="{midList>reqm_quantity_unit}" 
                                                                 visible="{=!${oUi>/readMode}}"
                                                                 required="{=!${oUi>/readMode}}"
                                                                 submit=".onReqmQuantityUnit"                                          
                                                                 valueHelpRequest=".onReqmQuantityUnit"                                                                 
                                                                 showValueHelp="true"
                                                                 valueHelpOnly="true"
-                                                                width="90px"/> 
+                                                                /> 
                                                             <Text   text="{midList>reqm_quantity_unit}"
-                                                                    visible="{oUi>/readMode}"/>                                                          
+                                                                    visible="{oUi>/readMode}"/>                                                           -->
   
                                                         </VBox>                                                          
-                                                        <VBox alignItems="Center">
+                                                        <VBox alignItems="End">
                                                             <Input  visible="{=!${oUi>/readMode}}"
                                                                     required="{=!${oUi>/readMode}}"
                                                                     type = "Number" 
                                                                     textAlign="Right"
-                                                                    width="90px" 
+                                                                     
                                                                     liveChange=".onRequiredCheckTable"
                                                                     value="{ path: 'midList>reqm_quantity',
-                                                                            type: 'sap.ui.model.type.Number',
+                                                                            type: 'sap.ui.model.type.Float',
                                                                             constraints: {minLength : 1, maxLength : 10} }"/>                                                        
                                                             <Text   text="{midList>reqm_quantity}"
                                                                     visible="{oUi>/readMode}"
                                                              />                                      
                                                         </VBox>
                                                         <VBox  alignItems="Center">  
-                                                            <ComboBox   placeholder="{I18N>/OPTION}"
+                                                            <!-- <ComboBox   placeholder="{I18N>/OPTION}"
                                                                         visible="{=!${oUi>/readMode}}" 
                                                                         required="{=!${oUi>/readMode}}"
-                                                                        items ="{/UseYNView}"
-                                                                        forceSelection="false"
-                                                                        selectedKey="{midList>use_flag}">  
+                                                                        selectedKey="{midList>use_flag}"
+                                                                        items="{path:'/UseYNView',
+                                                                            filters : [
+                                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                                                                            ] 
+                                                                    }"> 
                                                                 <items> 
                                                                     <core:ListItem key="{code}" text="{code_name}"/>
                                                                 </items>
-                                                            </ComboBox>                                                         
-                                                            <Text   text="{= ${midList>use_flag}?'Yes':'No'}"
+                                                            </ComboBox>                                                          -->
+                                                            <ToggleButton text="{=${midList>use_flag} ? 'YES' : 'NO'}" 
+                                                                visible="{=!${oUi>/readMode}}" 
+                                                                pressed="{=${midList>use_flag}}" press="onPressUseFlag"/>
+                                                            <Text   text="{=${midList>use_flag} ? 'YES' : 'NO'}"
                                                                     visible="{oUi>/readMode}"/> 
                                                         </VBox>         
                                                         <Text text="{midList>currency_unit}"/>                                          
@@ -368,47 +422,45 @@
                                                 </ColumnListItem>
                                             </items>
                                         </Table>  
-                                    </uxap:blocks>
+                                    <!-- </uxap:blocks> -->
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>
                         </uxap:ObjectPageSection>
                     </uxap:sections>
+                    <uxap:footer>
+                         <OverflowToolbar id="overflowToolbar">
+                            <ToolbarSpacer />
+                                <HBox visible="{oUi>/readMode}">
+                                        <Button type="Transparent" text="{I18N>/CANCEL}" enabled="false" visible="flase"/>
+                                        <Button type="Transparent" text="{I18N>/COPY}" enabled="true" press=".onCopy"/>                         
+                                        <Button type="Transparent" text="{I18N>/UPDATE}" enabled="true" press=".onEdit"/>
+                                        <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" />
+                                        <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="false" visible="flase" />
+                                    </HBox>
+                                    <HBox visible="{oUi>/editMode}">                            
+                                        <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
+                                        <Button type="Transparent" text="{I18N>/COPY}" enabled="false" visible="flase"/> 
+                                        <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false" visible="flase"/>
+                                        <Button type="Transparent" text="{I18N>/DELETE}" enabled="true" press=".onDeleteAction"/>                    
+                                        <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="true" press=".onSaveAction"/>
+                                    </HBox>
+                                    <HBox visible="{oUi>/createMode}">
+                                        <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
+                                        <Button type="Transparent" text="{I18N>/COPY}" enabled="false" visible="flase"/>                         
+                                        <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false" visible="flase"/>
+                                        <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" visible="flase"/>
+                                        <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
+                                    </HBox>
+                                    <HBox visible="{oUi>/copyMode}">
+                                        <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
+                                        <Button type="Transparent" text="{I18N>/COPY}" enabled="false" visible="flase"/>                         
+                                        <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false" visible="flase"/>
+                                        <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" visible="flase"/>
+                                        <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
+                                    </HBox>
+                        </OverflowToolbar>
+                    </uxap:footer>
                 </uxap:ObjectPageLayout>            
-            </content>
-            <footer>
-                <OverflowToolbar id="overflowToolbar">
-                    <ToolbarSpacer/>
-                        <HBox visible="{oUi>/readMode}">
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="false" />
-                            <Button type="Transparent" text="{I18N>/COPY}" enabled="true" press=".onCopy"/>                         
-                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="true" press=".onEdit"/>
-                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" />
-                            <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="false"  />
-                        </HBox>
-                        <HBox visible="{oUi>/editMode}">                            
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
-                            <Button type="Transparent" text="{I18N>/COPY}" enabled="false"/> 
-                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
-                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="true" press=".onDeleteAction"/>                    
-                            <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="true" press=".onSaveAction"/>
-                        </HBox>
-                        <HBox visible="{oUi>/createMode}">
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
-                            <Button type="Transparent" text="{I18N>/COPY}" enabled="false"/>                         
-                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
-                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false"/>
-                            <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
-                        </HBox>
-                        <HBox visible="{oUi>/copyMode}">
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
-                            <Button type="Transparent" text="{I18N>/COPY}" enabled="false"/>                         
-                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
-                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false"/>
-                            <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
-                        </HBox>
-
-                </OverflowToolbar>
-            </footer>
         </Page>
-    </App>
+  
 </mvc:View>
