@@ -1,8 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m"  xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:uxap="sap.uxap" >
-<VBox class="sapUiSmallMargin">
-<form:SimpleForm editable="false" layout="ResponsiveGridLayout">
-<form:content>
-</form:content>
-</form:SimpleForm>
-</VBox>
-</core:FragmentDefinition>

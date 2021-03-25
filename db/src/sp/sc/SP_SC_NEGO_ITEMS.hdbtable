@@ -1,6 +1,0 @@
-COLUMN TABLE sp_Sc_Nego_Items (
-  id INTEGER NOT NULL,
-  name NVARCHAR(5000),
-  parent_id INTEGER NOT NULL,
-  PRIMARY KEY(id)
-);

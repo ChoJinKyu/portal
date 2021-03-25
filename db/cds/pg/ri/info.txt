@@ -1,4 +1,0 @@
-// 구매 거버넌스>KPI,모니터링 Model
-   cds deploy --to hana:sppDb_hdi_dev
-
-   git config credential.helper store

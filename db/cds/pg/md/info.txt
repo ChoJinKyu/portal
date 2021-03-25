@@ -1,6 +1,0 @@
-// 구매 거버넌스>spend용 구매기준정보 
-// PG-05-01. 구매 기준정보 관리
-
-   cds deploy --to hana:sppDb_hdi_dev
-
-   git config credential.helper store

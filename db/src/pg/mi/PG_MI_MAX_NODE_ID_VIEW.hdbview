@@ -1,4 +1,0 @@
-view pg_MI_Max_Node_ID_View as
-    select 
-            cast(max(node_id)+ 1 as integer) as max_node_id 
-    from    pg_mi_category_hichy_stru;

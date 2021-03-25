@@ -1,4 +1,0 @@
-// 구매 거버넌스>RISK 분석 Model
-   cds deploy --to hana:sppDb_hdi_dev
-
-   git config credential.helper store

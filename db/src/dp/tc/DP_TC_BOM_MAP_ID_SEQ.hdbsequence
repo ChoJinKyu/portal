@@ -1,9 +1,0 @@
-/**************************************************************************
-Scrum          : VI/재료비관리
-Program Name   : DP_TC_BOM_MAP_ID_SEQ
-Creator        : Jeong Jeong Ho
-Description    : BOM Mapping ID 채번
-History        : 2021-01-05 initial creation
-***************************************************************************/
-SEQUENCE DP_TC_BOM_MAP_ID_SEQ START WITH 1 NO MAXVALUE NO CYCLE 
-;

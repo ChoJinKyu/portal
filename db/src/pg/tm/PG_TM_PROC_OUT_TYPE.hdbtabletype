@@ -1,6 +1,0 @@
-type pg_tm_proc_out_type 
-as table
-(
-    returncode nvarchar(2),
-    returnmessage nvarchar(5000)
-);

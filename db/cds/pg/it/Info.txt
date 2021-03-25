@@ -1,4 +1,0 @@
-// 구매 거버넌스> interface table --> 업무 table (내부사용 용도) 
-   cds deploy --to hana:sppDb_hdi_dev
-
-   git config credential.helper store

@@ -1,4 +1,0 @@
-view pg_Tm_Max_Scenario_Number_View as
-    select  cast(max(scenario_number)+ 1 as integer) as max_scenario_number 
-    from    pg_tm_master
-    ;

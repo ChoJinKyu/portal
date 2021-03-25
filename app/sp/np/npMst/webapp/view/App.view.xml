@@ -1,8 +1,0 @@
-<mvc:View
-	controllerName="sp.np.npMst.controller.App"
-	displayBlock="true"
-	xmlns="sap.m"
-	xmlns:f="sap.f"
-	xmlns:mvc="sap.ui.core.mvc">
-	<App id="app"/>
-</mvc:View>

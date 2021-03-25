@@ -1,2 +1,0 @@
-sequence pg_tm_scenario_number_seq start with 1 maxvalue 999999999
-reset by select ifnull(max(scenario_number), 0) + 1 from pg_tm_master

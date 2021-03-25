@@ -25,11 +25,9 @@
         }
     },
     "scripts": {
-        "build": "npm run clean && npm run copy_portal && ui5 build --include-task=generateManifestBundle generateCachebusterInfo && npm run copy_dev && npm run copy_lib && npm run copy_app && npm run zip",
+        "build": "npm run clean && npm run copy_portal && ui5 build --include-task=generateManifestBundle generateCachebusterInfo && npm run copy_dev && npm run zip",
         "copy_portal": "cd portal && npx copyfiles './**/*' ../webapp/",
         "copy_dev": "cd build_dev && npx npx copyfiles './manifest.json' ../dist/",
-        "copy_lib": "npx copyfiles 'lib/**/*' dist",
-        "copy_app": "npx copyfiles 'cm/**/*' dist && npx copyfiles 'dp/**/*' dist && npx copyfiles 'ep/**/*' dist && npx copyfiles 'op/**/*' dist && npx copyfiles 'pg/**/*' dist && npx copyfiles 'sp/**/*' dist && npx copyfiles 'xx/**/*' dist",
         "zip": "cd dist && npx bestzip ../portal-content.zip *",
         "clean": "npx rimraf portal-content.zip dist webapp"
     },

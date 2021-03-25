@@ -1,7 +1,0 @@
-VIEW OP_PU_PR_TEMPLATE_TXN AS
-SELECT DISTINCT
-      tenant_id 
-    , table_name	
-    , txn_type_code
-from  OP_PU_PR_TEMPLATE_DTL
-

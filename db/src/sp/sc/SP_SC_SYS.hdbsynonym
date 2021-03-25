@@ -1,8 +1,0 @@
-{
-  "SP_SC_SYSM_SESSION_CONTEXT": {
-    "target": {
-      "object": "M_SESSION_CONTEXT",
-      "schema": "SYS"
-    }
-  }
-}

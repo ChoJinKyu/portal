@@ -1,7 +1,0 @@
-view Pg_Tm_Job_Title_View as
-select
-	distinct tenant_id,
-	job_title
-from cm_hr_employee
-order by 
-    job_title;

@@ -1,7 +1,0 @@
-view Pg_Tm_Mobile_Phone_Number_View as
-select
-	distinct tenant_id,
-	mobile_phone_number
-from cm_hr_employee
-order by 
-    mobile_phone_number;

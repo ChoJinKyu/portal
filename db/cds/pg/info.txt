@@ -1,5 +1,0 @@
-// 구매 거버넌스 Model
-   cds deploy --to hana:sppDb_hdi_dev
-
-   git config credential.helper store
-   mvn spring-boot:run
